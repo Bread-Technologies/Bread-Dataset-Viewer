@@ -1,0 +1,14 @@
+{
+  "iconDefinitions": {
+    "gguf-file": {
+      "iconPath": "./gguf.svg"
+    },
+    "safetensors-file": {
+      "iconPath": "./safetensors.svg"
+    }
+  },
+  "fileExtensions": {
+    "gguf": "gguf-file",
+    "safetensors": "safetensors-file"
+  }
+}
