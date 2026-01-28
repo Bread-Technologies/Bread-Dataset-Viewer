@@ -699,7 +699,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         <div class="toolbar-divider"></div>
 
         <div class="toolbar-section" style="position: relative;">
-            <button id="path-toggle-btn" class="secondary">Filter ⌄</button>
+            <button id="path-toggle-btn" class="secondary">Filter <span style="font-size: 10px; margin-left: 2px; vertical-align: middle;">▾</span></button>
             <div id="path-panel">
                 <div class="path-panel-header">
                     <strong>Filter</strong>
@@ -1065,7 +1065,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         function buildPathTree(paths) {
             const tree = {};
             paths.forEach(path => {
-                const parts = path.split('.');
+                // Split by dots, but preserve [] notation
+                const parts = path.split('.').map(p => p.trim()).filter(p => p);
                 let current = tree;
                 let fullPath = '';
                 
@@ -1076,7 +1077,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                     if (!current[part]) {
                         current[part] = {
                             fullPath: fullPath,
-                            children: {}
+                            children: {},
+                            isArray: part.endsWith('[]')
                         };
                     }
                     current = current[part].children;
@@ -1130,7 +1132,12 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 });
 
                 const text = document.createElement('span');
-                text.textContent = key.replace('[]', ' (array)');
+                // Display array fields with (array) notation
+                if (key.endsWith('[]')) {
+                    text.textContent = key.slice(0, -2) + ' (array)';
+                } else {
+                    text.textContent = key;
+                }
 
                 label.appendChild(checkbox);
                 label.appendChild(text);
@@ -1198,9 +1205,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             }
 
             if (Array.isArray(value)) {
-                if (path) {
-                    added = addPath(path) || added;
-                }
+                // Only use the array notation (path[]) to avoid duplicates
                 const arrayPath = path ? path + '[]' : '[]';
                 added = addPath(arrayPath) || added;
                 const scanLength = Math.min(value.length, MAX_ARRAY_SCAN);
