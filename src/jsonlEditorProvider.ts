@@ -39,13 +39,15 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
 
         console.log(`[PERF] Stats read: ${Date.now() - startTime}ms`);
         
-        // Send initial file info
+        // Send initial file info with timestamp
         webviewPanel.webview.postMessage({
             type: 'fileInfo',
             filePath: document.uri.fsPath,
             fileName: path.basename(document.uri.fsPath),
             fileSize: fileSizeBytes,
             fileSizeMB: fileSizeMB,
+            backendTimestamp: Date.now(), // When backend sent this
+            backendTimeSinceStart: Date.now() - startTime, // Time from click
         });
         
         console.log(`[PERF] File info sent: ${Date.now() - startTime}ms`);
@@ -89,7 +91,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         filePath: string,
         webview: vscode.Webview,
         offset: number = 0,
-        limit: number = 100,
+        limit: number = 10,
         searchTerm?: string,
         tokenizer: string = 'gpt-4'
     ): Promise<void> {
@@ -138,6 +140,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             console.log(`[PERF] File read complete: ${Date.now() - loadStart}ms (${lines.length} lines)`);
 
             // Send lines immediately without tokens
+            const linesSentTime = Date.now();
             webview.postMessage({
                 type: 'lines',
                 lines,
@@ -145,6 +148,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 nextOffset: lineNum,
                 searchTerm,
                 skippedBySearch,
+                backendTimestamp: linesSentTime, // When backend sent this
             });
             
             console.log(`[PERF] Lines message sent: ${Date.now() - loadStart}ms`);
@@ -184,10 +188,13 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
     }
 
     private getHtmlForWebview(webview: vscode.Webview): string {
-        const scriptUri = webview.asWebviewUri(
-            vscode.Uri.file(path.join(this.context.extensionPath, 'webview', 'jsonlViewer.js'))
-        );
-
+        // Return full HTML - the async loading approach was causing issues
+        // The webview initialization overhead is mostly VS Code's service worker,
+        // which we can't optimize. The actual HTML parsing is fast.
+        return this.getFullHtmlContent();
+    }
+    
+    private getFullHtmlContent(): string {
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -244,7 +251,6 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             cursor: pointer;
             border-radius: 2px;
             font-size: 13px;
-            transition: background-color 0.2s;
         }
 
         button:hover {
@@ -316,7 +322,6 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             border-radius: 4px;
             padding: 16px;
             margin-bottom: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .card-header {
@@ -478,12 +483,6 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             color: var(--vscode-descriptionForeground);
         }
 
-        .no-results {
-            text-align: center;
-            padding: 48px 24px;
-            color: var(--vscode-descriptionForeground);
-        }
-
         .jump-to-line {
             display: flex;
             gap: 4px;
@@ -522,32 +521,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         <div class="toolbar-section">
             <label for="tokenizer-select" style="font-size: 12px; margin-right: 4px;" title="Select model tokenizer. For chat completions format, applies model-specific chat template before counting tokens.">Tokenizer:</label>
             <select id="tokenizer-select" title="OpenAI models use exact tokenizers. Other models use approximations with chat templates applied for chat completions format.">
-                <optgroup label="OpenAI Models (Exact)">
-                    <option value="gpt-4">GPT-4 / GPT-3.5-Turbo (cl100k_base)</option>
-                    <option value="gpt-3">GPT-3 Davinci/Curie (p50k_base)</option>
-                    <option value="gpt-2">GPT-2 (r50k_base)</option>
-                </optgroup>
-                <optgroup label="Anthropic (Exact)">
-                    <option value="claude">Claude (cl100k_base)</option>
-                </optgroup>
-                <optgroup label="Meta Llama (Template Applied)">
-                    <option value="llama-3">Llama 3 / 3.1 / 3.2</option>
-                    <option value="llama-2">Llama 2</option>
-                </optgroup>
-                <optgroup label="Chinese Models (Approximation)">
-                    <option value="qwen">Qwen / Qwen2</option>
-                    <option value="qwen2.5">Qwen 2.5</option>
-                    <option value="glm">ChatGLM / GLM-4</option>
-                    <option value="baichuan">Baichuan 2</option>
-                    <option value="yi">Yi / Yi-1.5</option>
-                </optgroup>
-                <optgroup label="Other Models (Approximation)">
-                    <option value="mistral">Mistral / Mixtral</option>
-                    <option value="gemma">Gemma / Gemma 2</option>
-                    <option value="phi">Phi-2 / Phi-3</option>
-                    <option value="deepseek">DeepSeek</option>
-                    <option value="internlm">InternLM 2</option>
-                </optgroup>
+                <option value="gpt-4">Loading...</option>
             </select>
         </div>
         
@@ -601,7 +575,24 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
     </div>
 
     <script>
+        // CRITICAL: Set up message listener IMMEDIATELY (before anything else)
+        // This ensures we can receive messages as soon as the webview is ready
         const vscode = acquireVsCodeApi();
+        let messageQueue = [];
+        let messageHandlerReady = false;
+        
+        // Set up message listener in the earliest possible moment (before DOM is ready)
+        // This ensures we catch messages as soon as the webview can receive them
+        const earlyMessageListener = (event) => {
+            if (!messageHandlerReady || !window.handleMessage) {
+                // Queue messages until handler is ready
+                messageQueue.push(event.data);
+            } else {
+                // Handler is ready, process immediately
+                window.handleMessage(event.data);
+            }
+        };
+        window.addEventListener('message', earlyMessageListener, { capture: true, passive: true });
         
         let allLines = [];
         let nextOffset = 0;
@@ -611,25 +602,77 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         let fileInfo = null;
         let tokenCounts = new Map();
         let currentTokenizer = 'gpt-4';
+        let listenersInitialized = false;
         
-        // Initialize
-        document.getElementById('card-view-btn').addEventListener('click', () => switchView('cards'));
-        document.getElementById('table-view-btn').addEventListener('click', () => switchView('table'));
-        document.getElementById('raw-view-btn').addEventListener('click', () => switchView('raw'));
-        document.getElementById('search-btn').addEventListener('click', performSearch);
-        document.getElementById('clear-search-btn').addEventListener('click', clearSearch);
-        document.getElementById('load-more-btn').addEventListener('click', loadMore);
-        document.getElementById('jump-btn').addEventListener('click', jumpToLine);
-        document.getElementById('tokenizer-select').addEventListener('change', handleTokenizerChange);
-        document.getElementById('edit-btn').addEventListener('click', openInTextEditor);
+        // Defer non-critical event listeners until after first render
+        function initializeEventListeners() {
+            if (listenersInitialized) return;
+            listenersInitialized = true;
+            
+            document.getElementById('card-view-btn').addEventListener('click', () => switchView('cards'));
+            document.getElementById('table-view-btn').addEventListener('click', () => switchView('table'));
+            document.getElementById('raw-view-btn').addEventListener('click', () => switchView('raw'));
+            document.getElementById('search-btn').addEventListener('click', performSearch);
+            document.getElementById('clear-search-btn').addEventListener('click', clearSearch);
+            document.getElementById('load-more-btn').addEventListener('click', loadMore);
+            document.getElementById('jump-btn').addEventListener('click', jumpToLine);
+            document.getElementById('tokenizer-select').addEventListener('change', handleTokenizerChange);
+            document.getElementById('edit-btn').addEventListener('click', openInTextEditor);
+            
+            document.getElementById('search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+            
+            document.getElementById('jump-line-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') jumpToLine();
+            });
+            
+            // Lazy load tokenizer options on first interaction
+            const tokenizerSelect = document.getElementById('tokenizer-select');
+            const loadOnInteraction = () => {
+                if (tokenizerSelect.children.length <= 1) {
+                    loadTokenizerOptions();
+                }
+                tokenizerSelect.removeEventListener('focus', loadOnInteraction);
+                tokenizerSelect.removeEventListener('click', loadOnInteraction);
+            };
+            tokenizerSelect.addEventListener('focus', loadOnInteraction, { once: true });
+            tokenizerSelect.addEventListener('click', loadOnInteraction, { once: true });
+        }
         
-        document.getElementById('search-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performSearch();
-        });
-        
-        document.getElementById('jump-line-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') jumpToLine();
-        });
+        // Lazy load tokenizer dropdown options
+        function loadTokenizerOptions() {
+            const select = document.getElementById('tokenizer-select');
+            select.innerHTML = \`
+                <optgroup label="OpenAI Models (Exact)">
+                    <option value="gpt-4">GPT-4 / GPT-3.5-Turbo (cl100k_base)</option>
+                    <option value="gpt-3">GPT-3 Davinci/Curie (p50k_base)</option>
+                    <option value="gpt-2">GPT-2 (r50k_base)</option>
+                </optgroup>
+                <optgroup label="Anthropic (Exact)">
+                    <option value="claude">Claude (cl100k_base)</option>
+                </optgroup>
+                <optgroup label="Meta Llama (Template Applied)">
+                    <option value="llama-3">Llama 3 / 3.1 / 3.2</option>
+                    <option value="llama-2">Llama 2</option>
+                </optgroup>
+                <optgroup label="Chinese Models (Approximation)">
+                    <option value="qwen">Qwen / Qwen2</option>
+                    <option value="qwen2.5">Qwen 2.5</option>
+                    <option value="glm">ChatGLM / GLM-4</option>
+                    <option value="baichuan">Baichuan 2</option>
+                    <option value="yi">Yi / Yi-1.5</option>
+                </optgroup>
+                <optgroup label="Other Models (Approximation)">
+                    <option value="mistral">Mistral / Mixtral</option>
+                    <option value="gemma">Gemma / Gemma 2</option>
+                    <option value="phi">Phi-2 / Phi-3</option>
+                    <option value="deepseek">DeepSeek</option>
+                    <option value="internlm">InternLM 2</option>
+                </optgroup>
+            \`;
+            select.value = currentTokenizer;
+        }
 
         function switchView(view) {
             currentView = view;
@@ -723,19 +766,60 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             document.getElementById('load-more-container').style.display = 'none';
         }
 
-        // Handle messages from extension
-        window.addEventListener('message', event => {
-            const message = event.data;
-            
+        // Handle messages from extension - make it available globally
+        window.handleMessage = function(message) {
             switch (message.type) {
+                case 'clear':
+                    // Reset UI state when reusing the same webview for a new file
+                    fileInfo = null;
+                    allLines = [];
+                    nextOffset = 0;
+                    hasMore = false;
+                    tokenCounts = {};
+                    currentSearchTerm = '';
+                    clearContainer();
+                    showLoading(true);
+                    document.getElementById('load-more-container').style.display = 'none';
+                    // Best-effort clear of header info
+                    const fileNameEl = document.getElementById('file-name');
+                    const fileSizeEl = document.getElementById('file-size');
+                    if (fileNameEl) fileNameEl.textContent = '';
+                    if (fileSizeEl) fileSizeEl.textContent = '';
+                    break;
+
                 case 'fileInfo':
+                    const fileInfoTime = performance.now();
+                    performance.mark('file-info-received');
                     fileInfo = message;
                     document.getElementById('file-name').textContent = message.fileName;
                     document.getElementById('file-size').textContent = \`(\${message.fileSizeMB} MB)\`;
+                    
+                    // Calculate actual message delay if backend timestamp provided
+                    if (message.backendTimestamp) {
+                        const frontendReceiveTime = Date.now();
+                        const messageDelay = frontendReceiveTime - message.backendTimestamp;
+                        console.log('[PERF] File info received (relative to webview load):', fileInfoTime.toFixed(2), 'ms');
+                        console.log('[PERF] Backend sent at:', message.backendTimeSinceStart, 'ms after click');
+                        console.log('[PERF] Message delay (backend send → frontend receive):', messageDelay.toFixed(2), 'ms');
+                        console.log('[PERF] Webview initialization overhead:', (fileInfoTime - (message.backendTimeSinceStart || 0)).toFixed(2), 'ms');
+                    } else {
+                        console.log('[PERF] File info received (relative to webview load):', fileInfoTime.toFixed(2), 'ms');
+                    }
                     break;
                     
                 case 'lines':
+                    const linesReceivedTime = performance.now();
+                    const linesReceivedTimestamp = Date.now();
+                    performance.mark('lines-received');
+                    
+                    // Calculate message delay if backend timestamp provided
+                    if (message.backendTimestamp) {
+                        const messageDelay = linesReceivedTimestamp - message.backendTimestamp;
+                        console.log('[PERF] Lines message delay (backend send → frontend receive):', messageDelay.toFixed(2), 'ms');
+                    }
+                    
                     showLoading(false);
+                    const renderStartTime = performance.now();
                     allLines = allLines.concat(message.lines);
                     nextOffset = message.nextOffset;
                     hasMore = message.hasMore;
@@ -748,14 +832,59 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                         renderRaw();
                     }
                     
+                    const renderEndTime = performance.now();
+                    const renderDuration = renderEndTime - renderStartTime;
                     updateStats();
                     
                     if (hasMore) {
                         document.getElementById('load-more-container').style.display = 'block';
                     }
+                    
+                    // Measure DOM render time (wait for next frame to ensure paint)
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            const paintTime = performance.now();
+                            performance.mark('dom-rendered');
+                            const paintDuration = paintTime - renderEndTime;
+                            const totalRenderTime = paintTime - renderStartTime;
+                            
+                            // Initialize event listeners after first render (deferred for performance)
+                            initializeEventListeners();
+                            
+                            // Calculate total time from fileInfo if available
+                            const fileInfoMark = performance.getEntriesByName('file-info-received', 'mark')[0];
+                            let totalTimeFromFileInfo = null;
+                            if (fileInfoMark) {
+                                totalTimeFromFileInfo = paintTime - fileInfoMark.startTime;
+                                performance.measure('total-load-time', 'file-info-received', 'dom-rendered');
+                            }
+                            
+                            // Measure render time
+                            performance.measure('render-time', 'lines-received', 'dom-rendered');
+                            const renderMeasure = performance.getEntriesByName('render-time', 'measure')[0];
+                            
+                            // Log all timing information
+                            console.log('[PERF] ===== Frontend Timing =====');
+                            console.log('[PERF] Lines received (relative to webview load):', linesReceivedTime.toFixed(2), 'ms');
+                            console.log('[PERF] DOM construction time:', renderDuration.toFixed(2), 'ms');
+                            console.log('[PERF] Paint wait time:', paintDuration.toFixed(2), 'ms');
+                            console.log('[PERF] Total render time (construct + paint):', totalRenderTime.toFixed(2), 'ms');
+                            if (renderMeasure) {
+                                console.log('[PERF] Total time (lines received → painted):', renderMeasure.duration.toFixed(2), 'ms');
+                            }
+                            if (totalTimeFromFileInfo !== null) {
+                                console.log('[PERF] Total time (fileInfo → painted):', totalTimeFromFileInfo.toFixed(2), 'ms');
+                            }
+                            console.log('[PERF] ============================');
+                        });
+                    });
                     break;
                     
                 case 'tokens':
+                    const tokensReceivedTime = performance.now();
+                    performance.mark('tokens-received');
+                    
+                    const tokenUpdateStart = performance.now();
                     // Update token counts asynchronously
                     for (const [lineIndex, count] of Object.entries(message.tokens)) {
                         const idx = parseInt(lineIndex);
@@ -773,7 +902,11 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                             tableCellEl.textContent = count.toLocaleString();
                         }
                     }
+                    const tokenUpdateEnd = performance.now();
                     updateStats();
+                    
+                    console.log('[PERF] Tokens received (relative to webview load):', tokensReceivedTime.toFixed(2), 'ms');
+                    console.log('[PERF] Token counts updated in:', (tokenUpdateEnd - tokenUpdateStart).toFixed(2), 'ms');
                     break;
                     
                 case 'error':
@@ -781,7 +914,12 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                     alert(message.message);
                     break;
             }
-        });
+        };
+        
+        // Mark handler as ready and process any queued messages
+        messageHandlerReady = true;
+        messageQueue.forEach(msg => window.handleMessage(msg));
+        messageQueue = [];
 
         function renderCards(lines) {
             const container = document.getElementById('cards-container');

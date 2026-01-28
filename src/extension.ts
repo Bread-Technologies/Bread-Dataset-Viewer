@@ -3,6 +3,7 @@ import { JsonlEditorProvider } from './jsonlEditorProvider';
 import { ModelChatProvider } from './modelChatProvider';
 import { initializeBackends } from './backends';
 import { initTokenizer, cleanup as cleanupTokenizer } from './utils/tokenizer';
+import { JsonlSingletonPanel } from './jsonlSingletonPanel';
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('ML Workbench extension is now active');
@@ -26,6 +27,13 @@ export async function activate(context: vscode.ExtensionContext) {
                 supportsMultipleEditorsPerDocument: false,
             }
         )
+    );
+
+    // Fast JSONL Viewer (single persistent panel)
+    context.subscriptions.push(
+        vscode.commands.registerCommand('mlWorkbench.openJsonlFast', async (uri?: vscode.Uri) => {
+            await JsonlSingletonPanel.open(context, uri);
+        })
     );
 
     // Register Model Chat

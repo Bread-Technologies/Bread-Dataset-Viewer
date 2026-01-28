@@ -14,10 +14,17 @@
   ],
   "activationEvents": [
     "onCustomEditor:mlWorkbench.jsonlViewer",
-    "onCustomEditor:mlWorkbench.modelChat"
+    "onCustomEditor:mlWorkbench.modelChat",
+    "onCommand:mlWorkbench.openJsonlFast"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "mlWorkbench.openJsonlFast",
+        "title": "Open JSONL Viewer (Fast Reused Webview)"
+      }
+    ],
     "customEditors": [
       {
         "viewType": "mlWorkbench.jsonlViewer",
@@ -72,7 +79,23 @@
           "Safetensors Model"
         ]
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "mlWorkbench.openJsonlFast",
+          "when": "resourceExtname == .jsonl",
+          "group": "navigation@11"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "mlWorkbench.openJsonlFast",
+          "when": "resourceExtname == .jsonl",
+          "group": "navigation@11"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
