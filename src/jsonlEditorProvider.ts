@@ -199,6 +199,9 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         const katexAutoRenderUri = webview.asWebviewUri(
             vscode.Uri.file(path.join(this.context.extensionPath, 'node_modules', 'katex', 'dist', 'contrib', 'auto-render.min.js'))
         );
+        const breadIconUri = webview.asWebviewUri(
+            vscode.Uri.file(path.join(this.context.extensionPath, 'icons', 'bread_alpha.png'))
+        );
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -532,6 +535,15 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             color: var(--vscode-descriptionForeground);
         }
 
+        .bread-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            vertical-align: middle;
+            opacity: 0.75;
+            filter: saturate(1.0) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+        }
+
         .no-results {
             text-align: center;
             padding: 48px 24px;
@@ -615,11 +627,12 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         }
 
         .chat-bubble {
-            border: 1px solid var(--vscode-panel-border);
+            border: 1.5px solid var(--vscode-panel-border);
             border-radius: 10px;
             padding: 16px 20px;
             max-width: 900px;
             background-color: var(--vscode-editor-background);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .chat-bubble.user {
@@ -634,13 +647,11 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         .chat-bubble.system {
             align-self: stretch;
             background-color: var(--vscode-inputValidation-infoBackground);
-            border-color: var(--vscode-inputValidation-infoBorder);
         }
 
         .chat-bubble.tool {
             align-self: stretch;
             background-color: var(--vscode-inputValidation-warningBackground);
-            border-color: var(--vscode-inputValidation-warningBorder);
         }
 
         .chat-role {
@@ -652,7 +663,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         }
 
         .chat-content {
-            padding: 8px;
+            padding: 4px;
+            line-height: 1.9;
         }
 
         .chat-content p {
@@ -663,11 +675,44 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             margin-bottom: 0;
         }
 
+        .chat-content h1,
+        .chat-content h2,
+        .chat-content h3,
+        .chat-content h4,
+        .chat-content h5,
+        .chat-content h6 {
+            margin: 12px 0 8px 0;
+            line-height: 1.3;
+        }
+
+        .chat-content h1:first-child,
+        .chat-content h2:first-child,
+        .chat-content h3:first-child,
+        .chat-content h4:first-child,
+        .chat-content h5:first-child,
+        .chat-content h6:first-child {
+            margin-top: 0;
+        }
+
+        .chat-content ul,
+        .chat-content ol {
+            margin: 8px 0;
+            padding-left: 24px;
+        }
+
+        .chat-content li {
+            margin: 4px 0;
+        }
+
         .chat-content code {
             font-family: var(--vscode-editor-font-family);
             background-color: var(--vscode-textCodeBlock-background);
             padding: 0 4px;
             border-radius: 3px;
+        }
+
+        .chat-content pre {
+            margin: 8px 0;
         }
 
         .chat-content pre code {
@@ -683,6 +728,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
 <body>
     <div id="toolbar">
         <div class="toolbar-section">
+            <img src="${breadIconUri}" alt="🍞" class="bread-icon" title="ML Workbench JSONL Viewer">
             <strong id="file-name"></strong>
             <span style="font-size: 11px; color: var(--vscode-descriptionForeground);" id="file-size"></span>
         </div>
