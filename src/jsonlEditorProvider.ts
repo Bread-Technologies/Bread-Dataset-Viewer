@@ -24,6 +24,9 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         
         webviewPanel.webview.options = {
             enableScripts: true,
+            localResourceRoots: [
+                vscode.Uri.file(this.context.extensionPath),
+            ],
         };
 
         console.log(`[PERF] Options set: ${Date.now() - startTime}ms`);
@@ -184,16 +187,16 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
     }
 
     private getHtmlForWebview(webview: vscode.Webview): string {
-        const scriptUri = webview.asWebviewUri(
-            vscode.Uri.file(path.join(this.context.extensionPath, 'webview', 'jsonlViewer.js'))
+        const markdownItUri = webview.asWebviewUri(
+            vscode.Uri.file(path.join(this.context.extensionPath, 'node_modules', 'markdown-it', 'dist', 'markdown-it.min.js'))
         );
-
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSONL Viewer</title>
+    <script src="${markdownItUri}"></script>
     <style>
         * {
             margin: 0;
@@ -382,6 +385,47 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             color: #569cd6;
         }
 
+        .json-tree {
+            font-family: var(--vscode-editor-font-family);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .json-details {
+            margin: 2px 0;
+        }
+
+        .json-summary {
+            cursor: pointer;
+        }
+
+        .json-summary::-webkit-details-marker {
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .json-line {
+            margin: 2px 0;
+        }
+
+        .json-index {
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .json-brace {
+            color: var(--vscode-foreground);
+        }
+
+        .json-meta {
+            color: var(--vscode-descriptionForeground);
+            font-size: 11px;
+            margin-left: 6px;
+        }
+
+        .json-placeholder {
+            color: var(--vscode-descriptionForeground);
+            font-size: 12px;
+        }
+
         /* Table View Styles */
         #table-container {
             display: none;
@@ -494,6 +538,120 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             width: 100px;
             min-width: 100px;
         }
+
+        #path-panel {
+            display: none;
+            border: 1px solid var(--vscode-panel-border);
+            background-color: var(--vscode-editor-background);
+            padding: 8px;
+            margin-bottom: 16px;
+            border-radius: 4px;
+        }
+
+        .path-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: var(--vscode-descriptionForeground);
+        }
+
+        .path-panel-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .path-panel-list {
+            max-height: 220px;
+            overflow: auto;
+            border: 1px solid var(--vscode-panel-border);
+            padding: 6px 8px;
+            border-radius: 4px;
+        }
+
+        .path-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-family: var(--vscode-editor-font-family);
+            font-size: 12px;
+            padding: 2px 0;
+        }
+
+        .path-empty {
+            color: var(--vscode-descriptionForeground);
+            font-size: 12px;
+            padding: 6px 0;
+        }
+
+        .chat-thread {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-bubble {
+            border: 1px solid var(--vscode-panel-border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            max-width: 900px;
+            background-color: var(--vscode-editor-background);
+        }
+
+        .chat-bubble.user {
+            align-self: flex-end;
+            background-color: var(--vscode-editorWidget-background);
+        }
+
+        .chat-bubble.assistant {
+            align-self: flex-start;
+        }
+
+        .chat-bubble.system {
+            align-self: stretch;
+            background-color: var(--vscode-inputValidation-infoBackground);
+            border-color: var(--vscode-inputValidation-infoBorder);
+        }
+
+        .chat-bubble.tool {
+            align-self: stretch;
+            background-color: var(--vscode-inputValidation-warningBackground);
+            border-color: var(--vscode-inputValidation-warningBorder);
+        }
+
+        .chat-role {
+            font-size: 11px;
+            color: var(--vscode-descriptionForeground);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .chat-content p {
+            margin: 0 0 10px 0;
+        }
+
+        .chat-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .chat-content code {
+            font-family: var(--vscode-editor-font-family);
+            background-color: var(--vscode-textCodeBlock-background);
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+
+        .chat-content pre code {
+            display: block;
+            padding: 12px;
+            background-color: var(--vscode-textCodeBlock-background);
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+
     </style>
 </head>
 <body>
@@ -506,9 +664,16 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         <div class="toolbar-divider"></div>
         
         <div class="toolbar-section">
-            <button id="card-view-btn" class="secondary active">📇 Cards</button>
-            <button id="table-view-btn" class="secondary">📊 Table</button>
-            <button id="raw-view-btn" class="secondary">📄 Raw</button>
+            <button id="pretty-view-btn" class="secondary active">Pretty</button>
+            <button id="render-view-btn" class="secondary">Render</button>
+            <button id="table-view-btn" class="secondary">Table</button>
+            <button id="raw-view-btn" class="secondary">Raw</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <button id="path-toggle-btn" class="secondary">Paths</button>
         </div>
         
         <div class="toolbar-divider"></div>
@@ -585,8 +750,21 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         </div>
     </div>
 
+    <div id="path-panel">
+        <div class="path-panel-header">
+            <span>Paths</span>
+            <span id="path-count">0/0</span>
+        </div>
+        <div class="path-panel-actions">
+            <button id="path-select-all" class="secondary">Select All</button>
+            <button id="path-clear" class="secondary">Clear</button>
+        </div>
+        <div class="path-panel-list" id="path-list"></div>
+    </div>
+
     <div id="container">
-        <div id="cards-container"></div>
+        <div id="pretty-container"></div>
+        <div id="render-container" style="display: none;"></div>
         <div id="table-container">
             <table id="data-table">
                 <thead id="table-head"></thead>
@@ -606,14 +784,24 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         let allLines = [];
         let nextOffset = 0;
         let hasMore = false;
-        let currentView = 'cards';
+        let currentView = 'pretty';
         let currentSearchTerm = '';
         let fileInfo = null;
         let tokenCounts = new Map();
         let currentTokenizer = 'gpt-4';
+
+        const MAX_PATHS = 2000;
+        const MAX_PATH_DEPTH = 8;
+        const MAX_ARRAY_SCAN = 20;
+        const AUTO_EXPAND_LIMIT = 50;
+        let availablePaths = new Set();
+        let selectedPaths = new Set();
+        let pathLimitReached = false;
+        let pathPanelVisible = false;
         
         // Initialize
-        document.getElementById('card-view-btn').addEventListener('click', () => switchView('cards'));
+        document.getElementById('pretty-view-btn').addEventListener('click', () => switchView('pretty'));
+        document.getElementById('render-view-btn').addEventListener('click', () => switchView('render'));
         document.getElementById('table-view-btn').addEventListener('click', () => switchView('table'));
         document.getElementById('raw-view-btn').addEventListener('click', () => switchView('raw'));
         document.getElementById('search-btn').addEventListener('click', performSearch);
@@ -622,6 +810,9 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         document.getElementById('jump-btn').addEventListener('click', jumpToLine);
         document.getElementById('tokenizer-select').addEventListener('change', handleTokenizerChange);
         document.getElementById('edit-btn').addEventListener('click', openInTextEditor);
+        document.getElementById('path-toggle-btn').addEventListener('click', togglePathPanel);
+        document.getElementById('path-select-all').addEventListener('click', selectAllPaths);
+        document.getElementById('path-clear').addEventListener('click', clearSelectedPaths);
         
         document.getElementById('search-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') performSearch();
@@ -635,19 +826,26 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             currentView = view;
             
             // Hide all views
-            document.getElementById('cards-container').style.display = 'none';
+            document.getElementById('pretty-container').style.display = 'none';
+            document.getElementById('render-container').style.display = 'none';
             document.getElementById('table-container').style.display = 'none';
             document.getElementById('raw-container').style.display = 'none';
             
             // Remove active from all buttons
-            document.getElementById('card-view-btn').classList.remove('active');
+            document.getElementById('pretty-view-btn').classList.remove('active');
+            document.getElementById('render-view-btn').classList.remove('active');
             document.getElementById('table-view-btn').classList.remove('active');
             document.getElementById('raw-view-btn').classList.remove('active');
             
             // Show selected view
-            if (view === 'cards') {
-                document.getElementById('cards-container').style.display = 'block';
-                document.getElementById('card-view-btn').classList.add('active');
+            if (view === 'pretty') {
+                document.getElementById('pretty-container').style.display = 'block';
+                document.getElementById('pretty-view-btn').classList.add('active');
+                renderPretty(allLines, true);
+            } else if (view === 'render') {
+                document.getElementById('render-container').style.display = 'block';
+                document.getElementById('render-view-btn').classList.add('active');
+                renderChat(allLines, true);
             } else if (view === 'table') {
                 document.getElementById('table-container').style.display = 'block';
                 document.getElementById('table-view-btn').classList.add('active');
@@ -664,6 +862,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             // Reload data with new tokenizer
             allLines = [];
             nextOffset = 0;
+            resetAvailablePaths();
             clearContainer();
             vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer });
             showLoading(true);
@@ -679,6 +878,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 currentSearchTerm = searchTerm;
                 allLines = [];
                 nextOffset = 0;
+                resetAvailablePaths();
                 clearContainer();
                 vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm, tokenizer: currentTokenizer });
                 showLoading(true);
@@ -690,6 +890,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             document.getElementById('search-input').value = '';
             allLines = [];
             nextOffset = 0;
+            resetAvailablePaths();
             clearContainer();
             vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, tokenizer: currentTokenizer });
             showLoading(true);
@@ -705,6 +906,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             if (!isNaN(lineNum) && lineNum >= 0) {
                 allLines = [];
                 nextOffset = lineNum;
+                resetAvailablePaths();
                 clearContainer();
                 vscode.postMessage({ type: 'jumpToLine', lineNumber: lineNum, tokenizer: currentTokenizer });
                 showLoading(true);
@@ -712,10 +914,19 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         }
 
         function clearContainer() {
-            document.getElementById('cards-container').innerHTML = '';
+            document.getElementById('pretty-container').innerHTML = '';
+            document.getElementById('render-container').innerHTML = '';
             document.getElementById('table-body').innerHTML = '';
             document.getElementById('table-head').innerHTML = '';
             document.getElementById('raw-container').innerHTML = '';
+        }
+
+        function resetAvailablePaths() {
+            availablePaths = new Set();
+            pathLimitReached = false;
+            if (pathPanelVisible) {
+                renderPathList();
+            }
         }
 
         function showLoading(show) {
@@ -739,9 +950,13 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                     allLines = allLines.concat(message.lines);
                     nextOffset = message.nextOffset;
                     hasMore = message.hasMore;
+
+                    updatePathsFromLines(message.lines);
                     
-                    if (currentView === 'cards') {
-                        renderCards(message.lines);
+                    if (currentView === 'pretty') {
+                        renderPretty(message.lines);
+                    } else if (currentView === 'render') {
+                        renderChat(message.lines);
                     } else if (currentView === 'table') {
                         renderTable();
                     } else if (currentView === 'raw') {
@@ -761,7 +976,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                         const idx = parseInt(lineIndex);
                         tokenCounts.set(idx, count);
                         
-                        // Update card view
+                        // Update pretty view
                         const cardTokenEl = document.getElementById(\`tokens-\${idx}\`);
                         if (cardTokenEl) {
                             cardTokenEl.textContent = \`\${count.toLocaleString()} tokens\`;
@@ -783,38 +998,221 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             }
         });
 
-        function renderCards(lines) {
-            const container = document.getElementById('cards-container');
-            
+        function togglePathPanel() {
+            pathPanelVisible = !pathPanelVisible;
+            const panel = document.getElementById('path-panel');
+            panel.style.display = pathPanelVisible ? 'block' : 'none';
+            if (pathPanelVisible) {
+                renderPathList();
+            }
+        }
+
+        function selectAllPaths() {
+            selectedPaths = new Set(availablePaths);
+            renderPathList();
+            rerenderPretty();
+            rerenderRender();
+        }
+
+        function clearSelectedPaths() {
+            selectedPaths.clear();
+            renderPathList();
+            rerenderPretty();
+            rerenderRender();
+        }
+
+        function updatePathCount(total) {
+            const countEl = document.getElementById('path-count');
+            const suffix = pathLimitReached ? ' (truncated)' : '';
+            countEl.textContent = selectedPaths.size + '/' + total + suffix;
+        }
+
+        function renderPathList() {
+            const list = document.getElementById('path-list');
+            const paths = Array.from(new Set([...availablePaths, ...selectedPaths])).sort();
+            updatePathCount(paths.length);
+
+            list.innerHTML = '';
+            if (paths.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'path-empty';
+                empty.textContent = 'No paths discovered yet.';
+                list.appendChild(empty);
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            paths.forEach(path => {
+                const label = document.createElement('label');
+                label.className = 'path-item';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = selectedPaths.has(path);
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        selectedPaths.add(path);
+                    } else {
+                        selectedPaths.delete(path);
+                    }
+                    updatePathCount(paths.length);
+                    rerenderPretty();
+                    rerenderRender();
+                });
+
+                const text = document.createElement('span');
+                text.textContent = path;
+
+                label.appendChild(checkbox);
+                label.appendChild(text);
+                fragment.appendChild(label);
+            });
+
+            list.appendChild(fragment);
+        }
+
+        function updatePathsFromLines(lines) {
+            let added = false;
+            lines.forEach(line => {
+                if (line.error || line.data === null || line.data === undefined) return;
+                if (collectPaths(line.data, '', 0)) {
+                    added = true;
+                }
+            });
+            if ((added || pathLimitReached) && pathPanelVisible) {
+                renderPathList();
+            }
+        }
+
+        function addPath(path) {
+            if (!path) return false;
+            if (availablePaths.has(path)) return false;
+            if (availablePaths.size >= MAX_PATHS) {
+                pathLimitReached = true;
+                return false;
+            }
+            availablePaths.add(path);
+            return true;
+        }
+
+        function collectPaths(value, path, depth) {
+            if (pathLimitReached || depth > MAX_PATH_DEPTH) return false;
+            let added = false;
+
+            if (value === null || typeof value !== 'object') {
+                if (path) {
+                    added = addPath(path) || added;
+                }
+                return added;
+            }
+
+            if (Array.isArray(value)) {
+                if (path) {
+                    added = addPath(path) || added;
+                }
+                const arrayPath = path ? path + '[]' : '[]';
+                added = addPath(arrayPath) || added;
+                const scanLength = Math.min(value.length, MAX_ARRAY_SCAN);
+                for (let i = 0; i < scanLength; i++) {
+                    added = collectPaths(value[i], arrayPath, depth + 1) || added;
+                    if (pathLimitReached) break;
+                }
+                return added;
+            }
+
+            if (path) {
+                added = addPath(path) || added;
+            }
+
+            const keys = Object.keys(value);
+            for (const key of keys) {
+                const childPath = path ? path + '.' + key : key;
+                added = collectPaths(value[key], childPath, depth + 1) || added;
+                if (pathLimitReached) break;
+            }
+
+            return added;
+        }
+
+        function filterValueForPaths(value, path) {
+            if (selectedPaths.size === 0) return value;
+            if (path && selectedPaths.has(path)) return value;
+
+            if (value === null || typeof value !== 'object') {
+                return selectedPaths.has(path) ? value : undefined;
+            }
+
+            if (Array.isArray(value)) {
+                const arrayPath = path ? path + '[]' : '[]';
+                if (selectedPaths.has(arrayPath)) return value;
+                const filtered = [];
+                for (let i = 0; i < value.length; i++) {
+                    const item = filterValueForPaths(value[i], arrayPath);
+                    if (item !== undefined) {
+                        filtered.push(item);
+                    }
+                }
+                return filtered.length ? filtered : undefined;
+            }
+
+            const result = {};
+            Object.keys(value).forEach(key => {
+                const childPath = path ? path + '.' + key : key;
+                const childValue = filterValueForPaths(value[key], childPath);
+                if (childValue !== undefined) {
+                    result[key] = childValue;
+                }
+            });
+
+            return Object.keys(result).length ? result : undefined;
+        }
+
+        function rerenderPretty() {
+            if (currentView === 'pretty') {
+                renderPretty(allLines, true);
+            }
+        }
+
+        function rerenderRender() {
+            if (currentView === 'render') {
+                renderChat(allLines, true);
+            }
+        }
+
+        function renderPretty(lines, reset = false) {
+            const container = document.getElementById('pretty-container');
+            if (reset) {
+                container.innerHTML = '';
+            }
+
             lines.forEach(line => {
                 const card = document.createElement('div');
                 card.className = line.error ? 'card card-error' : 'card';
-                
+
                 const header = document.createElement('div');
                 header.className = 'card-header';
-                
+
                 const title = document.createElement('div');
                 title.className = 'card-title';
-                title.textContent = \`Line \${line.index}\`;
-                
+                title.textContent = 'Line ' + line.index;
+
                 const tokensSpan = document.createElement('span');
                 tokensSpan.className = 'card-tokens';
-                tokensSpan.id = \`tokens-\${line.index}\`;
-                
-                // Tokens calculated asynchronously
+                tokensSpan.id = 'tokens-' + line.index;
+
                 const tokenCount = line.tokens || tokenCounts.get(line.index);
                 if (tokenCount !== undefined) {
-                    tokensSpan.textContent = \`\${tokenCount.toLocaleString()} tokens\`;
+                    tokensSpan.textContent = tokenCount.toLocaleString() + ' tokens';
                 } else {
                     tokensSpan.textContent = '...';
                 }
-                
+
                 header.appendChild(title);
                 header.appendChild(tokensSpan);
-                
+
                 const content = document.createElement('div');
                 content.className = 'card-content';
-                
+
                 if (line.error) {
                     const errorMsg = document.createElement('div');
                     errorMsg.className = 'error-message';
@@ -822,13 +1220,364 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                     content.appendChild(errorMsg);
                     content.appendChild(document.createTextNode(line.raw));
                 } else {
-                    content.innerHTML = syntaxHighlight(line.data);
+                    const filtered = filterValueForPaths(line.data, '');
+                    if (filtered === undefined) {
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'json-placeholder';
+                        placeholder.textContent = 'No matching paths for this record.';
+                        content.appendChild(placeholder);
+                    } else {
+                        const tree = renderJsonTree(filtered, 0, null, null);
+                        if (tree) {
+                            tree.classList.add('json-tree');
+                            content.appendChild(tree);
+                        }
+                    }
                 }
-                
+
                 card.appendChild(header);
                 card.appendChild(content);
                 container.appendChild(card);
             });
+        }
+
+        function renderChat(lines, reset = false) {
+            const container = document.getElementById('render-container');
+            if (reset) {
+                container.innerHTML = '';
+            }
+
+            lines.forEach(line => {
+                const card = document.createElement('div');
+                card.className = line.error ? 'card card-error' : 'card';
+
+                const header = document.createElement('div');
+                header.className = 'card-header';
+
+                const title = document.createElement('div');
+                title.className = 'card-title';
+                title.textContent = 'Line ' + line.index;
+
+                const tokensSpan = document.createElement('span');
+                tokensSpan.className = 'card-tokens';
+                tokensSpan.id = 'tokens-' + line.index;
+
+                const tokenCount = line.tokens || tokenCounts.get(line.index);
+                if (tokenCount !== undefined) {
+                    tokensSpan.textContent = tokenCount.toLocaleString() + ' tokens';
+                } else {
+                    tokensSpan.textContent = '...';
+                }
+
+                header.appendChild(title);
+                header.appendChild(tokensSpan);
+
+                const content = document.createElement('div');
+                content.className = 'card-content';
+
+                if (line.error) {
+                    const errorMsg = document.createElement('div');
+                    errorMsg.className = 'error-message';
+                    errorMsg.textContent = '⚠️ Malformed JSON';
+                    content.appendChild(errorMsg);
+                    content.appendChild(document.createTextNode(line.raw));
+                } else {
+                    const filtered = filterValueForPaths(line.data, '');
+                    const messages = filtered && filtered.messages;
+                    if (!messages || !Array.isArray(messages)) {
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'json-placeholder';
+                        placeholder.textContent = 'No matching messages for this record.';
+                        content.appendChild(placeholder);
+                    } else {
+                        const thread = document.createElement('div');
+                        thread.className = 'chat-thread';
+                        const fragment = document.createDocumentFragment();
+
+                        messages.forEach((message, idx) => {
+                            const role = normalizeRole(message && message.role ? message.role : 'unknown');
+                            const bubble = document.createElement('div');
+                            bubble.className = 'chat-bubble ' + role;
+
+                            const roleLabel = document.createElement('div');
+                            roleLabel.className = 'chat-role';
+                            roleLabel.textContent = role;
+
+                            const body = document.createElement('div');
+                            body.className = 'chat-content';
+                            body.innerHTML = renderMarkdown(normalizeMessageContent(message && message.content));
+
+                            bubble.appendChild(roleLabel);
+                            bubble.appendChild(body);
+                            fragment.appendChild(bubble);
+                        });
+
+                        thread.appendChild(fragment);
+                        content.appendChild(thread);
+                    }
+                }
+
+                card.appendChild(header);
+                card.appendChild(content);
+                container.appendChild(card);
+            });
+        }
+
+        function renderJsonTree(value, depth, label, labelType) {
+            if (value === null || typeof value !== 'object') {
+                return renderPrimitiveLine(value, depth, label, labelType);
+            }
+            if (Array.isArray(value)) {
+                return renderArrayNode(value, depth, label, labelType);
+            }
+            return renderObjectNode(value, depth, label, labelType);
+        }
+
+        function getMarkdownRenderer() {
+            if (!window.markdownit) {
+                return null;
+            }
+            if (window.__markdownRenderer) {
+                return window.__markdownRenderer;
+            }
+            const renderer = window.markdownit({
+                html: false,
+                linkify: true,
+                breaks: true,
+            });
+            window.__markdownRenderer = renderer;
+            return renderer;
+        }
+
+        function renderMarkdown(text) {
+            const renderer = getMarkdownRenderer();
+            if (!renderer) {
+            return escapeHtml(text).replace(/\\n/g, '<br>');
+            }
+            return renderer.render(text || '');
+        }
+
+        function normalizeRole(role) {
+            const normalized = String(role || 'unknown').toLowerCase();
+            if (normalized === 'user' || normalized === 'assistant' || normalized === 'system' || normalized === 'tool') {
+                return normalized;
+            }
+            return 'assistant';
+        }
+
+        function normalizeMessageContent(content) {
+            if (content === null || content === undefined) {
+                return '';
+            }
+            if (Array.isArray(content)) {
+                const parts = [];
+                content.forEach(part => {
+                    if (typeof part === 'string') {
+                        parts.push(part);
+                        return;
+                    }
+                    if (part && typeof part === 'object') {
+                        if (part.type === 'text' && typeof part.text === 'string') {
+                            parts.push(part.text);
+                        } else if (part.type === 'input_text' && typeof part.text === 'string') {
+                            parts.push(part.text);
+                        } else if (part.type === 'image_url' && part.image_url && part.image_url.url) {
+                            parts.push('[image] ' + part.image_url.url);
+                        } else {
+                            parts.push(JSON.stringify(part));
+                        }
+                        return;
+                    }
+                    parts.push(String(part));
+                });
+                return parts.join('\\n');
+            }
+            if (typeof content === 'string') {
+                return content;
+            }
+            return JSON.stringify(content, null, 2);
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function renderPrimitiveLine(value, depth, label, labelType) {
+            const line = document.createElement('div');
+            line.className = 'json-line';
+            line.style.marginLeft = (depth * 16) + 'px';
+
+            if (label !== null && label !== undefined) {
+                appendLabel(line, label, labelType);
+            }
+
+            const valueSpan = createValueSpan(value);
+            line.appendChild(valueSpan);
+            return line;
+        }
+
+        function renderObjectNode(obj, depth, label, labelType) {
+            const keys = Object.keys(obj);
+            if (keys.length === 0) {
+                return renderEmptyContainer('{}', depth, label, labelType);
+            }
+
+            const details = document.createElement('details');
+            details.className = 'json-details';
+            details.open = keys.length <= AUTO_EXPAND_LIMIT;
+            details.style.marginLeft = (depth * 16) + 'px';
+
+            const summary = document.createElement('summary');
+            summary.className = 'json-summary';
+            if (label !== null && label !== undefined) {
+                appendLabel(summary, label, labelType);
+            }
+            summary.appendChild(createBraceSpan('{'));
+            const meta = document.createElement('span');
+            meta.className = 'json-meta';
+            meta.textContent = keys.length + ' keys';
+            summary.appendChild(meta);
+            summary.appendChild(createBraceSpan('}'));
+            details.appendChild(summary);
+
+            const renderChildren = () => {
+                if (details.dataset.rendered === 'true') return;
+                details.dataset.rendered = 'true';
+                keys.forEach(key => {
+                    const child = renderJsonTree(obj[key], depth + 1, key, 'key');
+                    if (child) {
+                        details.appendChild(child);
+                    }
+                });
+                details.appendChild(renderClosingBrace('}', depth));
+            };
+
+            if (details.open) {
+                renderChildren();
+            }
+            details.addEventListener('toggle', () => {
+                if (details.open) {
+                    renderChildren();
+                }
+            });
+
+            return details;
+        }
+
+        function renderArrayNode(arr, depth, label, labelType) {
+            if (arr.length === 0) {
+                return renderEmptyContainer('[]', depth, label, labelType);
+            }
+
+            const details = document.createElement('details');
+            details.className = 'json-details';
+            details.open = arr.length <= AUTO_EXPAND_LIMIT;
+            details.style.marginLeft = (depth * 16) + 'px';
+
+            const summary = document.createElement('summary');
+            summary.className = 'json-summary';
+            if (label !== null && label !== undefined) {
+                appendLabel(summary, label, labelType);
+            }
+            summary.appendChild(createBraceSpan('['));
+            const meta = document.createElement('span');
+            meta.className = 'json-meta';
+            meta.textContent = arr.length + ' items';
+            summary.appendChild(meta);
+            summary.appendChild(createBraceSpan(']'));
+            details.appendChild(summary);
+
+            const renderChildren = () => {
+                if (details.dataset.rendered === 'true') return;
+                details.dataset.rendered = 'true';
+                arr.forEach((item, index) => {
+                    const child = renderJsonTree(item, depth + 1, '[' + index + ']', 'index');
+                    if (child) {
+                        details.appendChild(child);
+                    }
+                });
+                details.appendChild(renderClosingBrace(']', depth));
+            };
+
+            if (details.open) {
+                renderChildren();
+            }
+            details.addEventListener('toggle', () => {
+                if (details.open) {
+                    renderChildren();
+                }
+            });
+
+            return details;
+        }
+
+        function renderEmptyContainer(braces, depth, label, labelType) {
+            const line = document.createElement('div');
+            line.className = 'json-line';
+            line.style.marginLeft = (depth * 16) + 'px';
+
+            if (label !== null && label !== undefined) {
+                appendLabel(line, label, labelType);
+            }
+            line.appendChild(createBraceSpan(braces));
+            return line;
+        }
+
+        function renderClosingBrace(brace, depth) {
+            const line = document.createElement('div');
+            line.className = 'json-line';
+            line.style.marginLeft = (depth * 16) + 'px';
+            line.appendChild(createBraceSpan(brace));
+            return line;
+        }
+
+        function appendLabel(container, label, labelType) {
+            const labelSpan = document.createElement('span');
+            if (labelType === 'index') {
+                labelSpan.className = 'json-index';
+                labelSpan.textContent = label;
+            } else {
+                labelSpan.className = 'json-key';
+                labelSpan.textContent = '\"' + label + '\"';
+            }
+            container.appendChild(labelSpan);
+            container.appendChild(document.createTextNode(': '));
+        }
+
+        function createValueSpan(value) {
+            const span = document.createElement('span');
+            if (value === null) {
+                span.className = 'json-null';
+                span.textContent = 'null';
+                return span;
+            }
+            const type = typeof value;
+            if (type === 'string') {
+                span.className = 'json-string';
+                span.textContent = JSON.stringify(value);
+            } else if (type === 'number') {
+                span.className = 'json-number';
+                span.textContent = String(value);
+            } else if (type === 'boolean') {
+                span.className = 'json-boolean';
+                span.textContent = value ? 'true' : 'false';
+            } else {
+                span.className = 'json-string';
+                span.textContent = JSON.stringify(value);
+            }
+            return span;
+        }
+
+        function createBraceSpan(char) {
+            const span = document.createElement('span');
+            span.className = 'json-brace';
+            span.textContent = char;
+            return span;
         }
 
         function renderTable() {
@@ -904,26 +1653,6 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 });
                 
                 tbody.appendChild(tr);
-            });
-        }
-
-        function syntaxHighlight(obj) {
-            let json = JSON.stringify(obj, null, 2);
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-                let cls = 'json-number';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        cls = 'json-key';
-                    } else {
-                        cls = 'json-string';
-                    }
-                } else if (/true|false/.test(match)) {
-                    cls = 'json-boolean';
-                } else if (/null/.test(match)) {
-                    cls = 'json-null';
-                }
-                return '<span class="' + cls + '">' + match + '</span>';
             });
         }
 
