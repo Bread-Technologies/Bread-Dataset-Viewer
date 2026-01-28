@@ -190,13 +190,25 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         const markdownItUri = webview.asWebviewUri(
             vscode.Uri.file(path.join(this.context.extensionPath, 'node_modules', 'markdown-it', 'dist', 'markdown-it.min.js'))
         );
+        const katexCssUri = webview.asWebviewUri(
+            vscode.Uri.file(path.join(this.context.extensionPath, 'node_modules', 'katex', 'dist', 'katex.min.css'))
+        );
+        const katexJsUri = webview.asWebviewUri(
+            vscode.Uri.file(path.join(this.context.extensionPath, 'node_modules', 'katex', 'dist', 'katex.min.js'))
+        );
+        const katexAutoRenderUri = webview.asWebviewUri(
+            vscode.Uri.file(path.join(this.context.extensionPath, 'node_modules', 'katex', 'dist', 'contrib', 'auto-render.min.js'))
+        );
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSONL Viewer</title>
+    <link rel="stylesheet" href="${katexCssUri}">
     <script src="${markdownItUri}"></script>
+    <script src="${katexJsUri}"></script>
+    <script src="${katexAutoRenderUri}"></script>
     <style>
         * {
             margin: 0;
@@ -1306,6 +1318,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                             const body = document.createElement('div');
                             body.className = 'chat-content';
                             body.innerHTML = renderMarkdown(normalizeMessageContent(message && message.content));
+                            renderLatexInElement(body);
 
                             bubble.appendChild(roleLabel);
                             bubble.appendChild(body);
@@ -1355,6 +1368,24 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             return escapeHtml(text).replace(/\\n/g, '<br>');
             }
             return renderer.render(text || '');
+        }
+
+        function renderLatexInElement(element) {
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(element, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\\\[', right: '\\\\]', display: true},
+                            {left: '\\\\(', right: '\\\\)', display: false}
+                        ],
+                        throwOnError: false
+                    });
+                } catch (e) {
+                    console.warn('LaTeX rendering failed:', e);
+                }
+            }
         }
 
         function normalizeRole(role) {
