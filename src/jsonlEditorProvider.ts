@@ -255,11 +255,12 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             background-color: var(--vscode-button-background);
             color: var(--vscode-button-foreground);
             border: none;
-            padding: 6px 12px;
+            padding: 4px 12px;
             cursor: pointer;
-            border-radius: 2px;
+            border-radius: 5px;
             font-size: 13px;
             transition: background-color 0.2s;
+            font-weight: 500;
         }
 
         button:hover {
@@ -290,7 +291,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             color: var(--vscode-input-foreground);
             border: 1px solid var(--vscode-input-border);
             padding: 6px 8px;
-            border-radius: 2px;
+            border-radius: 5px;
             font-size: 13px;
             min-width: 200px;
         }
@@ -351,10 +352,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
 
         .card-tokens {
             font-size: 11px;
-            color: var(--vscode-badge-foreground);
-            background-color: var(--vscode-badge-background);
-            padding: 2px 8px;
-            border-radius: 10px;
+            color: var(--vscode-descriptionForeground);
             font-weight: 500;
         }
 
@@ -553,11 +551,18 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
 
         #path-panel {
             display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 4px;
             border: 1px solid var(--vscode-panel-border);
             background-color: var(--vscode-editor-background);
             padding: 8px;
-            margin-bottom: 16px;
-            border-radius: 4px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            min-width: 300px;
+            max-width: 400px;
         }
 
         .path-panel-header {
@@ -590,6 +595,11 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             font-family: var(--vscode-editor-font-family);
             font-size: 12px;
             padding: 2px 0;
+            cursor: pointer;
+        }
+        
+        .path-item:hover {
+            background-color: var(--vscode-list-hoverBackground);
         }
 
         .path-empty {
@@ -607,7 +617,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         .chat-bubble {
             border: 1px solid var(--vscode-panel-border);
             border-radius: 10px;
-            padding: 10px 12px;
+            padding: 16px 20px;
             max-width: 900px;
             background-color: var(--vscode-editor-background);
         }
@@ -636,9 +646,13 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         .chat-role {
             font-size: 11px;
             color: var(--vscode-descriptionForeground);
-            margin-bottom: 6px;
+            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 0.03em;
+        }
+
+        .chat-content {
+            padding: 8px;
         }
 
         .chat-content p {
@@ -684,14 +698,25 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
 
         <div class="toolbar-divider"></div>
 
-        <div class="toolbar-section">
-            <button id="path-toggle-btn" class="secondary">Paths</button>
+        <div class="toolbar-section" style="position: relative;">
+            <button id="path-toggle-btn" class="secondary">Filter ⌄</button>
+            <div id="path-panel">
+                <div class="path-panel-header">
+                    <strong>Filter</strong>
+                    <span id="path-count">0/0 selected</span>
+                </div>
+                <div class="path-panel-actions">
+                    <button id="path-select-all" class="secondary">Select All</button>
+                    <button id="path-clear" class="secondary">Clear</button>
+                </div>
+                <div class="path-panel-list" id="path-list"></div>
+            </div>
         </div>
         
         <div class="toolbar-divider"></div>
         
         <div class="toolbar-section">
-            <button id="edit-btn" class="secondary">✏️ Edit in Text Editor</button>
+            <button id="edit-btn" class="secondary">Edit in Text Editor</button>
         </div>
         
         <div class="toolbar-divider"></div>
@@ -732,8 +757,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         
         <div class="toolbar-section">
             <input type="text" id="search-input" placeholder="Search records...">
-            <button id="search-btn" class="secondary">🔍 Search</button>
-            <button id="clear-search-btn" class="secondary">✕ Clear</button>
+            <button id="search-btn" class="secondary">Search</button>
+            <button id="clear-search-btn" class="secondary">Clear</button>
         </div>
         
         <div class="toolbar-divider"></div>
@@ -760,18 +785,6 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 <span id="max-tokens">-</span>
             </div>
         </div>
-    </div>
-
-    <div id="path-panel">
-        <div class="path-panel-header">
-            <span>Paths</span>
-            <span id="path-count">0/0</span>
-        </div>
-        <div class="path-panel-actions">
-            <button id="path-select-all" class="secondary">Select All</button>
-            <button id="path-clear" class="secondary">Clear</button>
-        </div>
-        <div class="path-panel-list" id="path-list"></div>
     </div>
 
     <div id="container">
@@ -1019,6 +1032,16 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             }
         }
 
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('path-panel');
+            const btn = document.getElementById('path-toggle-btn');
+            if (pathPanelVisible && !panel.contains(e.target) && e.target !== btn) {
+                pathPanelVisible = false;
+                panel.style.display = 'none';
+            }
+        });
+
         function selectAllPaths() {
             selectedPaths = new Set(availablePaths);
             renderPathList();
@@ -1036,7 +1059,88 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         function updatePathCount(total) {
             const countEl = document.getElementById('path-count');
             const suffix = pathLimitReached ? ' (truncated)' : '';
-            countEl.textContent = selectedPaths.size + '/' + total + suffix;
+            countEl.textContent = selectedPaths.size + '/' + total + ' selected' + suffix;
+        }
+
+        function buildPathTree(paths) {
+            const tree = {};
+            paths.forEach(path => {
+                const parts = path.split('.');
+                let current = tree;
+                let fullPath = '';
+                
+                parts.forEach((part, index) => {
+                    if (index > 0) fullPath += '.';
+                    fullPath += part;
+                    
+                    if (!current[part]) {
+                        current[part] = {
+                            fullPath: fullPath,
+                            children: {}
+                        };
+                    }
+                    current = current[part].children;
+                });
+            });
+            return tree;
+        }
+
+        function getAllDescendantPaths(path) {
+            const descendants = [];
+            availablePaths.forEach(p => {
+                if (p !== path && p.startsWith(path + '.')) {
+                    descendants.push(p);
+                }
+            });
+            return descendants;
+        }
+
+        function renderPathTree(tree, container, depth = 0) {
+            const keys = Object.keys(tree).sort();
+            
+            keys.forEach(key => {
+                const node = tree[key];
+                const path = node.fullPath;
+                
+                const label = document.createElement('label');
+                label.className = 'path-item';
+                label.style.paddingLeft = (depth * 16) + 'px';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = selectedPaths.has(path);
+                checkbox.addEventListener('change', (e) => {
+                    e.stopPropagation();
+                    
+                    if (checkbox.checked) {
+                        selectedPaths.add(path);
+                        // Also select all descendants
+                        const descendants = getAllDescendantPaths(path);
+                        descendants.forEach(d => selectedPaths.add(d));
+                    } else {
+                        selectedPaths.delete(path);
+                        // Also deselect all descendants
+                        const descendants = getAllDescendantPaths(path);
+                        descendants.forEach(d => selectedPaths.delete(d));
+                    }
+                    
+                    renderPathList();
+                    rerenderPretty();
+                    rerenderRender();
+                });
+
+                const text = document.createElement('span');
+                text.textContent = key.replace('[]', ' (array)');
+
+                label.appendChild(checkbox);
+                label.appendChild(text);
+                container.appendChild(label);
+                
+                // Render children
+                if (Object.keys(node.children).length > 0) {
+                    renderPathTree(node.children, container, depth + 1);
+                }
+            });
         }
 
         function renderPathList() {
@@ -1053,34 +1157,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 return;
             }
 
-            const fragment = document.createDocumentFragment();
-            paths.forEach(path => {
-                const label = document.createElement('label');
-                label.className = 'path-item';
-
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = selectedPaths.has(path);
-                checkbox.addEventListener('change', () => {
-                    if (checkbox.checked) {
-                        selectedPaths.add(path);
-                    } else {
-                        selectedPaths.delete(path);
-                    }
-                    updatePathCount(paths.length);
-                    rerenderPretty();
-                    rerenderRender();
-                });
-
-                const text = document.createElement('span');
-                text.textContent = path;
-
-                label.appendChild(checkbox);
-                label.appendChild(text);
-                fragment.appendChild(label);
-            });
-
-            list.appendChild(fragment);
+            const tree = buildPathTree(paths);
+            renderPathTree(tree, list);
         }
 
         function updatePathsFromLines(lines) {
@@ -1104,6 +1182,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 return false;
             }
             availablePaths.add(path);
+            selectedPaths.add(path); // Auto-select all paths by default
             return true;
         }
 
@@ -1228,7 +1307,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 if (line.error) {
                     const errorMsg = document.createElement('div');
                     errorMsg.className = 'error-message';
-                    errorMsg.textContent = '⚠️ Malformed JSON';
+                    errorMsg.textContent = 'Malformed JSON';
                     content.appendChild(errorMsg);
                     content.appendChild(document.createTextNode(line.raw));
                 } else {
@@ -1290,43 +1369,93 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 if (line.error) {
                     const errorMsg = document.createElement('div');
                     errorMsg.className = 'error-message';
-                    errorMsg.textContent = '⚠️ Malformed JSON';
+                    errorMsg.textContent = 'Malformed JSON';
                     content.appendChild(errorMsg);
                     content.appendChild(document.createTextNode(line.raw));
                 } else {
                     const filtered = filterValueForPaths(line.data, '');
-                    const messages = filtered && filtered.messages;
-                    if (!messages || !Array.isArray(messages)) {
-                        const placeholder = document.createElement('div');
-                        placeholder.className = 'json-placeholder';
-                        placeholder.textContent = 'No matching messages for this record.';
-                        content.appendChild(placeholder);
-                    } else {
+                    
+                    // Check for Gemini format (text_input/output)
+                    if (filtered && (filtered.text_input !== undefined || filtered.output !== undefined)) {
                         const thread = document.createElement('div');
                         thread.className = 'chat-thread';
                         const fragment = document.createDocumentFragment();
 
-                        messages.forEach((message, idx) => {
-                            const role = normalizeRole(message && message.role ? message.role : 'unknown');
+                        // Render text_input as user message
+                        if (filtered.text_input !== undefined) {
                             const bubble = document.createElement('div');
-                            bubble.className = 'chat-bubble ' + role;
+                            bubble.className = 'chat-bubble user';
 
                             const roleLabel = document.createElement('div');
                             roleLabel.className = 'chat-role';
-                            roleLabel.textContent = role;
+                            roleLabel.textContent = 'user';
 
                             const body = document.createElement('div');
                             body.className = 'chat-content';
-                            body.innerHTML = renderMarkdown(normalizeMessageContent(message && message.content));
+                            body.innerHTML = renderMarkdown(String(filtered.text_input || ''));
                             renderLatexInElement(body);
 
                             bubble.appendChild(roleLabel);
                             bubble.appendChild(body);
                             fragment.appendChild(bubble);
-                        });
+                        }
+
+                        // Render output as assistant message
+                        if (filtered.output !== undefined) {
+                            const bubble = document.createElement('div');
+                            bubble.className = 'chat-bubble assistant';
+
+                            const roleLabel = document.createElement('div');
+                            roleLabel.className = 'chat-role';
+                            roleLabel.textContent = 'assistant';
+
+                            const body = document.createElement('div');
+                            body.className = 'chat-content';
+                            body.innerHTML = renderMarkdown(String(filtered.output || ''));
+                            renderLatexInElement(body);
+
+                            bubble.appendChild(roleLabel);
+                            bubble.appendChild(body);
+                            fragment.appendChild(bubble);
+                        }
 
                         thread.appendChild(fragment);
                         content.appendChild(thread);
+                    } else {
+                        // Handle standard chat format (messages array)
+                        const messages = filtered && filtered.messages;
+                        if (!messages || !Array.isArray(messages)) {
+                            const placeholder = document.createElement('div');
+                            placeholder.className = 'json-placeholder';
+                            placeholder.textContent = 'No matching messages for this record.';
+                            content.appendChild(placeholder);
+                        } else {
+                            const thread = document.createElement('div');
+                            thread.className = 'chat-thread';
+                            const fragment = document.createDocumentFragment();
+
+                            messages.forEach((message, idx) => {
+                                const role = normalizeRole(message && message.role ? message.role : 'unknown');
+                                const bubble = document.createElement('div');
+                                bubble.className = 'chat-bubble ' + role;
+
+                                const roleLabel = document.createElement('div');
+                                roleLabel.className = 'chat-role';
+                                roleLabel.textContent = role;
+
+                                const body = document.createElement('div');
+                                body.className = 'chat-content';
+                                body.innerHTML = renderMarkdown(normalizeMessageContent(message && message.content));
+                                renderLatexInElement(body);
+
+                                bubble.appendChild(roleLabel);
+                                bubble.appendChild(body);
+                                fragment.appendChild(bubble);
+                            });
+
+                            thread.appendChild(fragment);
+                            content.appendChild(thread);
+                        }
                     }
                 }
 
