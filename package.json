@@ -15,7 +15,13 @@
   "activationEvents": [
     "onCustomEditor:mlWorkbench.jsonlViewer",
     "onCustomEditor:mlWorkbench.modelChat",
-    "onCommand:mlWorkbench.openJsonlFast"
+    "onCommand:mlWorkbench.openJsonlFast",
+    "onCommand:mlWorkbench.openJsonlTextViewer",
+    "onCommand:mlWorkbench.jsonlText.setMode",
+    "onCommand:mlWorkbench.jsonlText.nextPage",
+    "onCommand:mlWorkbench.jsonlText.prevPage",
+    "onCommand:mlWorkbench.jsonlText.filter",
+    "onCommand:mlWorkbench.jsonlText.gotoLine"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -23,6 +29,35 @@
       {
         "command": "mlWorkbench.openJsonlFast",
         "title": "Open JSONL Viewer (Fast Reused Webview)"
+      },
+      {
+        "command": "mlWorkbench.openJsonlTextViewer",
+        "title": "Open JSONL Viewer (Text, Fast)"
+      },
+      {
+        "command": "mlWorkbench.jsonlText.setMode",
+        "title": "JSONL Text Viewer: Set Mode",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.jsonlText.nextPage",
+        "title": "JSONL Text Viewer: Next Page",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.jsonlText.prevPage",
+        "title": "JSONL Text Viewer: Previous Page",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.jsonlText.filter",
+        "title": "JSONL Text Viewer: Filter",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.jsonlText.gotoLine",
+        "title": "JSONL Text Viewer: Go to Line",
+        "category": "ML Workbench"
       }
     ],
     "customEditors": [
@@ -86,6 +121,11 @@
           "command": "mlWorkbench.openJsonlFast",
           "when": "resourceExtname == .jsonl",
           "group": "navigation@11"
+        },
+        {
+          "command": "mlWorkbench.openJsonlTextViewer",
+          "when": "resourceExtname == .jsonl",
+          "group": "navigation@12"
         }
       ],
       "editor/title": [
