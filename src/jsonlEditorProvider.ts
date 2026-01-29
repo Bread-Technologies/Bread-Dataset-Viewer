@@ -63,7 +63,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                         message.offset,
                         message.limit,
                         message.searchTerm,
-                        message.tokenizer
+                        message.tokenizer,
+                        message.tokenMode
                     );
                     break;
                 case 'jumpToLine':
@@ -71,7 +72,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                         document.uri.fsPath,
                         webviewPanel.webview,
                         message.lineNumber,
-                        message.tokenizer
+                        message.tokenizer,
+                        message.tokenMode
                     );
                     break;
                 case 'openInTextEditor':
@@ -94,7 +96,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         offset: number = 0,
         limit: number = 100,
         searchTerm?: string,
-        tokenizer: string = 'gpt-4'
+        tokenizer: string = 'qwen-3',
+        tokenMode: string = 'auto'
     ): Promise<void> {
         const loadStart = Date.now();
         try {
@@ -153,18 +156,52 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             console.log(`[PERF] Lines message sent: ${Date.now() - loadStart}ms`);
 
             // Calculate tokens in background and send separately
-            setImmediate(() => {
+            setImmediate(async () => {
                 const tokenStart = Date.now();
-                const tokensMap: { [key: number]: number } = {};
+                const tokensMap: { [key: number]: any } = {};
+                const errors: string[] = [];
+                
                 for (const line of lines) {
-                    tokensMap[line.index] = countTokens(line.raw, tokenizer);
+                    try {
+                        const result = await countTokens(line.raw, tokenizer, tokenMode);
+                        tokensMap[line.index] = {
+                            count: result.count,
+                            mode: result.mode,
+                            key: result.key,
+                            preview: result.preview,
+                        };
+                    } catch (error) {
+                        // Store error for this line
+                        const errorMsg = String(error);
+                        console.error(`[ERROR] Token counting failed for line ${line.index}:`, error);
+                        
+                        tokensMap[line.index] = {
+                            count: 0,
+                            mode: 'error',
+                            error: errorMsg,
+                        };
+                        
+                        // Collect unique errors (don't spam same error for every line)
+                        if (!errors.some(e => e === errorMsg)) {
+                            errors.push(errorMsg);
+                        }
+                    }
                 }
+                
                 console.log(`[PERF] Token counting done: ${Date.now() - tokenStart}ms for ${lines.length} lines`);
                 
                 webview.postMessage({
                     type: 'tokens',
                     tokens: tokensMap,
                 });
+                
+                // Send errors as a separate message if any occurred
+                if (errors.length > 0) {
+                    webview.postMessage({
+                        type: 'tokenErrors',
+                        errors: errors,
+                    });
+                }
                 
                 console.log(`[PERF] Tokens message sent: ${Date.now() - tokenStart}ms`);
             });
@@ -180,10 +217,11 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         filePath: string,
         webview: vscode.Webview,
         targetLine: number,
-        tokenizer: string = 'gpt-4'
+        tokenizer: string = 'qwen-3',
+        tokenMode: string = 'auto'
     ): Promise<void> {
         // For jump-to-line, we load from that line
-        await this.loadLines(filePath, webview, targetLine, 100, undefined, tokenizer);
+        await this.loadLines(filePath, webview, targetLine, 100, undefined, tokenizer, tokenMode);
     }
 
     private getHtmlForWebview(webview: vscode.Webview): string {
@@ -544,6 +582,46 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             filter: saturate(1.0) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
         }
 
+        #error-banner {
+            display: none;
+            background-color: var(--vscode-inputValidation-errorBackground);
+            border: 1px solid var(--vscode-inputValidation-errorBorder);
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+
+        #error-banner.visible {
+            display: block;
+        }
+
+        .error-banner-title {
+            color: var(--vscode-errorForeground);
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .error-banner-message {
+            color: var(--vscode-foreground);
+            font-size: 12px;
+            font-family: var(--vscode-editor-font-family);
+            white-space: pre-wrap;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .error-banner-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .error-banner-actions button {
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+
         .no-results {
             text-align: center;
             padding: 48px 24px;
@@ -768,34 +846,56 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         <div class="toolbar-divider"></div>
         
         <div class="toolbar-section">
-            <label for="tokenizer-select" style="font-size: 12px; margin-right: 4px;" title="Select model tokenizer. For chat completions format, applies model-specific chat template before counting tokens.">Tokenizer:</label>
-            <select id="tokenizer-select" title="OpenAI models use exact tokenizers. Other models use approximations with chat templates applied for chat completions format.">
-                <optgroup label="OpenAI Models (Exact)">
-                    <option value="gpt-4">GPT-4 / GPT-3.5-Turbo (cl100k_base)</option>
-                    <option value="gpt-3">GPT-3 Davinci/Curie (p50k_base)</option>
-                    <option value="gpt-2">GPT-2 (r50k_base)</option>
+            <label for="tokenizer-select" style="font-size: 12px; margin-right: 4px;" title="Select model tokenizer. Uses real model tokenizers and chat templates from HuggingFace.">Tokenizer:</label>
+            <select id="tokenizer-select" title="All tokenizers use actual model tokenizers with real chat templates. First use downloads and caches the tokenizer.">
+                <optgroup label="Qwen Family">
+                    <option value="qwen-3" selected>Qwen 3.x</option>
+                    <option value="qwen-2.5">Qwen 2.5</option>
                 </optgroup>
-                <optgroup label="Anthropic (Exact)">
-                    <option value="claude">Claude (cl100k_base)</option>
+                <optgroup label="DeepSeek Family">
+                    <option value="deepseek-v3">DeepSeek V3 / R1</option>
                 </optgroup>
-                <optgroup label="Meta Llama (Template Applied)">
-                    <option value="llama-3">Llama 3 / 3.1 / 3.2</option>
-                    <option value="llama-2">Llama 2</option>
+                <optgroup label="Llama Family">
+                    <option value="llama-3">Llama 3.x</option>
                 </optgroup>
-                <optgroup label="Chinese Models (Approximation)">
-                    <option value="qwen">Qwen / Qwen2</option>
-                    <option value="qwen2.5">Qwen 2.5</option>
-                    <option value="glm">ChatGLM / GLM-4</option>
-                    <option value="baichuan">Baichuan 2</option>
-                    <option value="yi">Yi / Yi-1.5</option>
+                <optgroup label="Gemma Family">
+                    <option value="gemma-3">Gemma 3.x</option>
+                    <option value="gemma-2">Gemma 2.x</option>
                 </optgroup>
-                <optgroup label="Other Models (Approximation)">
-                    <option value="mistral">Mistral / Mixtral</option>
-                    <option value="gemma">Gemma / Gemma 2</option>
-                    <option value="phi">Phi-2 / Phi-3</option>
-                    <option value="deepseek">DeepSeek</option>
-                    <option value="internlm">InternLM 2</option>
+                <optgroup label="Mistral Family">
+                    <option value="mistral-tekken">Mistral Tekken</option>
+                    <option value="mistral-v3">Mistral V3</option>
+                    <option value="mistral-v1">Mistral V1</option>
                 </optgroup>
+                <optgroup label="Phi Family">
+                    <option value="phi-4">Phi 4.x</option>
+                </optgroup>
+                <optgroup label="Command R Family">
+                    <option value="command-r">Command R Family</option>
+                </optgroup>
+                <optgroup label="GPT Family">
+                    <option value="gpt-5">GPT-5.x / gpt-oss</option>
+                    <option value="gpt-4o">GPT-4o Family</option>
+                    <option value="gpt-4">GPT-4 Classic</option>
+                    <option value="gpt-2">GPT-2</option>
+                </optgroup>
+                <optgroup label="Claude Family">
+                    <option value="claude">Claude 3.x / 4.x</option>
+                </optgroup>
+            </select>
+        </div>
+        
+        <div class="toolbar-section">
+            <label for="token-mode-select" style="font-size: 12px; margin-right: 4px;" title="What to tokenize">Mode:</label>
+            <select id="token-mode-select" title="Auto: Smart detection | Chat: Apply chat template | Full JSON: Normalized JSON string | Key: Single field | Raw Text: Exact file content with whitespace">
+                <option value="auto" selected>Auto</option>
+                <option value="chat">Chat (messages[])</option>
+                <option value="full-json" title="Normalized JSON (parsed then stringified)">Full JSON</option>
+                <option value="key">Specific Key</option>
+                <option value="raw-text" title="Exact line as written in file (includes whitespace)">Raw Text</option>
+            </select>
+            <select id="token-key-select" style="display: none; min-width: 120px; margin-left: 4px;" title="Select JSON key to tokenize">
+                <option value="">Select key...</option>
             </select>
         </div>
         
@@ -833,6 +933,14 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         </div>
     </div>
 
+    <div id="error-banner">
+        <div class="error-banner-title">⚠️ Tokenization Errors</div>
+        <div id="error-banner-content"></div>
+        <div class="error-banner-actions">
+            <button id="dismiss-error-btn" class="secondary">Dismiss</button>
+        </div>
+    </div>
+
     <div id="container">
         <div id="pretty-container"></div>
         <div id="render-container" style="display: none;"></div>
@@ -859,7 +967,10 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         let currentSearchTerm = '';
         let fileInfo = null;
         let tokenCounts = new Map();
-        let currentTokenizer = 'gpt-4';
+        let tokenModes = new Map();  // Store mode info per line
+        let currentTokenizer = 'qwen-3';
+        let currentTokenMode = 'auto';
+        let availableKeys = new Set();  // Store discovered keys
 
         const MAX_PATHS = 2000;
         const MAX_PATH_DEPTH = 8;
@@ -880,10 +991,13 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         document.getElementById('load-more-btn').addEventListener('click', loadMore);
         document.getElementById('jump-btn').addEventListener('click', jumpToLine);
         document.getElementById('tokenizer-select').addEventListener('change', handleTokenizerChange);
+        document.getElementById('token-mode-select').addEventListener('change', handleTokenModeChange);
+        document.getElementById('token-key-select').addEventListener('change', handleTokenKeyChange);
         document.getElementById('edit-btn').addEventListener('click', openInTextEditor);
         document.getElementById('path-toggle-btn').addEventListener('click', togglePathPanel);
         document.getElementById('path-select-all').addEventListener('click', selectAllPaths);
         document.getElementById('path-clear').addEventListener('click', clearSelectedPaths);
+        document.getElementById('dismiss-error-btn').addEventListener('click', dismissErrorBanner);
         
         document.getElementById('search-input').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') performSearch();
@@ -935,8 +1049,115 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             nextOffset = 0;
             resetAvailablePaths();
             clearContainer();
-            vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer });
+            vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
             showLoading(true);
+        }
+
+        function handleTokenModeChange(e) {
+            const mode = e.target.value;
+            const keySelect = document.getElementById('token-key-select');
+            
+            // Show/hide key dropdown for custom key mode
+            if (mode === 'key') {
+                keySelect.style.display = 'inline-block';
+                const selectedKey = keySelect.value || 'text';
+                currentTokenMode = selectedKey ? 'key:' + selectedKey : 'auto';
+                
+                // Don't reload if no key selected yet
+                if (!selectedKey) {
+                    return;
+                }
+            } else {
+                keySelect.style.display = 'none';
+                currentTokenMode = mode;
+            }
+            
+            // Reload data with new mode
+            allLines = [];
+            nextOffset = 0;
+            resetAvailablePaths();
+            clearContainer();
+            vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
+            showLoading(true);
+        }
+
+        function handleTokenKeyChange(e) {
+            const key = e.target.value;
+            if (!key) return;  // Don't reload if empty selection
+            
+            currentTokenMode = 'key:' + key;
+            
+            // Reload data with new key
+            allLines = [];
+            nextOffset = 0;
+            resetAvailablePaths();
+            clearContainer();
+            vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
+            showLoading(true);
+        }
+
+        function discoverKeys(lines) {
+            // Discover keys from the first batch of lines
+            const keysFound = new Set();
+            const MAX_LINES_TO_SCAN = 10;
+            
+            for (let i = 0; i < Math.min(lines.length, MAX_LINES_TO_SCAN); i++) {
+                const line = lines[i];
+                if (line.data && typeof line.data === 'object' && !Array.isArray(line.data)) {
+                    Object.keys(line.data).forEach(key => keysFound.add(key));
+                }
+            }
+            
+            return Array.from(keysFound).sort();
+        }
+
+        function updateKeyDropdown(keys) {
+            const keySelect = document.getElementById('token-key-select');
+            const currentValue = keySelect.value;
+            
+            // Update available keys
+            keys.forEach(key => availableKeys.add(key));
+            
+            // Rebuild dropdown
+            const allKeys = Array.from(availableKeys).sort();
+            keySelect.innerHTML = '<option value="">Select key...</option>';
+            
+            // Add common keys first (if they exist)
+            const priorityKeys = ['text', 'content', 'prompt', 'completion', 'output', 'input'];
+            const addedKeys = new Set();
+            
+            priorityKeys.forEach(key => {
+                if (allKeys.includes(key)) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = key;
+                    keySelect.appendChild(option);
+                    addedKeys.add(key);
+                }
+            });
+            
+            // Add separator if we have priority keys
+            if (addedKeys.size > 0 && allKeys.length > addedKeys.size) {
+                const separator = document.createElement('option');
+                separator.disabled = true;
+                separator.textContent = '───────────';
+                keySelect.appendChild(separator);
+            }
+            
+            // Add remaining keys
+            allKeys.forEach(key => {
+                if (!addedKeys.has(key)) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = key;
+                    keySelect.appendChild(option);
+                }
+            });
+            
+            // Restore selection if it still exists
+            if (currentValue && allKeys.includes(currentValue)) {
+                keySelect.value = currentValue;
+            }
         }
 
         function openInTextEditor() {
@@ -951,7 +1172,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 nextOffset = 0;
                 resetAvailablePaths();
                 clearContainer();
-                vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm, tokenizer: currentTokenizer });
+                vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
                 showLoading(true);
             }
         }
@@ -963,12 +1184,12 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             nextOffset = 0;
             resetAvailablePaths();
             clearContainer();
-            vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, tokenizer: currentTokenizer });
+            vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
             showLoading(true);
         }
 
         function loadMore() {
-            vscode.postMessage({ type: 'loadLines', offset: nextOffset, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer });
+            vscode.postMessage({ type: 'loadLines', offset: nextOffset, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
             showLoading(true);
         }
 
@@ -979,7 +1200,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                 nextOffset = lineNum;
                 resetAvailablePaths();
                 clearContainer();
-                vscode.postMessage({ type: 'jumpToLine', lineNumber: lineNum, tokenizer: currentTokenizer });
+                vscode.postMessage({ type: 'jumpToLine', lineNumber: lineNum, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
                 showLoading(true);
             }
         }
@@ -1024,6 +1245,12 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
 
                     updatePathsFromLines(message.lines);
                     
+                    // Discover available keys for key mode
+                    const discoveredKeys = discoverKeys(message.lines);
+                    if (discoveredKeys.length > 0) {
+                        updateKeyDropdown(discoveredKeys);
+                    }
+                    
                     if (currentView === 'pretty') {
                         renderPretty(message.lines);
                     } else if (currentView === 'render') {
@@ -1043,23 +1270,56 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                     
                 case 'tokens':
                     // Update token counts asynchronously
-                    for (const [lineIndex, count] of Object.entries(message.tokens)) {
+                    for (const [lineIndex, tokenData] of Object.entries(message.tokens)) {
                         const idx = parseInt(lineIndex);
+                        const count = tokenData.count;
+                        const mode = tokenData.mode;
+                        const key = tokenData.key;
+                        
                         tokenCounts.set(idx, count);
+                        tokenModes.set(idx, tokenData);
+                        
+                        // Create mode indicator
+                        let modeIndicator = '';
+                        if (mode === 'error') {
+                            modeIndicator = ' <span style="color: var(--vscode-errorForeground); font-size: 10px;" title="' + (tokenData.error || 'Error').replace(/"/g, '&quot;') + '">✗ error</span>';
+                        } else if (mode === 'chat') {
+                            modeIndicator = ' <span style="color: var(--vscode-charts-green); font-size: 10px;" title="Tokenized with chat template">●</span>';
+                        } else if (mode === 'key') {
+                            modeIndicator = \` <span style="color: var(--vscode-charts-blue); font-size: 10px;" title="Tokenized key: \${key}">key:\${key}</span>\`;
+                        } else if (mode === 'full-json') {
+                            modeIndicator = ' <span style="color: var(--vscode-charts-orange); font-size: 10px;" title="Tokenized full JSON">JSON</span>';
+                        } else if (mode === 'raw-text') {
+                            modeIndicator = ' <span style="color: var(--vscode-descriptionForeground); font-size: 10px;" title="Tokenized raw text">raw</span>';
+                        }
                         
                         // Update pretty view
                         const cardTokenEl = document.getElementById(\`tokens-\${idx}\`);
                         if (cardTokenEl) {
-                            cardTokenEl.textContent = \`\${count.toLocaleString()} tokens\`;
+                            if (mode === 'error') {
+                                cardTokenEl.innerHTML = \`error\${modeIndicator}\`;
+                            } else {
+                                cardTokenEl.innerHTML = \`\${count.toLocaleString()} tokens\${modeIndicator}\`;
+                            }
                         }
                         
                         // Update table view
                         const tableCellEl = document.getElementById(\`tokens-cell-\${idx}\`);
                         if (tableCellEl) {
-                            tableCellEl.textContent = count.toLocaleString();
+                            if (mode === 'error') {
+                                tableCellEl.textContent = 'error';
+                                tableCellEl.style.color = 'var(--vscode-errorForeground)';
+                            } else {
+                                tableCellEl.textContent = count.toLocaleString();
+                            }
                         }
                     }
                     updateStats();
+                    break;
+                    
+                case 'tokenErrors':
+                    // Show error banner with all tokenization errors
+                    showErrorBanner(message.errors);
                     break;
                     
                 case 'error':
@@ -1068,6 +1328,26 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                     break;
             }
         });
+
+        function showErrorBanner(errors) {
+            const banner = document.getElementById('error-banner');
+            const content = document.getElementById('error-banner-content');
+            
+            content.innerHTML = '';
+            errors.forEach(error => {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-banner-message';
+                errorDiv.textContent = error;
+                content.appendChild(errorDiv);
+            });
+            
+            banner.classList.add('visible');
+        }
+
+        function dismissErrorBanner() {
+            const banner = document.getElementById('error-banner');
+            banner.classList.remove('visible');
+        }
 
         function togglePathPanel() {
             pathPanelVisible = !pathPanelVisible;

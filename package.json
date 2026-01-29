@@ -1,7 +1,7 @@
 {
   "name": "ml-workbench",
   "displayName": "ML Workbench",
-  "description": "View JSONL datasets and chat with local models",
+  "description": "View JSONL datasets with accurate token counting for ML training data",
   "version": "0.1.0",
   "publisher": "ml-workbench",
   "engines": {
@@ -13,8 +13,7 @@
     "Visualization"
   ],
   "activationEvents": [
-    "onCustomEditor:mlWorkbench.jsonlViewer",
-    "onCustomEditor:mlWorkbench.modelChat"
+    "onCustomEditor:mlWorkbench.jsonlViewer"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -28,19 +27,6 @@
           }
         ],
         "priority": "default"
-      },
-      {
-        "viewType": "mlWorkbench.modelChat",
-        "displayName": "Chat with Model",
-        "selector": [
-          {
-            "filenamePattern": "*.gguf"
-          },
-          {
-            "filenamePattern": "*.safetensors"
-          }
-        ],
-        "priority": "option"
       }
     ],
     "languages": [
@@ -52,24 +38,6 @@
         "aliases": [
           "JSONL",
           "JSON Lines"
-        ]
-      },
-      {
-        "id": "gguf",
-        "extensions": [
-          ".gguf"
-        ],
-        "aliases": [
-          "GGUF Model"
-        ]
-      },
-      {
-        "id": "safetensors",
-        "extensions": [
-          ".safetensors"
-        ],
-        "aliases": [
-          "Safetensors Model"
         ]
       }
     ]
@@ -88,8 +56,6 @@
     "typescript": "^5.3.0"
   },
   "dependencies": {
-    "katex": "^0.16.28",
-    "markdown-it": "^14.1.0",
-    "tiktoken": "^1.0.0"
+    "@huggingface/transformers": "^3.8.1"
   }
 }
