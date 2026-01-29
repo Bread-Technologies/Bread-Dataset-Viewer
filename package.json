@@ -131,8 +131,13 @@
       "editor/title": [
         {
           "command": "mlWorkbench.openJsonlFast",
-          "when": "resourceExtname == .jsonl",
+          "when": "resourceExtname == .jsonl || resourceScheme == jsonl-view",
           "group": "navigation@11"
+        },
+        {
+          "command": "mlWorkbench.openJsonlTextViewer",
+          "when": "resourceExtname == .jsonl || resourceScheme == jsonl-view",
+          "group": "navigation@12"
         }
       ]
     }
