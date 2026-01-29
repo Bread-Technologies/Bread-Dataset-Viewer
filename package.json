@@ -15,6 +15,7 @@
   "activationEvents": [
     "onCustomEditor:mlWorkbench.jsonlViewer",
     "onCustomEditor:mlWorkbench.parquetViewer",
+    "onCustomEditor:mlWorkbench.csvViewer",
     "onCustomEditor:mlWorkbench.modelChat"
   ],
   "main": "./out/extension.js",
@@ -36,6 +37,19 @@
         "selector": [
           {
             "filenamePattern": "*.parquet"
+          }
+        ],
+        "priority": "default"
+      },
+      {
+        "viewType": "mlWorkbench.csvViewer",
+        "displayName": "CSV/TSV Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.csv"
+          },
+          {
+            "filenamePattern": "*.tsv"
           }
         ],
         "priority": "default"
@@ -73,6 +87,26 @@
         "aliases": [
           "Parquet",
           "Apache Parquet"
+        ]
+      },
+      {
+        "id": "csv",
+        "extensions": [
+          ".csv"
+        ],
+        "aliases": [
+          "CSV",
+          "Comma-Separated Values"
+        ]
+      },
+      {
+        "id": "tsv",
+        "extensions": [
+          ".tsv"
+        ],
+        "aliases": [
+          "TSV",
+          "Tab-Separated Values"
         ]
       },
       {
@@ -118,6 +152,7 @@
   "dependencies": {
     "@dsnp/parquetjs": "^1.8.7",
     "apache-arrow": "^21.1.0",
+    "csv-parser": "^3.2.0",
     "katex": "^0.16.28",
     "markdown-it": "^14.1.0",
     "tiktoken": "^1.0.0"

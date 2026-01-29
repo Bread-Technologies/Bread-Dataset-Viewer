@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 // import { JsonlEditorProvider } from './jsonlEditorProvider';
 import { JsonlDataProvider } from './providers/JsonlDataProvider';
 import { ParquetDataProvider } from './providers/ParquetDataProvider';
+import { CsvDataProvider } from './providers/CsvDataProvider';
 import { ModelChatProvider } from './modelChatProvider';
 import { initializeBackends } from './backends';
 import { initTokenizer, cleanup as cleanupTokenizer } from './utils/tokenizer';
@@ -37,6 +38,21 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.registerCustomEditorProvider(
             'mlWorkbench.parquetViewer',
             parquetProvider,
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true,
+                },
+                supportsMultipleEditorsPerDocument: false,
+            }
+        )
+    );
+
+    // Register CSV/TSV Viewer
+    const csvProvider = new CsvDataProvider(context);
+    context.subscriptions.push(
+        vscode.window.registerCustomEditorProvider(
+            'mlWorkbench.csvViewer',
+            csvProvider,
             {
                 webviewOptions: {
                     retainContextWhenHidden: true,

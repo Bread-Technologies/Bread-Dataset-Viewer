@@ -169,9 +169,6 @@ window.addEventListener('message', event => {
                 formatBadge.textContent = message.format.toUpperCase();
                 formatBadge.style.display = 'inline-block';
 
-                // All formats default to Pretty view (like JSONL)
-                // Users can switch to Table view manually if preferred
-
                 // Disable Edit button for binary formats (Parquet)
                 const editBtn = document.getElementById('edit-btn');
                 if (message.format === 'parquet') {
