@@ -5,7 +5,7 @@
 /**
  * Supported file formats
  */
-export type FileFormat = 'jsonl' | 'parquet' | 'csv' | 'tsv';
+export type FileFormat = 'jsonl' | 'parquet' | 'csv' | 'tsv' | 'arrow' | 'feather';
 
 /**
  * Data type enum for schema columns

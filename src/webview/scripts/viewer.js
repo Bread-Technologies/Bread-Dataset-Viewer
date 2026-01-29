@@ -169,11 +169,11 @@ window.addEventListener('message', event => {
                 formatBadge.textContent = message.format.toUpperCase();
                 formatBadge.style.display = 'inline-block';
 
-                // Disable Edit button for binary formats (Parquet)
+                // Disable Edit button for binary formats (Parquet, Arrow, Feather)
                 const editBtn = document.getElementById('edit-btn');
-                if (message.format === 'parquet') {
+                if (message.format === 'parquet' || message.format === 'arrow' || message.format === 'feather') {
                     editBtn.disabled = true;
-                    editBtn.title = 'Parquet files are binary and cannot be edited as text';
+                    editBtn.title = 'Binary files cannot be edited as text';
                     editBtn.style.opacity = '0.5';
                     editBtn.style.cursor = 'not-allowed';
                 } else {
@@ -1068,8 +1068,8 @@ function renderTable() {
 function renderRaw() {
     const container = document.getElementById('raw-container');
 
-    // Show schema for Parquet files (only once at the top)
-    if (fileInfo && fileInfo.format === 'parquet' && fileInfo.schema && container.children.length === 0) {
+    // Show schema for columnar formats (Parquet, Arrow, Feather) (only once at the top)
+    if (fileInfo && (fileInfo.format === 'parquet' || fileInfo.format === 'arrow' || fileInfo.format === 'feather') && fileInfo.schema && container.children.length === 0) {
         const schemaDiv = document.createElement('div');
         schemaDiv.style.cssText = 'padding: 16px; margin-bottom: 16px; background: var(--vscode-editor-background); border: 1px solid var(--vscode-widget-border); border-radius: 4px;';
 
@@ -1145,8 +1145,8 @@ function renderRaw() {
 
         const content = document.createElement('span');
         content.className = 'raw-line-content';
-        // For Parquet, show pretty-printed JSON
-        if (fileInfo && fileInfo.format === 'parquet') {
+        // For columnar formats (Parquet, Arrow, Feather), show pretty-printed JSON
+        if (fileInfo && (fileInfo.format === 'parquet' || fileInfo.format === 'arrow' || fileInfo.format === 'feather')) {
             content.textContent = JSON.stringify(line.data, null, 2);
         } else {
             content.textContent = line.raw;

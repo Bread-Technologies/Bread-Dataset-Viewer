@@ -16,6 +16,7 @@
     "onCustomEditor:mlWorkbench.jsonlViewer",
     "onCustomEditor:mlWorkbench.parquetViewer",
     "onCustomEditor:mlWorkbench.csvViewer",
+    "onCustomEditor:mlWorkbench.arrowViewer",
     "onCustomEditor:mlWorkbench.modelChat"
   ],
   "main": "./out/extension.js",
@@ -50,6 +51,19 @@
           },
           {
             "filenamePattern": "*.tsv"
+          }
+        ],
+        "priority": "default"
+      },
+      {
+        "viewType": "mlWorkbench.arrowViewer",
+        "displayName": "Arrow IPC Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.arrow"
+          },
+          {
+            "filenamePattern": "*.feather"
           }
         ],
         "priority": "default"
@@ -107,6 +121,26 @@
         "aliases": [
           "TSV",
           "Tab-Separated Values"
+        ]
+      },
+      {
+        "id": "arrow",
+        "extensions": [
+          ".arrow"
+        ],
+        "aliases": [
+          "Arrow IPC",
+          "Apache Arrow"
+        ]
+      },
+      {
+        "id": "feather",
+        "extensions": [
+          ".feather"
+        ],
+        "aliases": [
+          "Feather",
+          "Arrow Feather"
         ]
       },
       {

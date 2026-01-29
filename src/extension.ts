@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import { JsonlDataProvider } from './providers/JsonlDataProvider';
 import { ParquetDataProvider } from './providers/ParquetDataProvider';
 import { CsvDataProvider } from './providers/CsvDataProvider';
+import { ArrowDataProvider } from './providers/ArrowDataProvider';
 import { ModelChatProvider } from './modelChatProvider';
 import { initializeBackends } from './backends';
 import { initTokenizer, cleanup as cleanupTokenizer } from './utils/tokenizer';
@@ -53,6 +54,21 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.registerCustomEditorProvider(
             'mlWorkbench.csvViewer',
             csvProvider,
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true,
+                },
+                supportsMultipleEditorsPerDocument: false,
+            }
+        )
+    );
+
+    // Register Arrow IPC Viewer
+    const arrowProvider = new ArrowDataProvider(context);
+    context.subscriptions.push(
+        vscode.window.registerCustomEditorProvider(
+            'mlWorkbench.arrowViewer',
+            arrowProvider,
             {
                 webviewOptions: {
                     retainContextWhenHidden: true,

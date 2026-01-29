@@ -13,6 +13,8 @@ test-data/*.jsonl
 test-data/*.parquet
 test-data/*.csv
 test-data/*.tsv
+test-data/*.arrow
+test-data/*.feather
 !test-data/sample-chat.jsonl
 
 # IDE and Editor files
