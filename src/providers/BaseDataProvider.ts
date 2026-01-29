@@ -64,13 +64,22 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
 
         console.log(`[PERF] Stats read: ${Date.now() - startTime}ms`);
 
-        // Send initial file info
+        // Initialize loader to get metadata
+        const loader = this.createLoader(document.uri.fsPath);
+        await loader.initialize(document.uri.fsPath);
+        const metadata = await loader.getMetadata();
+
+        console.log(`[PERF] Loader initialized: ${Date.now() - startTime}ms`);
+
+        // Send initial file info with format and schema
         webviewPanel.webview.postMessage({
             type: 'fileInfo',
             filePath: document.uri.fsPath,
             fileName: path.basename(document.uri.fsPath),
             fileSize: fileSizeBytes,
             fileSizeMB: fileSizeMB,
+            format: metadata.format,
+            schema: metadata.schema,
         });
 
         console.log(`[PERF] File info sent: ${Date.now() - startTime}ms`);

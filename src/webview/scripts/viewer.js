@@ -162,6 +162,30 @@ window.addEventListener('message', event => {
             fileInfo = message;
             document.getElementById('file-name').textContent = message.fileName;
             document.getElementById('file-size').textContent = `(${message.fileSizeMB} MB)`;
+
+            // Show format badge if format is present
+            if (message.format) {
+                const formatBadge = document.getElementById('format-badge');
+                formatBadge.textContent = message.format.toUpperCase();
+                formatBadge.style.display = 'inline-block';
+
+                // All formats default to Pretty view (like JSONL)
+                // Users can switch to Table view manually if preferred
+
+                // Disable Edit button for binary formats (Parquet)
+                const editBtn = document.getElementById('edit-btn');
+                if (message.format === 'parquet') {
+                    editBtn.disabled = true;
+                    editBtn.title = 'Parquet files are binary and cannot be edited as text';
+                    editBtn.style.opacity = '0.5';
+                    editBtn.style.cursor = 'not-allowed';
+                } else {
+                    editBtn.disabled = false;
+                    editBtn.title = 'Open in text editor';
+                    editBtn.style.opacity = '1';
+                    editBtn.style.cursor = 'pointer';
+                }
+            }
             break;
             
         case 'lines':
@@ -191,9 +215,10 @@ window.addEventListener('message', event => {
             
         case 'tokens':
             // Update token counts asynchronously
-            for (const [lineIndex, count] of Object.entries(message.tokens)) {
-                const idx = parseInt(lineIndex);
-                tokenCounts.set(idx, count);
+            if (message.counts) {
+                for (const [lineIndex, count] of Object.entries(message.counts)) {
+                    const idx = parseInt(lineIndex);
+                    tokenCounts.set(idx, count);
                 
                 // Update pretty view
                 const cardTokenEl = document.getElementById(`tokens-${idx}`);
@@ -205,6 +230,7 @@ window.addEventListener('message', event => {
                 const tableCellEl = document.getElementById(`tokens-cell-${idx}`);
                 if (tableCellEl) {
                     tableCellEl.textContent = count.toLocaleString();
+                }
                 }
             }
             updateStats();
@@ -624,16 +650,32 @@ function renderChat(lines, reset = false) {
                 // Handle standard chat format (messages array)
                 const messages = filtered && filtered.messages;
                 if (!messages || !Array.isArray(messages)) {
-                    const placeholder = document.createElement('div');
-                    placeholder.className = 'json-placeholder';
-                    placeholder.textContent = 'No matching messages for this record.';
-                    content.appendChild(placeholder);
+                    // Fallback: Show JSON tree for non-chat data (like Parquet tabular data)
+                    if (filtered !== undefined && filtered !== null) {
+                        const fallbackLabel = document.createElement('div');
+                        fallbackLabel.className = 'json-placeholder';
+                        fallbackLabel.style.marginBottom = '8px';
+                        fallbackLabel.style.fontStyle = 'italic';
+                        fallbackLabel.textContent = 'Data is not in chat format. Showing as JSON:';
+                        content.appendChild(fallbackLabel);
+
+                        const tree = renderJsonTree(filtered, 0, null, null);
+                        if (tree) {
+                            tree.classList.add('json-tree');
+                            content.appendChild(tree);
+                        }
+                    } else {
+                        const placeholder = document.createElement('div');
+                        placeholder.className = 'json-placeholder';
+                        placeholder.textContent = 'No matching data for this record.';
+                        content.appendChild(placeholder);
+                    }
                 } else {
                     const thread = document.createElement('div');
                     thread.className = 'chat-thread';
                     const fragment = document.createDocumentFragment();
 
-                    messages.forEach((message, idx) => {
+                    messages.forEach((message) => {
                         const role = normalizeRole(message && message.role ? message.role : 'unknown');
                         const bubble = document.createElement('div');
                         bubble.className = 'chat-bubble ' + role;
@@ -959,7 +1001,7 @@ function renderTable() {
     thead.innerHTML = '';
     tbody.innerHTML = '';
     
-    // Create header
+    // Create header with type indicators for schema columns
     const headerRow = document.createElement('tr');
     columnArray.forEach(col => {
         const th = document.createElement('th');
@@ -971,6 +1013,17 @@ function renderTable() {
             th.className = 'tokens-col';
         } else {
             th.textContent = col;
+
+            // Add type indicator if schema is available
+            if (fileInfo && fileInfo.schema && fileInfo.schema.columns) {
+                const schemaCol = fileInfo.schema.columns.find(c => c.name === col);
+                if (schemaCol) {
+                    const typeBadge = document.createElement('span');
+                    typeBadge.style.cssText = 'margin-left: 6px; padding: 1px 4px; border-radius: 2px; font-size: 9px; font-weight: normal; background: var(--vscode-badge-background); color: var(--vscode-badge-foreground); opacity: 0.8;';
+                    typeBadge.textContent = schemaCol.type;
+                    th.appendChild(typeBadge);
+                }
+            }
         }
         headerRow.appendChild(th);
     });
@@ -1017,21 +1070,91 @@ function renderTable() {
 
 function renderRaw() {
     const container = document.getElementById('raw-container');
-    
+
+    // Show schema for Parquet files (only once at the top)
+    if (fileInfo && fileInfo.format === 'parquet' && fileInfo.schema && container.children.length === 0) {
+        const schemaDiv = document.createElement('div');
+        schemaDiv.style.cssText = 'padding: 16px; margin-bottom: 16px; background: var(--vscode-editor-background); border: 1px solid var(--vscode-widget-border); border-radius: 4px;';
+
+        const schemaHeader = document.createElement('div');
+        schemaHeader.style.cssText = 'font-weight: bold; margin-bottom: 12px; color: var(--vscode-foreground);';
+        schemaHeader.textContent = '📊 Schema Information';
+        schemaDiv.appendChild(schemaHeader);
+
+        if (fileInfo.schema.columns && fileInfo.schema.columns.length > 0) {
+            const table = document.createElement('table');
+            table.style.cssText = 'width: 100%; border-collapse: collapse; font-family: var(--vscode-editor-font-family); font-size: 12px;';
+
+            // Create table header using DOM methods (no innerHTML for CSP compliance)
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+
+            const th1 = document.createElement('th');
+            th1.style.cssText = 'text-align: left; padding: 8px; border-bottom: 1px solid var(--vscode-widget-border);';
+            th1.textContent = 'Column Name';
+            headerRow.appendChild(th1);
+
+            const th2 = document.createElement('th');
+            th2.style.cssText = 'text-align: left; padding: 8px; border-bottom: 1px solid var(--vscode-widget-border);';
+            th2.textContent = 'Type';
+            headerRow.appendChild(th2);
+
+            const th3 = document.createElement('th');
+            th3.style.cssText = 'text-align: left; padding: 8px; border-bottom: 1px solid var(--vscode-widget-border);';
+            th3.textContent = 'Nullable';
+            headerRow.appendChild(th3);
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Create table body using DOM methods (no innerHTML for CSP compliance)
+            const tbody = document.createElement('tbody');
+            fileInfo.schema.columns.forEach(col => {
+                const row = document.createElement('tr');
+
+                const td1 = document.createElement('td');
+                td1.style.cssText = 'padding: 8px; border-bottom: 1px solid var(--vscode-widget-border);';
+                td1.textContent = col.name;
+                row.appendChild(td1);
+
+                const td2 = document.createElement('td');
+                td2.style.cssText = 'padding: 8px; border-bottom: 1px solid var(--vscode-widget-border); color: var(--vscode-terminal-ansiBlue);';
+                td2.textContent = col.type;
+                row.appendChild(td2);
+
+                const td3 = document.createElement('td');
+                td3.style.cssText = 'padding: 8px; border-bottom: 1px solid var(--vscode-widget-border);';
+                td3.textContent = col.nullable ? 'Yes' : 'No';
+                row.appendChild(td3);
+
+                tbody.appendChild(row);
+            });
+            table.appendChild(tbody);
+            schemaDiv.appendChild(table);
+        }
+
+        container.appendChild(schemaDiv);
+    }
+
     // Only render new lines (incremental rendering for performance)
     const existingLines = container.children.length;
     allLines.slice(existingLines).forEach(line => {
         const lineDiv = document.createElement('div');
         lineDiv.className = 'raw-line';
-        
+
         const lineNum = document.createElement('span');
         lineNum.className = 'raw-line-number';
         lineNum.textContent = line.index;
-        
+
         const content = document.createElement('span');
         content.className = 'raw-line-content';
-        content.textContent = line.raw;
-        
+        // For Parquet, show pretty-printed JSON
+        if (fileInfo && fileInfo.format === 'parquet') {
+            content.textContent = JSON.stringify(line.data, null, 2);
+        } else {
+            content.textContent = line.raw;
+        }
+
         lineDiv.appendChild(lineNum);
         lineDiv.appendChild(content);
         container.appendChild(lineDiv);

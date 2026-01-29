@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 // Old provider kept as backup during migration
 // import { JsonlEditorProvider } from './jsonlEditorProvider';
 import { JsonlDataProvider } from './providers/JsonlDataProvider';
+import { ParquetDataProvider } from './providers/ParquetDataProvider';
 import { ModelChatProvider } from './modelChatProvider';
 import { initializeBackends } from './backends';
 import { initTokenizer, cleanup as cleanupTokenizer } from './utils/tokenizer';
@@ -21,6 +22,21 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.registerCustomEditorProvider(
             'mlWorkbench.jsonlViewer',
             jsonlProvider,
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true,
+                },
+                supportsMultipleEditorsPerDocument: false,
+            }
+        )
+    );
+
+    // Register Parquet Viewer
+    const parquetProvider = new ParquetDataProvider(context);
+    context.subscriptions.push(
+        vscode.window.registerCustomEditorProvider(
+            'mlWorkbench.parquetViewer',
+            parquetProvider,
             {
                 webviewOptions: {
                     retainContextWhenHidden: true,

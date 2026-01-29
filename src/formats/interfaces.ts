@@ -13,6 +13,7 @@ export type FileFormat = 'jsonl' | 'parquet' | 'csv' | 'tsv';
 export enum DataType {
     STRING = 'string',
     NUMBER = 'number',
+    INTEGER = 'integer',
     BOOLEAN = 'boolean',
     OBJECT = 'object',
     ARRAY = 'array',
@@ -22,7 +23,9 @@ export enum DataType {
     FLOAT = 'float',
     DOUBLE = 'double',
     DATE = 'date',
-    TIMESTAMP = 'timestamp'
+    DATETIME = 'datetime',
+    TIMESTAMP = 'timestamp',
+    BINARY = 'binary'
 }
 
 /**
@@ -128,5 +131,5 @@ export interface IDataLoader {
     /**
      * Clean up resources (close streams, etc.)
      */
-    dispose(): void;
+    dispose(): void | Promise<void>;
 }
