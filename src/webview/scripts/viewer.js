@@ -7,7 +7,10 @@ let currentView = 'pretty';
 let currentSearchTerm = '';
 let fileInfo = null;
 let tokenCounts = new Map();
-let currentTokenizer = 'gpt-4';
+let tokenModes = new Map();  // Store mode info per line
+let currentTokenizer = 'qwen-3';
+let currentTokenMode = 'auto';
+let availableKeys = new Set();  // Store discovered keys
 
 const MAX_PATHS = 2000;
 const MAX_PATH_DEPTH = 8;
@@ -28,10 +31,13 @@ document.getElementById('clear-search-btn').addEventListener('click', clearSearc
 document.getElementById('load-more-btn').addEventListener('click', loadMore);
 document.getElementById('jump-btn').addEventListener('click', jumpToLine);
 document.getElementById('tokenizer-select').addEventListener('change', handleTokenizerChange);
+document.getElementById('token-mode-select').addEventListener('change', handleTokenModeChange);
+document.getElementById('token-key-select').addEventListener('change', handleTokenKeyChange);
 document.getElementById('edit-btn').addEventListener('click', openInTextEditor);
 document.getElementById('path-toggle-btn').addEventListener('click', togglePathPanel);
 document.getElementById('path-select-all').addEventListener('click', selectAllPaths);
 document.getElementById('path-clear').addEventListener('click', clearSelectedPaths);
+document.getElementById('dismiss-error-btn').addEventListener('click', dismissErrorBanner);
 
 document.getElementById('search-input').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') performSearch();
@@ -83,8 +89,135 @@ function handleTokenizerChange(e) {
     nextOffset = 0;
     resetAvailablePaths();
     clearContainer();
-    vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer });
+    vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
     showLoading(true);
+}
+
+function handleTokenModeChange(e) {
+    const mode = e.target.value;
+    const keySelect = document.getElementById('token-key-select');
+
+    // Show/hide key dropdown for custom key mode
+    if (mode === 'key') {
+        keySelect.style.display = 'inline-block';
+        const selectedKey = keySelect.value || 'text';
+        currentTokenMode = selectedKey ? 'key:' + selectedKey : 'auto';
+
+        // Don't reload if no key selected yet
+        if (!selectedKey) {
+            return;
+        }
+    } else {
+        keySelect.style.display = 'none';
+        currentTokenMode = mode;
+    }
+
+    // Reload data with new mode
+    allLines = [];
+    nextOffset = 0;
+    resetAvailablePaths();
+    clearContainer();
+    vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
+    showLoading(true);
+}
+
+function handleTokenKeyChange(e) {
+    const key = e.target.value;
+    if (!key) return;  // Don't reload if empty selection
+
+    currentTokenMode = 'key:' + key;
+
+    // Reload data with new key
+    allLines = [];
+    nextOffset = 0;
+    resetAvailablePaths();
+    clearContainer();
+    vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
+    showLoading(true);
+}
+
+function discoverKeys(lines) {
+    // Discover keys from the first batch of lines
+    const keysFound = new Set();
+    const MAX_LINES_TO_SCAN = 10;
+
+    for (let i = 0; i < Math.min(lines.length, MAX_LINES_TO_SCAN); i++) {
+        const line = lines[i];
+        if (line.data && typeof line.data === 'object' && !Array.isArray(line.data)) {
+            Object.keys(line.data).forEach(key => keysFound.add(key));
+        }
+    }
+
+    return Array.from(keysFound).sort();
+}
+
+function updateKeyDropdown(keys) {
+    const keySelect = document.getElementById('token-key-select');
+    const currentValue = keySelect.value;
+
+    // Update available keys
+    keys.forEach(key => availableKeys.add(key));
+
+    // Rebuild dropdown
+    const allKeys = Array.from(availableKeys).sort();
+    keySelect.innerHTML = '<option value="">Select key...</option>';
+
+    // Add common keys first (if they exist)
+    const priorityKeys = ['text', 'content', 'prompt', 'completion', 'output', 'input'];
+    const addedKeys = new Set();
+
+    priorityKeys.forEach(key => {
+        if (allKeys.includes(key)) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = key;
+            keySelect.appendChild(option);
+            addedKeys.add(key);
+        }
+    });
+
+    // Add separator if we have priority keys
+    if (addedKeys.size > 0 && allKeys.length > addedKeys.size) {
+        const separator = document.createElement('option');
+        separator.disabled = true;
+        separator.textContent = '───────────';
+        keySelect.appendChild(separator);
+    }
+
+    // Add remaining keys
+    allKeys.forEach(key => {
+        if (!addedKeys.has(key)) {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = key;
+            keySelect.appendChild(option);
+        }
+    });
+
+    // Restore selection if it still exists
+    if (currentValue && allKeys.includes(currentValue)) {
+        keySelect.value = currentValue;
+    }
+}
+
+function showErrorBanner(errors) {
+    const banner = document.getElementById('error-banner');
+    const content = document.getElementById('error-banner-content');
+
+    content.innerHTML = '';
+    errors.forEach(error => {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-banner-message';
+        errorDiv.textContent = error;
+        content.appendChild(errorDiv);
+    });
+
+    banner.classList.add('visible');
+}
+
+function dismissErrorBanner() {
+    const banner = document.getElementById('error-banner');
+    banner.classList.remove('visible');
 }
 
 function openInTextEditor() {
@@ -99,7 +232,7 @@ function performSearch() {
         nextOffset = 0;
         resetAvailablePaths();
         clearContainer();
-        vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm, tokenizer: currentTokenizer });
+        vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, searchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
         showLoading(true);
     }
 }
@@ -111,12 +244,12 @@ function clearSearch() {
     nextOffset = 0;
     resetAvailablePaths();
     clearContainer();
-    vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, tokenizer: currentTokenizer });
+    vscode.postMessage({ type: 'loadLines', offset: 0, limit: 100, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
     showLoading(true);
 }
 
 function loadMore() {
-    vscode.postMessage({ type: 'loadLines', offset: nextOffset, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer });
+    vscode.postMessage({ type: 'loadLines', offset: nextOffset, limit: 100, searchTerm: currentSearchTerm, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
     showLoading(true);
 }
 
@@ -127,7 +260,7 @@ function jumpToLine() {
         nextOffset = lineNum;
         resetAvailablePaths();
         clearContainer();
-        vscode.postMessage({ type: 'jumpToLine', lineNumber: lineNum, tokenizer: currentTokenizer });
+        vscode.postMessage({ type: 'jumpToLine', lineNumber: lineNum, tokenizer: currentTokenizer, tokenMode: currentTokenMode });
         showLoading(true);
     }
 }
@@ -192,7 +325,13 @@ window.addEventListener('message', event => {
             hasMore = message.hasMore;
 
             updatePathsFromLines(message.lines);
-            
+
+            // Discover available keys for key mode
+            const discoveredKeys = discoverKeys(message.lines);
+            if (discoveredKeys.length > 0) {
+                updateKeyDropdown(discoveredKeys);
+            }
+
             if (currentView === 'pretty') {
                 renderPretty(message.lines);
             } else if (currentView === 'render') {
@@ -202,37 +341,68 @@ window.addEventListener('message', event => {
             } else if (currentView === 'raw') {
                 renderRaw();
             }
-            
+
             updateStats();
-            
+
             if (hasMore) {
                 document.getElementById('load-more-container').style.display = 'block';
             }
             break;
-            
+
         case 'tokens':
             // Update token counts asynchronously
-            if (message.counts) {
-                for (const [lineIndex, count] of Object.entries(message.counts)) {
-                    const idx = parseInt(lineIndex);
-                    tokenCounts.set(idx, count);
-                
+            for (const [lineIndex, tokenData] of Object.entries(message.tokens)) {
+                const idx = parseInt(lineIndex);
+                const count = tokenData.count;
+                const mode = tokenData.mode;
+                const key = tokenData.key;
+
+                tokenCounts.set(idx, count);
+                tokenModes.set(idx, tokenData);
+
+                // Create mode indicator
+                let modeIndicator = '';
+                if (mode === 'error') {
+                    modeIndicator = ' <span style="color: var(--vscode-errorForeground); font-size: 10px;" title="' + (tokenData.error || 'Error').replace(/"/g, '&quot;') + '">✗ error</span>';
+                } else if (mode === 'chat') {
+                    modeIndicator = ' <span style="color: var(--vscode-charts-green); font-size: 10px;" title="Tokenized with chat template">●</span>';
+                } else if (mode === 'key') {
+                    modeIndicator = ` <span style="color: var(--vscode-charts-blue); font-size: 10px;" title="Tokenized key: ${key}">key:${key}</span>`;
+                } else if (mode === 'full-json') {
+                    modeIndicator = ' <span style="color: var(--vscode-charts-orange); font-size: 10px;" title="Tokenized full JSON">JSON</span>';
+                } else if (mode === 'raw-text') {
+                    modeIndicator = ' <span style="color: var(--vscode-descriptionForeground); font-size: 10px;" title="Tokenized raw text">raw</span>';
+                }
+
                 // Update pretty view
                 const cardTokenEl = document.getElementById(`tokens-${idx}`);
                 if (cardTokenEl) {
-                    cardTokenEl.textContent = `${count.toLocaleString()} tokens`;
+                    if (mode === 'error') {
+                        cardTokenEl.innerHTML = `error${modeIndicator}`;
+                    } else {
+                        cardTokenEl.innerHTML = `${count.toLocaleString()} tokens${modeIndicator}`;
+                    }
                 }
 
                 // Update table view
                 const tableCellEl = document.getElementById(`tokens-cell-${idx}`);
                 if (tableCellEl) {
-                    tableCellEl.textContent = count.toLocaleString();
-                }
+                    if (mode === 'error') {
+                        tableCellEl.textContent = 'error';
+                        tableCellEl.style.color = 'var(--vscode-errorForeground)';
+                    } else {
+                        tableCellEl.textContent = count.toLocaleString();
+                    }
                 }
             }
             updateStats();
             break;
-            
+
+        case 'tokenErrors':
+            // Show error banner with all tokenization errors
+            showErrorBanner(message.errors);
+            break;
+
         case 'error':
             showLoading(false);
             alert(message.message);

@@ -110,7 +110,8 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                         loadMsg.offset,
                         loadMsg.limit,
                         loadMsg.searchTerm,
-                        loadMsg.tokenizer
+                        loadMsg.tokenizer,
+                        loadMsg.tokenMode
                     );
                     break;
                 case 'jumpToLine':
@@ -119,7 +120,8 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                         document.uri.fsPath,
                         webviewPanel.webview,
                         jumpMsg.lineNumber,
-                        jumpMsg.tokenizer
+                        jumpMsg.tokenizer,
+                        jumpMsg.tokenMode
                     );
                     break;
                 case 'openInTextEditor':
@@ -139,7 +141,8 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
         offset: number,
         limit: number,
         searchTerm?: string,
-        tokenizer: string = 'gpt-4'
+        tokenizer: string = 'qwen-3',
+        tokenMode: string = 'auto'
     ): Promise<void> {
         const loader = this.createLoader(filePath);
 
@@ -149,20 +152,7 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
             const filter = searchTerm ? { searchTerm } : undefined;
             const batch = await loader.loadRows(offset, limit, filter);
 
-            // Count tokens for each row
-            const tokenCounts: { [index: number]: number } = {};
-            for (const row of batch.rows) {
-                try {
-                    const text = loader.extractTextForTokens(row.data);
-                    const tokens = await countTokens(text, tokenizer);
-                    tokenCounts[row.index] = tokens;
-                    row.tokens = tokens;
-                } catch (error) {
-                    console.error(`Error counting tokens for row ${row.index}:`, error);
-                }
-            }
-
-            // Send rows to webview
+            // Send rows to webview immediately (without tokens)
             webview.postMessage({
                 type: 'lines',
                 lines: batch.rows,
@@ -170,10 +160,48 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                 nextOffset: batch.nextOffset
             });
 
-            // Send token counts
-            webview.postMessage({
-                type: 'tokens',
-                counts: tokenCounts
+            // Count tokens in background and send separately
+            setImmediate(async () => {
+                const tokensMap: { [index: number]: any } = {};
+                const errors: string[] = [];
+
+                for (const row of batch.rows) {
+                    try {
+                        const text = loader.extractTextForTokens(row.data);
+                        const result = await countTokens(text, tokenizer, tokenMode);
+                        tokensMap[row.index] = {
+                            count: result.count,
+                            mode: result.mode,
+                            key: result.key,
+                            preview: result.preview,
+                        };
+                    } catch (error) {
+                        const errorMsg = String(error);
+                        console.error(`Error counting tokens for row ${row.index}:`, error);
+                        tokensMap[row.index] = {
+                            count: 0,
+                            mode: 'error',
+                            error: errorMsg,
+                        };
+                        if (!errors.some(e => e === errorMsg)) {
+                            errors.push(errorMsg);
+                        }
+                    }
+                }
+
+                // Send token counts
+                webview.postMessage({
+                    type: 'tokens',
+                    tokens: tokensMap
+                });
+
+                // Send errors if any
+                if (errors.length > 0) {
+                    webview.postMessage({
+                        type: 'tokenErrors',
+                        errors: errors
+                    });
+                }
             });
         } finally {
             loader.dispose();
@@ -187,9 +215,10 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
         filePath: string,
         webview: vscode.Webview,
         targetRow: number,
-        tokenizer: string = 'gpt-4'
+        tokenizer: string = 'qwen-3',
+        tokenMode: string = 'auto'
     ): Promise<void> {
-        await this.loadAndSendRows(filePath, webview, targetRow, 100, undefined, tokenizer);
+        await this.loadAndSendRows(filePath, webview, targetRow, 100, undefined, tokenizer, tokenMode);
     }
 
     /**

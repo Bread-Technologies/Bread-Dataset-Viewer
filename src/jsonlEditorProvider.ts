@@ -63,7 +63,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                         message.offset,
                         message.limit,
                         message.searchTerm,
-                        message.tokenizer
+                        message.tokenizer,
+                        message.tokenMode
                     );
                     break;
                 case 'jumpToLine':
@@ -71,7 +72,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
                         document.uri.fsPath,
                         webviewPanel.webview,
                         message.lineNumber,
-                        message.tokenizer
+                        message.tokenizer,
+                        message.tokenMode
                     );
                     break;
                 case 'openInTextEditor':
@@ -94,7 +96,8 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         offset: number = 0,
         limit: number = 100,
         searchTerm?: string,
-        tokenizer: string = 'gpt-4'
+        tokenizer: string = 'qwen-3',
+        tokenMode: string = 'auto'
     ): Promise<void> {
         const loadStart = Date.now();
         try {
@@ -153,19 +156,48 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             console.log(`[PERF] Lines message sent: ${Date.now() - loadStart}ms`);
 
             // Calculate tokens in background and send separately
-            setImmediate(() => {
+            setImmediate(async () => {
                 const tokenStart = Date.now();
-                const tokensMap: { [key: number]: number } = {};
+                const tokensMap: { [key: number]: any } = {};
+                const errors: string[] = [];
+
                 for (const line of lines) {
-                    tokensMap[line.index] = countTokens(line.raw, tokenizer);
+                    try {
+                        const result = await countTokens(line.raw, tokenizer, tokenMode);
+                        tokensMap[line.index] = {
+                            count: result.count,
+                            mode: result.mode,
+                            key: result.key,
+                            preview: result.preview,
+                        };
+                    } catch (error) {
+                        const errorMsg = String(error);
+                        console.error(`Error counting tokens for line ${line.index}:`, error);
+                        tokensMap[line.index] = {
+                            count: 0,
+                            mode: 'error',
+                            error: errorMsg,
+                        };
+                        if (!errors.some(e => e === errorMsg)) {
+                            errors.push(errorMsg);
+                        }
+                    }
                 }
                 console.log(`[PERF] Token counting done: ${Date.now() - tokenStart}ms for ${lines.length} lines`);
-                
+
                 webview.postMessage({
                     type: 'tokens',
                     tokens: tokensMap,
                 });
-                
+
+                // Send errors if any
+                if (errors.length > 0) {
+                    webview.postMessage({
+                        type: 'tokenErrors',
+                        errors: errors
+                    });
+                }
+
                 console.log(`[PERF] Tokens message sent: ${Date.now() - tokenStart}ms`);
             });
         } catch (error) {
@@ -180,10 +212,11 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         filePath: string,
         webview: vscode.Webview,
         targetLine: number,
-        tokenizer: string = 'gpt-4'
+        tokenizer: string = 'qwen-3',
+        tokenMode: string = 'auto'
     ): Promise<void> {
         // For jump-to-line, we load from that line
-        await this.loadLines(filePath, webview, targetLine, 100, undefined, tokenizer);
+        await this.loadLines(filePath, webview, targetLine, 100, undefined, tokenizer, tokenMode);
     }
 
     private getHtmlForWebview(webview: vscode.Webview): string {

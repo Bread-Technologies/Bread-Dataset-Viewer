@@ -1,195 +1,371 @@
-import { get_encoding, encoding_for_model } from 'tiktoken';
+import { AutoTokenizer } from '@huggingface/transformers';
+import * as path from 'path';
 
-const encoders = new Map<string, any>();
-let defaultEncoder: any = null;
+/**
+ * Tokenizer configuration for bundled local tokenizers
+ */
+interface TokenizerConfig {
+    name: string;
+    modelId: string;  // HuggingFace model ID (for reference only - we load from disk)
+    notes?: string;
+}
 
-// Chat template definitions for different models
-const chatTemplates: { [key: string]: (messages: any[]) => string } = {
-    'llama-3': (messages) => {
-        // Llama 3 format: <|begin_of_text|><|start_header_id|>role<|end_header_id|>content<|eot_id|>
-        let formatted = '<|begin_of_text|>';
-        for (const msg of messages) {
-            formatted += `<|start_header_id|>${msg.role}<|end_header_id|>\n\n${msg.content}<|eot_id|>`;
-        }
-        return formatted;
+/**
+ * Exhaustive list of supported tokenizers
+ * All models are carefully selected to avoid authentication requirements
+ * Organized by model family with consistent naming
+ */
+const TOKENIZER_CONFIGS: { [key: string]: TokenizerConfig } = {
+    // ========================================================
+    // QWEN FAMILY
+    // ========================================================
+    
+    'qwen-3': {
+        name: 'Qwen 3.x',
+        modelId: 'Qwen/Qwen3-8B',
+        notes: 'Vocab: 36T | Template: Qwen ChatML v3',
     },
-    'llama-2': (messages) => {
-        // Llama 2 format: [INST] <<SYS>>system<</SYS>>user [/INST] assistant
-        let formatted = '';
-        let systemMsg = '';
-        for (let i = 0; i < messages.length; i++) {
-            const msg = messages[i];
-            if (msg.role === 'system') {
-                systemMsg = `<<SYS>>\n${msg.content}\n<</SYS>>\n\n`;
-            } else if (msg.role === 'user') {
-                formatted += `[INST] ${systemMsg}${msg.content} [/INST] `;
-                systemMsg = '';
-            } else if (msg.role === 'assistant') {
-                formatted += `${msg.content} `;
-            }
-        }
-        return formatted;
+    
+    'qwen-2.5': {
+        name: 'Qwen 2.5',
+        modelId: 'Qwen/Qwen2.5-72B-Instruct',
+        notes: 'Vocab: Qwen | Template: Qwen ChatML v2',
     },
-    'mistral': (messages) => {
-        // Mistral format: <s>[INST] user [/INST] assistant</s>
-        let formatted = '<s>';
-        for (const msg of messages) {
-            if (msg.role === 'user') {
-                formatted += `[INST] ${msg.content} [/INST]`;
-            } else if (msg.role === 'assistant') {
-                formatted += ` ${msg.content}</s>`;
-            }
-        }
-        return formatted;
+    
+    // ========================================================
+    // DEEPSEEK FAMILY
+    // ========================================================
+    
+    'deepseek-v3': {
+        name: 'DeepSeek V3 / R1',
+        modelId: 'deepseek-ai/DeepSeek-V3',
+        notes: 'Vocab: 128k | Template: DeepSeek ChatML',
     },
-    'qwen': (messages) => {
-        // Qwen format: <|im_start|>role\ncontent<|im_end|>
-        let formatted = '';
-        for (const msg of messages) {
-            formatted += `<|im_start|>${msg.role}\n${msg.content}<|im_end|>\n`;
-        }
-        return formatted;
+    
+    // ========================================================
+    // LLAMA FAMILY
+    // ========================================================
+    
+    'llama-3': {
+        name: 'Llama 3.x',
+        modelId: 'unsloth/Llama-3.3-70B-Instruct',
+        notes: 'Vocab: 128k | Template: Llama 3 | Unsloth version (no auth)',
     },
-    'glm': (messages) => {
-        // ChatGLM format: [Round 0]\n问：user\n答：assistant
-        let formatted = '';
-        let roundNum = 0;
-        for (let i = 0; i < messages.length; i += 2) {
-            if (i + 1 < messages.length) {
-                formatted += `[Round ${roundNum}]\n问：${messages[i].content}\n答：${messages[i + 1].content}\n`;
-                roundNum++;
-            }
-        }
-        return formatted;
+    
+    // ========================================================
+    // GEMMA FAMILY
+    // ========================================================
+    
+    'gemma-3': {
+        name: 'Gemma 3.x',
+        modelId: 'unsloth/gemma-3-12b-it',
+        notes: 'Vocab: 262k | Template: Gemma 3 Multimodal | Unsloth version',
+    },
+    
+    'gemma-2': {
+        name: 'Gemma 2.x',
+        modelId: 'unsloth/gemma-2-9b-it',
+        notes: 'Vocab: 256k | Template: Gemma 2 | Unsloth version',
+    },
+    
+    // ========================================================
+    // MISTRAL FAMILY
+    // ========================================================
+    
+    'mistral-tekken': {
+        name: 'Mistral Tekken',
+        modelId: 'mistralai/Mistral-Nemo-Instruct-2407',
+        notes: 'Vocab: 131k | For: NeMo 12B, Pixtral 12B, Ministral 8B, Small 3',
+    },
+    
+    'mistral-v3': {
+        name: 'Mistral V3',
+        modelId: 'unsloth/mistral-7b-instruct-v0.3',
+        notes: 'Vocab: 32,768 (SentencePiece) | For: Large 2, Codestral 22B, Mixtral 8x22B, 7B v0.3 | Unsloth version',
+    },
+    
+    'mistral-v1': {
+        name: 'Mistral V1',
+        modelId: 'mistralai/Mistral-7B-Instruct-v0.1',
+        notes: 'Vocab: 32,000 (Llama 2 compatible) | For: 7B v0.1, 7B v0.2, Mixtral 8x7B | Legacy',
+    },
+    
+    // ========================================================
+    // PHI FAMILY
+    // ========================================================
+    
+    'phi-4': {
+        name: 'Phi 4.x',
+        modelId: 'microsoft/Phi-4-mini-instruct',
+        notes: 'Vocab: 100k | Template: Phi 4',
+    },
+    
+    // ========================================================
+    // COMMAND R FAMILY
+    // ========================================================
+    
+    'command-r': {
+        name: 'Command R Family',
+        modelId: 'Xenova/c4ai-command-r-v01-tokenizer',
+        notes: 'Vocab: 256k (Cohere) | Template: Command R | For: R7B, R, R+ | Xenova version',
+    },
+    
+    // ========================================================
+    // GPT FAMILY
+    // ========================================================
+    
+    'gpt-5': {
+        name: 'GPT-5.x / gpt-oss',
+        modelId: 'openai/gpt-oss-20b',
+        notes: 'Vocab: o200k_harmony | Template: Harmony (embedded) | Official repo with Thinking tokens',
+    },
+    
+    'gpt-4o': {
+        name: 'GPT-4o Family',
+        modelId: 'Xenova/gpt-4o',
+        notes: 'Vocab: o200k_base | Template: Basic ChatML | For GPT-4o, o1-preview, o1-mini',
+    },
+    
+    'gpt-4': {
+        name: 'GPT-4 Classic',
+        modelId: 'Xenova/gpt-4',
+        notes: 'Vocab: cl100k_base | Template: ChatML | For GPT-4 Turbo, GPT-3.5 Turbo',
+    },
+    
+    'gpt-2': {
+        name: 'GPT-2',
+        modelId: 'gpt2',
+        notes: 'Vocab: 50k BPE | Template: None | Baseline for modern tokenizers',
+    },
+    
+    // ========================================================
+    // CLAUDE FAMILY (PROPRIETARY PROXY)
+    // ========================================================
+    
+    'claude': {
+        name: 'Claude 3.x / 4.x',
+        modelId: 'Xenova/claude-tokenizer',
+        notes: 'Community proxy | Template embedded',
     },
 };
 
-export async function initTokenizer(): Promise<void> {
-    // Don't initialize eagerly - let it be lazy loaded on first use
-    // This saves 300-500ms on extension activation
-}
+// Cache loaded tokenizers
+const tokenizers = new Map<string, any>();
 
-function getEncoder(tokenizerType: string = 'gpt-4'): any {
-    // Return cached encoder if available
-    if (encoders.has(tokenizerType)) {
-        return encoders.get(tokenizerType);
+/**
+ * Get or load a tokenizer for the specified model
+ */
+async function getTokenizer(tokenizerType: string): Promise<any> {
+    if (tokenizers.has(tokenizerType)) {
+        return tokenizers.get(tokenizerType);
     }
     
-    // Initialize default encoder lazily on first use
-    if (!defaultEncoder) {
-        try {
-            defaultEncoder = encoding_for_model('gpt-4');
-        } catch (error) {
-            console.error('Failed to initialize default encoder:', error);
-        }
+    const config = TOKENIZER_CONFIGS[tokenizerType];
+    if (!config) {
+        const availableTypes = Object.keys(TOKENIZER_CONFIGS)
+            .map(k => `  - ${k}: ${TOKENIZER_CONFIGS[k].name}`)
+            .join('\n');
+        throw new Error(
+            `Unknown tokenizer type: "${tokenizerType}"\n\n` +
+            `Available types:\n${availableTypes}`
+        );
     }
     
     try {
-        let encoder;
-        
-        switch (tokenizerType) {
-            case 'gpt-4':
-            case 'claude':
-            case 'llama-3':
-            case 'qwen2.5':
-                // Use cl100k_base (GPT-4 encoding)
-                encoder = get_encoding('cl100k_base');
-                break;
-            case 'gpt-3':
-                // GPT-3 uses p50k_base
-                encoder = get_encoding('p50k_base');
-                break;
-            case 'gpt-2':
-            case 'llama-2':
-            case 'mistral':
-            case 'phi':
-                // Use r50k_base (GPT-2 encoding) as approximation
-                encoder = get_encoding('r50k_base');
-                break;
-            case 'qwen':
-            case 'glm':
-            case 'baichuan':
-            case 'yi':
-            case 'gemma':
-            case 'deepseek':
-            case 'internlm':
-                // Use cl100k_base as reasonable approximation for Chinese models
-                encoder = get_encoding('cl100k_base');
-                break;
-            default:
-                encoder = defaultEncoder;
+        console.log(`[Tokenizer] Loading: ${config.name} from bundled files`);
+        if (config.notes) {
+            console.log(`[Tokenizer] Notes: ${config.notes}`);
         }
         
-        if (encoder) {
-            encoders.set(tokenizerType, encoder);
-        }
-        return encoder;
+        // Construct path to bundled tokenizer directory
+        // __dirname points to out/utils/, so we go up to extension root, then into tokenizers/
+        const localPath = path.join(__dirname, '..', '..', 'tokenizers', tokenizerType);
+        console.log(`[Tokenizer] Local path: ${localPath}`);
+        
+        // Load from bundled local files only - no network access
+        const tokenizer = await AutoTokenizer.from_pretrained(localPath, {
+            local_files_only: true,  // Force offline loading from bundled files
+        });
+        
+        tokenizers.set(tokenizerType, tokenizer);
+        console.log(`[Tokenizer] ✓ Loaded from disk: ${config.name}`);
+        return tokenizer;
     } catch (error) {
-        console.error(`Failed to get encoder for ${tokenizerType}:`, error);
-        return defaultEncoder;
+        // Create detailed error message for local loading failures
+        const errorMsg = String(error);
+        let helpText = '\n\nThe bundled tokenizer files may be missing or corrupted. Try reinstalling the extension.';
+        
+        if (errorMsg.includes('ENOENT') || errorMsg.includes('not found')) {
+            helpText = `\n\nTokenizer directory not found: tokenizers/${tokenizerType}/\nThe extension installation may be incomplete.`;
+        }
+        
+        throw new Error(
+            `Failed to load bundled tokenizer: ${config.name}\n` +
+            `Local key: ${tokenizerType}\n` +
+            `Error: ${errorMsg}${helpText}`
+        );
     }
 }
 
-function applyChatTemplate(data: any, tokenizerType: string): string {
+/**
+ * Apply chat template to messages if the data is in chat format
+ */
+async function applyChatTemplate(data: any, tokenizerType: string): Promise<string> {
     // Check if data has messages array (chat completions format)
     if (data && Array.isArray(data.messages)) {
-        const template = chatTemplates[tokenizerType];
-        if (template) {
-            return template(data.messages);
+        const tokenizer = await getTokenizer(tokenizerType);
+        
+        try {
+            // Use the tokenizer's built-in chat template
+            const formatted = await tokenizer.apply_chat_template(data.messages, {
+                tokenize: false,
+                add_generation_prompt: false,
+            });
+            
+            return formatted;
+        } catch (error) {
+            const errorStr = String(error);
+            
+            // Provide specific guidance for known template limitations
+            let guidance = '';
+            if (errorStr.includes('chat_template is not set') || errorStr.includes('no template argument')) {
+                guidance = '\n\n💡 This tokenizer does not have a chat template configured.\n' +
+                          'Solutions:\n' +
+                          '  • Switch to "Full JSON" mode to count the raw JSON tokens\n' +
+                          '  • Switch to "Key" mode to count a specific field\n' +
+                          '  • Use a different model tokenizer';
+            } else if (errorStr.includes('System role not supported')) {
+                guidance = '\n\n💡 This model does not support system messages.\n' +
+                          'Solutions:\n' +
+                          '  • Remove system role messages from your data\n' +
+                          '  • Switch to "Full JSON" or "Raw Text" mode\n' +
+                          '  • Use a different tokenizer';
+            } else if (errorStr.includes('Tool call IDs')) {
+                guidance = '\n\n💡 This model has strict tool call validation.\n' +
+                          'Solutions:\n' +
+                          '  • Fix tool call format in your data\n' +
+                          '  • Switch to "Full JSON" or "Raw Text" mode\n' +
+                          '  • Use a different tokenizer';
+            }
+            
+            throw new Error(
+                `Chat template error (${TOKENIZER_CONFIGS[tokenizerType].name}):\n${errorStr}${guidance}`
+            );
         }
-        // Default: just concatenate messages
-        return data.messages.map((m: any) => `${m.role}: ${m.content}`).join('\n');
     }
+    
     // If not chat format, return original JSON string
     return JSON.stringify(data);
 }
 
-export function countTokens(text: string, tokenizerType: string = 'gpt-4'): number {
-    const encoder = getEncoder(tokenizerType);
-    
-    if (!encoder) {
-        // Fallback to approximation if encoder not ready
-        return Math.ceil(text.length / 4);
-    }
+export interface TokenCountResult {
+    count: number;
+    mode: 'chat' | 'full-json' | 'key' | 'raw-text';
+    key?: string;  // For mode='key', which key was used
+    preview: string;  // First 100 chars of what was tokenized
+}
+
+/**
+ * Count tokens in text using the specified tokenizer
+ * 
+ * @param text - Raw text or JSON string
+ * @param tokenizerType - Model tokenizer key (e.g., 'qwen-3', 'llama-3', 'gpt-4o')
+ * @param mode - Tokenization mode: 'auto', 'chat', 'full-json', 'key:<keyname>', 'raw-text'
+ * @returns Token count and metadata about what was tokenized
+ * @throws Error if tokenizer fails to load or tokenization fails
+ */
+export async function countTokens(
+    text: string, 
+    tokenizerType: string = 'qwen-3',
+    mode: string = 'auto'
+): Promise<TokenCountResult> {
+    const tokenizer = await getTokenizer(tokenizerType);
     
     try {
-        // Try to parse as JSON to check for chat completions format
         let textToTokenize = text;
+        let actualMode: TokenCountResult['mode'] = 'raw-text';
+        let usedKey: string | undefined;
+        
+        // Parse JSON if possible
+        let parsed: any = null;
         try {
-            const parsed = JSON.parse(text);
-            if (parsed && Array.isArray(parsed.messages)) {
-                // Apply chat template for accurate token counting
-                textToTokenize = applyChatTemplate(parsed, tokenizerType);
-            }
+            parsed = JSON.parse(text);
         } catch {
-            // Not JSON or not chat format, use original text
+            // Not JSON, use raw text
         }
         
-        const tokens = encoder.encode(textToTokenize);
-        return tokens.length;
+        // Determine what to tokenize based on mode
+        if (mode === 'auto') {
+            // Auto-detect: prefer messages array with chat template, fallback to full JSON
+            if (parsed && Array.isArray(parsed.messages)) {
+                try {
+                    textToTokenize = await applyChatTemplate(parsed, tokenizerType);
+                    actualMode = 'chat';
+                } catch (chatError) {
+                    // Chat template not available for this tokenizer, fall back to full-json
+                    console.log(`[Tokenizer] Chat template not available for ${tokenizerType}, falling back to full-json mode`);
+                    textToTokenize = JSON.stringify(parsed);
+                    actualMode = 'full-json';
+                }
+            } else if (parsed) {
+                textToTokenize = JSON.stringify(parsed);
+                actualMode = 'full-json';
+            } else {
+                // Keep original text
+                actualMode = 'raw-text';
+            }
+        } else if (mode === 'chat') {
+            // Force chat mode
+            if (parsed && Array.isArray(parsed.messages)) {
+                textToTokenize = await applyChatTemplate(parsed, tokenizerType);
+                actualMode = 'chat';
+            } else {
+                throw new Error('No messages array found for chat mode');
+            }
+        } else if (mode === 'full-json') {
+            // Force full JSON
+            if (parsed) {
+                textToTokenize = JSON.stringify(parsed);
+                actualMode = 'full-json';
+            } else {
+                throw new Error('Not valid JSON for full-json mode');
+            }
+        } else if (mode.startsWith('key:')) {
+            // Extract specific key
+            const keyName = mode.substring(4);
+            if (parsed && keyName in parsed) {
+                const value = parsed[keyName];
+                textToTokenize = typeof value === 'string' ? value : JSON.stringify(value);
+                actualMode = 'key';
+                usedKey = keyName;
+            } else {
+                throw new Error(`Key "${keyName}" not found in JSON`);
+            }
+        } else if (mode === 'raw-text') {
+            // Use raw text as-is
+            textToTokenize = text;
+            actualMode = 'raw-text';
+        }
+        
+        // Tokenize using the actual model tokenizer
+        const tokens = await tokenizer.encode(textToTokenize);
+        
+        return {
+            count: tokens.length,
+            mode: actualMode,
+            key: usedKey,
+            preview: textToTokenize.substring(0, 100),
+        };
     } catch (error) {
-        console.error('Token counting error:', error);
-        return Math.ceil(text.length / 4);
+        throw new Error(
+            `Token counting failed for ${TOKENIZER_CONFIGS[tokenizerType].name}:\n${error}`
+        );
     }
 }
 
+/**
+ * Cleanup loaded tokenizers
+ */
 export function cleanup(): void {
-    // Free all encoders
-    for (const encoder of encoders.values()) {
-        try {
-            encoder.free();
-        } catch (e) {
-            // Ignore errors during cleanup
-        }
-    }
-    encoders.clear();
-    
-    if (defaultEncoder) {
-        try {
-            defaultEncoder.free();
-        } catch (e) {
-            // Ignore
-        }
-        defaultEncoder = null;
-    }
+    tokenizers.clear();
 }

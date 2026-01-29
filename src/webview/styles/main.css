@@ -329,6 +329,47 @@ tr:hover {
     filter: saturate(1.0) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
 }
 
+/* Error Banner */
+#error-banner {
+    display: none;
+    background-color: var(--vscode-inputValidation-errorBackground);
+    border: 1px solid var(--vscode-inputValidation-errorBorder);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+}
+
+#error-banner.visible {
+    display: block;
+}
+
+.error-banner-title {
+    color: var(--vscode-errorForeground);
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.error-banner-message {
+    color: var(--vscode-foreground);
+    font-size: 12px;
+    font-family: var(--vscode-editor-font-family);
+    white-space: pre-wrap;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.error-banner-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.error-banner-actions button {
+    padding: 4px 10px;
+    font-size: 12px;
+}
+
 .no-results {
     text-align: center;
     padding: 48px 24px;

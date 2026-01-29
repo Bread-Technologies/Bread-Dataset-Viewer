@@ -20,6 +20,7 @@ export interface LoadLinesMessage extends BaseMessage {
     limit: number;
     searchTerm?: string;
     tokenizer: string;
+    tokenMode?: string;
 }
 
 /**
@@ -29,6 +30,7 @@ export interface JumpToLineMessage extends BaseMessage {
     type: 'jumpToLine';
     lineNumber: number;
     tokenizer: string;
+    tokenMode?: string;
 }
 
 /**
@@ -49,11 +51,30 @@ export interface LinesResponseMessage extends BaseMessage {
 }
 
 /**
+ * Token count result for a single row
+ */
+export interface TokenCountData {
+    count: number;
+    mode: 'chat' | 'full-json' | 'key' | 'raw-text' | 'error';
+    key?: string;
+    preview?: string;
+    error?: string;
+}
+
+/**
  * Message from extension to webview: Token counts
  */
 export interface TokensMessage extends BaseMessage {
     type: 'tokens';
-    counts: { [index: number]: number };
+    tokens: { [index: number]: TokenCountData };
+}
+
+/**
+ * Message from extension to webview: Token errors
+ */
+export interface TokenErrorsMessage extends BaseMessage {
+    type: 'tokenErrors';
+    errors: string[];
 }
 
 /**

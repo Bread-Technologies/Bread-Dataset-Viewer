@@ -1,7 +1,7 @@
 {
   "name": "ml-workbench",
   "displayName": "ML Workbench",
-  "description": "View JSONL datasets and chat with local models",
+  "description": "View JSONL datasets with accurate token counting for ML training data",
   "version": "0.1.0",
   "publisher": "ml-workbench",
   "engines": {
@@ -16,8 +16,7 @@
     "onCustomEditor:mlWorkbench.jsonlViewer",
     "onCustomEditor:mlWorkbench.parquetViewer",
     "onCustomEditor:mlWorkbench.csvViewer",
-    "onCustomEditor:mlWorkbench.arrowViewer",
-    "onCustomEditor:mlWorkbench.modelChat"
+    "onCustomEditor:mlWorkbench.arrowViewer"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -67,19 +66,6 @@
           }
         ],
         "priority": "default"
-      },
-      {
-        "viewType": "mlWorkbench.modelChat",
-        "displayName": "Chat with Model",
-        "selector": [
-          {
-            "filenamePattern": "*.gguf"
-          },
-          {
-            "filenamePattern": "*.safetensors"
-          }
-        ],
-        "priority": "option"
       }
     ],
     "languages": [
@@ -142,24 +128,6 @@
           "Feather",
           "Arrow Feather"
         ]
-      },
-      {
-        "id": "gguf",
-        "extensions": [
-          ".gguf"
-        ],
-        "aliases": [
-          "GGUF Model"
-        ]
-      },
-      {
-        "id": "safetensors",
-        "extensions": [
-          ".safetensors"
-        ],
-        "aliases": [
-          "Safetensors Model"
-        ]
       }
     ]
   },
@@ -185,10 +153,10 @@
   },
   "dependencies": {
     "@dsnp/parquetjs": "^1.8.7",
+    "@huggingface/transformers": "^3.8.1",
     "apache-arrow": "^21.1.0",
     "csv-parser": "^3.2.0",
     "katex": "^0.16.28",
-    "markdown-it": "^14.1.0",
-    "tiktoken": "^1.0.0"
+    "markdown-it": "^14.1.0"
   }
 }

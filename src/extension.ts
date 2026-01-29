@@ -1,24 +1,14 @@
 import * as vscode from 'vscode';
-// Old provider kept as backup during migration
-// import { JsonlEditorProvider } from './jsonlEditorProvider';
 import { JsonlDataProvider } from './providers/JsonlDataProvider';
 import { ParquetDataProvider } from './providers/ParquetDataProvider';
 import { CsvDataProvider } from './providers/CsvDataProvider';
 import { ArrowDataProvider } from './providers/ArrowDataProvider';
-import { ModelChatProvider } from './modelChatProvider';
-import { initializeBackends } from './backends';
-import { initTokenizer, cleanup as cleanupTokenizer } from './utils/tokenizer';
+import { cleanup as cleanupTokenizer } from './utils/tokenizer';
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('ML Workbench extension is now active');
 
-    // Initialize tokenizer for accurate token counting
-    await initTokenizer();
-
-    // Initialize backends (Ollama, etc.)
-    await initializeBackends(context);
-
-    // Register JSONL Viewer (new architecture)
+    // Register JSONL Viewer
     const jsonlProvider = new JsonlDataProvider(context);
     context.subscriptions.push(
         vscode.window.registerCustomEditorProvider(
@@ -69,21 +59,6 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.registerCustomEditorProvider(
             'mlWorkbench.arrowViewer',
             arrowProvider,
-            {
-                webviewOptions: {
-                    retainContextWhenHidden: true,
-                },
-                supportsMultipleEditorsPerDocument: false,
-            }
-        )
-    );
-
-    // Register Model Chat
-    const modelChatProvider = new ModelChatProvider(context);
-    context.subscriptions.push(
-        vscode.window.registerCustomEditorProvider(
-            'mlWorkbench.modelChat',
-            modelChatProvider,
             {
                 webviewOptions: {
                     retainContextWhenHidden: true,
