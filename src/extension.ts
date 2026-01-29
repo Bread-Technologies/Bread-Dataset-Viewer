@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { JsonlDataProvider } from './providers/JsonlDataProvider';
+import { JsonDataProvider } from './providers/JsonDataProvider';
 import { ParquetDataProvider } from './providers/ParquetDataProvider';
 import { CsvDataProvider } from './providers/CsvDataProvider';
 import { ArrowDataProvider } from './providers/ArrowDataProvider';
@@ -14,6 +15,21 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.registerCustomEditorProvider(
             'mlWorkbench.jsonlViewer',
             jsonlProvider,
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true,
+                },
+                supportsMultipleEditorsPerDocument: false,
+            }
+        )
+    );
+
+    // Register JSON Viewer
+    const jsonProvider = new JsonDataProvider(context);
+    context.subscriptions.push(
+        vscode.window.registerCustomEditorProvider(
+            'mlWorkbench.jsonViewer',
+            jsonProvider,
             {
                 webviewOptions: {
                     retainContextWhenHidden: true,
