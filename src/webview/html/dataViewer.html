@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSONL Viewer</title>
+    <link rel="stylesheet" href="{{katexCssUri}}">
+    <link rel="stylesheet" href="{{mainCssUri}}">
+    <script src="{{markdownItUri}}"></script>
+    <script src="{{katexJsUri}}"></script>
+    <script src="{{katexAutoRenderUri}}"></script>
+</head>
+<body>
+    <div id="toolbar">
+        <div class="toolbar-section">
+            <img src="{{breadIconUri}}" alt="🍞" class="bread-icon" title="ML Workbench JSONL Viewer">
+            <strong id="file-name"></strong>
+            <span style="font-size: 11px; color: var(--vscode-descriptionForeground);" id="file-size"></span>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <button id="pretty-view-btn" class="secondary active">Pretty</button>
+            <button id="render-view-btn" class="secondary">Render</button>
+            <button id="table-view-btn" class="secondary">Table</button>
+            <button id="raw-view-btn" class="secondary">Raw</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section" style="position: relative;">
+            <button id="path-toggle-btn" class="secondary">Filter <span style="font-size: 10px; margin-left: 2px; vertical-align: middle;">▾</span></button>
+            <div id="path-panel">
+                <div class="path-panel-header">
+                    <strong>Filter</strong>
+                    <span id="path-count">0/0 selected</span>
+                </div>
+                <div class="path-panel-actions">
+                    <button id="path-select-all" class="secondary">Select All</button>
+                    <button id="path-clear" class="secondary">Clear</button>
+                </div>
+                <div class="path-panel-list" id="path-list"></div>
+            </div>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <button id="edit-btn" class="secondary">Edit in Text Editor</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <label for="tokenizer-select" style="font-size: 12px; margin-right: 4px;" title="Select model tokenizer. For chat completions format, applies model-specific chat template before counting tokens.">Tokenizer:</label>
+            <select id="tokenizer-select" title="OpenAI models use exact tokenizers. Other models use approximations with chat templates applied for chat completions format.">
+                <optgroup label="OpenAI Models (Exact)">
+                    <option value="gpt-4">GPT-4 / GPT-3.5-Turbo (cl100k_base)</option>
+                    <option value="gpt-3">GPT-3 Davinci/Curie (p50k_base)</option>
+                    <option value="gpt-2">GPT-2 (r50k_base)</option>
+                </optgroup>
+                <optgroup label="Anthropic (Exact)">
+                    <option value="claude">Claude (cl100k_base)</option>
+                </optgroup>
+                <optgroup label="Meta Llama (Template Applied)">
+                    <option value="llama-3">Llama 3 / 3.1 / 3.2</option>
+                    <option value="llama-2">Llama 2</option>
+                </optgroup>
+                <optgroup label="Chinese Models (Approximation)">
+                    <option value="qwen">Qwen / Qwen2</option>
+                    <option value="qwen2.5">Qwen 2.5</option>
+                    <option value="glm">ChatGLM / GLM-4</option>
+                    <option value="baichuan">Baichuan 2</option>
+                    <option value="yi">Yi / Yi-1.5</option>
+                </optgroup>
+                <optgroup label="Other Models (Approximation)">
+                    <option value="mistral">Mistral / Mixtral</option>
+                    <option value="gemma">Gemma / Gemma 2</option>
+                    <option value="phi">Phi-2 / Phi-3</option>
+                    <option value="deepseek">DeepSeek</option>
+                    <option value="internlm">InternLM 2</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <input type="text" id="search-input" placeholder="Search records...">
+            <button id="search-btn" class="secondary">Search</button>
+            <button id="clear-search-btn" class="secondary">Clear</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section jump-to-line">
+            <span style="font-size: 12px;">Jump to line:</span>
+            <input type="number" id="jump-line-input" placeholder="Line #" min="0">
+            <button id="jump-btn" class="secondary">Go</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <span class="stat-label">Loaded:</span>
+                <span id="loaded-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Avg Tokens:</span>
+                <span id="avg-tokens">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Max Tokens:</span>
+                <span id="max-tokens">-</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="container">
+        <div id="pretty-container"></div>
+        <div id="render-container" style="display: none;"></div>
+        <div id="table-container" style="display: none;">
+            <table id="data-table">
+                <thead id="table-head"></thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+        <div id="raw-container" style="display: none;"></div>
+        <div class="load-more-container" id="load-more-container" style="display: none;">
+            <button id="load-more-btn">Load More (100 lines)</button>
+        </div>
+        <div class="loading" id="loading" style="display: none;">Loading...</div>
+    </div>
+
+    <script src="{{viewerJsUri}}"></script>
+</body>
+</html>

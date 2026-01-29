@@ -1,12 +1,29 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
-import * as readline from 'readline';
 import * as path from 'path';
-import { countTokens } from './utils/tokenizer';
+import { IDataLoader, FileFormat } from '../formats/interfaces';
+import { countTokens } from '../utils/tokenizer';
+import { LoadLinesMessage, JumpToLineMessage } from '../webview/types/messages';
 
-export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider {
-    constructor(private readonly context: vscode.ExtensionContext) {}
+/**
+ * Abstract base provider for data file viewers
+ * Provides common logic for document lifecycle, webview setup, and data loading
+ */
+export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorProvider {
+    constructor(
+        protected readonly context: vscode.ExtensionContext,
+        protected readonly supportedFormats: FileFormat[]
+    ) {}
 
+    /**
+     * Create a format-specific data loader
+     * Subclasses must implement this to return the appropriate loader
+     */
+    abstract createLoader(filePath: string): IDataLoader;
+
+    /**
+     * Open custom document (standard lifecycle)
+     */
     async openCustomDocument(
         uri: vscode.Uri,
         openContext: vscode.CustomDocumentOpenContext,
@@ -15,13 +32,17 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         return { uri, dispose: () => {} };
     }
 
+    /**
+     * Resolve custom editor - setup webview and initialize loader
+     */
     async resolveCustomEditor(
         document: vscode.CustomDocument,
         webviewPanel: vscode.WebviewPanel,
         token: vscode.CancellationToken
     ): Promise<void> {
         const startTime = Date.now();
-        
+
+        // Setup webview options
         webviewPanel.webview.options = {
             enableScripts: true,
             localResourceRoots: [
@@ -30,9 +51,10 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         };
 
         console.log(`[PERF] Options set: ${Date.now() - startTime}ms`);
-        
+
+        // Load HTML for webview
         webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
-        
+
         console.log(`[PERF] HTML set: ${Date.now() - startTime}ms`);
 
         // Get file stats
@@ -41,7 +63,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         const fileSizeMB = (fileSizeBytes / 1024 / 1024).toFixed(2);
 
         console.log(`[PERF] Stats read: ${Date.now() - startTime}ms`);
-        
+
         // Send initial file info
         webviewPanel.webview.postMessage({
             type: 'fileInfo',
@@ -50,143 +72,121 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
             fileSize: fileSizeBytes,
             fileSizeMB: fileSizeMB,
         });
-        
+
         console.log(`[PERF] File info sent: ${Date.now() - startTime}ms`);
 
-        // Handle messages from webview
+        // Setup message handlers
+        this.setupMessageHandlers(document, webviewPanel);
+
+        // Load initial batch
+        await this.loadAndSendRows(document.uri.fsPath, webviewPanel.webview, 0, 100);
+
+        console.log(`[PERF] Initial data loaded: ${Date.now() - startTime}ms`);
+    }
+
+    /**
+     * Setup message handlers for webview communication
+     */
+    protected setupMessageHandlers(
+        document: vscode.CustomDocument,
+        webviewPanel: vscode.WebviewPanel
+    ): void {
         webviewPanel.webview.onDidReceiveMessage(async (message) => {
             switch (message.type) {
                 case 'loadLines':
-                    await this.loadLines(
+                    const loadMsg = message as LoadLinesMessage;
+                    await this.loadAndSendRows(
                         document.uri.fsPath,
                         webviewPanel.webview,
-                        message.offset,
-                        message.limit,
-                        message.searchTerm,
-                        message.tokenizer
+                        loadMsg.offset,
+                        loadMsg.limit,
+                        loadMsg.searchTerm,
+                        loadMsg.tokenizer
                     );
                     break;
                 case 'jumpToLine':
-                    await this.jumpToLine(
+                    const jumpMsg = message as JumpToLineMessage;
+                    await this.jumpToRow(
                         document.uri.fsPath,
                         webviewPanel.webview,
-                        message.lineNumber,
-                        message.tokenizer
+                        jumpMsg.lineNumber,
+                        jumpMsg.tokenizer
                     );
                     break;
                 case 'openInTextEditor':
-                    // Open the file in the default text editor
                     const doc = await vscode.workspace.openTextDocument(document.uri);
                     await vscode.window.showTextDocument(doc, { preview: false });
                     break;
             }
         });
-
-        // Load initial batch
-        await this.loadLines(document.uri.fsPath, webviewPanel.webview, 0, 100);
-        
-        console.log(`[PERF] Initial lines loaded: ${Date.now() - startTime}ms`);
     }
 
-    private async loadLines(
+    /**
+     * Load and send rows to webview with token counting
+     */
+    protected async loadAndSendRows(
         filePath: string,
         webview: vscode.Webview,
-        offset: number = 0,
-        limit: number = 100,
+        offset: number,
+        limit: number,
         searchTerm?: string,
         tokenizer: string = 'gpt-4'
     ): Promise<void> {
-        const loadStart = Date.now();
+        const loader = this.createLoader(filePath);
+
         try {
-            const stream = fs.createReadStream(filePath, { encoding: 'utf8' });
-            const rl = readline.createInterface({ input: stream });
+            await loader.initialize(filePath);
 
-            let lineNum = 0; // Start at 0 for zero-based indexing
-            const lines: any[] = [];
-            let skippedBySearch = 0;
+            const filter = searchTerm ? { searchTerm } : undefined;
+            const batch = await loader.loadRows(offset, limit, filter);
 
-            for await (const line of rl) {
-                // Skip lines before offset
-                if (lineNum < offset) {
-                    lineNum++;
-                    continue;
-                }
-
-                // Stop if we have enough lines
-                if (lines.length >= limit) {
-                    break;
-                }
-
-                // Apply search filter if present
-                if (searchTerm && !line.toLowerCase().includes(searchTerm.toLowerCase())) {
-                    skippedBySearch++;
-                    lineNum++;
-                    continue;
-                }
-
+            // Count tokens for each row
+            const tokenCounts: { [index: number]: number } = {};
+            for (const row of batch.rows) {
                 try {
-                    const data = JSON.parse(line);
-                    lines.push({ index: lineNum, data, raw: line });
-                } catch {
-                    // Handle malformed JSON
-                    lines.push({ index: lineNum, data: null, raw: line, error: true });
+                    const text = loader.extractTextForTokens(row.data);
+                    const tokens = await countTokens(text, tokenizer);
+                    tokenCounts[row.index] = tokens;
+                    row.tokens = tokens;
+                } catch (error) {
+                    console.error(`Error counting tokens for row ${row.index}:`, error);
                 }
-
-                lineNum++;
             }
 
-            rl.close();
-            stream.destroy();
-
-            console.log(`[PERF] File read complete: ${Date.now() - loadStart}ms (${lines.length} lines)`);
-
-            // Send lines immediately without tokens
+            // Send rows to webview
             webview.postMessage({
                 type: 'lines',
-                lines,
-                hasMore: lines.length === limit,
-                nextOffset: lineNum,
-                searchTerm,
-                skippedBySearch,
+                lines: batch.rows,
+                hasMore: batch.hasMore,
+                nextOffset: batch.nextOffset
             });
-            
-            console.log(`[PERF] Lines message sent: ${Date.now() - loadStart}ms`);
 
-            // Calculate tokens in background and send separately
-            setImmediate(() => {
-                const tokenStart = Date.now();
-                const tokensMap: { [key: number]: number } = {};
-                for (const line of lines) {
-                    tokensMap[line.index] = countTokens(line.raw, tokenizer);
-                }
-                console.log(`[PERF] Token counting done: ${Date.now() - tokenStart}ms for ${lines.length} lines`);
-                
-                webview.postMessage({
-                    type: 'tokens',
-                    tokens: tokensMap,
-                });
-                
-                console.log(`[PERF] Tokens message sent: ${Date.now() - tokenStart}ms`);
-            });
-        } catch (error) {
+            // Send token counts
             webview.postMessage({
-                type: 'error',
-                message: `Failed to load file: ${error}`,
+                type: 'tokens',
+                counts: tokenCounts
             });
+        } finally {
+            loader.dispose();
         }
     }
 
-    private async jumpToLine(
+    /**
+     * Jump to a specific row and load from that point
+     */
+    protected async jumpToRow(
         filePath: string,
         webview: vscode.Webview,
-        targetLine: number,
+        targetRow: number,
         tokenizer: string = 'gpt-4'
     ): Promise<void> {
-        // For jump-to-line, we load from that line
-        await this.loadLines(filePath, webview, targetLine, 100, undefined, tokenizer);
+        await this.loadAndSendRows(filePath, webview, targetRow, 100, undefined, tokenizer);
     }
 
-    private getHtmlForWebview(webview: vscode.Webview): string {
+    /**
+     * Load HTML template and inject resource URIs
+     */
+    protected getHtmlForWebview(webview: vscode.Webview): string {
         // Generate URIs for external resources
         const markdownItUri = webview.asWebviewUri(
             vscode.Uri.file(path.join(this.context.extensionPath, 'node_modules', 'markdown-it', 'dist', 'markdown-it.min.js'))

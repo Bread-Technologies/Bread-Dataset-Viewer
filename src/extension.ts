@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
-import { JsonlEditorProvider } from './jsonlEditorProvider';
+// Old provider kept as backup during migration
+// import { JsonlEditorProvider } from './jsonlEditorProvider';
+import { JsonlDataProvider } from './providers/JsonlDataProvider';
 import { ModelChatProvider } from './modelChatProvider';
 import { initializeBackends } from './backends';
 import { initTokenizer, cleanup as cleanupTokenizer } from './utils/tokenizer';
@@ -13,8 +15,8 @@ export async function activate(context: vscode.ExtensionContext) {
     // Initialize backends (Ollama, etc.)
     await initializeBackends(context);
 
-    // Register JSONL Viewer
-    const jsonlProvider = new JsonlEditorProvider(context);
+    // Register JSONL Viewer (new architecture)
+    const jsonlProvider = new JsonlDataProvider(context);
     context.subscriptions.push(
         vscode.window.registerCustomEditorProvider(
             'mlWorkbench.jsonlViewer',
