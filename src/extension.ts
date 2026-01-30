@@ -62,6 +62,21 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    // Reapply decorations after document content updates (fixes color reversion bug during navigation)
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeTextDocument(e => {
+            // Only handle jsonl-view documents
+            if (e.document.uri.scheme !== JsonlTextViewProvider.scheme) return;
+
+            // Find the editor showing this document
+            const editor = vscode.window.visibleTextEditors.find(ed => ed.document === e.document);
+            if (!editor) return;
+
+            // Reapply decorations with the updated content
+            applyJsonlDecorations(editor, jsonlDecorationTypes);
+        })
+    );
+
     // Turn header action labels into clickable command links
     context.subscriptions.push(
         vscode.languages.registerDocumentLinkProvider(
@@ -112,7 +127,8 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.window.onDidChangeTextEditorVisibleRanges((e: vscode.TextEditorVisibleRangesChangeEvent) => {
             if (e.textEditor.document.uri.scheme !== JsonlTextViewProvider.scheme) return;
             const width = sampleColumnWidth(e.textEditor);
-            if (width != null) textProvider.setColumnWidth(e.textEditor.document.uri, width);
+            // Use growOnly to prevent shrinking during navigation transitions
+            if (width != null) textProvider.setColumnWidth(e.textEditor.document.uri, width, true);
         })
     );
 
@@ -125,7 +141,8 @@ export async function activate(context: vscode.ExtensionContext) {
                 const ed = vscode.window.activeTextEditor;
                 if (!ed || ed.document.uri.toString() !== viewUri.toString()) return;
                 const width = sampleColumnWidth(ed);
-                if (width != null) textProvider.setColumnWidth(viewUri, width);
+                // Use growOnly to prevent shrinking during navigation
+                if (width != null) textProvider.setColumnWidth(viewUri, width, true);
             };
             setTimeout(run, 50);
             setTimeout(run, 200);
@@ -149,7 +166,8 @@ export async function activate(context: vscode.ExtensionContext) {
                 const editor = vscode.window.activeTextEditor;
                 if (editor?.document.uri.toString() !== viewUri.toString()) return;
                 const width = sampleColumnWidth(editor);
-                if (width != null && width >= 40) textProvider.setColumnWidth(viewUri, width);
+                // Use growOnly to prevent shrinking during navigation
+                if (width != null && width >= 40) textProvider.setColumnWidth(viewUri, width, true);
             };
             [50, 150, 400, 1000].forEach(ms => setTimeout(trySetWidth, ms));
             [100, 300].forEach(ms => setTimeout(updateJsonlViewDecorations, ms));
@@ -180,6 +198,8 @@ export async function activate(context: vscode.ExtensionContext) {
             textProvider.updateState(editor.document.uri, st => {
                 st.startLine = Math.max(0, st.startLine + st.pageSize);
             });
+            // Add timeout to ensure decorations reapply after content refresh
+            setTimeout(() => updateJsonlViewDecorations(), 50);
         })
     );
 
@@ -192,6 +212,8 @@ export async function activate(context: vscode.ExtensionContext) {
             textProvider.updateState(editor.document.uri, st => {
                 st.startLine = Math.max(0, st.startLine - st.pageSize);
             });
+            // Add timeout to ensure decorations reapply after content refresh
+            setTimeout(() => updateJsonlViewDecorations(), 50);
         })
     );
 

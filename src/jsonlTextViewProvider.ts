@@ -5,7 +5,7 @@ import { getTokenizerName, countTokens } from './utils/tokenizer';
 
 export type ViewMode = 'cards';
 
-const DEFAULT_COLUMN_WIDTH = 80;
+const DEFAULT_COLUMN_WIDTH = 120;
 const MIN_COLUMN_WIDTH = 40;
 const MAX_COLUMN_WIDTH = 500;
 /** Horizontal padding (spaces) between card border and content. */
@@ -111,9 +111,11 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
     }
 
     /** Update visible column width and refresh (call when editor is resized). */
-    public setColumnWidth(viewUri: vscode.Uri, width: number): void {
+    public setColumnWidth(viewUri: vscode.Uri, width: number, growOnly: boolean = false): void {
         const clamped = Math.max(MIN_COLUMN_WIDTH, Math.min(MAX_COLUMN_WIDTH, Math.floor(width)));
         const st = this.getOrInitState(viewUri);
+        // If growOnly is true, only update if new width is larger (prevents shrinking during navigation)
+        if (growOnly && clamped <= st.columnWidth) return;
         if (st.columnWidth === clamped) return;
         st.columnWidth = clamped;
         this.emitter.fire(viewUri);
