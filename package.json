@@ -73,6 +73,46 @@
         "command": "mlWorkbench.jsonlText.setTokenizer",
         "title": "JSONL Text Viewer: Set Tokenizer",
         "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.openTextViewer",
+        "title": "Open Text Viewer (Fast, All Formats)",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.textViewer.setMode",
+        "title": "Text Viewer: Set Mode",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.textViewer.nextPage",
+        "title": "Text Viewer: Next Page",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.textViewer.prevPage",
+        "title": "Text Viewer: Previous Page",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.textViewer.search",
+        "title": "Text Viewer: Search",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.textViewer.gotoLine",
+        "title": "Text Viewer: Go to Line",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.textViewer.openInEditor",
+        "title": "Text Viewer: Open File for Editing",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.textViewer.setTokenizer",
+        "title": "Text Viewer: Set Tokenizer",
+        "category": "ML Workbench"
       }
     ],
     "customEditors": [
@@ -206,6 +246,11 @@
           "command": "mlWorkbench.openJsonlTextViewer",
           "when": "resourceExtname == .jsonl",
           "group": "navigation@12"
+        },
+        {
+          "command": "mlWorkbench.openTextViewer",
+          "when": "resourceExtname =~ /\\.(jsonl|json|csv|tsv|parquet|arrow|feather)$/",
+          "group": "navigation@10"
         }
       ],
       "editor/title": [
@@ -218,6 +263,11 @@
           "command": "mlWorkbench.openJsonlTextViewer",
           "when": "resourceExtname == .jsonl || resourceScheme == jsonl-view",
           "group": "navigation@12"
+        },
+        {
+          "command": "mlWorkbench.openTextViewer",
+          "when": "resourceExtname =~ /\\.(jsonl|json|csv|tsv|parquet|arrow|feather)$/ || resourceScheme == data-text-view",
+          "group": "navigation@10"
         }
       ]
     }
