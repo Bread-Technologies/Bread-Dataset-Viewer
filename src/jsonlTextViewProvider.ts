@@ -4,7 +4,7 @@ import * as readline from 'readline';
 
 type ViewMode = 'cards' | 'table' | 'raw';
 
-const DEFAULT_COLUMN_WIDTH = 300;
+const DEFAULT_COLUMN_WIDTH = 80;
 const MIN_COLUMN_WIDTH = 40;
 const MAX_COLUMN_WIDTH = 500;
 
@@ -100,17 +100,16 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         this.emitter.fire(viewUri);
     }
 
-    /** Width used for rendering. Always use MAX_COLUMN_WIDTH so content is never cut off;
-     * visibleRanges-based sampling is unreliable for virtual documents. */
-    private getRenderWidth(_state: ViewerState): number {
-        return MAX_COLUMN_WIDTH;
+    /** Width used for rendering. Defaults to DEFAULT_COLUMN_WIDTH; may be updated by setColumnWidth (e.g. from visibleRanges). */
+    private getRenderWidth(state: ViewerState): number {
+        return state.columnWidth;
     }
 
     async provideTextDocumentContent(uri: vscode.Uri): Promise<string> {
         const state = this.getOrInitState(uri);
         const header = await this.buildHeader(state);
         const body = await this.render(state);
-        return `${header}\n${body}`;
+        return `${header}\n\n${body}`;
     }
 
     private async buildHeader(state: ViewerState): Promise<string> {
@@ -125,34 +124,35 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         }
         const filterLabel = state.filter ? `Filter: "${state.filter}"` : 'Filter: (none)';
         const rangeLabel = `Lines ${state.startLine}–${state.startLine + state.pageSize - 1}`;
-        const sep = '  │  ';
+        const pad = '   ';
+        const sep = '    │    ';
         const line0 = [
-            '🍞 ',
+            '  🍞  ',
             fileName,
             fileSizeLabel,
             sep,
-            JSONL_TEXT_HEADER_ACTIONS.NEXT,
-            ' ',
             JSONL_TEXT_HEADER_ACTIONS.PREV,
-            ' ',
+            pad,
+            JSONL_TEXT_HEADER_ACTIONS.NEXT,
+            pad,
             JSONL_TEXT_HEADER_ACTIONS.FILTER,
-            ' ',
+            pad,
             JSONL_TEXT_HEADER_ACTIONS.GOTO,
             sep,
             JSONL_TEXT_HEADER_ACTIONS.CARDS,
-            ' ',
+            pad,
             JSONL_TEXT_HEADER_ACTIONS.TABLE,
-            ' ',
+            pad,
             JSONL_TEXT_HEADER_ACTIONS.RAW,
             sep,
             rangeLabel,
-            '  │  ',
+            sep,
             filterLabel,
         ].join('');
         const renderWidth = this.getRenderWidth(state);
-        const rule = '═'.repeat(renderWidth);
         const line0Padded = line0.padEnd(Math.max(line0.length, renderWidth), ' ');
-        return [line0Padded, rule].join('\n');
+        const rule = '═'.repeat(renderWidth);
+        return ['', line0Padded, rule].join('\n');
     }
 
     private async render(state: ViewerState): Promise<string> {
@@ -227,29 +227,38 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         const hor = '─'.repeat(innerWidth);
         const top = '┌' + hor + '┐';
         const bottom = '└' + hor + '┘';
+        const sep = '├' + hor + '┤';
 
         for (const rec of records) {
-            const prefix = `[#${rec.index}] `;
+            const prefix = `  [#${rec.index}]  `;
             const summaryMaxLen = Math.max(20, innerWidth - prefix.length);
             const summary = this.buildSummary(rec, summaryMaxLen);
             const header = prefix + summary;
 
             const bodyLines: string[] = [];
             if (rec.data && typeof rec.data === 'object') {
-                const entries = Object.entries(rec.data).slice(0, 10);
+                const entries = Object.entries(rec.data).slice(0, 15);
                 for (const [key, value] of entries) {
-                    const line = `${key}: ${String(value)}`;
-                    bodyLines.push(this.padLine(line, innerWidth));
+                    if (value !== null && typeof value === 'object') {
+                        bodyLines.push(this.padLine(`  ${key}:`, innerWidth));
+                        for (const line of this.prettyValueLines(value, innerWidth - 4)) {
+                            bodyLines.push(this.padLine('    ' + line.trimEnd(), innerWidth));
+                        }
+                    } else {
+                        const line = `  ${key}: ${this.formatValueOneLine(value)}`;
+                        bodyLines.push(this.padLine(line, innerWidth));
+                    }
                 }
             } else {
-                bodyLines.push(this.padLine(rec.raw, innerWidth));
+                bodyLines.push(this.padLine('  ' + rec.raw, innerWidth));
             }
 
             const headerPadded = this.padLine(header, innerWidth);
             const boxLines = [
                 top,
                 '│' + headerPadded + '│',
-                ...bodyLines.map(l => '│' + l + '│'),
+                sep,
+                ...bodyLines.map(l => '│' + this.padLine(l, innerWidth) + '│'),
                 bottom,
             ];
             boxes.push(boxLines.join('\n'));
@@ -290,7 +299,7 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
             for (const key of keys) {
                 let value = '';
                 if (rec.data && typeof rec.data === 'object' && key in rec.data) {
-                    value = String((rec.data as any)[key]);
+                    value = this.formatValueOneLine((rec.data as any)[key]);
                 }
                 cols.push(this.truncateCell(value, colWidth));
             }
@@ -302,8 +311,15 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
 
     private renderRaw(records: Array<{ index: number; data: any | null; raw: string }>): string {
         const chunks: string[] = [];
-        for (const rec of records) {
-            chunks.push(`L${rec.index}:\n${rec.raw}\n`);
+        const sep = '─'.repeat(40);
+        for (let i = 0; i < records.length; i++) {
+            if (i > 0) chunks.push(sep);
+            const rec = records[i];
+            if (rec.data !== null && typeof rec.data === 'object') {
+                chunks.push(`L${rec.index}:`, this.prettyPrintJson(rec.data));
+            } else {
+                chunks.push(`L${rec.index}:`, rec.raw);
+            }
         }
         return chunks.join('\n');
     }
@@ -316,6 +332,43 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
             }
         }
         return this.truncateText(rec.raw, maxLen);
+    }
+
+    /** Pretty-print JSON (reuses built-in; same idea as webview pretty view). */
+    private prettyPrintJson(value: unknown): string {
+        try {
+            return JSON.stringify(value, null, 2);
+        } catch {
+            return String(value);
+        }
+    }
+
+    /** Format a value for single-line display (e.g. table cell). */
+    private formatValueOneLine(value: unknown): string {
+        if (value === null) return 'null';
+        if (typeof value !== 'object') return String(value);
+        try {
+            return JSON.stringify(value);
+        } catch {
+            return String(value);
+        }
+    }
+
+    /** Pretty-printed lines for an object value; each line fits within maxWidth (wrap/truncate). */
+    private prettyValueLines(value: unknown, maxWidth: number): string[] {
+        const raw = this.prettyPrintJson(value);
+        const lines: string[] = [];
+        for (const line of raw.split(/\r?\n/)) {
+            if (line.length <= maxWidth) {
+                lines.push(this.padLine(line, maxWidth));
+            } else {
+                for (let i = 0; i < line.length; i += maxWidth) {
+                    const chunk = line.slice(i, i + maxWidth);
+                    lines.push(chunk.length < maxWidth ? this.padLine(chunk, maxWidth) : chunk);
+                }
+            }
+        }
+        return lines;
     }
 
     private padLine(text: string, width: number): string {

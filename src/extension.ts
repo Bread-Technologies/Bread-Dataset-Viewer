@@ -46,7 +46,10 @@ export async function activate(context: vscode.ExtensionContext) {
             {
                 provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
                     const links: vscode.DocumentLink[] = [];
-                    const line0 = document.lineAt(0).text;
+                    // Header has a leading blank line, so the link line is at index 1
+                    const linkLineIndex = 1;
+                    if (document.lineCount <= linkLineIndex) return links;
+                    const lineText = document.lineAt(linkLineIndex).text;
                     const tokens = [
                         { str: JSONL_TEXT_HEADER_ACTIONS.NEXT, command: 'mlWorkbench.jsonlText.nextPage' },
                         { str: JSONL_TEXT_HEADER_ACTIONS.PREV, command: 'mlWorkbench.jsonlText.prevPage' },
@@ -59,9 +62,9 @@ export async function activate(context: vscode.ExtensionContext) {
                     for (const { str, command, args } of tokens) {
                         let idx = 0;
                         while (true) {
-                            const pos = line0.indexOf(str, idx);
+                            const pos = lineText.indexOf(str, idx);
                             if (pos === -1) break;
-                            const range = new vscode.Range(0, pos, 0, pos + str.length);
+                            const range = new vscode.Range(linkLineIndex, pos, linkLineIndex, pos + str.length);
                             const query = args ? '?' + encodeURIComponent(JSON.stringify(args)) : '';
                             const target = vscode.Uri.parse(`command:${command}${query}`);
                             links.push(new vscode.DocumentLink(range, target));
