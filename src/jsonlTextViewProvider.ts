@@ -1,19 +1,26 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as readline from 'readline';
+import { getTokenizerName, countTokens } from './utils/tokenizer';
 
-type ViewMode = 'cards' | 'table' | 'raw';
+export type ViewMode = 'cards';
 
 const DEFAULT_COLUMN_WIDTH = 80;
 const MIN_COLUMN_WIDTH = 40;
 const MAX_COLUMN_WIDTH = 500;
+/** Horizontal padding (spaces) between card border and content. */
+const CARD_PAD_H = 2;
+/** Vertical padding: blank lines between card border and content. */
+const CARD_PAD_V = 1;
 
 interface ViewerState {
     fileUri: vscode.Uri;
     viewMode: ViewMode;
     startLine: number;
     pageSize: number;
-    filter: string | null;
+    search: string | null;
+    /** Tokenizer key (e.g. 'qwen-3') or null for none. */
+    tokenizer: string | null;
     /** Visible editor width (chars); set from onDidChangeTextEditorVisibleRanges. */
     columnWidth: number;
 }
@@ -22,11 +29,12 @@ interface ViewerState {
 export const JSONL_TEXT_HEADER_ACTIONS = {
     NEXT: '[Next]',
     PREV: '[Prev]',
-    FILTER: '[Filter]',
+    SEARCH: '[Search]',
     GOTO: '[Goto]',
     CARDS: '[Cards]',
-    TABLE: '[Table]',
-    RAW: '[Raw]',
+    /** Open file in text editor (view raw / edit). */
+    EDIT: '[Edit]',
+    TOKENIZER: '[Tokenizer]',
 } as const;
 
 export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider {
@@ -72,7 +80,8 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
                 viewMode: 'cards',
                 startLine: 0,
                 pageSize: 100,
-                filter: null,
+                search: null,
+                tokenizer: null,
                 columnWidth: DEFAULT_COLUMN_WIDTH,
             };
             this.state.set(key, st);
@@ -89,6 +98,16 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
     /** Current column width for a view (for callers that only want to grow). */
     public getColumnWidth(viewUri: vscode.Uri): number {
         return this.getOrInitState(viewUri).columnWidth;
+    }
+
+    /** Current view mode (e.g. to skip decorations in raw view). */
+    public getViewMode(viewUri: vscode.Uri): ViewMode {
+        return this.getOrInitState(viewUri).viewMode;
+    }
+
+    /** Current tokenizer key or null. */
+    public getTokenizer(viewUri: vscode.Uri): string | null {
+        return this.getOrInitState(viewUri).tokenizer;
     }
 
     /** Update visible column width and refresh (call when editor is resized). */
@@ -122,7 +141,10 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         } catch {
             fileSizeLabel = '';
         }
-        const filterLabel = state.filter ? `Filter: "${state.filter}"` : 'Filter: (none)';
+        const searchLabel = state.search ? `Search: "${state.search}"` : 'Search: (none)';
+        const tokenizerLabel = state.tokenizer
+            ? `Tokenizer: ${getTokenizerName(state.tokenizer) ?? state.tokenizer}`
+            : 'Tokenizer: (none)';
         const rangeLabel = `Lines ${state.startLine}–${state.startLine + state.pageSize - 1}`;
         const pad = '   ';
         const sep = '    │    ';
@@ -135,19 +157,21 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
             pad,
             JSONL_TEXT_HEADER_ACTIONS.NEXT,
             pad,
-            JSONL_TEXT_HEADER_ACTIONS.FILTER,
+            JSONL_TEXT_HEADER_ACTIONS.SEARCH,
             pad,
             JSONL_TEXT_HEADER_ACTIONS.GOTO,
             sep,
             JSONL_TEXT_HEADER_ACTIONS.CARDS,
             pad,
-            JSONL_TEXT_HEADER_ACTIONS.TABLE,
+            JSONL_TEXT_HEADER_ACTIONS.EDIT,
             pad,
-            JSONL_TEXT_HEADER_ACTIONS.RAW,
+            JSONL_TEXT_HEADER_ACTIONS.TOKENIZER,
             sep,
             rangeLabel,
             sep,
-            filterLabel,
+            searchLabel,
+            sep,
+            tokenizerLabel,
         ].join('');
         const renderWidth = this.getRenderWidth(state);
         const line0Padded = line0.padEnd(Math.max(line0.length, renderWidth), ' ');
@@ -160,15 +184,17 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         if (records.length === 0) {
             return '(no records to display)';
         }
-        switch (state.viewMode) {
-            case 'cards':
-                return this.renderCards(state, records);
-            case 'table':
-                return this.renderTable(state, records);
-            case 'raw':
-            default:
-                return this.renderRaw(records);
+        let tokenCounts: (number | null)[] | undefined;
+        if (state.tokenizer) {
+            tokenCounts = await Promise.all(
+                records.map((r) =>
+                    countTokens(r.raw, state.tokenizer!, 'auto')
+                        .then((res) => res.count)
+                        .catch(() => null)
+                )
+            );
         }
+        return this.renderCards(state, records, tokenCounts);
     }
 
     private async readPage(state: ViewerState): Promise<Array<{ index: number; data: any | null; raw: string }>> {
@@ -184,7 +210,7 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
 
         let lineNum = 0;
         const want = state.pageSize;
-        const filter = state.filter?.toLowerCase() ?? null;
+        const search = state.search?.toLowerCase() ?? null;
 
         try {
             for await (const line of rl) {
@@ -199,7 +225,7 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
                     break;
                 }
 
-                if (filter && !line.toLowerCase().includes(filter)) {
+                if (search && !line.toLowerCase().includes(search)) {
                     continue;
                 }
 
@@ -220,118 +246,65 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         return records;
     }
 
-    private renderCards(state: ViewerState, records: Array<{ index: number; data: any | null; raw: string }>): string {
+    private renderCards(
+        state: ViewerState,
+        records: Array<{ index: number; data: any | null; raw: string }>,
+        tokenCounts?: (number | null)[]
+    ): string {
         const width = this.getRenderWidth(state);
         const innerWidth = width - 2;
+        const contentWidth = innerWidth - 2 * CARD_PAD_H;
         const boxes: string[] = [];
         const hor = '─'.repeat(innerWidth);
         const top = '┌' + hor + '┐';
         const bottom = '└' + hor + '┘';
         const sep = '├' + hor + '┤';
+        const padSide = ' '.repeat(CARD_PAD_H);
+        const emptyLine = '│' + ' '.repeat(innerWidth) + '│';
 
-        for (const rec of records) {
-            const prefix = `  [#${rec.index}]  `;
-            const summaryMaxLen = Math.max(20, innerWidth - prefix.length);
-            const summary = this.buildSummary(rec, summaryMaxLen);
-            const header = prefix + summary;
+        for (let i = 0; i < records.length; i++) {
+            const rec = records[i];
+            const tokenStr =
+                tokenCounts && tokenCounts[i] !== null
+                    ? `  (${(tokenCounts[i] as number).toLocaleString()} tokens)`
+                    : tokenCounts
+                      ? '  (— tokens)'
+                      : '';
+            const header = `  [#${rec.index}]  ${tokenStr}  `.trimEnd();
 
             const bodyLines: string[] = [];
             if (rec.data && typeof rec.data === 'object') {
                 const entries = Object.entries(rec.data).slice(0, 15);
                 for (const [key, value] of entries) {
                     if (value !== null && typeof value === 'object') {
-                        bodyLines.push(this.padLine(`  ${key}:`, innerWidth));
-                        for (const line of this.prettyValueLines(value, innerWidth - 4)) {
-                            bodyLines.push(this.padLine('    ' + line.trimEnd(), innerWidth));
+                        bodyLines.push(this.padLine(`  ${key}:`, contentWidth));
+                        for (const line of this.prettyValueLines(value, contentWidth - 4)) {
+                            bodyLines.push(this.padLine('    ' + line.trimEnd(), contentWidth));
                         }
                     } else {
                         const line = `  ${key}: ${this.formatValueOneLine(value)}`;
-                        bodyLines.push(this.padLine(line, innerWidth));
+                        bodyLines.push(this.padLine(this.truncateAtWord(line, contentWidth), contentWidth));
                     }
                 }
             } else {
-                bodyLines.push(this.padLine('  ' + rec.raw, innerWidth));
+                bodyLines.push(this.padLine(this.truncateAtWord('  ' + rec.raw, contentWidth), contentWidth));
             }
 
-            const headerPadded = this.padLine(header, innerWidth);
+            const headerPadded = this.padLine(this.truncateAtWord(header, contentWidth), contentWidth);
+            const contentRow = (line: string) => '│' + padSide + line + padSide + '│';
+            const verticalPadding = Array(CARD_PAD_V).fill(emptyLine);
             const boxLines = [
                 top,
-                '│' + headerPadded + '│',
+                contentRow(headerPadded),
                 sep,
-                ...bodyLines.map(l => '│' + this.padLine(l, innerWidth) + '│'),
+                ...verticalPadding,
+                ...bodyLines.map((l) => contentRow(l)),
+                ...verticalPadding,
                 bottom,
             ];
             boxes.push(boxLines.join('\n'));
         }
         return boxes.join('\n\n');
-    }
-
-    private renderTable(state: ViewerState, records: Array<{ index: number; data: any | null; raw: string }>): string {
-        const maxCols = 6;
-        const keysSet = new Set<string>();
-        for (const rec of records) {
-            if (rec.data && typeof rec.data === 'object') {
-                for (const key of Object.keys(rec.data)) {
-                    keysSet.add(key);
-                    if (keysSet.size >= maxCols - 1) break;
-                }
-            }
-            if (keysSet.size >= maxCols - 1) break;
-        }
-        const keys = Array.from(keysSet);
-        const headers = ['idx', ...keys];
-        const numCols = headers.length;
-        const totalWidth = this.getRenderWidth(state) - numCols - 1; // reserve one char per │ (including sides)
-        const colWidth = Math.max(8, Math.floor(totalWidth / numCols));
-
-        const hor = '─'.repeat(colWidth);
-        const top = '┌' + Array(numCols).fill(hor).join('┬') + '┐';
-        const headSep = '├' + Array(numCols).fill(hor).join('┼') + '┤';
-        const bottom = '└' + Array(numCols).fill(hor).join('┴') + '┘';
-
-        const headerCells = headers.map(h => this.truncateCell(h, colWidth));
-        const headerRow = '│' + headerCells.join('│') + '│';
-
-        const rows: string[] = [];
-        for (const rec of records) {
-            const cols: string[] = [];
-            cols.push(this.truncateCell(String(rec.index), colWidth));
-            for (const key of keys) {
-                let value = '';
-                if (rec.data && typeof rec.data === 'object' && key in rec.data) {
-                    value = this.formatValueOneLine((rec.data as any)[key]);
-                }
-                cols.push(this.truncateCell(value, colWidth));
-            }
-            rows.push('│' + cols.join('│') + '│');
-        }
-
-        return [top, headerRow, headSep, ...rows, bottom].join('\n');
-    }
-
-    private renderRaw(records: Array<{ index: number; data: any | null; raw: string }>): string {
-        const chunks: string[] = [];
-        const sep = '─'.repeat(40);
-        for (let i = 0; i < records.length; i++) {
-            if (i > 0) chunks.push(sep);
-            const rec = records[i];
-            if (rec.data !== null && typeof rec.data === 'object') {
-                chunks.push(`L${rec.index}:`, this.prettyPrintJson(rec.data));
-            } else {
-                chunks.push(`L${rec.index}:`, rec.raw);
-            }
-        }
-        return chunks.join('\n');
-    }
-
-    private buildSummary(rec: { index: number; data: any | null; raw: string }, maxLen: number = 80): string {
-        if (rec.data && typeof rec.data === 'object') {
-            const anyData = rec.data as any;
-            if (typeof anyData.message === 'string') {
-                return this.truncateText(anyData.message, maxLen);
-            }
-        }
-        return this.truncateText(rec.raw, maxLen);
     }
 
     /** Pretty-print JSON (reuses built-in; same idea as webview pretty view). */
@@ -343,7 +316,7 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         }
     }
 
-    /** Format a value for single-line display (e.g. table cell). */
+    /** Format a value for single-line display. */
     private formatValueOneLine(value: unknown): string {
         if (value === null) return 'null';
         if (typeof value !== 'object') return String(value);
@@ -354,7 +327,7 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         }
     }
 
-    /** Pretty-printed lines for an object value; each line fits within maxWidth (wrap/truncate). */
+    /** Pretty-printed lines for an object value; each line fits within maxWidth (wrap at word boundaries). */
     private prettyValueLines(value: unknown, maxWidth: number): string[] {
         const raw = this.prettyPrintJson(value);
         const lines: string[] = [];
@@ -362,13 +335,38 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
             if (line.length <= maxWidth) {
                 lines.push(this.padLine(line, maxWidth));
             } else {
-                for (let i = 0; i < line.length; i += maxWidth) {
-                    const chunk = line.slice(i, i + maxWidth);
-                    lines.push(chunk.length < maxWidth ? this.padLine(chunk, maxWidth) : chunk);
-                }
+                lines.push(...this.wrapAtWords(line, maxWidth));
             }
         }
         return lines;
+    }
+
+    /** Wrap text at word boundaries so words don't split across lines. */
+    private wrapAtWords(text: string, maxWidth: number): string[] {
+        const result: string[] = [];
+        let remaining = text;
+        while (remaining.length > 0) {
+            if (remaining.length <= maxWidth) {
+                result.push(this.padLine(remaining, maxWidth));
+                break;
+            }
+            const chunk = remaining.slice(0, maxWidth + 1);
+            const lastSpace = chunk.lastIndexOf(' ');
+            const breakAt =
+                lastSpace > 0 ? lastSpace : maxWidth;
+            result.push(this.padLine(remaining.slice(0, breakAt), maxWidth));
+            remaining = remaining.slice(breakAt).replace(/^\s+/, '');
+        }
+        return result;
+    }
+
+    /** Truncate at last word boundary before width to avoid mid-word cut. */
+    private truncateAtWord(text: string, width: number): string {
+        if (text.length <= width) return text;
+        const slice = text.slice(0, width + 1);
+        const lastSpace = slice.lastIndexOf(' ');
+        if (lastSpace > width * 0.6) return text.slice(0, lastSpace);
+        return text.slice(0, width);
     }
 
     private padLine(text: string, width: number): string {
@@ -378,16 +376,5 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
         return text + ' '.repeat(width - text.length);
     }
 
-    private truncateText(text: string, max: number): string {
-        if (text.length <= max) return text;
-        return text.slice(0, max - 1) + '…';
-    }
-
-    private truncateCell(text: string, max: number): string {
-        if (text.length <= max) {
-            return text.padEnd(max, ' ');
-        }
-        return text.slice(0, max - 1) + '…';
-    }
 }
 

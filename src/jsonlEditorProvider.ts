@@ -1236,6 +1236,7 @@ export class JsonlEditorProvider implements vscode.CustomReadonlyEditorProvider 
         messageHandlerReady = true;
         messageQueue.forEach(msg => window.handleMessage(msg));
         messageQueue = [];
+        vscode.postMessage({ type: 'webviewReady' });
 
         function togglePathPanel() {
             pathPanelVisible = !pathPanelVisible;

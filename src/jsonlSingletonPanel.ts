@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { JsonlEditorProvider } from './jsonlEditorProvider';
+import { JsonlTextViewProvider } from './jsonlTextViewProvider';
 
 /**
  * Pattern B: single persistent webview panel (reused across opens).
@@ -40,6 +41,10 @@ export class JsonlSingletonPanel {
 
         this.panel.webview.onDidReceiveMessage(async (message) => {
             switch (message.type) {
+                case 'webviewReady':
+                    // Webview script just finished loading; (re)send current file so content loads
+                    await this.syncContentToWebview();
+                    break;
                 case 'loadLines': {
                     if (!this.currentFilePath) return;
                     await (this.provider as any).loadLines(
@@ -76,21 +81,28 @@ export class JsonlSingletonPanel {
     static async open(context: vscode.ExtensionContext, uri?: vscode.Uri): Promise<void> {
         if (!JsonlSingletonPanel.current) {
             JsonlSingletonPanel.current = new JsonlSingletonPanel(context);
-        } else {
-            JsonlSingletonPanel.current.panel.reveal(vscode.ViewColumn.Active);
         }
 
-        const targetUri = uri ?? vscode.window.activeTextEditor?.document?.uri;
-        if (!targetUri) return;
+        const rawUri = uri ?? vscode.window.activeTextEditor?.document?.uri;
+        if (!rawUri) return;
+        // Resolve jsonl-view (ASCII text viewer) URI to file URI so loading works
+        const targetUri = JsonlTextViewProvider.getFileUri(rawUri) ?? rawUri;
 
         await JsonlSingletonPanel.current.loadFile(targetUri);
+        JsonlSingletonPanel.current.panel.reveal(vscode.ViewColumn.Active);
     }
 
     private async loadFile(uri: vscode.Uri): Promise<void> {
-        const startTime = Date.now();
         this.currentFilePath = uri.fsPath;
+        await this.syncContentToWebview();
+    }
 
-        // Tell UI to clear old state quickly (added in webview script).
+    /** Send clear + fileInfo + initial lines to the webview. Called from loadFile and on webviewReady. */
+    private async syncContentToWebview(): Promise<void> {
+        if (!this.currentFilePath) return;
+        const uri = vscode.Uri.file(this.currentFilePath);
+        const startTime = Date.now();
+
         this.panel.webview.postMessage({ type: 'clear' });
 
         const stats = await fs.promises.stat(uri.fsPath);
@@ -107,7 +119,6 @@ export class JsonlSingletonPanel {
             backendTimeSinceStart: Date.now() - startTime,
         });
 
-        // Kick initial load (same as custom editor path)
         await (this.provider as any).loadLines(uri.fsPath, this.panel.webview, 0, 100);
     }
 }

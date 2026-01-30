@@ -19,8 +19,10 @@
     "onCommand:mlWorkbench.jsonlText.setMode",
     "onCommand:mlWorkbench.jsonlText.nextPage",
     "onCommand:mlWorkbench.jsonlText.prevPage",
-    "onCommand:mlWorkbench.jsonlText.filter",
+    "onCommand:mlWorkbench.jsonlText.search",
     "onCommand:mlWorkbench.jsonlText.gotoLine",
+    "onCommand:mlWorkbench.jsonlText.openInEditor",
+    "onCommand:mlWorkbench.jsonlText.setTokenizer",
     "onCustomEditor:mlWorkbench.jsonViewer",
     "onCustomEditor:mlWorkbench.parquetViewer",
     "onCustomEditor:mlWorkbench.csvViewer",
@@ -53,13 +55,23 @@
         "category": "ML Workbench"
       },
       {
-        "command": "mlWorkbench.jsonlText.filter",
-        "title": "JSONL Text Viewer: Filter",
+        "command": "mlWorkbench.jsonlText.search",
+        "title": "JSONL Text Viewer: Search",
         "category": "ML Workbench"
       },
       {
         "command": "mlWorkbench.jsonlText.gotoLine",
         "title": "JSONL Text Viewer: Go to Line",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.jsonlText.openInEditor",
+        "title": "JSONL Text Viewer: Open File for Editing",
+        "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.jsonlText.setTokenizer",
+        "title": "JSONL Text Viewer: Set Tokenizer",
         "category": "ML Workbench"
       }
     ],

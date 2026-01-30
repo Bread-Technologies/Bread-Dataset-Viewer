@@ -364,6 +364,23 @@ export async function countTokens(
 }
 
 /**
+ * Get tokenizer options for dropdown/quick-pick (id + display name).
+ */
+export function getTokenizerOptions(): { id: string; label: string }[] {
+    return Object.entries(TOKENIZER_CONFIGS).map(([id, config]) => ({
+        id,
+        label: config.name,
+    }));
+}
+
+/**
+ * Get display name for a tokenizer id, or undefined if unknown.
+ */
+export function getTokenizerName(id: string): string | undefined {
+    return TOKENIZER_CONFIGS[id]?.name;
+}
+
+/**
  * Cleanup loaded tokenizers
  */
 export function cleanup(): void {

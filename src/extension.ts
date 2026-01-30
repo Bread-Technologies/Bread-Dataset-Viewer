@@ -4,10 +4,11 @@ import { JsonDataProvider } from './providers/JsonDataProvider';
 import { ParquetDataProvider } from './providers/ParquetDataProvider';
 import { CsvDataProvider } from './providers/CsvDataProvider';
 import { ArrowDataProvider } from './providers/ArrowDataProvider';
-import { cleanup as cleanupTokenizer } from './utils/tokenizer';
+import { cleanup as cleanupTokenizer, getTokenizerOptions } from './utils/tokenizer';
 import { JsonlEditorProvider } from './jsonlEditorProvider';
 import { JsonlSingletonPanel } from './jsonlSingletonPanel';
 import { JsonlTextViewProvider, JSONL_TEXT_HEADER_ACTIONS } from './jsonlTextViewProvider';
+import { createJsonlDecorationTypes, applyJsonlDecorations } from './jsonlTextDecorations';
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('ML Workbench extension is now active');
@@ -36,6 +37,31 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
+    // Decoration types for text-view syntax coloring (dispose on deactivate)
+    const jsonlDecorationTypes = createJsonlDecorationTypes();
+    jsonlDecorationTypes.forEach(dt => context.subscriptions.push(dt));
+
+    const updateJsonlViewDecorations = () => {
+        const editor = vscode.window.activeTextEditor;
+        if (editor?.document.uri.scheme !== JsonlTextViewProvider.scheme) return;
+        applyJsonlDecorations(editor, jsonlDecorationTypes);
+    };
+
+    textProvider.onDidChange(uri => {
+        const editor = vscode.window.activeTextEditor;
+        if (editor?.document.uri.toString() === uri.toString()) {
+            updateJsonlViewDecorations();
+        }
+    });
+
+    context.subscriptions.push(
+        vscode.window.onDidChangeActiveTextEditor(editor => {
+            if (editor?.document.uri.scheme === JsonlTextViewProvider.scheme) {
+                updateJsonlViewDecorations();
+            }
+        })
+    );
+
     // Turn header action labels into clickable command links
     context.subscriptions.push(
         vscode.languages.registerDocumentLinkProvider(
@@ -50,11 +76,11 @@ export async function activate(context: vscode.ExtensionContext) {
                     const tokens = [
                         { str: JSONL_TEXT_HEADER_ACTIONS.NEXT, command: 'mlWorkbench.jsonlText.nextPage' },
                         { str: JSONL_TEXT_HEADER_ACTIONS.PREV, command: 'mlWorkbench.jsonlText.prevPage' },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.FILTER, command: 'mlWorkbench.jsonlText.filter' },
+                        { str: JSONL_TEXT_HEADER_ACTIONS.SEARCH, command: 'mlWorkbench.jsonlText.search' },
                         { str: JSONL_TEXT_HEADER_ACTIONS.GOTO, command: 'mlWorkbench.jsonlText.gotoLine' },
                         { str: JSONL_TEXT_HEADER_ACTIONS.CARDS, command: 'mlWorkbench.jsonlText.setMode', args: ['cards'] },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.TABLE, command: 'mlWorkbench.jsonlText.setMode', args: ['table'] },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.RAW, command: 'mlWorkbench.jsonlText.setMode', args: ['raw'] },
+                        { str: JSONL_TEXT_HEADER_ACTIONS.EDIT, command: 'mlWorkbench.jsonlText.openInEditor' },
+                        { str: JSONL_TEXT_HEADER_ACTIONS.TOKENIZER, command: 'mlWorkbench.jsonlText.setTokenizer' },
                     ];
                     for (const { str, command, args } of tokens) {
                         let idx = 0;
@@ -116,6 +142,8 @@ export async function activate(context: vscode.ExtensionContext) {
             const viewUri = JsonlTextViewProvider.toViewUri(target);
             const doc = await vscode.workspace.openTextDocument(viewUri);
             await vscode.window.showTextDocument(doc, { preview: false });
+            // Use plaintext so no grammar tokenizes box-drawing chars (┌│─ etc.) and causes pink/weird colors
+            await vscode.languages.setTextDocumentLanguage(doc, 'plaintext');
             // Poll for viewport width until layout is ready (provider pads all lines so visibleRanges reflects real width).
             const trySetWidth = () => {
                 const editor = vscode.window.activeTextEditor;
@@ -124,16 +152,17 @@ export async function activate(context: vscode.ExtensionContext) {
                 if (width != null && width >= 40) textProvider.setColumnWidth(viewUri, width);
             };
             [50, 150, 400, 1000].forEach(ms => setTimeout(trySetWidth, ms));
+            [100, 300].forEach(ms => setTimeout(updateJsonlViewDecorations, ms));
         })
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('mlWorkbench.jsonlText.setMode', async (mode?: 'cards' | 'table' | 'raw') => {
+        vscode.commands.registerCommand('mlWorkbench.jsonlText.setMode', async (mode?: 'cards') => {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== JsonlTextViewProvider.scheme) {
                 return;
             }
-            if (mode !== 'cards' && mode !== 'table' && mode !== 'raw') {
+            if (mode !== 'cards') {
                 return;
             }
             textProvider.updateState(editor.document.uri, st => {
@@ -167,7 +196,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('mlWorkbench.jsonlText.filter', async () => {
+        vscode.commands.registerCommand('mlWorkbench.jsonlText.search', async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== JsonlTextViewProvider.scheme) {
                 return;
@@ -175,14 +204,14 @@ export async function activate(context: vscode.ExtensionContext) {
             const uri = editor.document.uri;
             let current: string | null = null;
             textProvider.updateState(uri, st => {
-                current = st.filter;
+                current = st.search;
             });
             const pattern = await vscode.window.showInputBox({
-                prompt: 'Filter lines (substring match)',
+                prompt: 'Search lines (substring match)',
                 value: current ?? '',
             });
             textProvider.updateState(uri, st => {
-                st.filter = pattern && pattern.length > 0 ? pattern : null;
+                st.search = pattern && pattern.length > 0 ? pattern : null;
                 st.startLine = 0;
             });
         })
@@ -206,6 +235,43 @@ export async function activate(context: vscode.ExtensionContext) {
             }
             textProvider.updateState(editor.document.uri, st => {
                 st.startLine = n;
+            });
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('mlWorkbench.jsonlText.openInEditor', async () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor || editor.document.uri.scheme !== JsonlTextViewProvider.scheme) return;
+            const fileUri = JsonlTextViewProvider.getFileUri(editor.document.uri);
+            if (!fileUri) return;
+            const doc = await vscode.workspace.openTextDocument(fileUri);
+            await vscode.window.showTextDocument(doc, { preview: false });
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('mlWorkbench.jsonlText.setTokenizer', async () => {
+            const editor = vscode.window.activeTextEditor;
+            if (!editor || editor.document.uri.scheme !== JsonlTextViewProvider.scheme) return;
+            const uri = editor.document.uri;
+            const current = textProvider.getTokenizer(uri);
+            const options = getTokenizerOptions();
+            const items: vscode.QuickPickItem[] = [
+                { label: '(none)', description: 'No tokenizer' },
+                ...options.map(opt => ({
+                    label: opt.label,
+                    description: opt.id,
+                })),
+            ];
+            const picked = await vscode.window.showQuickPick(items, {
+                title: 'Tokenizer',
+                placeHolder: current ? options.find(o => o.id === current)?.label ?? current : '(none)',
+                matchOnDescription: true,
+            });
+            if (picked === undefined) return;
+            textProvider.updateState(uri, st => {
+                st.tokenizer = picked.label === '(none)' ? null : (picked.description ?? null);
             });
         })
     );
