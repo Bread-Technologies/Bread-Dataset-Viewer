@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSONL Viewer</title>
+    <link rel="stylesheet" href="{{katexCssUri}}">
+    <link rel="stylesheet" href="{{mainCssUri}}">
+    <script src="{{markdownItUri}}"></script>
+    <script src="{{katexJsUri}}"></script>
+    <script src="{{katexAutoRenderUri}}"></script>
+</head>
+<body>
+    <div id="toolbar">
+        <div class="toolbar-section">
+            <img src="{{breadIconUri}}" alt="🍞" class="bread-icon" title="ML Workbench Data Viewer">
+            <strong id="file-name"></strong>
+            <span id="format-badge" style="display: none; margin-left: 6px; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; background: var(--vscode-badge-background); color: var(--vscode-badge-foreground);"></span>
+            <span style="font-size: 11px; color: var(--vscode-descriptionForeground);" id="file-size"></span>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <button id="pretty-view-btn" class="secondary active">Pretty</button>
+            <button id="render-view-btn" class="secondary">Render</button>
+            <button id="table-view-btn" class="secondary">Table</button>
+            <button id="raw-view-btn" class="secondary">Raw</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section" style="position: relative;">
+            <button id="path-toggle-btn" class="secondary">Filter <span style="font-size: 10px; margin-left: 2px; vertical-align: middle;">▾</span></button>
+            <div id="path-panel">
+                <div class="path-panel-header">
+                    <strong>Filter</strong>
+                    <span id="path-count">0/0 selected</span>
+                </div>
+                <div class="path-panel-actions">
+                    <button id="path-select-all" class="secondary">Select All</button>
+                    <button id="path-clear" class="secondary">Clear</button>
+                </div>
+                <div class="path-panel-list" id="path-list"></div>
+            </div>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <button id="edit-btn" class="secondary">Edit in Text Editor</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <label for="tokenizer-select" style="font-size: 12px; margin-right: 4px;" title="Select model tokenizer. Uses real model tokenizers and chat templates from HuggingFace.">Tokenizer:</label>
+            <select id="tokenizer-select" title="All tokenizers use actual model tokenizers with real chat templates. First use downloads and caches the tokenizer.">
+                <optgroup label="Qwen Family">
+                    <option value="qwen-3" selected>Qwen 3.x</option>
+                    <option value="qwen-2.5">Qwen 2.5</option>
+                </optgroup>
+                <optgroup label="DeepSeek Family">
+                    <option value="deepseek-v3">DeepSeek V3 / R1</option>
+                </optgroup>
+                <optgroup label="Llama Family">
+                    <option value="llama-3">Llama 3.x</option>
+                </optgroup>
+                <optgroup label="Gemma Family">
+                    <option value="gemma-3">Gemma 3.x</option>
+                    <option value="gemma-2">Gemma 2.x</option>
+                </optgroup>
+                <optgroup label="Mistral Family">
+                    <option value="mistral-tekken">Mistral Tekken</option>
+                    <option value="mistral-v3">Mistral V3</option>
+                    <option value="mistral-v1">Mistral V1</option>
+                </optgroup>
+                <optgroup label="Phi Family">
+                    <option value="phi-4">Phi 4.x</option>
+                </optgroup>
+                <optgroup label="Command R Family">
+                    <option value="command-r">Command R Family</option>
+                </optgroup>
+                <optgroup label="GPT Family">
+                    <option value="gpt-5">GPT-5.x / gpt-oss</option>
+                    <option value="gpt-4o">GPT-4o Family</option>
+                    <option value="gpt-4">GPT-4 Classic</option>
+                    <option value="gpt-2">GPT-2</option>
+                </optgroup>
+                <optgroup label="Claude Family">
+                    <option value="claude">Claude 3.x / 4.x</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="toolbar-section">
+            <label for="token-mode-select" style="font-size: 12px; margin-right: 4px;" title="What to tokenize">Mode:</label>
+            <select id="token-mode-select" title="Auto: Smart detection | Chat: Apply chat template | Full JSON: Normalized JSON string | Key: Single field | Raw Text: Exact file content with whitespace">
+                <option value="auto" selected>Auto</option>
+                <option value="chat">Chat (messages[])</option>
+                <option value="full-json" title="Normalized JSON (parsed then stringified)">Full JSON</option>
+                <option value="key">Specific Key</option>
+                <option value="raw-text" title="Exact line as written in file (includes whitespace)">Raw Text</option>
+            </select>
+            <select id="token-key-select" style="display: none; min-width: 120px; margin-left: 4px;" title="Select JSON key to tokenize">
+                <option value="">Select key...</option>
+            </select>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section">
+            <input type="text" id="search-input" placeholder="Search records...">
+            <button id="search-btn" class="secondary">Search</button>
+            <button id="clear-search-btn" class="secondary">Clear</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="toolbar-section jump-to-line">
+            <span style="font-size: 12px;">Jump to line:</span>
+            <input type="number" id="jump-line-input" placeholder="Line #" min="0">
+            <button id="jump-btn" class="secondary">Go</button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <div class="stats" id="stats">
+            <div class="stat-item">
+                <span class="stat-label">Loaded:</span>
+                <span id="loaded-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Avg Tokens:</span>
+                <span id="avg-tokens">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Max Tokens:</span>
+                <span id="max-tokens">-</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="error-banner">
+        <div class="error-banner-title">⚠️ Tokenization Errors</div>
+        <div id="error-banner-content"></div>
+        <div class="error-banner-actions">
+            <button id="dismiss-error-btn" class="secondary">Dismiss</button>
+        </div>
+    </div>
+
+    <div id="container">
+        <div id="pretty-container"></div>
+        <div id="render-container" style="display: none;"></div>
+        <div id="table-container" style="display: none;">
+            <table id="data-table">
+                <thead id="table-head"></thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+        <div id="raw-container" style="display: none;"></div>
+        <div class="load-more-container" id="load-more-container" style="display: none;">
+            <button id="load-more-btn">Load More (100 lines)</button>
+        </div>
+        <div class="loading" id="loading" style="display: none;">Loading...</div>
+    </div>
+
+    <script src="{{viewerJsUri}}"></script>
+</body>
+</html>

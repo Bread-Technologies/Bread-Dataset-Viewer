@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "name": "Single Object Test",
+  "description": "This is a test of a single JSON object (not an array)",
+  "messages": [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What is JSON?"},
+    {"role": "assistant", "content": "JSON (JavaScript Object Notation) is a lightweight data interchange format that is easy for humans to read and write and easy for machines to parse and generate."}
+  ],
+  "metadata": {
+    "created": "2026-01-29",
+    "author": "Test User",
+    "tags": ["test", "json", "single-object"]
+  }
+}

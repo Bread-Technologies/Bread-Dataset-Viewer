@@ -1,22 +1,19 @@
 import * as vscode from 'vscode';
+import { JsonlDataProvider } from './providers/JsonlDataProvider';
+import { JsonDataProvider } from './providers/JsonDataProvider';
+import { ParquetDataProvider } from './providers/ParquetDataProvider';
+import { CsvDataProvider } from './providers/CsvDataProvider';
+import { ArrowDataProvider } from './providers/ArrowDataProvider';
+import { cleanup as cleanupTokenizer } from './utils/tokenizer';
 import { JsonlEditorProvider } from './jsonlEditorProvider';
-import { ModelChatProvider } from './modelChatProvider';
-import { initializeBackends } from './backends';
-import { initTokenizer, cleanup as cleanupTokenizer } from './utils/tokenizer';
 import { JsonlSingletonPanel } from './jsonlSingletonPanel';
 import { JsonlTextViewProvider, JSONL_TEXT_HEADER_ACTIONS } from './jsonlTextViewProvider';
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('ML Workbench extension is now active');
 
-    // Initialize tokenizer for accurate token counting
-    await initTokenizer();
-
-    // Initialize backends (Ollama, etc.)
-    await initializeBackends(context);
-
     // Register JSONL Viewer
-    const jsonlProvider = new JsonlEditorProvider(context);
+    const jsonlProvider = new JsonlDataProvider(context);
     context.subscriptions.push(
         vscode.window.registerCustomEditorProvider(
             'mlWorkbench.jsonlViewer',
@@ -222,12 +219,57 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    // Register Model Chat
-    const modelChatProvider = new ModelChatProvider(context);
+    // Register JSON Viewer
+    const jsonProvider = new JsonDataProvider(context);
     context.subscriptions.push(
         vscode.window.registerCustomEditorProvider(
-            'mlWorkbench.modelChat',
-            modelChatProvider,
+            'mlWorkbench.jsonViewer',
+            jsonProvider,
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true,
+                },
+                supportsMultipleEditorsPerDocument: false,
+            }
+        )
+    );
+
+    // Register Parquet Viewer
+    const parquetProvider = new ParquetDataProvider(context);
+    context.subscriptions.push(
+        vscode.window.registerCustomEditorProvider(
+            'mlWorkbench.parquetViewer',
+            parquetProvider,
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true,
+                },
+                supportsMultipleEditorsPerDocument: false,
+            }
+        )
+    );
+
+    // Register CSV/TSV Viewer
+    const csvProvider = new CsvDataProvider(context);
+    context.subscriptions.push(
+        vscode.window.registerCustomEditorProvider(
+            'mlWorkbench.csvViewer',
+            csvProvider,
+            {
+                webviewOptions: {
+                    retainContextWhenHidden: true,
+                },
+                supportsMultipleEditorsPerDocument: false,
+            }
+        )
+    );
+
+    // Register Arrow IPC Viewer
+    const arrowProvider = new ArrowDataProvider(context);
+    context.subscriptions.push(
+        vscode.window.registerCustomEditorProvider(
+            'mlWorkbench.arrowViewer',
+            arrowProvider,
             {
                 webviewOptions: {
                     retainContextWhenHidden: true,

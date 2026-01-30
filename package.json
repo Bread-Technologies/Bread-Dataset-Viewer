@@ -1,7 +1,7 @@
 {
   "name": "ml-workbench",
   "displayName": "ML Workbench",
-  "description": "View JSONL datasets and chat with local models",
+  "description": "View JSONL datasets with accurate token counting for ML training data",
   "version": "0.1.0",
   "publisher": "ml-workbench",
   "engines": {
@@ -14,14 +14,17 @@
   ],
   "activationEvents": [
     "onCustomEditor:mlWorkbench.jsonlViewer",
-    "onCustomEditor:mlWorkbench.modelChat",
     "onCommand:mlWorkbench.openJsonlFast",
     "onCommand:mlWorkbench.openJsonlTextViewer",
     "onCommand:mlWorkbench.jsonlText.setMode",
     "onCommand:mlWorkbench.jsonlText.nextPage",
     "onCommand:mlWorkbench.jsonlText.prevPage",
     "onCommand:mlWorkbench.jsonlText.filter",
-    "onCommand:mlWorkbench.jsonlText.gotoLine"
+    "onCommand:mlWorkbench.jsonlText.gotoLine",
+    "onCustomEditor:mlWorkbench.jsonViewer",
+    "onCustomEditor:mlWorkbench.parquetViewer",
+    "onCustomEditor:mlWorkbench.csvViewer",
+    "onCustomEditor:mlWorkbench.arrowViewer"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -72,17 +75,50 @@
         "priority": "default"
       },
       {
-        "viewType": "mlWorkbench.modelChat",
-        "displayName": "Chat with Model",
+        "viewType": "mlWorkbench.jsonViewer",
+        "displayName": "JSON Viewer",
         "selector": [
           {
-            "filenamePattern": "*.gguf"
-          },
-          {
-            "filenamePattern": "*.safetensors"
+            "filenamePattern": "*.json"
           }
         ],
-        "priority": "option"
+        "priority": "default"
+      },
+      {
+        "viewType": "mlWorkbench.parquetViewer",
+        "displayName": "Parquet Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.parquet"
+          }
+        ],
+        "priority": "default"
+      },
+      {
+        "viewType": "mlWorkbench.csvViewer",
+        "displayName": "CSV/TSV Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.csv"
+          },
+          {
+            "filenamePattern": "*.tsv"
+          }
+        ],
+        "priority": "default"
+      },
+      {
+        "viewType": "mlWorkbench.arrowViewer",
+        "displayName": "Arrow IPC Viewer",
+        "selector": [
+          {
+            "filenamePattern": "*.arrow"
+          },
+          {
+            "filenamePattern": "*.feather"
+          }
+        ],
+        "priority": "default"
       }
     ],
     "languages": [
@@ -97,21 +133,53 @@
         ]
       },
       {
-        "id": "gguf",
+        "id": "parquet",
         "extensions": [
-          ".gguf"
+          ".parquet"
         ],
         "aliases": [
-          "GGUF Model"
+          "Parquet",
+          "Apache Parquet"
         ]
       },
       {
-        "id": "safetensors",
+        "id": "csv",
         "extensions": [
-          ".safetensors"
+          ".csv"
         ],
         "aliases": [
-          "Safetensors Model"
+          "CSV",
+          "Comma-Separated Values"
+        ]
+      },
+      {
+        "id": "tsv",
+        "extensions": [
+          ".tsv"
+        ],
+        "aliases": [
+          "TSV",
+          "Tab-Separated Values"
+        ]
+      },
+      {
+        "id": "arrow",
+        "extensions": [
+          ".arrow"
+        ],
+        "aliases": [
+          "Arrow IPC",
+          "Apache Arrow"
+        ]
+      },
+      {
+        "id": "feather",
+        "extensions": [
+          ".feather"
+        ],
+        "aliases": [
+          "Feather",
+          "Arrow Feather"
         ]
       }
     ],
@@ -147,17 +215,27 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "vsce package",
-    "publish": "vsce publish"
+    "publish": "vsce publish",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^2.22.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.3.0"
   },
   "dependencies": {
+    "@dsnp/parquetjs": "^1.8.7",
+    "@huggingface/transformers": "^3.8.1",
+    "apache-arrow": "^21.1.0",
+    "csv-parser": "^3.2.0",
     "katex": "^0.16.28",
-    "markdown-it": "^14.1.0",
-    "tiktoken": "^1.0.0"
+    "markdown-it": "^14.1.0"
   }
 }

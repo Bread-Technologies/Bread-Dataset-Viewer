@@ -1,5 +1,38 @@
+# Compiled output
 out
 node_modules
 .vscode-test/
 *.vsix
+
+# Test coverage reports
+coverage/
+*.lcov
+
+# Test data (can be regenerated with scripts)
+test-data/*.jsonl
+test-data/*.parquet
+test-data/*.csv
+test-data/*.tsv
+test-data/*.arrow
+test-data/*.feather
+!test-data/sample-chat.jsonl
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional: Jest cache
+.jest/
