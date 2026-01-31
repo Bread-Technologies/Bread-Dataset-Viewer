@@ -274,20 +274,9 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
                       : '';
             const header = `  [#${rec.index}]  ${tokenStr}  `.trimEnd();
 
-            const bodyLines: string[] = [];
+            let bodyLines: string[] = [];
             if (rec.data && typeof rec.data === 'object') {
-                const entries = Object.entries(rec.data).slice(0, 15);
-                for (const [key, value] of entries) {
-                    if (value !== null && typeof value === 'object') {
-                        bodyLines.push(this.padLine(`  ${key}:`, contentWidth));
-                        for (const line of this.prettyValueLines(value, contentWidth - 4)) {
-                            bodyLines.push(this.padLine('    ' + line.trimEnd(), contentWidth));
-                        }
-                    } else {
-                        const line = `  ${key}: ${this.formatValueOneLine(value)}`;
-                        bodyLines.push(this.padLine(this.truncateAtWord(line, contentWidth), contentWidth));
-                    }
-                }
+                bodyLines = this.prettyValueLines(rec.data, contentWidth);
             } else {
                 bodyLines.push(this.padLine(this.truncateAtWord('  ' + rec.raw, contentWidth), contentWidth));
             }
@@ -313,17 +302,6 @@ export class JsonlTextViewProvider implements vscode.TextDocumentContentProvider
     private prettyPrintJson(value: unknown): string {
         try {
             return JSON.stringify(value, null, 2);
-        } catch {
-            return String(value);
-        }
-    }
-
-    /** Format a value for single-line display. */
-    private formatValueOneLine(value: unknown): string {
-        if (value === null) return 'null';
-        if (typeof value !== 'object') return String(value);
-        try {
-            return JSON.stringify(value);
         } catch {
             return String(value);
         }
