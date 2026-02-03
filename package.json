@@ -8,10 +8,10 @@
   "icon": "bread_dataset_logo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YOUR_USERNAME/mle_vscode_extension"
+    "url": "https://github.com/Bread-Technologies/mle_vscode_extension"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_USERNAME/mle_vscode_extension/issues"
+    "url": "https://github.com/Bread-Technologies/mle_vscode_extension/issues"
   },
   "keywords": [
     "jsonl",

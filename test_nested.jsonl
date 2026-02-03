@@ -1,3 +1,0 @@
-{"user":{"name":"John","age":30,"addresses":[{"type":"home","street":"123 Main St","city":"Boston"},{"type":"work","street":"456 Office Blvd","city":"Cambridge"}],"preferences":{"theme":"dark","notifications":{"email":true,"sms":false}}},"metadata":{"created":"2024-01-01","tags":["important","verified"]}}
-{"products":[{"id":1,"name":"Widget","variants":[{"size":"small","price":10},{"size":"large","price":20}]},{"id":2,"name":"Gadget","variants":[{"size":"medium","price":15}]}],"total":3}
-{"company":{"name":"Acme Corp","employees":[{"name":"Alice","role":"engineer","projects":[{"name":"Project A","status":"active"},{"name":"Project B","status":"completed"}]},{"name":"Bob","role":"manager","projects":[{"name":"Project C","status":"active"}]}]}}

@@ -13,6 +13,10 @@ scripts/**
 **/__tests__/**
 **/test*.jsonl
 *.log
+CONTEXT.md
+test_gemini.jsonl
+test_nested.jsonl
+backup-before-fix/**
 
 # Exclude most of node_modules except runtime dependencies
 node_modules/**/test/**
