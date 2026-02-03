@@ -1,16 +1,40 @@
 {
-  "name": "ml-workbench",
-  "displayName": "ML Workbench",
-  "description": "View JSONL datasets with accurate token counting for ML training data",
+  "name": "bread-dataset-viewer",
+  "displayName": "Bread",
+  "description": "View massive JSONL, CSV, Parquet, and Arrow files instantly without freezing VS Code. Includes ML token counting.",
   "version": "0.1.0",
-  "publisher": "ml-workbench",
+  "publisher": "bread-tech",
+  "license": "MIT",
+  "icon": "bread_dataset_logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/mle_vscode_extension"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/mle_vscode_extension/issues"
+  },
+  "keywords": [
+    "jsonl",
+    "json",
+    "csv",
+    "parquet",
+    "arrow",
+    "dataset",
+    "large files",
+    "token counting",
+    "ml",
+    "machine learning",
+    "data viewer",
+    "lazy loading"
+  ],
   "engines": {
     "vscode": "^1.85.0"
   },
   "categories": [
-    "Machine Learning",
     "Data Science",
-    "Visualization"
+    "Machine Learning",
+    "Visualization",
+    "Other"
   ],
   "activationEvents": [
     "onCustomEditor:mlWorkbench.jsonlViewer",
@@ -25,42 +49,42 @@
       {
         "command": "mlWorkbench.openTextViewer",
         "title": "Open Text Viewer (Fast, All Formats)",
-        "category": "ML Workbench"
+        "category": "Bread"
       },
       {
         "command": "mlWorkbench.textViewer.setMode",
         "title": "Text Viewer: Set Mode",
-        "category": "ML Workbench"
+        "category": "Bread"
       },
       {
         "command": "mlWorkbench.textViewer.nextPage",
         "title": "Text Viewer: Next Page",
-        "category": "ML Workbench"
+        "category": "Bread"
       },
       {
         "command": "mlWorkbench.textViewer.prevPage",
         "title": "Text Viewer: Previous Page",
-        "category": "ML Workbench"
+        "category": "Bread"
       },
       {
         "command": "mlWorkbench.textViewer.search",
         "title": "Text Viewer: Search",
-        "category": "ML Workbench"
+        "category": "Bread"
       },
       {
         "command": "mlWorkbench.textViewer.gotoLine",
         "title": "Text Viewer: Go to Line",
-        "category": "ML Workbench"
+        "category": "Bread"
       },
       {
         "command": "mlWorkbench.textViewer.openInEditor",
         "title": "Text Viewer: Open File for Editing",
-        "category": "ML Workbench"
+        "category": "Bread"
       },
       {
         "command": "mlWorkbench.textViewer.setTokenizer",
         "title": "Text Viewer: Set Tokenizer",
-        "category": "ML Workbench"
+        "category": "Bread"
       }
     ],
     "customEditors": [

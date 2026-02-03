@@ -13,7 +13,7 @@ import { NoOpDecorator } from './textViewer/decorators/NoOpDecorator';
 import { TEXT_VIEWER_HEADER_ACTIONS } from './textViewer/BaseTextViewProvider';
 
 export async function activate(context: vscode.ExtensionContext) {
-    console.log('ML Workbench extension is now active');
+    console.log('Bread Dataset Viewer extension is now active');
 
     // Register JSONL Viewer
     const jsonlProvider = new JsonlDataProvider(context);
@@ -355,10 +355,10 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    console.log('ML Workbench: Custom editors registered');
+    console.log('Bread Dataset Viewer: Custom editors registered');
 }
 
 export function deactivate() {
     cleanupTokenizer();
-    console.log('ML Workbench extension is now deactivated');
+    console.log('Bread Dataset Viewer extension is now deactivated');
 }

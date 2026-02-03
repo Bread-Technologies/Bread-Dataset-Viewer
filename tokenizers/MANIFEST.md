@@ -2,6 +2,16 @@
 
 This document provides a source of truth for all bundled tokenizers in this extension.
 
+## License Notice
+
+All tokenizers in this directory are sourced from their respective model repositories on HuggingFace. Each tokenizer retains its original license from the source model. These are used for token counting functionality only and are not modified. See individual model repositories for specific licensing terms:
+
+- Most models use Apache 2.0 or MIT licenses
+- Some models (e.g., Llama, Gemma) have specific usage agreements
+- All tokenizers are used for offline token counting only
+
+For commercial use, verify the license of any specific tokenizer you plan to use with your data.
+
 ## Directory Structure
 
 All tokenizers are stored in `/tokenizers/` with the following structure:

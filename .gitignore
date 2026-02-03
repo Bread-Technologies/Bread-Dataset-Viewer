@@ -2,6 +2,9 @@
 out
 node_modules
 .vscode-test/
+
+# Extension packages
+*.vsix
 *.vsix
 
 # Test coverage reports
