@@ -1,64 +1,45 @@
 # Bread Dataset Viewer
 
-View massive dataset files instantly. No freezing, no crashes, no terminal commands.
+A VS Code extension for viewing large dataset files with lazy loading and token counting.
 
 ![Bread Dataset Viewer Screenshot](https://raw.githubusercontent.com/Bread-Technologies/mle_vscode_extension/main/screenshot.png)
 
-## Stop Fighting With Large Files
+## What It Does
 
-Tired of VS Code freezing when you open a 5GB JSONL file? Done squinting at `tail` output in Terminal? This extension opens dataset files of any size instantly by lazy-loading only what you need.
+Opens JSONL, CSV, Parquet, and Arrow files of any size by streaming and lazy-loading data. Includes token counting with real model tokenizers for ML training datasets.
 
-**Open files up to 100GB+ without breaking a sweat.**
+VS Code normally crashes or freezes when opening files over 50MB. This extension handles files up to 100GB+ by only loading what's visible.
 
 ## Supported Formats
 
-- **JSONL** (JSON Lines) - ML training datasets, logs
-- **JSON** - Regular JSON files
-- **CSV/TSV** - Spreadsheets, tabular data
-- **Parquet** - Columnar data format
-- **Arrow/Feather** - In-memory data format
+- JSONL (JSON Lines)
+- JSON
+- CSV/TSV
+- Parquet
+- Arrow/Feather
 
-## Key Features
+## Features
 
-### 🚀 Instant Loading (The Main Thing)
+**Lazy Loading**
+Opens large files instantly by loading data on-demand. Jump to any line without loading the entire file into memory.
 
-Click any dataset file and it opens immediately. No loading bars, no beach balls, no crashed editor. Jump to line 50,000 in a 10GB file without loading the entire thing into memory.
+**Token Counting**
+Shows exact token counts using real tokenizers from Qwen, DeepSeek, Llama, GPT, Claude, Mistral, Phi, and others. Supports chat templates for multi-turn conversations.
 
-### 🔢 Token Counting for ML Data
+**Multiple Views**
+- Pretty: Collapsible JSON trees
+- Render: Chat messages with markdown/LaTeX
+- Table: Spreadsheet columns
+- Raw: Plain text with line numbers
 
-See exact token counts using real model tokenizers. Perfect for ML engineers working with training data who need to know token usage.
+**Search and Navigation**
+Search by content, jump to line numbers, filter JSON paths, and load more records as needed.
 
-**Supported tokenizers**: Qwen 3.x, DeepSeek V3, Llama 3.x, Gemini, Mistral, Phi-4, GPT-4o, Claude, and more.
+## Usage
 
-Works with chat templates for accurate multi-turn conversation token counts.
+Install the extension and click any supported file. The viewer opens automatically. Use the toolbar to switch views, select tokenizers, or search.
 
-### 📊 Multiple View Modes
-
-- **Pretty View**: Collapsible JSON trees with syntax highlighting
-- **Render View**: Chat messages with markdown and LaTeX rendering
-- **Table View**: Spreadsheet-style columns (great for CSV/Parquet)
-- **Raw View**: Plain text with line numbers
-
-### 🔍 Search & Navigation
-
-- Search across records by content
-- Jump to any line number instantly
-- Filter nested JSON fields (path filtering)
-- Load more records on demand
-
-## How to Use
-
-1. Install the extension
-2. Click any `.jsonl`, `.json`, `.csv`, `.parquet`, or `.arrow` file
-3. The viewer opens automatically
-
-Switch views with the buttons at the top. Use the tokenizer dropdown to see token counts. Search or jump to specific lines as needed.
-
-## Why You Need This
-
-If you work with ML datasets, logs, or any large structured data files, you've hit this wall: VS Code can't handle files over ~50MB without choking. You end up using `cat`, `head`, `tail`, or writing one-off Python scripts just to peek at your data.
-
-This extension fixes that. It's built specifically for viewing large files that would normally crash your editor. The token counting is a bonus for ML folks who need accurate counts without firing up a Python REPL every time.
+For ML work: Pick a tokenizer from the dropdown to see accurate token counts for your training data.
 
 ## Requirements
 
