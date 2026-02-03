@@ -13,7 +13,21 @@
     "Visualization"
   ],
   "activationEvents": [
+    "onLanguage:jsonl",
+    "onLanguage:json",
+    "onLanguage:parquet",
+    "onLanguage:csv",
+    "onLanguage:tsv",
+    "onLanguage:arrow",
+    "onLanguage:feather",
+    "workspaceContains:**/*.jsonl",
+    "workspaceContains:**/*.parquet",
+    "workspaceContains:**/*.arrow",
+    "workspaceContains:**/*.feather",
+    "workspaceContains:**/*.csv",
+    "workspaceContains:**/*.tsv",
     "onCustomEditor:mlWorkbench.jsonlViewer",
+    "onCommand:mlWorkbench.openWebviewViewer",
     "onCommand:mlWorkbench.openJsonlFast",
     "onCommand:mlWorkbench.openJsonlTextViewer",
     "onCommand:mlWorkbench.jsonlText.setMode",
@@ -113,6 +127,11 @@
         "command": "mlWorkbench.textViewer.setTokenizer",
         "title": "Text Viewer: Set Tokenizer",
         "category": "ML Workbench"
+      },
+      {
+        "command": "mlWorkbench.openWebviewViewer",
+        "title": "Open in Rich Viewer (Webview)",
+        "category": "ML Workbench"
       }
     ],
     "customEditors": [
@@ -124,7 +143,7 @@
             "filenamePattern": "*.jsonl"
           }
         ],
-        "priority": "default"
+        "priority": "option"
       },
       {
         "viewType": "mlWorkbench.jsonViewer",
@@ -134,7 +153,7 @@
             "filenamePattern": "*.json"
           }
         ],
-        "priority": "default"
+        "priority": "option"
       },
       {
         "viewType": "mlWorkbench.parquetViewer",
@@ -157,7 +176,7 @@
             "filenamePattern": "*.tsv"
           }
         ],
-        "priority": "default"
+        "priority": "option"
       },
       {
         "viewType": "mlWorkbench.arrowViewer",
@@ -238,35 +257,15 @@
     "menus": {
       "explorer/context": [
         {
-          "command": "mlWorkbench.openJsonlFast",
-          "when": "resourceExtname == .jsonl",
-          "group": "navigation@11"
-        },
-        {
-          "command": "mlWorkbench.openJsonlTextViewer",
-          "when": "resourceExtname == .jsonl",
-          "group": "navigation@12"
-        },
-        {
-          "command": "mlWorkbench.openTextViewer",
+          "command": "mlWorkbench.openWebviewViewer",
           "when": "resourceExtname =~ /\\.(jsonl|json|csv|tsv|parquet|arrow|feather)$/",
           "group": "navigation@10"
         }
       ],
       "editor/title": [
         {
-          "command": "mlWorkbench.openJsonlFast",
-          "when": "resourceExtname == .jsonl || resourceScheme == jsonl-view",
-          "group": "navigation@11"
-        },
-        {
-          "command": "mlWorkbench.openJsonlTextViewer",
-          "when": "resourceExtname == .jsonl || resourceScheme == jsonl-view",
-          "group": "navigation@12"
-        },
-        {
-          "command": "mlWorkbench.openTextViewer",
-          "when": "resourceExtname =~ /\\.(jsonl|json|csv|tsv|parquet|arrow|feather)$/ || resourceScheme == data-text-view",
+          "command": "mlWorkbench.openWebviewViewer",
+          "when": "resourceExtname =~ /\\.(jsonl|json|csv|tsv|parquet|arrow|feather)$/ || resourceScheme == data-text-view || resourceScheme == jsonl-view",
           "group": "navigation@10"
         }
       ]

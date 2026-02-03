@@ -566,6 +566,43 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
+    // Open in Webview (Rich Viewer) command - allows switching from ASCII to webview
+    context.subscriptions.push(
+        vscode.commands.registerCommand('mlWorkbench.openWebviewViewer', async (uri?: vscode.Uri) => {
+            const fileUri = uri ?? vscode.window.activeTextEditor?.document.uri;
+            if (!fileUri) {
+                vscode.window.showErrorMessage('No file selected');
+                return;
+            }
+
+            // Resolve from text viewer URI if needed
+            const targetUri = GenericTextViewProvider.getFileUri(fileUri) ?? fileUri;
+            if (targetUri.scheme !== 'file') {
+                vscode.window.showErrorMessage('Can only open files');
+                return;
+            }
+
+            const ext = targetUri.fsPath.split('.').pop()?.toLowerCase();
+            const viewTypeMap: Record<string, string> = {
+                'jsonl': 'mlWorkbench.jsonlViewer',
+                'json': 'mlWorkbench.jsonViewer',
+                'csv': 'mlWorkbench.csvViewer',
+                'tsv': 'mlWorkbench.csvViewer',
+                'parquet': 'mlWorkbench.parquetViewer',
+                'arrow': 'mlWorkbench.arrowViewer',
+                'feather': 'mlWorkbench.arrowViewer',
+            };
+
+            const viewType = ext ? viewTypeMap[ext] : undefined;
+            if (!viewType) {
+                vscode.window.showErrorMessage(`Unsupported format: ${ext}`);
+                return;
+            }
+
+            await vscode.commands.executeCommand('vscode.openWith', targetUri, viewType);
+        })
+    );
+
     // Register JSON Viewer
     const jsonProvider = new JsonDataProvider(context);
     context.subscriptions.push(
@@ -627,6 +664,57 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     console.log('ML Workbench: Custom editors registered');
+
+    // Auto-redirect text-based formats to ASCII text viewer on open
+    // Note: Binary formats (parquet, arrow, feather) use webview custom editor by default
+    const supportedExtensions = ['jsonl', 'json', 'csv', 'tsv'];
+    const redirectedFiles = new Set<string>(); // Track redirected files to prevent loops
+
+    // Use onDidChangeActiveTextEditor for more reliable redirect
+    context.subscriptions.push(
+        vscode.window.onDidChangeActiveTextEditor(async (editor) => {
+            if (!editor) return;
+
+            const document = editor.document;
+
+            // Skip if not a file scheme
+            if (document.uri.scheme !== 'file') return;
+
+            const ext = document.uri.fsPath.split('.').pop()?.toLowerCase();
+            if (!ext || !supportedExtensions.includes(ext)) return;
+
+            const fileKey = document.uri.toString();
+
+            // Prevent redirect loops
+            if (redirectedFiles.has(fileKey)) {
+                return;
+            }
+
+            console.log(`ML Workbench: Auto-redirecting ${ext} file to ASCII viewer: ${document.uri.fsPath}`);
+            redirectedFiles.add(fileKey);
+
+            // Small delay to let VS Code finish opening the document
+            setTimeout(async () => {
+                try {
+                    const viewUri = GenericTextViewProvider.toViewUri(document.uri, ext);
+                    const doc = await vscode.workspace.openTextDocument(viewUri);
+                    const newEditor = await vscode.window.showTextDocument(doc, { preview: false });
+
+                    const state = genericTextProvider.getState(viewUri);
+                    if (state) {
+                        decorationManager.applyDecorations(newEditor, state.format);
+                    }
+
+                    console.log(`ML Workbench: Successfully opened ASCII viewer for ${ext} file`);
+                } catch (e) {
+                    console.error('ML Workbench: Auto-redirect to text viewer failed:', e);
+                } finally {
+                    // Clean up after a delay to allow for reopening
+                    setTimeout(() => redirectedFiles.delete(fileKey), 2000);
+                }
+            }, 100);
+        })
+    );
 }
 
 export function deactivate() {
