@@ -2,7 +2,7 @@
 
 View massive dataset files instantly. No freezing, no crashes, no terminal commands.
 
-![Bread Dataset Viewer Screenshot](screenshot.png)
+![Bread Dataset Viewer Screenshot](https://raw.githubusercontent.com/Bread-Technologies/mle_vscode_extension/main/screenshot.png)
 
 ## Stop Fighting With Large Files
 

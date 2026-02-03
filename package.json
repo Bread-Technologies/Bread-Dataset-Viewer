@@ -2,7 +2,7 @@
   "name": "bread-dataset-viewer",
   "displayName": "Bread Dataset Viewer",
   "description": "View massive files without freezing VS Code. Includes ML token counting.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "bread-tech",
   "license": "MIT",
   "icon": "bread_dataset_logo.png",
