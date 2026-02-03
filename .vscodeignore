@@ -18,11 +18,26 @@ test_gemini.jsonl
 test_nested.jsonl
 backup-before-fix/**
 
-# Exclude most of node_modules except runtime dependencies
+# Exclude unnecessary node_modules files to reduce package size
 node_modules/**/test/**
 node_modules/**/tests/**
 node_modules/**/*.ts
 node_modules/**/*.md
-node_modules/**/LICENSE
+node_modules/**/LICENSE*
 node_modules/**/CHANGELOG*
 node_modules/**/.github/**
+node_modules/**/*.map
+node_modules/**/README*
+node_modules/**/readme*
+node_modules/**/.npmignore
+node_modules/**/.eslintrc*
+node_modules/**/.prettierrc*
+node_modules/**/tsconfig*.json
+node_modules/**/*.d.ts
+node_modules/**/example/**
+node_modules/**/examples/**
+node_modules/**/docs/**
+node_modules/**/doc/**
+node_modules/**/*.spec.js
+node_modules/**/*.test.js
+node_modules/**/coverage/**
