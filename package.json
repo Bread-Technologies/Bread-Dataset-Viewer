@@ -14,15 +14,6 @@
   ],
   "activationEvents": [
     "onCustomEditor:mlWorkbench.jsonlViewer",
-    "onCommand:mlWorkbench.openJsonlFast",
-    "onCommand:mlWorkbench.openJsonlTextViewer",
-    "onCommand:mlWorkbench.jsonlText.setMode",
-    "onCommand:mlWorkbench.jsonlText.nextPage",
-    "onCommand:mlWorkbench.jsonlText.prevPage",
-    "onCommand:mlWorkbench.jsonlText.search",
-    "onCommand:mlWorkbench.jsonlText.gotoLine",
-    "onCommand:mlWorkbench.jsonlText.openInEditor",
-    "onCommand:mlWorkbench.jsonlText.setTokenizer",
     "onCustomEditor:mlWorkbench.jsonViewer",
     "onCustomEditor:mlWorkbench.parquetViewer",
     "onCustomEditor:mlWorkbench.csvViewer",
@@ -31,49 +22,6 @@
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "mlWorkbench.openJsonlFast",
-        "title": "Open JSONL Viewer (Fast Reused Webview)"
-      },
-      {
-        "command": "mlWorkbench.openJsonlTextViewer",
-        "title": "Open JSONL Viewer (Text, Fast)"
-      },
-      {
-        "command": "mlWorkbench.jsonlText.setMode",
-        "title": "JSONL Text Viewer: Set Mode",
-        "category": "ML Workbench"
-      },
-      {
-        "command": "mlWorkbench.jsonlText.nextPage",
-        "title": "JSONL Text Viewer: Next Page",
-        "category": "ML Workbench"
-      },
-      {
-        "command": "mlWorkbench.jsonlText.prevPage",
-        "title": "JSONL Text Viewer: Previous Page",
-        "category": "ML Workbench"
-      },
-      {
-        "command": "mlWorkbench.jsonlText.search",
-        "title": "JSONL Text Viewer: Search",
-        "category": "ML Workbench"
-      },
-      {
-        "command": "mlWorkbench.jsonlText.gotoLine",
-        "title": "JSONL Text Viewer: Go to Line",
-        "category": "ML Workbench"
-      },
-      {
-        "command": "mlWorkbench.jsonlText.openInEditor",
-        "title": "JSONL Text Viewer: Open File for Editing",
-        "category": "ML Workbench"
-      },
-      {
-        "command": "mlWorkbench.jsonlText.setTokenizer",
-        "title": "JSONL Text Viewer: Set Tokenizer",
-        "category": "ML Workbench"
-      },
       {
         "command": "mlWorkbench.openTextViewer",
         "title": "Open Text Viewer (Fast, All Formats)",
@@ -238,32 +186,12 @@
     "menus": {
       "explorer/context": [
         {
-          "command": "mlWorkbench.openJsonlFast",
-          "when": "resourceExtname == .jsonl",
-          "group": "navigation@11"
-        },
-        {
-          "command": "mlWorkbench.openJsonlTextViewer",
-          "when": "resourceExtname == .jsonl",
-          "group": "navigation@12"
-        },
-        {
           "command": "mlWorkbench.openTextViewer",
           "when": "resourceExtname =~ /\\.(jsonl|json|csv|tsv|parquet|arrow|feather)$/",
           "group": "navigation@10"
         }
       ],
       "editor/title": [
-        {
-          "command": "mlWorkbench.openJsonlFast",
-          "when": "resourceExtname == .jsonl || resourceScheme == jsonl-view",
-          "group": "navigation@11"
-        },
-        {
-          "command": "mlWorkbench.openJsonlTextViewer",
-          "when": "resourceExtname == .jsonl || resourceScheme == jsonl-view",
-          "group": "navigation@12"
-        },
         {
           "command": "mlWorkbench.openTextViewer",
           "when": "resourceExtname =~ /\\.(jsonl|json|csv|tsv|parquet|arrow|feather)$/ || resourceScheme == data-text-view",
