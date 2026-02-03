@@ -5,9 +5,6 @@ import { ParquetDataProvider } from './providers/ParquetDataProvider';
 import { CsvDataProvider } from './providers/CsvDataProvider';
 import { ArrowDataProvider } from './providers/ArrowDataProvider';
 import { cleanup as cleanupTokenizer, getTokenizerOptions } from './utils/tokenizer';
-import { JsonlEditorProvider } from './jsonlEditorProvider';
-import { JsonlTextViewProvider, JSONL_TEXT_HEADER_ACTIONS } from './jsonlTextViewProvider';
-import { createJsonlDecorationTypes, applyJsonlDecorations } from './jsonlTextDecorations';
 import { GenericTextViewProvider } from './textViewer/GenericTextViewProvider';
 import { DecorationManager } from './textViewer/DecorationManager';
 import { JsonDecorator } from './textViewer/decorators/JsonDecorator';
@@ -31,55 +28,6 @@ export async function activate(context: vscode.ExtensionContext) {
                 supportsMultipleEditorsPerDocument: false,
             }
         )
-    );
-
-    // Text-based JSONL Viewer (no webview, for latency benchmarking)
-    const textProvider = new JsonlTextViewProvider(context);
-    context.subscriptions.push(
-        vscode.workspace.registerTextDocumentContentProvider(
-            JsonlTextViewProvider.scheme,
-            textProvider
-        )
-    );
-
-    // Decoration types for text-view syntax coloring (dispose on deactivate)
-    const jsonlDecorationTypes = createJsonlDecorationTypes();
-    jsonlDecorationTypes.forEach(dt => context.subscriptions.push(dt));
-
-    const updateJsonlViewDecorations = () => {
-        const editor = vscode.window.activeTextEditor;
-        if (editor?.document.uri.scheme !== JsonlTextViewProvider.scheme) return;
-        applyJsonlDecorations(editor, jsonlDecorationTypes);
-    };
-
-    textProvider.onDidChange(uri => {
-        const editor = vscode.window.activeTextEditor;
-        if (editor?.document.uri.toString() === uri.toString()) {
-            updateJsonlViewDecorations();
-        }
-    });
-
-    context.subscriptions.push(
-        vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (editor?.document.uri.scheme === JsonlTextViewProvider.scheme) {
-                updateJsonlViewDecorations();
-            }
-        })
-    );
-
-    // Reapply decorations after document content updates (fixes color reversion bug during navigation)
-    context.subscriptions.push(
-        vscode.workspace.onDidChangeTextDocument(e => {
-            // Only handle jsonl-view documents
-            if (e.document.uri.scheme !== JsonlTextViewProvider.scheme) return;
-
-            // Find the editor showing this document
-            const editor = vscode.window.visibleTextEditors.find(ed => ed.document === e.document);
-            if (!editor) return;
-
-            // Reapply decorations with the updated content
-            applyJsonlDecorations(editor, jsonlDecorationTypes);
-        })
     );
 
     // Multi-Format Text Viewer (Generic ASCII viewer for all formats)
@@ -160,44 +108,6 @@ export async function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    // Turn header action labels into clickable command links
-    context.subscriptions.push(
-        vscode.languages.registerDocumentLinkProvider(
-            { scheme: JsonlTextViewProvider.scheme },
-            {
-                provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
-                    const links: vscode.DocumentLink[] = [];
-                    // Header has a leading blank line, so the link line is at index 1
-                    const linkLineIndex = 1;
-                    if (document.lineCount <= linkLineIndex) return links;
-                    const lineText = document.lineAt(linkLineIndex).text;
-                    const tokens = [
-                        { str: JSONL_TEXT_HEADER_ACTIONS.NEXT, command: 'mlWorkbench.jsonlText.nextPage' },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.PREV, command: 'mlWorkbench.jsonlText.prevPage' },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.SEARCH, command: 'mlWorkbench.jsonlText.search' },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.GOTO, command: 'mlWorkbench.jsonlText.gotoLine' },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.CARDS, command: 'mlWorkbench.jsonlText.setMode', args: ['cards'] },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.EDIT, command: 'mlWorkbench.jsonlText.openInEditor' },
-                        { str: JSONL_TEXT_HEADER_ACTIONS.TOKENIZER, command: 'mlWorkbench.jsonlText.setTokenizer' },
-                    ];
-                    for (const { str, command, args } of tokens) {
-                        let idx = 0;
-                        while (true) {
-                            const pos = lineText.indexOf(str, idx);
-                            if (pos === -1) break;
-                            const range = new vscode.Range(linkLineIndex, pos, linkLineIndex, pos + str.length);
-                            const query = args ? '?' + encodeURIComponent(JSON.stringify(args)) : '';
-                            const target = vscode.Uri.parse(`command:${command}${query}`);
-                            links.push(new vscode.DocumentLink(range, target));
-                            idx = pos + 1;
-                        }
-                    }
-                    return links;
-                },
-            }
-        )
-    );
-
     // Document link provider for generic text viewer (makes header actions clickable)
     context.subscriptions.push(
         vscode.languages.registerDocumentLinkProvider(
@@ -238,8 +148,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // Sample viewport width from visible ranges (only reliable when every line is long enough).
     const sampleColumnWidth = (editor: vscode.TextEditor): number | null => {
         const scheme = editor.document.uri.scheme;
-        if ((scheme !== JsonlTextViewProvider.scheme && scheme !== GenericTextViewProvider.scheme) ||
-            editor.visibleRanges.length === 0) return null;
+        if (scheme !== GenericTextViewProvider.scheme || editor.visibleRanges.length === 0) return null;
         const w = Math.max(...editor.visibleRanges.map(r => r.end.character));
         return w > 0 ? w : null;
     };
@@ -248,31 +157,10 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.window.onDidChangeTextEditorVisibleRanges((e: vscode.TextEditorVisibleRangesChangeEvent) => {
             const scheme = e.textEditor.document.uri.scheme;
-            if (scheme === JsonlTextViewProvider.scheme) {
-                const width = sampleColumnWidth(e.textEditor);
-                // Use growOnly to prevent shrinking during navigation transitions
-                if (width != null) textProvider.setColumnWidth(e.textEditor.document.uri, width, true);
-            } else if (scheme === GenericTextViewProvider.scheme) {
+            if (scheme === GenericTextViewProvider.scheme) {
                 const width = sampleColumnWidth(e.textEditor);
                 if (width != null) genericTextProvider.setColumnWidth(e.textEditor.document.uri, width, true);
             }
-        })
-    );
-
-    // When a jsonl-view editor becomes active, sample width after a short delay (layout may not be ready immediately).
-    context.subscriptions.push(
-        vscode.window.onDidChangeActiveTextEditor(editor => {
-            if (!editor || editor.document.uri.scheme !== JsonlTextViewProvider.scheme) return;
-            const viewUri = editor.document.uri;
-            const run = () => {
-                const ed = vscode.window.activeTextEditor;
-                if (!ed || ed.document.uri.toString() !== viewUri.toString()) return;
-                const width = sampleColumnWidth(ed);
-                // Use growOnly to prevent shrinking during navigation
-                if (width != null) textProvider.setColumnWidth(viewUri, width, true);
-            };
-            setTimeout(run, 50);
-            setTimeout(run, 200);
         })
     );
 
