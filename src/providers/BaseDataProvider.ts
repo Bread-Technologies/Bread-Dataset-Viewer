@@ -125,8 +125,9 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                     );
                     break;
                 case 'openInTextEditor':
-                    const doc = await vscode.workspace.openTextDocument(document.uri);
-                    await vscode.window.showTextDocument(doc, { preview: false });
+                    // Use workbench command to reopen the current file in text editor
+                    // This bypasses the 50MB extension synchronization limit
+                    await vscode.commands.executeCommand('workbench.action.reopenTextEditor');
                     break;
             }
         });
