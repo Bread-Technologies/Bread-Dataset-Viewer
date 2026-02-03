@@ -1,6 +1,6 @@
 {
   "name": "bread-dataset-viewer",
-  "displayName": "Bread",
+  "displayName": "Bread Dataset Viewer",
   "description": "View massive JSONL, CSV, Parquet, and Arrow files instantly without freezing VS Code. Includes ML token counting.",
   "version": "0.1.0",
   "publisher": "bread-tech",
