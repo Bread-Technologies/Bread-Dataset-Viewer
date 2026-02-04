@@ -485,5 +485,5 @@ export function deactivate() {
     }
 
     cleanupTokenizer();
-    console.log('ML Workbench extension is now deactivated');
+    console.log('Bread Dataset Viewer extension is now deactivated');
 }

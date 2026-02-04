@@ -1,3 +1,7 @@
+// Disable sharp (image processing) in HuggingFace Transformers - not needed for tokenization
+// This prevents native module loading errors on remote machines
+process.env.DISABLE_SHARP = '1';
+
 import { AutoTokenizer } from '@huggingface/transformers';
 import * as path from 'path';
 import { TelemetryService } from '../telemetry/TelemetryService';
