@@ -87,24 +87,8 @@ When disabled, no data is collected or sent.
 - Uses [Azure Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) for analytics
 - GDPR compliant with automatic PII sanitization
 - All telemetry code is open source in this repository
-
-### Developer Setup (Telemetry)
-
-To enable telemetry during development:
-
-1. Create an Application Insights resource in Azure Portal
-2. Copy the connection string from the resource
-3. Set the environment variable:
-   ```bash
-   # macOS/Linux
-   export APP_INSIGHTS_KEY="your-connection-string"
-
-   # Windows (PowerShell)
-   $env:APP_INSIGHTS_KEY="your-connection-string"
-   ```
-4. Restart VS Code to pick up the environment variable
-
-For production deployments, set the `APP_INSIGHTS_KEY` environment variable in your deployment environment or use GitHub Secrets for CI/CD pipelines.
+- Application Insights key is included in the extension (standard practice for client-side telemetry)
+- Rate limiting and security are handled server-side by Azure
 
 ## License
 
