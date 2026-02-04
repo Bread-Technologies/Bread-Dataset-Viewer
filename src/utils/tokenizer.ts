@@ -4,6 +4,8 @@ process.env.DISABLE_SHARP = '1';
 
 import { AutoTokenizer } from '@huggingface/transformers';
 import * as path from 'path';
+import { TelemetryService } from '../telemetry/TelemetryService';
+import { isTelemetryConfigured } from '../config/telemetry.config';
 
 /**
  * Tokenizer configuration for bundled local tokenizers
@@ -175,34 +177,52 @@ async function getTokenizer(tokenizerType: string): Promise<any> {
         );
     }
     
+    const loadStart = Date.now();
+
     try {
-        console.log(`[Tokenizer] Loading: ${config.name} from bundled files`);
-        if (config.notes) {
-            console.log(`[Tokenizer] Notes: ${config.notes}`);
-        }
-        
         // Construct path to bundled tokenizer directory
         // __dirname points to out/utils/, so we go up to extension root, then into tokenizers/
         const localPath = path.join(__dirname, '..', '..', 'tokenizers', tokenizerType);
-        console.log(`[Tokenizer] Local path: ${localPath}`);
-        
+
         // Load from bundled local files only - no network access
         const tokenizer = await AutoTokenizer.from_pretrained(localPath, {
             local_files_only: true,  // Force offline loading from bundled files
         });
-        
+
         tokenizers.set(tokenizerType, tokenizer);
-        console.log(`[Tokenizer] ✓ Loaded from disk: ${config.name}`);
+
+        // Track successful tokenizer loading
+        if (isTelemetryConfigured()) {
+            TelemetryService.getInstance().sendEvent('tokenizer.loaded', {
+                tokenizerType,
+                tokenizerName: config.name,
+            }, {
+                loadTimeMs: Date.now() - loadStart,
+            });
+        }
+
         return tokenizer;
     } catch (error) {
         // Create detailed error message for local loading failures
         const errorMsg = String(error);
         let helpText = '\n\nThe bundled tokenizer files may be missing or corrupted. Try reinstalling the extension.';
-        
+        let errorCategory = 'load_failure';
+
         if (errorMsg.includes('ENOENT') || errorMsg.includes('not found')) {
             helpText = `\n\nTokenizer directory not found: tokenizers/${tokenizerType}/\nThe extension installation may be incomplete.`;
+            errorCategory = 'not_found';
         }
-        
+
+        // Track tokenizer loading failure
+        if (isTelemetryConfigured()) {
+            TelemetryService.getInstance().sendError('error.tokenization', error as Error, {
+                errorType: errorCategory,
+                tokenizerType,
+                tokenizerName: config.name,
+                context: 'loading',
+            });
+        }
+
         throw new Error(
             `Failed to load bundled tokenizer: ${config.name}\n` +
             `Local key: ${tokenizerType}\n` +
@@ -218,40 +238,67 @@ async function applyChatTemplate(data: any, tokenizerType: string): Promise<stri
     // Check if data has messages array (chat completions format)
     if (data && Array.isArray(data.messages)) {
         const tokenizer = await getTokenizer(tokenizerType);
-        
+        const startTime = Date.now();
+
         try {
             // Use the tokenizer's built-in chat template
             const formatted = await tokenizer.apply_chat_template(data.messages, {
                 tokenize: false,
                 add_generation_prompt: false,
             });
-            
+
+            // Track successful template application
+            if (isTelemetryConfigured()) {
+                TelemetryService.getInstance().sendEvent('tokenizer.template.applied', {
+                    tokenizerType,
+                    tokenizerName: TOKENIZER_CONFIGS[tokenizerType].name,
+                }, {
+                    messageCount: data.messages.length,
+                    durationMs: Date.now() - startTime,
+                });
+            }
+
             return formatted;
         } catch (error) {
             const errorStr = String(error);
-            
-            // Provide specific guidance for known template limitations
+
+            // Categorize error type for telemetry
+            let errorCategory = 'unknown';
             let guidance = '';
+
             if (errorStr.includes('chat_template is not set') || errorStr.includes('no template argument')) {
+                errorCategory = 'missing_template';
                 guidance = '\n\n💡 This tokenizer does not have a chat template configured.\n' +
                           'Solutions:\n' +
                           '  • Switch to "Full JSON" mode to count the raw JSON tokens\n' +
                           '  • Switch to "Key" mode to count a specific field\n' +
                           '  • Use a different model tokenizer';
             } else if (errorStr.includes('System role not supported')) {
+                errorCategory = 'system_role_unsupported';
                 guidance = '\n\n💡 This model does not support system messages.\n' +
                           'Solutions:\n' +
                           '  • Remove system role messages from your data\n' +
                           '  • Switch to "Full JSON" or "Raw Text" mode\n' +
                           '  • Use a different tokenizer';
             } else if (errorStr.includes('Tool call IDs')) {
+                errorCategory = 'tool_call_validation';
                 guidance = '\n\n💡 This model has strict tool call validation.\n' +
                           'Solutions:\n' +
                           '  • Fix tool call format in your data\n' +
                           '  • Switch to "Full JSON" or "Raw Text" mode\n' +
                           '  • Use a different tokenizer';
             }
-            
+
+            // Track chat template error
+            if (isTelemetryConfigured()) {
+                TelemetryService.getInstance().sendError('error.tokenization', error as Error, {
+                    errorType: errorCategory,
+                    tokenizerType,
+                    tokenizerName: TOKENIZER_CONFIGS[tokenizerType].name,
+                    context: 'chat_template',
+                });
+            }
+
             throw new Error(
                 `Chat template error (${TOKENIZER_CONFIGS[tokenizerType].name}):\n${errorStr}${guidance}`
             );
@@ -307,9 +354,18 @@ export async function countTokens(
                     actualMode = 'chat';
                 } catch (chatError) {
                     // Chat template not available for this tokenizer, fall back to full-json
-                    console.log(`[Tokenizer] Chat template not available for ${tokenizerType}, falling back to full-json mode`);
                     textToTokenize = JSON.stringify(parsed);
                     actualMode = 'full-json';
+
+                    // Track fallback from chat to full-json
+                    if (isTelemetryConfigured()) {
+                        TelemetryService.getInstance().sendEvent('tokenizer.mode.fallback', {
+                            tokenizerType,
+                            fromMode: 'chat',
+                            toMode: 'full-json',
+                            reason: 'template_unavailable',
+                        });
+                    }
                 }
             } else if (parsed) {
                 textToTokenize = JSON.stringify(parsed);
@@ -361,6 +417,37 @@ export async function countTokens(
             preview: textToTokenize.substring(0, 100),
         };
     } catch (error) {
+        const errorMsg = String(error);
+
+        // Categorize error for telemetry
+        let errorCategory = 'unknown';
+        if (errorMsg.includes('chat_template') || errorMsg.includes('template')) {
+            errorCategory = 'missing_template';
+        } else if (errorMsg.includes('System role')) {
+            errorCategory = 'system_role_unsupported';
+        } else if (errorMsg.includes('Tool call')) {
+            errorCategory = 'tool_call_validation';
+        } else if (errorMsg.includes('Key') && errorMsg.includes('not found')) {
+            errorCategory = 'key_not_found';
+        } else if (errorMsg.includes('Failed to load')) {
+            errorCategory = 'load_failure';
+        } else if (errorMsg.includes('No messages array')) {
+            errorCategory = 'invalid_format';
+        } else if (errorMsg.includes('Not valid JSON')) {
+            errorCategory = 'invalid_json';
+        }
+
+        // Track token counting error
+        if (isTelemetryConfigured()) {
+            TelemetryService.getInstance().sendError('error.tokenization', error as Error, {
+                errorType: errorCategory,
+                tokenizerType,
+                tokenizerName: TOKENIZER_CONFIGS[tokenizerType].name,
+                context: 'counting',
+                mode,
+            });
+        }
+
         throw new Error(
             `Token counting failed for ${TOKENIZER_CONFIGS[tokenizerType].name}:\n${error}`
         );

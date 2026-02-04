@@ -4,6 +4,9 @@ import * as path from 'path';
 import { IDataLoader, FileFormat } from '../formats/interfaces';
 import { countTokens } from '../utils/tokenizer';
 import { LoadLinesMessage, JumpToLineMessage } from '../webview/types/messages';
+import { TelemetryService } from '../telemetry/TelemetryService';
+import { getFileSizeCategory } from '../telemetry/helpers';
+import { isTelemetryConfigured } from '../config/telemetry.config';
 
 /**
  * Abstract base provider for data file viewers
@@ -41,56 +44,101 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
         token: vscode.CancellationToken
     ): Promise<void> {
         const startTime = Date.now();
+        const timerId = `resolveEditor:${document.uri.fsPath}`;
 
-        // Setup webview options
-        webviewPanel.webview.options = {
-            enableScripts: true,
-            localResourceRoots: [
-                vscode.Uri.file(this.context.extensionPath),
-            ],
-        };
+        try {
+            // Start telemetry timer
+            if (isTelemetryConfigured()) {
+                TelemetryService.getInstance().startTimer(timerId);
+            }
 
-        console.log(`[PERF] Options set: ${Date.now() - startTime}ms`);
+            // Setup webview options
+            webviewPanel.webview.options = {
+                enableScripts: true,
+                localResourceRoots: [
+                    vscode.Uri.file(this.context.extensionPath),
+                ],
+            };
 
-        // Load HTML for webview
-        webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
+            // Load HTML for webview
+            webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview);
 
-        console.log(`[PERF] HTML set: ${Date.now() - startTime}ms`);
+            // Get file stats
+            const stats = await fs.promises.stat(document.uri.fsPath);
+            const fileSizeBytes = stats.size;
+            const fileSizeMB = (fileSizeBytes / 1024 / 1024).toFixed(2);
 
-        // Get file stats
-        const stats = await fs.promises.stat(document.uri.fsPath);
-        const fileSizeBytes = stats.size;
-        const fileSizeMB = (fileSizeBytes / 1024 / 1024).toFixed(2);
+            // Initialize loader to get metadata
+            const loader = this.createLoader(document.uri.fsPath);
+            await loader.initialize(document.uri.fsPath);
+            const metadata = await loader.getMetadata();
 
-        console.log(`[PERF] Stats read: ${Date.now() - startTime}ms`);
+            // Track initialization performance
+            if (isTelemetryConfigured()) {
+                const telemetry = TelemetryService.getInstance();
+                telemetry.sendEvent('perf.initialization', {
+                    format: metadata.format,
+                    loaderType: loader.constructor.name,
+                }, {
+                    durationMs: Date.now() - startTime,
+                });
+            }
 
-        // Initialize loader to get metadata
-        const loader = this.createLoader(document.uri.fsPath);
-        await loader.initialize(document.uri.fsPath);
-        const metadata = await loader.getMetadata();
+            // Send initial file info with format and schema
+            webviewPanel.webview.postMessage({
+                type: 'fileInfo',
+                filePath: document.uri.fsPath,
+                fileName: path.basename(document.uri.fsPath),
+                fileSize: fileSizeBytes,
+                fileSizeMB: fileSizeMB,
+                format: metadata.format,
+                schema: metadata.schema,
+            });
 
-        console.log(`[PERF] Loader initialized: ${Date.now() - startTime}ms`);
+            // Setup message handlers
+            this.setupMessageHandlers(document, webviewPanel);
 
-        // Send initial file info with format and schema
-        webviewPanel.webview.postMessage({
-            type: 'fileInfo',
-            filePath: document.uri.fsPath,
-            fileName: path.basename(document.uri.fsPath),
-            fileSize: fileSizeBytes,
-            fileSizeMB: fileSizeMB,
-            format: metadata.format,
-            schema: metadata.schema,
-        });
+            // Load initial batch
+            const loadStart = Date.now();
+            await this.loadAndSendRows(document.uri.fsPath, webviewPanel.webview, 0, 100);
 
-        console.log(`[PERF] File info sent: ${Date.now() - startTime}ms`);
+            // Track file opened with complete info
+            if (isTelemetryConfigured()) {
+                const telemetry = TelemetryService.getInstance();
+                telemetry.sendEvent('file.opened', {
+                    format: metadata.format,
+                    sizeCategory: getFileSizeCategory(fileSizeBytes),
+                    viewerType: 'webview',
+                    hasSchema: metadata.schema ? 'true' : 'false',
+                }, {
+                    fileSizeBytes,
+                    rowCount: metadata.totalRows || 0,
+                });
 
-        // Setup message handlers
-        this.setupMessageHandlers(document, webviewPanel);
+                // Track initial load performance
+                telemetry.sendEvent('file.loaded.initial', {
+                    format: metadata.format,
+                    sizeCategory: getFileSizeCategory(fileSizeBytes),
+                    viewerType: 'webview',
+                }, {
+                    durationMs: Date.now() - loadStart,
+                    rowsLoaded: 100,
+                });
 
-        // Load initial batch
-        await this.loadAndSendRows(document.uri.fsPath, webviewPanel.webview, 0, 100);
-
-        console.log(`[PERF] Initial data loaded: ${Date.now() - startTime}ms`);
+                // End overall editor resolution timer
+                telemetry.endTimer(timerId, 'perf.editor.resolved', {
+                    format: metadata.format,
+                });
+            }
+        } catch (error) {
+            // Track file loading errors
+            if (isTelemetryConfigured()) {
+                TelemetryService.getInstance().sendError('error.fileLoad', error as Error, {
+                    errorType: 'initialization_failed',
+                });
+            }
+            throw error;
+        }
     }
 
     /**
@@ -104,6 +152,23 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
             switch (message.type) {
                 case 'loadLines':
                     const loadMsg = message as LoadLinesMessage;
+
+                    // Track pagination from webview
+                    if (isTelemetryConfigured()) {
+                        const loader = this.createLoader(document.uri.fsPath);
+                        await loader.initialize(document.uri.fsPath);
+                        const metadata = await loader.getMetadata();
+                        loader.dispose();
+
+                        TelemetryService.getInstance().sendEvent('webview.loadMore', {
+                            format: metadata.format,
+                            hasSearch: loadMsg.searchTerm ? 'true' : 'false',
+                        }, {
+                            offset: loadMsg.offset,
+                            limit: loadMsg.limit,
+                        });
+                    }
+
                     await this.loadAndSendRows(
                         document.uri.fsPath,
                         webviewPanel.webview,
@@ -116,6 +181,21 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                     break;
                 case 'jumpToLine':
                     const jumpMsg = message as JumpToLineMessage;
+
+                    // Track jump to line from webview
+                    if (isTelemetryConfigured()) {
+                        const loader = this.createLoader(document.uri.fsPath);
+                        await loader.initialize(document.uri.fsPath);
+                        const metadata = await loader.getMetadata();
+                        loader.dispose();
+
+                        TelemetryService.getInstance().sendEvent('webview.jumpToLine', {
+                            format: metadata.format,
+                        }, {
+                            lineNumber: jumpMsg.lineNumber,
+                        });
+                    }
+
                     await this.jumpToRow(
                         document.uri.fsPath,
                         webviewPanel.webview,
@@ -125,6 +205,18 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                     );
                     break;
                 case 'openInTextEditor':
+                    // Track opening in text editor from webview
+                    if (isTelemetryConfigured()) {
+                        const loader = this.createLoader(document.uri.fsPath);
+                        await loader.initialize(document.uri.fsPath);
+                        const metadata = await loader.getMetadata();
+                        loader.dispose();
+
+                        TelemetryService.getInstance().sendEvent('webview.openInTextEditor', {
+                            format: metadata.format,
+                        });
+                    }
+
                     // Use workbench command to reopen the current file in text editor
                     // This bypasses the 50MB extension synchronization limit
                     await vscode.commands.executeCommand('workbench.action.reopenTextEditor');
@@ -145,13 +237,28 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
         tokenizer: string = 'qwen-3',
         tokenMode: string = 'auto'
     ): Promise<void> {
+        const loadStart = Date.now();
         const loader = this.createLoader(filePath);
 
         try {
             await loader.initialize(filePath);
+            const metadata = await loader.getMetadata();
 
             const filter = searchTerm ? { searchTerm } : undefined;
             const batch = await loader.loadRows(offset, limit, filter);
+
+            // Track data load performance
+            if (isTelemetryConfigured()) {
+                const telemetry = TelemetryService.getInstance();
+                telemetry.sendEvent('perf.dataLoad', {
+                    format: metadata.format,
+                    loaderType: loader.constructor.name,
+                    hasFilter: searchTerm ? 'true' : 'false',
+                }, {
+                    durationMs: Date.now() - loadStart,
+                    rowCount: batch.rows.length,
+                });
+            }
 
             // Send rows to webview immediately (without tokens)
             webview.postMessage({
@@ -163,8 +270,23 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
 
             // Count tokens in background and send separately
             setImmediate(async () => {
+                const tokenCountStart = Date.now();
                 const tokensMap: { [index: number]: any } = {};
                 const errors: string[] = [];
+
+                // Track token counting start
+                if (isTelemetryConfigured()) {
+                    TelemetryService.getInstance().sendEvent('tokenizer.count.started', {
+                        tokenizerType: tokenizer,
+                        tokenMode: tokenMode,
+                        format: metadata.format,
+                    }, {
+                        rowCount: batch.rows.length,
+                    });
+                }
+
+                let successCount = 0;
+                let errorCount = 0;
 
                 for (const row of batch.rows) {
                     try {
@@ -176,6 +298,7 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                             key: result.key,
                             preview: result.preview,
                         };
+                        successCount++;
                     } catch (error) {
                         const errorMsg = String(error);
                         console.error(`Error counting tokens for row ${row.index}:`, error);
@@ -187,7 +310,23 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                         if (!errors.some(e => e === errorMsg)) {
                             errors.push(errorMsg);
                         }
+                        errorCount++;
                     }
+                }
+
+                // Track token counting completion
+                if (isTelemetryConfigured()) {
+                    TelemetryService.getInstance().sendEvent('tokenizer.count.completed', {
+                        tokenizerType: tokenizer,
+                        tokenMode: tokenMode,
+                        format: metadata.format,
+                        hadErrors: errorCount > 0 ? 'true' : 'false',
+                    }, {
+                        rowCount: batch.rows.length,
+                        successCount,
+                        errorCount,
+                        durationMs: Date.now() - tokenCountStart,
+                    });
                 }
 
                 // Send token counts
@@ -204,6 +343,15 @@ export abstract class BaseDataProvider implements vscode.CustomReadonlyEditorPro
                     });
                 }
             });
+        } catch (error) {
+            // Track data loading errors
+            if (isTelemetryConfigured()) {
+                TelemetryService.getInstance().sendError('error.dataLoad', error as Error, {
+                    errorType: 'load_failed',
+                    hasFilter: searchTerm ? 'true' : 'false',
+                });
+            }
+            throw error;
         } finally {
             loader.dispose();
         }

@@ -11,9 +11,18 @@ import { JsonDecorator } from './textViewer/decorators/JsonDecorator';
 import { CsvDecorator } from './textViewer/decorators/CsvDecorator';
 import { NoOpDecorator } from './textViewer/decorators/NoOpDecorator';
 import { TEXT_VIEWER_HEADER_ACTIONS } from './textViewer/BaseTextViewProvider';
+import { TelemetryService } from './telemetry/TelemetryService';
+import { TELEMETRY_CONFIG, isTelemetryConfigured } from './config/telemetry.config';
 
 export async function activate(context: vscode.ExtensionContext) {
-    console.log('Bread Dataset Viewer extension is now active');
+    const activationStart = Date.now();
+
+    // Initialize telemetry service (if configured)
+    if (isTelemetryConfigured()) {
+        TelemetryService.initialize(context, TELEMETRY_CONFIG.appInsightsKey);
+    }
+
+    console.log('ML Workbench extension is now active');
 
     // Register JSONL Viewer
     const jsonlProvider = new JsonlDataProvider(context);
@@ -105,6 +114,14 @@ export async function activate(context: vscode.ExtensionContext) {
             if (state) {
                 decorationManager.applyDecorations(editor, state.format);
             }
+
+            // Track text viewer opened
+            if (isTelemetryConfigured()) {
+                TelemetryService.getInstance().sendEvent('textviewer.opened', {
+                    format: ext,
+                    viewerType: 'text',
+                });
+            }
         })
     );
 
@@ -186,9 +203,19 @@ export async function activate(context: vscode.ExtensionContext) {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== GenericTextViewProvider.scheme) return;
             if (mode !== 'cards') return;
+
+            const state = genericTextProvider.getState(editor.document.uri);
             genericTextProvider.updateState(editor.document.uri, st => {
                 st.mode = mode;
             });
+
+            // Track mode change
+            if (isTelemetryConfigured() && state) {
+                TelemetryService.getInstance().sendEvent('textviewer.mode.changed', {
+                    format: state.format,
+                    mode: mode,
+                });
+            }
         })
     );
 
@@ -196,9 +223,20 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('mlWorkbench.textViewer.nextPage', async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== GenericTextViewProvider.scheme) return;
+
+            const state = genericTextProvider.getState(editor.document.uri);
             genericTextProvider.updateState(editor.document.uri, st => {
                 st.startLine = Math.max(0, st.startLine + st.pageSize);
             });
+
+            // Track pagination
+            if (isTelemetryConfigured() && state) {
+                TelemetryService.getInstance().sendEvent('textviewer.pagination', {
+                    format: state.format,
+                    action: 'next',
+                });
+            }
+
             // Reapply decorations after content refresh
             setTimeout(() => {
                 const state = genericTextProvider.getState(editor.document.uri);
@@ -211,9 +249,20 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('mlWorkbench.textViewer.prevPage', async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== GenericTextViewProvider.scheme) return;
+
+            const state = genericTextProvider.getState(editor.document.uri);
             genericTextProvider.updateState(editor.document.uri, st => {
                 st.startLine = Math.max(0, st.startLine - st.pageSize);
             });
+
+            // Track pagination
+            if (isTelemetryConfigured() && state) {
+                TelemetryService.getInstance().sendEvent('textviewer.pagination', {
+                    format: state.format,
+                    action: 'prev',
+                });
+            }
+
             // Reapply decorations after content refresh
             setTimeout(() => {
                 const state = genericTextProvider.getState(editor.document.uri);
@@ -227,6 +276,7 @@ export async function activate(context: vscode.ExtensionContext) {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== GenericTextViewProvider.scheme) return;
             const uri = editor.document.uri;
+            const state = genericTextProvider.getState(uri);
             let current: string | null = null;
             genericTextProvider.updateState(uri, st => {
                 current = st.search;
@@ -235,10 +285,34 @@ export async function activate(context: vscode.ExtensionContext) {
                 prompt: 'Search lines (substring match)',
                 value: current ?? '',
             });
+
+            const wasCleared = current && (!pattern || pattern.length === 0);
+            const wasPerformed = pattern && pattern.length > 0;
+
             genericTextProvider.updateState(uri, st => {
                 st.search = pattern && pattern.length > 0 ? pattern : null;
                 st.startLine = 0;
             });
+
+            // Track search (without actual search term for privacy)
+            if (isTelemetryConfigured() && state) {
+                if (wasCleared) {
+                    TelemetryService.getInstance().sendEvent('textviewer.search.cleared', {
+                        format: state.format,
+                    });
+                } else if (wasPerformed) {
+                    // Categorize search term length without sending actual term
+                    let lengthCategory = 'empty';
+                    if (pattern!.length > 0 && pattern!.length <= 3) lengthCategory = 'short';
+                    else if (pattern!.length <= 10) lengthCategory = 'medium';
+                    else lengthCategory = 'long';
+
+                    TelemetryService.getInstance().sendEvent('textviewer.search.performed', {
+                        format: state.format,
+                        searchLengthCategory: lengthCategory,
+                    });
+                }
+            }
         })
     );
 
@@ -246,15 +320,27 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('mlWorkbench.textViewer.gotoLine', async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== GenericTextViewProvider.scheme) return;
+            const state = genericTextProvider.getState(editor.document.uri);
             const value = await vscode.window.showInputBox({
                 prompt: 'Go to line',
             });
             if (!value) return;
             const n = Number.parseInt(value, 10);
             if (Number.isNaN(n) || n < 0) return;
+
+            const startTime = Date.now();
             genericTextProvider.updateState(editor.document.uri, st => {
                 st.startLine = n;
             });
+
+            // Track jump to line
+            if (isTelemetryConfigured() && state) {
+                TelemetryService.getInstance().sendEvent('textviewer.jumpToLine', {
+                    format: state.format,
+                }, {
+                    durationMs: Date.now() - startTime,
+                });
+            }
         })
     );
 
@@ -262,8 +348,17 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand('mlWorkbench.textViewer.openInEditor', async () => {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== GenericTextViewProvider.scheme) return;
+            const state = genericTextProvider.getState(editor.document.uri);
             const fileUri = GenericTextViewProvider.getFileUri(editor.document.uri);
             if (!fileUri) return;
+
+            // Track opening in editor
+            if (isTelemetryConfigured() && state) {
+                TelemetryService.getInstance().sendEvent('textviewer.openInEditor', {
+                    format: state.format,
+                });
+            }
+
             const doc = await vscode.workspace.openTextDocument(fileUri);
             await vscode.window.showTextDocument(doc, { preview: false });
         })
@@ -274,6 +369,7 @@ export async function activate(context: vscode.ExtensionContext) {
             const editor = vscode.window.activeTextEditor;
             if (!editor || editor.document.uri.scheme !== GenericTextViewProvider.scheme) return;
             const uri = editor.document.uri;
+            const state = genericTextProvider.getState(uri);
             const current = genericTextProvider.getTokenizer(uri);
             const options = getTokenizerOptions();
             const items: vscode.QuickPickItem[] = [
@@ -289,9 +385,21 @@ export async function activate(context: vscode.ExtensionContext) {
                 matchOnDescription: true,
             });
             if (picked === undefined) return;
+
+            const newTokenizer = picked.label === '(none)' ? null : (picked.description ?? null);
             genericTextProvider.updateState(uri, st => {
-                st.tokenizer = picked.label === '(none)' ? null : (picked.description ?? null);
+                st.tokenizer = newTokenizer;
             });
+
+            // Track tokenizer selection
+            if (isTelemetryConfigured() && state) {
+                TelemetryService.getInstance().sendEvent('textviewer.tokenizer.selected', {
+                    format: state.format,
+                    tokenizerType: newTokenizer ?? 'none',
+                    tokenizerName: picked.label,
+                    previousTokenizer: current ?? 'none',
+                });
+            }
         })
     );
 
@@ -355,10 +463,27 @@ export async function activate(context: vscode.ExtensionContext) {
         )
     );
 
-    console.log('Bread Dataset Viewer: Custom editors registered');
+    console.log('ML Workbench: Custom editors registered');
+
+    // Send activation complete event
+    if (isTelemetryConfigured()) {
+        const telemetry = TelemetryService.getInstance();
+        telemetry.sendEvent('extension.activated', {
+            activationReason: String(context.extensionMode),
+        }, {
+            activationTimeMs: Date.now() - activationStart,
+        });
+    }
 }
 
 export function deactivate() {
+    // Send deactivation event and dispose telemetry
+    if (isTelemetryConfigured()) {
+        const telemetry = TelemetryService.getInstance();
+        telemetry.sendEvent('extension.deactivated');
+        telemetry.dispose();
+    }
+
     cleanupTokenizer();
     console.log('Bread Dataset Viewer extension is now deactivated');
 }

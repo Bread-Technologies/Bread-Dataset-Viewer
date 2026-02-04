@@ -11,7 +11,10 @@
       "outFiles": [
         "${workspaceFolder}/out/**/*.js"
       ],
-      "preLaunchTask": "npm: compile"
+      "preLaunchTask": "npm: compile",
+      "env": {
+        "APP_INSIGHTS_KEY": "${env:APP_INSIGHTS_KEY}"
+      }
     },
     {
       "name": "Run Extension (without build)",
@@ -22,7 +25,10 @@
       ],
       "outFiles": [
         "${workspaceFolder}/out/**/*.js"
-      ]
+      ],
+      "env": {
+        "APP_INSIGHTS_KEY": "${env:APP_INSIGHTS_KEY}"
+      }
     }
   ]
 }
