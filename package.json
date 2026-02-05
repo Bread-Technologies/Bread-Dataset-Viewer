@@ -2,7 +2,7 @@
   "name": "bread-dataset-viewer",
   "displayName": "Bread Dataset Viewer - Open Source",
   "description": "Open Source dataset viewer for ML engineers. View 100GB+ JSONL/Parquet/CSV files with real-time token counting using 16 LLM tokenizers.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "bread-tech",
   "license": "MIT",
   "icon": "bread_dataset_logo.png",
