@@ -1,22 +1,18 @@
 /**
  * Telemetry configuration for ML Workbench extension
  *
- * IMPORTANT: Replace with your actual Application Insights instrumentation key
- * or use environment variable for production deployments.
+ * Application Insights keys are designed for client-side use and safe to include
+ * in published extensions. Rate limiting and security are handled server-side by Azure.
  *
- * To create an Application Insights resource:
- * 1. Go to Azure Portal (portal.azure.com)
- * 2. Create new Application Insights resource
- * 3. Copy the Instrumentation Key
- * 4. Set APP_INSIGHTS_KEY environment variable or replace below
+ * Environment variable (APP_INSIGHTS_KEY) can override for development/testing.
  */
 
 export const TELEMETRY_CONFIG = {
     /**
      * Application Insights connection string
-     * Must be set via APP_INSIGHTS_KEY environment variable
+     * Safe to include in source - designed for client-side use
      */
-    appInsightsKey: process.env.APP_INSIGHTS_KEY || '',
+    appInsightsKey: process.env.APP_INSIGHTS_KEY || 'InstrumentationKey=57b31524-522d-4291-aab6-ff38f89ddbdb;IngestionEndpoint=https://westus2-2.in.applicationinsights.azure.com/;LiveEndpoint=https://westus2.livediagnostics.monitor.azure.com/;ApplicationId=bd35885e-0019-417f-96c7-8abe4d62a95e',
 
     /**
      * Enable/disable telemetry globally (still respects VS Code user setting)
