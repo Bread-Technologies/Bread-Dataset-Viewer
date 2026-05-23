@@ -33,13 +33,18 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | invFun uniqueness from toFun | `Transformations.lean :: invFun_unique` | ✓ |
 | PTrans extensionality | `Transformations.lean :: ext` | ✓ |
 | Action of PTrans on Meeting is functorial | `Transformations.lean :: actMeeting_id, actMeeting_comp` | ✓ |
+| Disjoint-union Wantable structure (no cross-system meetings) | `Composition.lean :: instWantableSum, Meeting.sum_no_cross` | ✓ |
+| Componentwise PTrans on disjoint unions | `Composition.lean :: PTrans.sumMap` | ✓ |
+| Spacelike pair of binary perspectival observables → CHSH tuple | `CHSH.lean :: SpacelikePair, toCHSHTuple` | ✓ |
+| **Realist case** (commutative *-algebra) ⇒ CHSH expression ≤ 2 | `CHSH.lean :: bound_realist` | ✓ via Mathlib |
+| **Perspectival/Tsirelson case** ⇒ CHSH expression ≤ 2√2 | `CHSH.lean :: bound_perspectival` | ✓ via Mathlib |
 
 ## What is NOT YET done — honest open list
 
 | Target | Tier | Status | Bottleneck |
 |--------|------|--------|------------|
-| Hardy reconstruction in this language | 1 | ? OPEN | Needs GPT (convex state spaces) — needs Mathlib |
-| Tsirelson 2√2 from axioms | 1 | ? OPEN | Needs Hardy or equivalent + Bell inequality machinery |
+| Hardy reconstruction in this language | 1 | ? OPEN | Needs GPT (convex state spaces) — Mathlib has the pieces |
+| Tsirelson 2√2 from axioms | 1 | ▲ PARTIAL | Bound is verified given the *-ring picture (`bound_perspectival`). DERIVING the *-ring picture from I–IV remains open |
 | No-cloning / no-broadcasting | 1 | ? OPEN | Needs operational composition structure |
 | Complex Hilbert space (vs real/quaternionic) | 1 | ? OPEN | Renou-style; needs tensor products in GPT |
 | Gauge group U(1)×SU(2)×SU(3) | 2 | ? OPEN | Unknown to anyone from any axiomatic framework |
