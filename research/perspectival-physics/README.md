@@ -35,12 +35,21 @@ not proof.
 
 ## Lineage
 
-Extends operational reconstructions: Hardy 2001, Clifton-Bub-Halvorson
-2003, Chiribella-D'Ariano-Perinotti 2010, Müller 2020/2024, Renou
-et al. 2021. Adds a specific philosophical refinement (libertarian
-agency without substantial self; first-person primacy as structure;
-market-of-wants ontology). The philosophy is the input; the derivations
-are the work.
+**Technical lineage** — extends operational reconstructions: Hardy
+2001, Clifton-Bub-Halvorson 2003, Chiribella-D'Ariano-Perinotti 2010,
+Müller 2020/2024, Renou et al. 2021.
+
+**Philosophical lineage** — see `LINEAGE.md`. Key additions to the
+standard reconstruction-program toolkit:
+- Libertarian agency without substantial self (Parfit completed, not
+  rejected; persistence via stage theory — Lewis, Sider, Quine).
+- First-person primacy as structure (Husserl, Schopenhauer, Whitehead).
+- Market-of-wants ontology (Hayek; Aristotelian functional essences).
+- Rortian "real is honorific" with Quinean teeth (inscrutability of
+  reference). Rovelli's relational QM as the physical counterpart of
+  Quinean ontological relativity.
+
+The philosophy is the input; the derivations are the work.
 
 ## Build
 
