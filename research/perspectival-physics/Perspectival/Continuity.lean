@@ -261,6 +261,18 @@ def singletonAgency {V : Type u} [AddCommGroup V] [Module ℝ V]
     · rw [hR₁eq]
     · rw [hR₂eq]
 
+/-- For any GPT G on a topological vector space V, a pair availability
+set `{R_id, R'}` extends to a `HasConnectedAgency` using the affine
+interpolation path. -/
+@[reducible]
+def pairAgency {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : GPT V) (R₀ R₁ : Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) : HasConnectedAgency G where
+  avail := {R₀, R₁}
+  id_avail := ⟨R₀, Set.mem_insert _ _, hR₀_id⟩
+  path_connected S₁ S₂ _ _ := path_via_affineLine G S₁ S₂
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
