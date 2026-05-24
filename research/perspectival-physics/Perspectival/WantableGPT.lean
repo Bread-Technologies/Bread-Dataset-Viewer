@@ -418,6 +418,14 @@ the WantableGPT is the classical simplex on `W`. -/
 theorem state_is_convex_combination_of_vertices (f : V W) (_hf : f ∈ states W) :
     f = ∑ w, f w • vertex W w := vertex_decomposition W f
 
+/-- The vertex family spans the entire ambient space `V W`. -/
+theorem vertices_span : Submodule.span ℝ (Set.range (vertex W)) = ⊤ := by
+  rw [eq_top_iff]
+  intro f _
+  rw [vertex_decomposition W f]
+  exact Submodule.sum_mem _ (fun w _ =>
+    Submodule.smul_mem _ (f w) (Submodule.subset_span ⟨w, rfl⟩))
+
 /-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
 give distinct linear maps on the state space.
 
