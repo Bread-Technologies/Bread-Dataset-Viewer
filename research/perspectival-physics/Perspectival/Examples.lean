@@ -849,6 +849,19 @@ example {W : Type u} [Wantable W] :
   show Wantable.complement (Wantable.complement w) = w
   exact Wantable.complement_involutive w
 
+example {W : Type u} [Wantable W] (n : ℕ) :
+    (complementEquiv : Equiv.Perm W) ^ (2 * n) = 1 := by
+  induction n with
+  | zero => simp
+  | succ k ih =>
+    rw [Nat.mul_succ, pow_add]
+    show (_ : Equiv.Perm W) * _ = 1
+    rw [ih, one_mul]
+    apply Equiv.ext
+    intro w
+    show Wantable.complement (Wantable.complement w) = w
+    exact Wantable.complement_involutive w
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
