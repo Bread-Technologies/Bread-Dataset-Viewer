@@ -11067,3 +11067,31 @@ example (R : Reality Bool) : PTrans.actReality (1 : PTrans Bool) R = R :=
 example (R : Reality Bool) :
     PTrans.actReality ((PTrans.complement : PTrans Bool) * PTrans.complement) R = R := by
   rw [PTrans.complement_sq, PTrans.actReality_one]
+
+/-- Concrete: actReality on the diagonal-meeting predicate. -/
+example : PTrans.actReality (PTrans.complement : PTrans Bool)
+            (fun m : Meeting Bool => m.side₁ = m.side₂)
+        = (fun m : Meeting Bool =>
+            (PTrans.actMeeting (PTrans.complement : PTrans Bool)⁻¹ m).side₁
+            = (PTrans.actMeeting (PTrans.complement : PTrans Bool)⁻¹ m).side₂) :=
+  rfl
+
+/-- The action on a self-referential Reality (m.side₁ = true). -/
+example : PTrans.actReality (PTrans.complement : PTrans Bool)
+            (fun m : Meeting Bool => m.side₁ = true)
+        = (fun m : Meeting Bool =>
+            (PTrans.actMeeting (PTrans.complement : PTrans Bool)⁻¹ m).side₁ = true) :=
+  rfl
+
+/-- The action of identity preserves any Reality predicate. -/
+example (R : Reality Bool) :
+    PTrans.actReality (1 : PTrans Bool) R = R :=
+  PTrans.actReality_one R
+
+example (R : Reality (Fin 4)) :
+    PTrans.actReality (1 : PTrans (Fin 4)) R = R :=
+  PTrans.actReality_one R
+
+example (R : Reality (Bool × Bool)) :
+    PTrans.actReality (1 : PTrans (Bool × Bool)) R = R :=
+  PTrans.actReality_one R
