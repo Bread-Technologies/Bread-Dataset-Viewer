@@ -157,5 +157,19 @@ example {W : Type*} [Wantable W] [Fintype W] [DecidableEq W]
                                 (Perspectival.WantableGPT.gpt W) :=
   φ  -- Lean inserts the Coe.
 
+/-! ## Example 9 — Boolean WantableGPT and complement-as-transformation
+
+A concrete instance: the Wantable structure on `Bool` produces a
+WantableGPT whose complement-action sends `vertex true` to
+`vertex false` and vice versa. -/
+
+example : Perspectival.GPT (Perspectival.WantableGPT.V Bool) :=
+  Perspectival.WantableGPT.gpt Bool
+
+example : Perspectival.WantableGPT.complementAction Bool
+    (Perspectival.WantableGPT.vertex Bool true)
+    = Perspectival.WantableGPT.vertex Bool false :=
+  Perspectival.WantableGPT.complementAction_vertex Bool true
+
 end Examples
 end Perspectival
