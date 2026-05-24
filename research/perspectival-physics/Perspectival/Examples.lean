@@ -3073,6 +3073,14 @@ example : ((Finset.univ : Finset (Fin 3)).image
             (Perspectival.WantableGPT.vertex (Fin 3))).card = 3 := by
   rw [Perspectival.WantableGPT.vertex_image_card]; decide
 
+/-- Fin 4 vertex map is injective. -/
+example : Function.Injective (Perspectival.WantableGPT.vertex (Fin 4)) :=
+  Perspectival.WantableGPT.vertex_injective (Fin 4)
+
+/-- Fin 3 vertex map is injective. -/
+example : Function.Injective (Perspectival.WantableGPT.vertex (Fin 3)) :=
+  Perspectival.WantableGPT.vertex_injective (Fin 3)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
