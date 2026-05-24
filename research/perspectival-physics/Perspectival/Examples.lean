@@ -2983,6 +2983,17 @@ example {W : Type u} [Wantable W] :
   apply (PTrans.mem_range_toEquivPermHom_iff _).mpr
   intro _; rfl
 
+/-- The complement permutation (as an Equiv) always lifts to the complement PTrans. -/
+example {W : Type u} [Wantable W] :
+    ∃ φ : PTrans W, PTrans.toEquivPermHom φ
+        = ⟨Wantable.complement, Wantable.complement,
+            Wantable.complement_involutive, Wantable.complement_involutive⟩ := by
+  apply (PTrans.mem_range_toEquivPermHom_iff _).mpr
+  intro w
+  show Wantable.complement (Wantable.complement w) = Wantable.complement
+    (Wantable.complement w)
+  rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
