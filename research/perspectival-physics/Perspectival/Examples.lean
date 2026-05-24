@@ -10633,3 +10633,29 @@ example {W : Type u} [Wantable W] (f : PTrans W) : f⁻¹⁻¹ = f := inv_inv f
 
 /-- 1⁻¹ = 1 in PTrans. -/
 example {W : Type u} [Wantable W] : (1 : PTrans W)⁻¹ = 1 := inv_one
+
+/-- complementPTrans is involutive in the WantableGPT group. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementPTrans W)⁻¹⁻¹
+      = Perspectival.WantableGPT.complementPTrans W := inv_inv _
+
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementPTrans W) ^ 0 = 1 := pow_zero _
+
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementPTrans W) ^ 1
+      = Perspectival.WantableGPT.complementPTrans W := pow_one _
+
+/-- complement powers cycle with period 2 (idealization). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementPTrans W) ^ 5
+      = Perspectival.WantableGPT.complementPTrans W := by
+  rw [show (5 : ℕ) = 2 * 2 + 1 from rfl, pow_add,
+      pow_mul, WantableGPT_complementPTrans_order_two,
+      one_pow, one_mul, pow_one]
+
+/-- complement^10 = 1 (even powers = id). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementPTrans W) ^ 10 = 1 := by
+  rw [show (10 : ℕ) = 2 * 5 from rfl, pow_mul,
+      WantableGPT_complementPTrans_order_two, one_pow]
