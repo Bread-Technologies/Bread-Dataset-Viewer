@@ -2903,6 +2903,10 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Unit ⊕ Bool)) = 3 :=
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Empty × Bool)) = 0 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
 
+/-- WantableGPT (Empty ⊕ Bool) has finrank 2 (= 0 + 2). -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Empty ⊕ Bool)) = 2 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
