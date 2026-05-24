@@ -1476,5 +1476,60 @@ example
   · exact classical_bijective_distinct_vertex_images (n := 3) R hinj 0 2 (by decide)
   · exact classical_bijective_distinct_vertex_images (n := 3) R hinj 1 2 (by decide)
 
+/-! ## Concrete examples on Classical n=3 GPT -/
+
+/-- cyclicShiftReversible is non-trivially distinct from identity. -/
+example : cyclicShiftReversible.toLin ≠
+          (Perspectival.Continuity.Reversible.id (gpt 3)).toLin := by
+  intro h
+  have h2 : cyclicShiftReversible.toLin (vertex 3 0)
+          = (Perspectival.Continuity.Reversible.id (gpt 3)).toLin (vertex 3 0) := by
+    rw [h]
+  show False
+  rw [show cyclicShiftReversible.toLin (vertex 3 0) = cyclicShiftLin (vertex 3 0) from rfl] at h2
+  rw [show cyclicShiftLin (vertex 3 0) = vertex 3 1 from by
+    funext j
+    show vertex 3 0 ((j - 1 : Fin 3)) = vertex 3 1 j
+    show (if (0 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+       = (if (1 : Fin 3) = j then (1 : ℝ) else 0)
+    fin_cases j <;> simp <;> decide] at h2
+  rw [show (Perspectival.Continuity.Reversible.id (gpt 3)).toLin (vertex 3 0)
+        = vertex 3 0 from rfl] at h2
+  -- h2 : vertex 3 1 = vertex 3 0
+  have h3 := congr_fun h2 0
+  rw [show vertex 3 1 0 = (if (1 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl,
+      show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at h3
+  simp at h3
+
+/-- cyclicShiftLin has order 3 in PTrans sense (applied 3 times = id). -/
+example (v : V 3) :
+    cyclicShiftLin (cyclicShiftLin (cyclicShiftLin v)) = v :=
+  cyclicShiftLin_third_iter v
+
+/-- cyclicShiftLin applied twice ≠ id (since order is 3). -/
+example : cyclicShiftLin (cyclicShiftLin (vertex 3 0)) ≠ vertex 3 0 := by
+  -- cyclicShiftLin (vertex 3 0) = vertex 3 1
+  -- cyclicShiftLin (vertex 3 1) = vertex 3 2
+  -- vertex 3 2 ≠ vertex 3 0
+  intro h
+  have hcol := congr_fun h 0
+  show False
+  have h1 : cyclicShiftLin (vertex 3 0) = vertex 3 1 := by
+    funext j
+    show vertex 3 0 ((j - 1 : Fin 3)) = vertex 3 1 j
+    show (if (0 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+       = (if (1 : Fin 3) = j then (1 : ℝ) else 0)
+    fin_cases j <;> simp <;> decide
+  have h2 : cyclicShiftLin (vertex 3 1) = vertex 3 2 := by
+    funext j
+    show vertex 3 1 ((j - 1 : Fin 3)) = vertex 3 2 j
+    show (if (1 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+       = (if (2 : Fin 3) = j then (1 : ℝ) else 0)
+    fin_cases j <;> simp <;> decide
+  rw [h1, h2] at hcol
+  rw [show vertex 3 2 0 = (if (2 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl,
+      show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at hcol
+  simp at hcol
+
 end Classical
 end Perspectival
