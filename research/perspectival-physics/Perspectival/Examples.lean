@@ -2948,6 +2948,15 @@ example : FixedPointFreeComplement (Bool × Bool × Bool × Bool) := by
   · exact Bool.false_ne_true h1.symm
   · exact Bool.false_ne_true h1
 
+/-- Bool⁴ complement on (t,f,t,f): each position negates. -/
+example : Wantable.complement ((true, false, true, false) : Bool × Bool × Bool × Bool)
+        = (false, true, false, true) := rfl
+
+/-- Bool⁴ vertex set has 16 elements. -/
+example : ((Finset.univ : Finset (Bool × Bool × Bool × Bool)).image
+            (Perspectival.WantableGPT.vertex (Bool × Bool × Bool × Bool))).card = 16 := by
+  rw [Perspectival.WantableGPT.vertex_image_card]; decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
