@@ -10360,3 +10360,23 @@ example : Function.Injective (Wantable.complement : List Bool → List Bool) :=
 
 example : Function.Injective (Wantable.complement : Option Bool → Option Bool) :=
   Wantable.complement_injective
+
+/-- complement is surjective across all types. -/
+example {W : Type u} [Wantable W] : Function.Surjective (Wantable.complement : W → W) :=
+  Wantable.complement_surjective
+
+example : Function.Surjective (Wantable.complement : Bool → Bool) :=
+  Wantable.complement_surjective
+
+example : Function.Surjective (Wantable.complement : Fin 4 → Fin 4) :=
+  Wantable.complement_surjective
+
+example : Function.Surjective (Wantable.complement : Bool × Bool → Bool × Bool) :=
+  Wantable.complement_surjective
+
+example : Function.Surjective (Wantable.complement : Bool ⊕ Bool → Bool ⊕ Bool) :=
+  Wantable.complement_surjective
+
+/-- complement is bijective across all types. -/
+example {W : Type u} [Wantable W] : Function.Bijective (Wantable.complement : W → W) :=
+  ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
