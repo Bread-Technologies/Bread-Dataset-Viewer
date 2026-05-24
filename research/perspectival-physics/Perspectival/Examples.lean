@@ -5585,5 +5585,29 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
   Perspectival.WantableGPT.finrank_V_eq_card W
 
+/-- `Classical.vertex_distinguishability_set`: classical vertex set is
+a Hardy distinguishability set. -/
+example (n : ℕ) :
+    Perspectival.Hardy.DistinguishabilitySet (Perspectival.Classical.gpt n)
+      ((Finset.univ : Finset (Fin n)).image (Perspectival.Classical.vertex n)) :=
+  Perspectival.Classical.vertex_distinguishability_set n
+
+/-- `Classical.perfectWitness`: the classical perfect witness exists. -/
+example (n : ℕ) :
+    Perspectival.Distinguish.PerfectWitness (G := Perspectival.Classical.gpt n)
+      (Perspectival.Classical.vertex n) :=
+  Perspectival.Classical.perfectWitness n
+
+/-- `Classical.proj_in_effects`: each classical projection is an effect. -/
+example (n : ℕ) (i : Fin n) :
+    Perspectival.Classical.proj n i ∈ Perspectival.Classical.effects n :=
+  Perspectival.Classical.proj_in_effects n i
+
+/-- `Classical.proj_vertex`: coordinate projection gives Kronecker delta. -/
+example (n : ℕ) (i j : Fin n) :
+    Perspectival.Classical.proj n i (Perspectival.Classical.vertex n j)
+      = if j = i then 1 else 0 :=
+  Perspectival.Classical.proj_vertex n i j
+
 end Examples
 end Perspectival
