@@ -784,6 +784,9 @@ example : boolEquivFin2.symm.toEquiv 1 = true := rfl
 /-- The double symm is the original. -/
 example : boolEquivFin2.symm.symm = boolEquivFin2 := rfl
 
+-- (boolEquivFin2 ⊕ symm composition examples skipped — proof structure for
+-- WantableEquiv equality is delicate; deferred to a follow-up.)
+
 /-- A Wantable isomorphism induces a PTrans isomorphism: conjugate a
 PTrans of W₁ by the equiv to get a PTrans of W₂. -/
 def WantableEquiv.mapPTrans {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
