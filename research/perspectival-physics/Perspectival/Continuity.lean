@@ -272,6 +272,15 @@ theorem Reachable.trans [ClosedAgency G] {ρ₁ ρ₂ ρ₃ : V}
   show R₂.toLin (R₁.toLin ρ₁) = ρ₃
   rw [hR₁eq, hR₂eq]
 
+/-- `Reachable` under `ClosedAgency` is preserved under all available
+transformations: if `ρ₁ ~> ρ₂` and `R` is available, then
+`ρ₁ ~> R.toLin ρ₂`. -/
+theorem Reachable.apply_available [ClosedAgency G] {ρ₁ ρ₂ : V}
+    (h : Reachable (G := G) ρ₁ ρ₂)
+    (R : Reversible G) (hR : R ∈ HasConnectedAgency.avail (G := G)) :
+    Reachable (G := G) ρ₁ (R.toLin ρ₂) := by
+  exact Reachable.trans h ⟨R, hR, rfl⟩
+
 /-! ## Honest framing
 
 What `continuous_path_of_reachable` shows: if the agency postulate is
