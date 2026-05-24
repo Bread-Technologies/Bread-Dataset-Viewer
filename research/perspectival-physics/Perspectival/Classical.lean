@@ -322,5 +322,38 @@ theorem classical_n1_strict_reversible_toLin_eq_id
     R.toLin = LinearMap.id :=
   classical_n1_state_preserving_eq_id R.toLin R.preserves_states
 
+/-! ## R6 progress: Classical n=2 — state-preserving linear maps -/
+
+/-- For Classical n=2 GPT, every state ρ ∈ V 2 has both coordinates
+in [0,1] and they sum to 1, so ρ 0 + ρ 1 = 1. -/
+theorem classical_n2_state_sum (ρ : V 2) (hρ : ρ ∈ states 2) :
+    ρ 0 + ρ 1 = 1 := by
+  have hsum := hρ.2
+  rw [show (Finset.univ : Finset (Fin 2)) = {0, 1} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
+  exact hsum
+
+/-- For Classical n=2, every state has nonneg coordinates. -/
+theorem classical_n2_state_nonneg (ρ : V 2) (hρ : ρ ∈ states 2) (j : Fin 2) :
+    0 ≤ ρ j := hρ.1 j
+
+/-- The vertex 0 in V 2 is (1, 0). -/
+theorem vertex_n2_zero_coords :
+    vertex 2 0 0 = 1 ∧ vertex 2 0 1 = 0 := by
+  refine ⟨?_, ?_⟩
+  · show (if (0 : Fin 2) = 0 then (1 : ℝ) else 0) = 1
+    simp
+  · show (if (0 : Fin 2) = 1 then (1 : ℝ) else 0) = 0
+    simp
+
+/-- The vertex 1 in V 2 is (0, 1). -/
+theorem vertex_n2_one_coords :
+    vertex 2 1 0 = 0 ∧ vertex 2 1 1 = 1 := by
+  refine ⟨?_, ?_⟩
+  · show (if (1 : Fin 2) = 0 then (1 : ℝ) else 0) = 0
+    simp
+  · show (if (1 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
+    simp
+
 end Classical
 end Perspectival
