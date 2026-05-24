@@ -6910,5 +6910,33 @@ example :
       = Perspectival.WantableGPT.vertex (Bool × Bool) (true, false) :=
   productState_vertex true false
 
+/-- New theorem: productState is associative on triple products (via the
+W₁ × (W₂ × W₃) ≅ (W₁ × W₂) × W₃ Equiv). The factorization works
+pointwise. -/
+theorem productState_assoc
+    {W₁ W₂ W₃ : Type u}
+    [Wantable W₁] [Wantable W₂] [Wantable W₃]
+    [Fintype W₁] [Fintype W₂] [Fintype W₃]
+    [DecidableEq W₁] [DecidableEq W₂] [DecidableEq W₃]
+    (f₁ : Perspectival.WantableGPT.V W₁)
+    (f₂ : Perspectival.WantableGPT.V W₂)
+    (f₃ : Perspectival.WantableGPT.V W₃)
+    (p : W₁ × W₂ × W₃) :
+    productState f₁ (productState f₂ f₃) p
+      = f₁ p.1 * f₂ p.2.1 * f₃ p.2.2 := by
+  show f₁ p.1 * productState f₂ f₃ p.2 = _
+  show f₁ p.1 * (f₂ p.2.1 * f₃ p.2.2) = _
+  ring
+
+/-- New theorem: productState is symmetric up to a swap on the product. -/
+theorem productState_swap
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (p : W₁ × W₂) :
+    productState f₁ f₂ p = productState f₂ f₁ p.swap := by
+  show f₁ p.1 * f₂ p.2 = f₂ p.2 * f₁ p.1
+  ring
+
 end Examples
 end Perspectival
