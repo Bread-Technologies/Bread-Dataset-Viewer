@@ -12203,3 +12203,71 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w v : W)
     show (1 : ℝ) * (if v = w then (1 : ℝ) else 0) = 0
     rw [if_neg h]; ring
   · rw [if_neg hw']; ring
+
+/-- deltaIndicatorLin on vertex w = 1 (named). -/
+theorem deltaIndicatorLin_vertex_self {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] (w : W) :
+    deltaIndicatorLin w (Perspectival.WantableGPT.vertex W w) = 1 := by
+  show ∑ w', deltaIndicator w w' * Perspectival.WantableGPT.vertex W w w' = 1
+  rw [Finset.sum_eq_single w]
+  · show (if w = w then (1 : ℝ) else 0)
+        * Perspectival.WantableGPT.vertex W w w = 1
+    simp [Perspectival.WantableGPT.vertex]
+  · intro w' _ hne
+    show (if w' = w then (1 : ℝ) else 0)
+        * Perspectival.WantableGPT.vertex W w w' = 0
+    rw [if_neg hne]; ring
+  · intro hne
+    exact absurd (Finset.mem_univ w) hne
+
+/-- deltaIndicatorLin on vertex v ≠ w = 0 (named). -/
+theorem deltaIndicatorLin_vertex_other {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] (w v : W) (h : v ≠ w) :
+    deltaIndicatorLin w (Perspectival.WantableGPT.vertex W v) = 0 := by
+  show ∑ w', deltaIndicator w w' * Perspectival.WantableGPT.vertex W v w' = 0
+  apply Finset.sum_eq_zero
+  intro w' _
+  show (if w' = w then (1 : ℝ) else 0)
+      * Perspectival.WantableGPT.vertex W v w' = 0
+  by_cases hw' : w' = w
+  · rw [if_pos hw']
+    show (1 : ℝ) * Perspectival.WantableGPT.vertex W v w' = 0
+    rw [hw']
+    show (1 : ℝ) * (if v = w then (1 : ℝ) else 0) = 0
+    rw [if_neg h]; ring
+  · rw [if_neg hw']; ring
+
+/-- deltaIndicator distinguishes any two distinct vertices. -/
+theorem vertices_distinguishable_via_delta {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] (w v : W) (h : w ≠ v) :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt W)
+      (Perspectival.WantableGPT.vertex W w)
+      (Perspectival.WantableGPT.vertex W v) :=
+  ⟨deltaIndicatorLin w, deltaIndicatorLin_in_effects w,
+   deltaIndicatorLin_vertex_self w,
+   deltaIndicatorLin_vertex_other w v (Ne.symm h)⟩
+
+/-- Bool vertex true and vertex false are distinguishable via delta. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt Bool)
+      (Perspectival.WantableGPT.vertex Bool true)
+      (Perspectival.WantableGPT.vertex Bool false) :=
+  vertices_distinguishable_via_delta true false (by decide)
+
+/-- Fin 3 vertex 0 and vertex 2 are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) 0)
+      (Perspectival.WantableGPT.vertex (Fin 3) 2) :=
+  vertices_distinguishable_via_delta 0 2 (by decide)
+
+/-- Fin 4 vertex 1 and vertex 3 are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 1)
+      (Perspectival.WantableGPT.vertex (Fin 4) 3) :=
+  vertices_distinguishable_via_delta 1 3 (by decide)
