@@ -776,6 +776,14 @@ example {W : Type u} [Wantable W] :
 example {W : Type u} [Wantable W] :
     (complementEquiv : Equiv.Perm W).symm = complementEquiv := rfl
 
+/-- complementEquiv has order ≤ 2 in the permutation group. -/
+example {W : Type u} [Wantable W] :
+    (complementEquiv : Equiv.Perm W) * complementEquiv = 1 := by
+  apply Equiv.ext
+  intro w
+  show Wantable.complement (Wantable.complement w) = w
+  exact Wantable.complement_involutive w
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
