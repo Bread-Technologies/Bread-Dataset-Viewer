@@ -92,6 +92,22 @@ with closure under composition, and yields transitivity of the
 `Reachable` relation (`Reachable.trans`). This is the first piece of
 the strengthening. R6 proper requires moving from closure to density.
 
+**Insight (Lean: `path_via_affineLine`).** Path-connectedness in
+`HasConnectedAgency` is "cheap" when V has the appropriate topological
+structure (TopologicalSpace + ContinuousAdd + ContinuousSMul): the
+affine interpolation `γ t = (1-t) R₁ + t R₂` is automatically jointly
+continuous. So the substantive content of `HasConnectedAgency` is the
+*availability set* itself, not the path-connectedness condition.
+R6 therefore needs to:
+- Restrict `avail` to "physical" reversibles (e.g., those preserving
+  the state space along the path, not just at endpoints),
+- And/or postulate that `avail` is *dense* in a topologically rich
+  subset of `Reversible G`.
+
+The current `path_via_affineLine` does not preserve state-preservation
+along the path; it only matches at endpoints. Strengthening to a path
+of state-preserving transformations is the key open piece.
+
 Estimated effort: extended research. Likely interleaves with the
 philosophical work in `LINEAGE.md`.
 
