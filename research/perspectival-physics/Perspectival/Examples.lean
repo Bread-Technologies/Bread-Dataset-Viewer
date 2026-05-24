@@ -11998,3 +11998,81 @@ example :
      = 1/2
   show (1 : ℝ) * (1/2 : ℝ) + (0 * 0 + (0 * 0 + 0 * (1/2 : ℝ))) = 1/2
   norm_num
+
+/-! ### The four single-point indicators on Bool × Bool -/
+
+/-- The single-point indicator `(true,false)`. -/
+noncomputable def pointIndicatorTF : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p = (true, false) then (1 : ℝ) else 0
+
+/-- The single-point indicator `(false,true)`. -/
+noncomputable def pointIndicatorFT : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p = (false, true) then (1 : ℝ) else 0
+
+/-- The single-point indicator `(false,false)`. -/
+noncomputable def pointIndicatorFF : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p = (false, false) then (1 : ℝ) else 0
+
+/-- pointIndicatorTF is in effectVec. -/
+theorem pointIndicatorTF_in_effectVec :
+    pointIndicatorTF ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p = (true, false) then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p = (true, false) then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- pointIndicatorFT is in effectVec. -/
+theorem pointIndicatorFT_in_effectVec :
+    pointIndicatorFT ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p = (false, true) then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p = (false, true) then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- pointIndicatorFF is in effectVec. -/
+theorem pointIndicatorFF_in_effectVec :
+    pointIndicatorFF ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p = (false, false) then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p = (false, false) then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- Sum of all 4 single-point indicators equals constant 1. -/
+example :
+    pointIndicatorTT + pointIndicatorTF + pointIndicatorFT + pointIndicatorFF
+      = (fun _ => (1 : ℝ)) := by
+  funext p
+  show (if p = (true, true) then (1 : ℝ) else 0)
+     + (if p = (true, false) then (1 : ℝ) else 0)
+     + (if p = (false, true) then (1 : ℝ) else 0)
+     + (if p = (false, false) then (1 : ℝ) else 0)
+     = 1
+  obtain ⟨b₁, b₂⟩ := p
+  cases b₁ with
+  | true => cases b₂ with
+    | true => simp
+    | false => simp
+  | false => cases b₂ with
+    | true => simp
+    | false => simp
+
+/-- For any state f, the sum of pointwise probabilities = 1. -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    f (true, true) + f (true, false) + f (false, true) + f (false, false) = 1 := by
+  have h := hf.2
+  show f (true, true) + f (true, false) + f (false, true) + f (false, false) = 1
+  rw [show f (true, true) + f (true, false) + f (false, true) + f (false, false)
+        = ∑ p, f p from by
+    rw [show (Finset.univ : Finset (Bool × Bool))
+          = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    ring]
+  exact h
