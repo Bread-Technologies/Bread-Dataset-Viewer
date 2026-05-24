@@ -5950,5 +5950,26 @@ example : Perspectival.WantableGPT.complementAction (Fin 4)
   rw [Perspectival.WantableGPT.complementAction_vertex]
   rfl
 
+/-- Complement on Fin 4 sends vertex 0 to vertex 3 (reflection). -/
+example : Perspectival.WantableGPT.complementAction (Fin 4)
+            (Perspectival.WantableGPT.vertex (Fin 4) 0)
+        = Perspectival.WantableGPT.vertex (Fin 4) 3 := by
+  rw [Perspectival.WantableGPT.complementAction_vertex]
+  rfl
+
+/-- Complement on Fin 4 sends vertex 3 to vertex 0 (reflection). -/
+example : Perspectival.WantableGPT.complementAction (Fin 4)
+            (Perspectival.WantableGPT.vertex (Fin 4) 3)
+        = Perspectival.WantableGPT.vertex (Fin 4) 0 := by
+  rw [Perspectival.WantableGPT.complementAction_vertex]
+  rfl
+
+/-- Complement on Fin 4 sends vertex 2 to vertex 1 (reflection). -/
+example : Perspectival.WantableGPT.complementAction (Fin 4)
+            (Perspectival.WantableGPT.vertex (Fin 4) 2)
+        = Perspectival.WantableGPT.vertex (Fin 4) 1 := by
+  rw [Perspectival.WantableGPT.complementAction_vertex]
+  rfl
+
 end Examples
 end Perspectival
