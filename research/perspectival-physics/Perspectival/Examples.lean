@@ -742,6 +742,10 @@ example {W : Type u} [Wantable W] (w : W) :
     Wantable.complement (Wantable.complement w) = w :=
   Wantable.complement_involutive w
 
+-- NOTE: complement is its own inverse function. Stating this with
+-- Mathlib's Function.invFun requires Nonempty W, which we don't
+-- want to constrain at this level. Omitted.
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
