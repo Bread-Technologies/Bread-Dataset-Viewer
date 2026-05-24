@@ -8740,3 +8740,32 @@ example : leftMarginal (Perspectival.WantableGPT.vertex (Bool × Bool) (true, fa
 example : rightMarginal (Perspectival.WantableGPT.vertex (Bool × Bool) (true, false))
         = Perspectival.WantableGPT.vertex Bool false :=
   rightMarginal_vertex true false
+
+/-- leftMarginal of the constant-1 function = constant-|W₂|. -/
+theorem leftMarginal_const_one
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    leftMarginal (fun _ : W₁ × W₂ => (1 : ℝ))
+      = fun _ : W₁ => (Fintype.card W₂ : ℝ) := by
+  funext w₁
+  show ∑ _ : W₂, (1 : ℝ) = (Fintype.card W₂ : ℝ)
+  rw [Finset.sum_const, Finset.card_univ]
+  simp
+
+/-- rightMarginal of the constant-1 function = constant-|W₁|. -/
+theorem rightMarginal_const_one
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    rightMarginal (fun _ : W₁ × W₂ => (1 : ℝ))
+      = fun _ : W₂ => (Fintype.card W₁ : ℝ) := by
+  funext w₂
+  show ∑ _ : W₁, (1 : ℝ) = (Fintype.card W₁ : ℝ)
+  rw [Finset.sum_const, Finset.card_univ]
+  simp
+
+/-- Concrete: leftMarginal of constant-1 on Bool × Bool = constant 2. -/
+example : leftMarginal (fun _ : Bool × Bool => (1 : ℝ))
+        = fun _ : Bool => (2 : ℝ) := by
+  rw [leftMarginal_const_one]
+  funext _
+  norm_cast
