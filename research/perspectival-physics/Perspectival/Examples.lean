@@ -7978,3 +7978,21 @@ example :
     (Perspectival.WantableGPT.vertex_in_states Bool true)
     (Perspectival.WantableGPT.vertex_in_states Bool false)
     (by norm_num) (by norm_num) (by norm_num)
+
+/-- New theorem: every Bool state is a convex combination of vertex true
+and vertex false. -/
+theorem WantableGPT_Bool_states_convex_hull
+    (ρ : Perspectival.WantableGPT.V Bool)
+    (hρ : ρ ∈ Perspectival.WantableGPT.states Bool) :
+    ρ = ρ true • Perspectival.WantableGPT.vertex Bool true
+      + ρ false • Perspectival.WantableGPT.vertex Bool false :=
+  WantableGPT_Bool_state_decomp ρ
+
+/-- New theorem: ρ is a 'pure' state on Bool iff ρ = vertex true or
+ρ = vertex false (the convex hull characterization). For finite
+classical states, "pure" means an extreme point = vertex. -/
+theorem WantableGPT_Bool_state_is_convex_combo
+    (ρ : Perspectival.WantableGPT.V Bool)
+    (hρ : ρ ∈ Perspectival.WantableGPT.states Bool) :
+    0 ≤ ρ true ∧ 0 ≤ ρ false ∧ ρ true + ρ false = 1 :=
+  (WantableGPT_Bool_states_iff ρ).mp hρ
