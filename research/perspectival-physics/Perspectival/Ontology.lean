@@ -48,6 +48,20 @@ structure Existent (W : Type u) where
 
 instance {W : Type u} [Inhabited W] : Inhabited (Existent W) := ⟨⟨default⟩⟩
 
+/-- `complement` is injective. -/
+theorem Wantable.complement_injective {W : Type u} [Wantable W] :
+    ∀ a b : W, Wantable.complement a = Wantable.complement b → a = b := by
+  intro a b h
+  have : Wantable.complement (Wantable.complement a) = Wantable.complement (Wantable.complement b) :=
+    congrArg Wantable.complement h
+  rw [Wantable.complement_involutive, Wantable.complement_involutive] at this
+  exact this
+
+/-- `complement` is surjective. -/
+theorem Wantable.complement_surjective {W : Type u} [Wantable W] :
+    ∀ w : W, ∃ v, Wantable.complement v = w :=
+  fun w => ⟨Wantable.complement w, Wantable.complement_involutive w⟩
+
 /-! ## Axiom III: reality is the structure of meetings
 
 A meeting is a pair of complementary wants. Reality is a collection
