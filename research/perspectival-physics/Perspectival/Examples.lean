@@ -3150,6 +3150,16 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Inhabited W] :
   ⟨Perspectival.WantableGPT.proj W default,
    Perspectival.WantableGPT.proj_in_effects W default⟩
 
+/-- Using the named theorem: WantableGPT Bool has a state. -/
+example : ∃ ρ : Perspectival.WantableGPT.V Bool,
+    ρ ∈ Perspectival.WantableGPT.states Bool :=
+  Perspectival.WantableGPT.wantableGPT_state_inhabited Bool
+
+/-- Using the named theorem: WantableGPT Bool has an effect. -/
+example : ∃ e : Perspectival.WantableGPT.V Bool →ₗ[ℝ] ℝ,
+    e ∈ Perspectival.WantableGPT.effects Bool :=
+  Perspectival.WantableGPT.wantableGPT_effect_inhabited Bool
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
