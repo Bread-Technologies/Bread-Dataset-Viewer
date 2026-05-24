@@ -14543,6 +14543,37 @@ example :
      = 1/2
   norm_num
 
+/-! ### CHSH structure on Bool × Bool (perfect correlation check) -/
+
+/-- The diagonal-indicator distinguishes diagonalState from antiDiagonalState. -/
+example :
+    diagonalIndicatorLin diagonalState = 1
+    ∧ diagonalIndicatorLin antiDiagonalState = 0 :=
+  ⟨diagonalIndicatorLin_on_diagonalState,
+   diagonalIndicatorLin_on_antiDiagonalState⟩
+
+/-- The anti-diagonal-indicator inverts the diagonal-indicator's role. -/
+example :
+    antiDiagonalIndicatorLin diagonalState = 0
+    ∧ antiDiagonalIndicatorLin antiDiagonalState = 1 :=
+  ⟨antiDiagonalIndicatorLin_on_diagonalState,
+   antiDiagonalIndicatorLin_on_antiDiagonalState⟩
+
+/-- For perfectly correlated states, the {diagonal, anti-diagonal} measurement
+gives deterministic outcomes. -/
+example :
+    diagonalIndicatorLin diagonalState + antiDiagonalIndicatorLin diagonalState = 1 := by
+  rw [diagonalIndicatorLin_on_diagonalState,
+      antiDiagonalIndicatorLin_on_diagonalState]
+  norm_num
+
+/-- Same for anti-diagonal: sum to 1. -/
+example :
+    diagonalIndicatorLin antiDiagonalState + antiDiagonalIndicatorLin antiDiagonalState = 1 := by
+  rw [diagonalIndicatorLin_on_antiDiagonalState,
+      antiDiagonalIndicatorLin_on_antiDiagonalState]
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
