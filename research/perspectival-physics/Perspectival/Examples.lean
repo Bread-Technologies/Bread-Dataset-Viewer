@@ -2819,6 +2819,15 @@ example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
   show ¬ (P R ∨ Q R) ↔ (¬ P R) ∧ (¬ Q R)
   tauto
 
+/-- Concrete Pattern instances on Bool's Reality. -/
+def boolReality_alwaysComplementary : Reality Bool :=
+  fun m => Wantable.complement m.side₁ = m.side₂
+
+/-- Every meeting in Bool satisfies the always-complementary reality
+(definitionally, since `m.complementary` is part of the structure). -/
+example : ∀ m : Meeting Bool, boolReality_alwaysComplementary m :=
+  fun m => m.complementary
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
