@@ -1075,6 +1075,8 @@ example : (complementEquiv : Equiv.Perm (List Bool)).toFun [false, false, true] 
 example : (complementEquiv : Equiv.Perm ℤ).toFun 100 = -100 := rfl
 example : (complementEquiv : Equiv.Perm ℤ).toFun (-100) = 100 := by show -(-100 : ℤ) = 100; ring
 
+example : (complementEquiv : Equiv.Perm ℤ).toFun 1000000 = -1000000 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
