@@ -13075,6 +13075,66 @@ example : productState uniformBool uniformBool (true, true) = (1/4 : ℝ) := by
   show (1/2 : ℝ) * (1/2 : ℝ) = 1/4
   norm_num
 
+/-! ### Comparison: distinguishability of states -/
+
+/-- diagonalState and uniformState (Bool × Bool) are distinguishable:
+diagonalIndicatorLin gives 1 vs 1/2. -/
+example :
+    diagonalIndicatorLin diagonalState ≠
+    diagonalIndicatorLin (uniformState (Bool × Bool)) := by
+  rw [diagonalIndicatorLin_on_diagonalState]
+  intro h
+  -- h : 1 = diagonalIndicatorLin (uniformState (Bool × Bool))
+  -- diagonalIndicatorLin on uniformState = 1/2
+  rw [show diagonalIndicatorLin (uniformState (Bool × Bool)) = 1/2 from by
+    show ∑ p, diagonalIndicator p * uniformState (Bool × Bool) p = 1/2
+    rw [show (Finset.univ : Finset (Bool × Bool))
+          = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    show diagonalIndicator (true, true) * uniformState (Bool × Bool) (true, true)
+       + (diagonalIndicator (true, false) * uniformState (Bool × Bool) (true, false)
+       + (diagonalIndicator (false, true) * uniformState (Bool × Bool) (false, true)
+       + diagonalIndicator (false, false) * uniformState (Bool × Bool) (false, false)))
+       = 1/2
+    have h_card : (Fintype.card (Bool × Bool) : ℝ) = 4 := by norm_num
+    have h_unif : ∀ p : Bool × Bool, uniformState (Bool × Bool) p = (1/4 : ℝ) := by
+      intro p
+      show (1 : ℝ) / Fintype.card (Bool × Bool) = 1/4
+      rw [h_card]
+    rw [h_unif (true, true), h_unif (true, false),
+        h_unif (false, true), h_unif (false, false)]
+    show (1 : ℝ) * (1/4 : ℝ) + (0 * (1/4 : ℝ) + (0 * (1/4 : ℝ) + 1 * (1/4 : ℝ))) = 1/2
+    norm_num] at h
+  norm_num at h
+
+/-- diagonalState and productState uniformBool uniformBool give
+diagonalIndicatorLin values 1 vs 1/2. They are distinguishable. -/
+example :
+    diagonalIndicatorLin diagonalState ≠
+    diagonalIndicatorLin (productState uniformBool uniformBool) := by
+  rw [diagonalIndicatorLin_on_diagonalState]
+  intro h
+  -- diagonalIndicatorLin (productState uniformBool uniformBool) = 1/2 (already proved earlier)
+  rw [show diagonalIndicatorLin (productState uniformBool uniformBool) = 1/2 from by
+    show (∑ p, diagonalIndicator p * productState uniformBool uniformBool p) = 1/2
+    rw [show (Finset.univ : Finset (Bool × Bool))
+          = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    show diagonalIndicator (true, true) * productState uniformBool uniformBool (true, true)
+       + (diagonalIndicator (true, false) * productState uniformBool uniformBool (true, false)
+       + (diagonalIndicator (false, true) * productState uniformBool uniformBool (false, true)
+       + diagonalIndicator (false, false) * productState uniformBool uniformBool (false, false)))
+       = 1/2
+    show (1 : ℝ) * ((1/2 : ℝ) * (1/2 : ℝ))
+       + (0 * ((1/2 : ℝ) * (1/2 : ℝ))
+       + (0 * ((1/2 : ℝ) * (1/2 : ℝ))
+       + 1 * ((1/2 : ℝ) * (1/2 : ℝ))))
+       = 1/2
+    norm_num] at h
+  norm_num at h
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
