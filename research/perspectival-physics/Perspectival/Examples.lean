@@ -2768,6 +2768,16 @@ example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
     Pattern.or P Q R ↔ Pattern.or Q P R :=
   ⟨Or.symm, Or.symm⟩
 
+/-- Pattern.and with the trivial pattern is just the other pattern. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (R : Reality W) :
+    Pattern.and P (Pattern.trivial W) R ↔ P R :=
+  ⟨fun h => h.1, fun h => ⟨h, trivial⟩⟩
+
+/-- Pattern.or with the empty pattern is just the other pattern. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (R : Reality W) :
+    Pattern.or P (Pattern.empty W) R ↔ P R :=
+  ⟨fun h => h.elim id (False.elim), fun h => Or.inl h⟩
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
