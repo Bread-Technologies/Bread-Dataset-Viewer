@@ -2496,6 +2496,25 @@ example : Perspectival.Distinguish.PerfectWitness
 /-- N (size of perfect-distinguishability family) for Bool is exactly 2. -/
 example : Fintype.card Bool = 2 := by decide
 
+/-- The PerfectWitness on Bool's vertex map: the projection at b
+distinguishes vertex b from all others. -/
+example (b₁ b₂ : Bool) :
+    (Perspectival.WantableGPT.perfectWitness Bool).e b₁
+      (Perspectival.WantableGPT.vertex Bool b₂)
+    = if b₁ = b₂ then (1 : ℝ) else 0 :=
+  (Perspectival.WantableGPT.perfectWitness Bool).kronecker b₁ b₂
+
+/-- Specifically: proj true (vertex true) = 1, proj true (vertex false) = 0. -/
+example : (Perspectival.WantableGPT.perfectWitness Bool).e true
+            (Perspectival.WantableGPT.vertex Bool true) = 1 := by
+  have := (Perspectival.WantableGPT.perfectWitness Bool).kronecker true true
+  simpa using this
+
+example : (Perspectival.WantableGPT.perfectWitness Bool).e true
+            (Perspectival.WantableGPT.vertex Bool false) = 0 := by
+  have := (Perspectival.WantableGPT.perfectWitness Bool).kronecker true false
+  simpa using this
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
