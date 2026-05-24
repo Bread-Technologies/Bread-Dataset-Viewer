@@ -129,6 +129,19 @@ currently known.
 
 ## Tier 4: Philosophical articulation
 
+### R10b. Multi-sector dark matter, formal model
+
+Move P5 in `PREDICTIONS.md` toward Derived status by:
+1. Choosing an N-sector composition data (specific Wantable structure
+   for each sector, e.g., N disjoint Wantables).
+2. Postulating gravity as universal coupling across sectors.
+3. Demonstrating quantitatively distinct gravitational signatures
+   (halo profile, substructure, scaling laws).
+
+Estimated effort: substantial research with cosmological-simulation
+collaborators. Out of scope for pure Lean work but suitable for a
+follow-on paper.
+
 ### R11. Quine–Rovelli formalization
 
 Move P-A3 (the Quine–Rovelli parallel) from prose to a formal claim
