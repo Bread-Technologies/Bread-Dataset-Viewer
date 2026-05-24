@@ -9824,3 +9824,18 @@ example := Perspectival.WantableGPT.wantableGPT_classical_dichotomy
 /-- Concrete: classical dichotomy on Bool × Bool × Bool × Bool. -/
 example := Perspectival.WantableGPT.wantableGPT_classical_dichotomy
   (Bool × Bool × Bool × Bool) (by decide)
+
+/-- WantableGPT classical_signature on Bool. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_signature Bool
+
+/-- WantableGPT classical_signature on Fin 4. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_signature (Fin 4)
+
+/-- WantableGPT classical_signature on Bool × Bool. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_signature (Bool × Bool)
+
+/-- WantableGPT classical_signature on Bool ⊕ Bool. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_signature (Bool ⊕ Bool)
+
+/-- WantableGPT classical_signature on Bool³. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_signature (Bool × Bool × Bool)
