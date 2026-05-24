@@ -173,6 +173,40 @@ This gap is the framework's honest structural limitation. Both levels
 do real work; they don't yet *unify*. ROADMAP R6 and R7 are the path
 toward closing this gap.
 
+### Bridge now built; bridge now also delimited
+
+**Update.** `WantableGPT` (verified) provides a concrete bridge: for
+any finite Wantable `W`, the construction `WantableGPT.gpt W` is a
+machine-verified GPT instance whose vertices, distinguishability set,
+and PTrans-induced automorphisms are all formally derived. So the
+"strong-bridge" question has *partial* affirmative resolution.
+
+But the same module now also contains a **no-go theorem**
+(`wantableGPT_is_classical`): the bridge always lands on classical
+structure — `N = K = |W|`, with `K = K_A · K_B` for product
+composition and `K = K_A + K_B` for sum composition. So the bridge
+exists, but it cannot, by itself, deliver quantum structure. The
+ROADMAP R6/R7 program — strengthening the agency postulate to force
+quantum-like path-connectedness — is the next bet *precisely
+because* the bare ontology has been shown to be insufficient.
+
+## Structural deflations (clarifying)
+
+Two clarifying deflations have been formally proven:
+
+- `Meeting W ≃ W` via `mk_fromSide` (Ontology). A "meeting" is not
+  a richer thing than a "want"; the two are in canonical bijection.
+- `PTrans W` is *exactly* the centralizer of the `complement`
+  involution inside `Equiv.Perm W` (Transformations). The PTrans
+  group is not a novel algebraic structure beyond Mathlib's
+  permutation group; it is the standard Z/2-equivariant subgroup.
+
+These are not weaknesses but clarifications: the framework's
+vocabulary picks out a specific, well-understood mathematical object.
+The interesting research question is whether *additional* postulates
+on top of I–IV can pick out non-classical mathematics; the bare
+ontology, as the no-go and the deflations together establish, cannot.
+
 ## Clarifications and limitations
 
 ### L1. Scope of `no_cloning`
