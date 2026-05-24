@@ -5929,5 +5929,26 @@ example : (Wantable.complement (() : Unit)) = () := rfl
 /-- Empty has a vacuous Wantable instance. -/
 example : Wantable Empty := inferInstance
 
+/-- Fin 4 WantableGPT vertex 0 on coords. -/
+example : Perspectival.WantableGPT.vertex (Fin 4) 0
+        = (fun v => if (0 : Fin 4) = v then (1 : ℝ) else 0) := rfl
+
+/-- Fin 4 WantableGPT proj 0 evaluates Kronecker on vertex 0. -/
+example : Perspectival.WantableGPT.proj (Fin 4) 0
+            (Perspectival.WantableGPT.vertex (Fin 4) 0) = 1 := by
+  rw [Perspectival.WantableGPT.proj_vertex]; simp
+
+/-- Fin 4 WantableGPT proj 0 evaluates Kronecker on vertex 1 (= 0). -/
+example : Perspectival.WantableGPT.proj (Fin 4) 0
+            (Perspectival.WantableGPT.vertex (Fin 4) 1) = 0 := by
+  rw [Perspectival.WantableGPT.proj_vertex]; simp
+
+/-- Complement on Fin 4 sends vertex 1 to vertex 2. -/
+example : Perspectival.WantableGPT.complementAction (Fin 4)
+            (Perspectival.WantableGPT.vertex (Fin 4) 1)
+        = Perspectival.WantableGPT.vertex (Fin 4) 2 := by
+  rw [Perspectival.WantableGPT.complementAction_vertex]
+  rfl
+
 end Examples
 end Perspectival
