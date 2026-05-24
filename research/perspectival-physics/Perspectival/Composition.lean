@@ -118,6 +118,18 @@ def Meeting.prodMk {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
        = (m₁.side₂, m₂.side₂)
     rw [m₁.complementary, m₂.complementary]
 
+@[simp] theorem Meeting.prodFst_prodMk {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂]
+    (m₁ : Meeting W₁) (m₂ : Meeting W₂) :
+    (Meeting.prodMk m₁ m₂).prodFst = m₁ := by
+  cases m₁; rfl
+
+@[simp] theorem Meeting.prodSnd_prodMk {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂]
+    (m₁ : Meeting W₁) (m₂ : Meeting W₂) :
+    (Meeting.prodMk m₁ m₂).prodSnd = m₂ := by
+  cases m₂; rfl
+
 def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ ⊕ W₂) where
   toFun := fun
