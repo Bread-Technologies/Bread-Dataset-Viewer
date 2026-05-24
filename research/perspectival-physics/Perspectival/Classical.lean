@@ -887,5 +887,54 @@ theorem classical_n2_strict_reversible_path_id_swap_empty
   classical_n2_no_strict_reversible_path p
     (n2_disc_det_path_continuous p.γ p.continuous)
 
+/-- The contrapositive: there is NO StrictReversiblePath from id to swap. -/
+theorem classical_n2_strict_reversible_path_id_swap_nonempty_false :
+    ¬ Nonempty (Perspectival.Continuity.StrictReversiblePath (gpt 2)
+              (Perspectival.Continuity.StrictReversible.id (gpt 2))
+              swapStrictReversible) := by
+  intro ⟨p⟩
+  exact classical_n2_strict_reversible_path_id_swap_empty p
+
+/-- The reverse direction also fails: no StrictReversiblePath from
+swap to id either. -/
+theorem classical_n2_strict_reversible_path_swap_id_nonempty_false :
+    ¬ Nonempty (Perspectival.Continuity.StrictReversiblePath (gpt 2)
+              swapStrictReversible
+              (Perspectival.Continuity.StrictReversible.id (gpt 2))) := by
+  intro ⟨p⟩
+  -- Reverse the path
+  have p' : Perspectival.Continuity.StrictReversiblePath (gpt 2)
+              (Perspectival.Continuity.StrictReversible.id (gpt 2))
+              swapStrictReversible := {
+    γ := fun t => p.γ (unitInterval.symm t)
+    continuous := by
+      have h1 : Continuous (fun t : unitInterval => unitInterval.symm t) :=
+        unitInterval.continuous_symm
+      have h2 : Continuous (fun pair : unitInterval × V 2 =>
+                              (unitInterval.symm pair.1, pair.2)) :=
+        Continuous.prodMk (h1.comp continuous_fst) continuous_snd
+      exact p.continuous.comp h2
+    start := by
+      show p.γ (unitInterval.symm 0) = _
+      rw [unitInterval.symm_zero, p.finish]
+    finish := by
+      show p.γ (unitInterval.symm 1) = swapLin
+      rw [unitInterval.symm_one, p.start]
+      rfl
+    preserves_states_along := fun t ρ hρ => p.preserves_states_along _ ρ hρ
+    preserves_unit_along := fun t => p.preserves_unit_along _
+    bijective_along := fun t => p.bijective_along _
+  }
+  exact classical_n2_strict_reversible_path_id_swap_empty p'
+
+/-- StrictConnectedAgency on Classical n=2 with {id, swap} avail is FALSE. -/
+theorem classical_n2_no_two_element_strict_agency
+    (A : Perspectival.Continuity.StrictConnectedAgency (gpt 2))
+    (hid : Perspectival.Continuity.StrictReversible.id (gpt 2) ∈ A.avail)
+    (hswap : swapStrictReversible ∈ A.avail) :
+    False := by
+  have hp := A.strict_paths _ _ hid hswap
+  exact classical_n2_strict_reversible_path_id_swap_nonempty_false hp
+
 end Classical
 end Perspectival
