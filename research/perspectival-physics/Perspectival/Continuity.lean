@@ -821,5 +821,59 @@ class StrongConnectedAgency (G : GPT V) where
     ∀ R₁ R₂ : Reversible G, R₁ ∈ avail → R₂ ∈ avail →
       Nonempty (ReversiblePath G R₁ R₂)
 
+/-! ### R6-tris: StrictReversiblePath — paths of bijections -/
+
+/-- A continuous path of StrictReversibles: every intermediate map
+must be a genuine bijection (continuous, state-preserving, unit-
+preserving, AND bijective). This is the strongest R6 condition. -/
+structure StrictReversiblePath (G : GPT V) (R₁ R₂ : StrictReversible G) where
+  γ : unitInterval → V →ₗ[ℝ] V
+  continuous : Continuous (fun p : unitInterval × V => γ p.1 p.2)
+  start : γ 0 = R₁.toLin
+  finish : γ 1 = R₂.toLin
+  preserves_states_along : ∀ t : unitInterval, ∀ ρ ∈ G.states, γ t ρ ∈ G.states
+  preserves_unit_along : ∀ t : unitInterval, G.unit.comp (γ t) = G.unit
+  bijective_along : ∀ t : unitInterval, Function.Bijective (γ t)
+
+/-- StrictReversiblePath is strictly stronger than ReversiblePath. -/
+def StrictReversiblePath.toReversiblePath {G : GPT V}
+    {R₁ R₂ : StrictReversible G} (p : StrictReversiblePath G R₁ R₂) :
+    ReversiblePath G R₁.toReversible R₂.toReversible where
+  γ := p.γ
+  continuous := p.continuous
+  start := p.start
+  finish := p.finish
+  preserves_states_along := p.preserves_states_along
+  preserves_unit_along := p.preserves_unit_along
+  continuous_at := fun t => by
+    have h : Continuous (fun v : V => (t, v)) :=
+      Continuous.prodMk continuous_const continuous_id
+    exact p.continuous.comp h
+
+/-- The identity StrictReversiblePath. -/
+def StrictReversiblePath.id (G : GPT V) :
+    StrictReversiblePath G (StrictReversible.id G) (StrictReversible.id G) where
+  γ := fun _ => LinearMap.id
+  continuous := by
+    show Continuous (fun p : unitInterval × V => LinearMap.id p.2)
+    show Continuous (fun p : unitInterval × V => p.2)
+    exact continuous_snd
+  start := rfl
+  finish := rfl
+  preserves_states_along := fun _ ρ hρ => hρ
+  preserves_unit_along := fun _ => rfl
+  bijective_along := fun _ => Function.bijective_id
+
+/-- The R6-final agency postulate: every pair of available StrictReversibles
+is connected by a StrictReversiblePath. This is the substantive condition
+that (conjecturally) distinguishes quantum (path-connected Lie group U(N))
+from classical (discrete S_N). -/
+class StrictConnectedAgency (G : GPT V) where
+  avail : Set (StrictReversible G)
+  id_avail : StrictReversible.id G ∈ avail
+  strict_paths :
+    ∀ R₁ R₂ : StrictReversible G, R₁ ∈ avail → R₂ ∈ avail →
+      Nonempty (StrictReversiblePath G R₁ R₂)
+
 end Continuity
 end Perspectival
