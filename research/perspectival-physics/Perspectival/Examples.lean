@@ -3249,6 +3249,8 @@ example : (Perspectival.WantableGPT.proj Bool false)
   show (if false = false then (1 : ℝ) else 0) = 1
   simp
 
+-- (Sum-of-probabilities example over Bool deferred — Finset.sum_eq_add syntax fiddly.)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
