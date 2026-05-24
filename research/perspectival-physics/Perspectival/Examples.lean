@@ -326,6 +326,12 @@ example :
   funext b
   cases b <;> rfl
 
+/-- WantableGPT(Bool) has 2-dimensional carrier. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = 2 := by
+  show Module.finrank ℝ (Bool → ℝ) = 2
+  rw [Module.finrank_pi]
+  simp
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
