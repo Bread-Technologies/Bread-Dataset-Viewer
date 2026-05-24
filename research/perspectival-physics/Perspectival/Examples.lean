@@ -7359,6 +7359,24 @@ theorem diagonalState_right_marginal (b : Bool) :
     show (0 : ℝ) + 1/2 = 1/2
     norm_num
 
+/-- diagonalState is NOT a product of uniform states (it's correlated). -/
+theorem diagonalState_ne_productState_uniformBool :
+    diagonalState ≠ productState uniformBool uniformBool := by
+  intro h
+  have : diagonalState (true, false) = productState uniformBool uniformBool (true, false) := by
+    rw [h]
+  -- LHS = 0 (off-diagonal), RHS = 1/2 * 1/2 = 1/4 ≠ 0
+  have hLHS : diagonalState (true, false) = 0 := by
+    show (if (true, false) = (true, true) ∨ (true, false) = (false, false)
+          then (1/2 : ℝ) else 0) = 0
+    simp
+  have hRHS : productState uniformBool uniformBool (true, false) = 1/4 := by
+    show uniformBool true * uniformBool false = 1/4
+    show (1/2 : ℝ) * (1/2 : ℝ) = 1/4
+    norm_num
+  rw [hLHS, hRHS] at this
+  norm_num at this
+
 /-- The diagonal state is in WantableGPT.states. -/
 theorem diagonalState_in_states :
     diagonalState ∈ Perspectival.WantableGPT.states (Bool × Bool) := by
