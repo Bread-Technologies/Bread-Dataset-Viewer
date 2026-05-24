@@ -5006,5 +5006,32 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
               (Perspectival.WantableGPT.gpt W)) :=
   Perspectival.WantableGPT.complementTransform_sq W
 
+/-- Generic statement: `fromPTransHom` is injective (the bridge is a
+faithful embedding of PTrans into the operational transformation monoid). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Function.Injective (Perspectival.WantableGPT.fromPTransHom W) :=
+  Perspectival.WantableGPT.fromPTransHom_injective W
+
+/-- Generic statement: `fromPTransHom` of 1 is LinearMap.id. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.WantableGPT.fromPTransHom W 1 = LinearMap.id :=
+  (Perspectival.WantableGPT.fromPTransHom W).map_one
+
+/-- Generic statement: `fromPTransHom` is multiplicative. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (φ ψ : PTrans W) :
+    Perspectival.WantableGPT.fromPTransHom W (φ * ψ) =
+    Perspectival.WantableGPT.fromPTransHom W φ *
+    Perspectival.WantableGPT.fromPTransHom W ψ :=
+  (Perspectival.WantableGPT.fromPTransHom W).map_mul φ ψ
+
+/-- Generic statement: `fromPTransTransformHom` is multiplicative. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (φ ψ : PTrans W) :
+    Perspectival.WantableGPT.fromPTransTransformHom W (φ * ψ) =
+    Perspectival.WantableGPT.fromPTransTransformHom W φ *
+    Perspectival.WantableGPT.fromPTransTransformHom W ψ :=
+  (Perspectival.WantableGPT.fromPTransTransformHom W).map_mul φ ψ
+
 end Examples
 end Perspectival
