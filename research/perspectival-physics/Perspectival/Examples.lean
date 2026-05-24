@@ -2566,6 +2566,15 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     e.mapPTransMulEquiv φ⁻¹ = (e.mapPTransMulEquiv φ)⁻¹ :=
   e.mapPTransMulEquiv.map_inv φ
 
+/-- For involutions in PTrans Bool: mapPTransMulEquiv preserves involutiveness. -/
+example : boolEquivFin2.mapPTransMulEquiv boolSwap *
+          boolEquivFin2.mapPTransMulEquiv boolSwap = 1 := by
+  rw [← boolEquivFin2.mapPTransMulEquiv.map_mul]
+  have : boolSwap * boolSwap = (1 : PTrans Bool) := by
+    apply PTrans.ext; intro b; cases b <;> rfl
+  rw [this]
+  exact boolEquivFin2.mapPTransMulEquiv.map_one
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
