@@ -461,5 +461,17 @@ theorem fromPTransTransformHom_complementPTrans :
     fromPTransTransformHom W (complementPTrans W) = complementTransform W :=
   (complementTransform_eq_fromPTrans_full W).symm
 
+/-- `complementTransform W` is an involution in the Monoid of GPT
+self-transformations. -/
+theorem complementTransform_sq :
+    complementTransform W * complementTransform W
+    = (1 : Perspectival.GPT.Transform (gpt W) (gpt W)) := by
+  apply Perspectival.GPT.Transform.ext
+  apply LinearMap.ext
+  intro f
+  funext w
+  show f (Wantable.complement (Wantable.complement w)) = f w
+  rw [Wantable.complement_involutive]
+
 end WantableGPT
 end Perspectival
