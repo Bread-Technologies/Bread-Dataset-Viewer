@@ -9427,3 +9427,23 @@ example (e : Perspectival.WantableGPT.V Bool →ₗ[ℝ] ℝ)
 example : (Perspectival.WantableGPT.gpt Bool).unit
         ∈ (Perspectival.WantableGPT.gpt Bool).effects :=
   (Perspectival.WantableGPT.gpt Bool).unit_is_effect
+
+/-- WantableGPT Bool projection (proj true) is in effects. -/
+example : Perspectival.WantableGPT.proj Bool true
+        ∈ (Perspectival.WantableGPT.gpt Bool).effects :=
+  Perspectival.WantableGPT.proj_in_effects Bool true
+
+/-- WantableGPT Bool projection (proj false) is in effects. -/
+example : Perspectival.WantableGPT.proj Bool false
+        ∈ (Perspectival.WantableGPT.gpt Bool).effects :=
+  Perspectival.WantableGPT.proj_in_effects Bool false
+
+/-- WantableGPT Fin 4 projection (proj 2) is in effects. -/
+example : Perspectival.WantableGPT.proj (Fin 4) 2
+        ∈ (Perspectival.WantableGPT.gpt (Fin 4)).effects :=
+  Perspectival.WantableGPT.proj_in_effects (Fin 4) 2
+
+/-- WantableGPT Bool×Bool projection at (true, false) is in effects. -/
+example : Perspectival.WantableGPT.proj (Bool × Bool) (true, false)
+        ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).effects :=
+  Perspectival.WantableGPT.proj_in_effects (Bool × Bool) (true, false)
