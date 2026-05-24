@@ -232,6 +232,16 @@ theorem fromPTrans_mul_toLin (ψ φ : PTrans W) :
   -- (ψ * φ).invFun w = φ.invFun (ψ.invFun w) by definition of comp
   rfl
 
+/-- The linear-map underlying `fromPTrans` is a monoid homomorphism
+from `PTrans W` to `V W →ₗ[ℝ] V W` (under linear-map composition).
+
+This is the framework's "group of metaphysical transformations maps
+into the group of operational transformations" claim, made precise. -/
+def fromPTransHom : PTrans W →* (V W →ₗ[ℝ] V W) where
+  toFun φ := (fromPTrans W φ).toLin
+  map_one' := fromPTrans_one_toLin W
+  map_mul' := fromPTrans_mul_toLin W
+
 /-! ## Vertices: pure states corresponding to each element of `W` -/
 
 variable [DecidableEq W]
