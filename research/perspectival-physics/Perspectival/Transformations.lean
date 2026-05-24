@@ -279,6 +279,46 @@ theorem toEquivPerm_commutes_complement (φ : PTrans W) :
   show φ.toFun (Wantable.complement w) = Wantable.complement (φ.toFun w)
   exact φ.resp_complement w
 
+/-- The converse construction: a permutation `σ` that commutes with
+complement lifts to a PTrans. -/
+def ofEquivPerm (σ : Equiv.Perm W)
+    (h_comm : ∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) :
+    PTrans W where
+  toFun := σ
+  invFun := σ.symm
+  left_inv := σ.left_inv
+  right_inv := σ.right_inv
+  resp_complement := h_comm
+
+@[simp] theorem ofEquivPerm_toFun (σ : Equiv.Perm W) (h) (w : W) :
+    (ofEquivPerm σ h).toFun w = σ w := rfl
+
+@[simp] theorem toEquivPerm_ofEquivPerm (σ : Equiv.Perm W) (h) :
+    toEquivPerm (ofEquivPerm σ h) = σ := rfl
+
+@[simp] theorem ofEquivPerm_toEquivPerm (φ : PTrans W) :
+    ofEquivPerm (toEquivPerm φ) φ.resp_complement = φ := by
+  apply PTrans.ext
+  intro w
+  rfl
+
+/-- **Characterization.** A permutation of `W` lies in the image of
+`toEquivPerm` iff it commutes with the complement permutation. So
+the image of `toEquivPermHom` is exactly the centralizer of
+`complement` in `Equiv.Perm W`. -/
+theorem mem_range_toEquivPermHom_iff (σ : Equiv.Perm W) :
+    (∃ φ : PTrans W, toEquivPermHom φ = σ) ↔
+    (∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) := by
+  constructor
+  · rintro ⟨φ, hφ⟩ w
+    have : (toEquivPerm φ) (Wantable.complement w)
+         = Wantable.complement ((toEquivPerm φ) w) := φ.resp_complement w
+    have hσ : σ = toEquivPerm φ := hφ.symm
+    rw [hσ]
+    exact this
+  · intro h
+    exact ⟨ofEquivPerm σ h, rfl⟩
+
 end PTrans
 
 end Perspectival
