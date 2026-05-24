@@ -9555,3 +9555,24 @@ example : (Fintype.card (Fin 4) : ℕ)
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4))
         = Fintype.card (Fin 4) :=
   Perspectival.WantableGPT.finrank_V_eq_card (Fin 4)
+
+/-- Module.Finite instance for WantableGPT V W. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Module.Finite ℝ (Perspectival.WantableGPT.V W) := inferInstance
+
+/-- Concrete: V Bool is finite. -/
+example : Module.Finite ℝ (Perspectival.WantableGPT.V Bool) := inferInstance
+
+/-- Concrete: V (Fin 4) is finite. -/
+example : Module.Finite ℝ (Perspectival.WantableGPT.V (Fin 4)) := inferInstance
+
+/-- Concrete: V (Bool × Bool) is finite. -/
+example : Module.Finite ℝ (Perspectival.WantableGPT.V (Bool × Bool)) := inferInstance
+
+/-- AddCommGroup on V W is inferred. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    AddCommGroup (Perspectival.WantableGPT.V W) := inferInstance
+
+/-- Module instance on V W. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Module ℝ (Perspectival.WantableGPT.V W) := inferInstance
