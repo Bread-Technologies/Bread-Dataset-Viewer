@@ -2298,6 +2298,26 @@ example : (1 : PTrans Bool) * boolSwap = boolSwap := one_mul _
 
 example : boolSwap * (1 : PTrans Bool) = boolSwap := mul_one _
 
+/-- `boolSwap * boolSwap = 1` (boolSwap is an involution). -/
+example : boolSwap * boolSwap = (1 : PTrans Bool) := by
+  apply PTrans.ext
+  intro b
+  cases b <;> rfl
+
+/-- `(boolSwap : PTrans Bool)⁻¹ = boolSwap` (self-inverse). -/
+example : (boolSwap : PTrans Bool)⁻¹ = boolSwap := by
+  apply inv_eq_of_mul_eq_one_left
+  exact (by apply PTrans.ext; intro b; cases b <;> rfl)
+
+/-- The PTrans Bool group is cyclic of order 2 — every element squares to 1. -/
+example (f : PTrans Bool) : f * f = (1 : PTrans Bool) := by
+  rcases ptrans_bool_classification f with h | h
+  · rw [h]; exact one_mul _
+  · rw [h]
+    apply PTrans.ext
+    intro b
+    cases b <;> rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
