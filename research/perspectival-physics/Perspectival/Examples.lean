@@ -14044,6 +14044,33 @@ example :
       (uniformState (Bool × Bool)) = uniformState (Bool × Bool) := by
   funext p; rfl
 
+/-! ### Transform action on vertex states (concrete cases) -/
+
+/-- Concrete on Bool: transformAction complement (vertex true) = vertex false. -/
+example :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement
+      (Perspectival.WantableGPT.vertex Bool true)
+    = Perspectival.WantableGPT.vertex Bool false := by
+  simp [Perspectival.WantableGPT.transformAction_vertex]
+  rfl
+
+/-- transformAction (1) on vertex Bool true = vertex Bool true. -/
+example :
+    Perspectival.WantableGPT.transformAction Bool (1 : PTrans Bool)
+      (Perspectival.WantableGPT.vertex Bool true)
+    = Perspectival.WantableGPT.vertex Bool true := by
+  simp [Perspectival.WantableGPT.transformAction_vertex]
+  rfl
+
+/-- For Bool, transformAction complement applied twice to vertex true = vertex true. -/
+example :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement
+      (Perspectival.WantableGPT.transformAction Bool PTrans.complement
+        (Perspectival.WantableGPT.vertex Bool true))
+    = Perspectival.WantableGPT.vertex Bool true := by
+  simp [Perspectival.WantableGPT.transformAction_vertex]
+  rfl
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
