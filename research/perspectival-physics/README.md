@@ -11,9 +11,11 @@ the dataset viewer; it is parked here because it is the authorized
 push target.
 
 **Headline results** (all machine-verified, no `sorry`):
-1. **No-go theorem**: the bare-ontology bridge `WantableGPT.gpt W`
-   always yields the *classical* signature `N = K = |W|`
-   (`WantableGPT.lean :: wantableGPT_is_classical`).
+1. **Triple no-go theorem**: the bare-ontology bridge `WantableGPT.gpt W`
+   always yields the *classical* signature `N = K = |W|`, AND quantum
+   `K=N²`, real-QM `2K=N(N+1)`, and quaternionic-QM `K=N(2N-1)` are
+   each formally ruled out for `|W| ≥ 2`
+   (`WantableGPT.lean :: wantableGPT_classical_dichotomy`).
 2. **Structural characterization**: `PTrans W` is exactly the centralizer
    of `Wantable.complement` in the symmetric group `Equiv.Perm W`
    (`Transformations.lean :: mem_range_toEquivPermHom_iff`).
@@ -27,8 +29,16 @@ push target.
 5. **Continuous extension**: Lie group `ℝˣ` embeds into `PTrans ℝ`
    via `scaleHom`, demonstrating Lie-group structure in the
    continuous setting (path toward ROADMAP R6/R7).
+6. **Strengthened agency**: `ClosedAgency` (composition closure) yields
+   `Reachable.trans`; with per-element inverse availability,
+   `Reachable.equivalence` makes Reachable a full equivalence relation
+   (`Continuity.lean`).
+7. **Functoriality**: `WantableEquiv` is a groupoid, induces a
+   `MulEquiv` on `PTrans` groups, preserves Fintype.card and
+   WantableGPT finrank, and preserves the triple no-go theorem
+   (`Examples.lean`).
 
-The no-go theorem is the framework's most distinctive recent
+The triple no-go theorem is the framework's most distinctive recent
 contribution: it makes precise what the bare axioms can and cannot
 deliver, sharpening the next research step (R6/R7 agency
 strengthening).
