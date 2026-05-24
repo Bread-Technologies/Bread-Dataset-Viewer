@@ -1034,6 +1034,12 @@ example : (complementEquiv : Equiv.Perm (Fin 3)).toFun = id := rfl
 example : (complementEquiv : Equiv.Perm (Fin 2)).toFun 0 = 1 := rfl
 example : (complementEquiv : Equiv.Perm (Fin 2)).toFun 1 = 0 := rfl
 
+/-- Fin 4's complement Equiv: i ↦ 3 - i. -/
+example : (complementEquiv : Equiv.Perm (Fin 4)).toFun 0 = 3 := rfl
+example : (complementEquiv : Equiv.Perm (Fin 4)).toFun 1 = 2 := rfl
+example : (complementEquiv : Equiv.Perm (Fin 4)).toFun 2 = 1 := rfl
+example : (complementEquiv : Equiv.Perm (Fin 4)).toFun 3 = 0 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
