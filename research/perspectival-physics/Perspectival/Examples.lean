@@ -12615,3 +12615,54 @@ example (f : Perspectival.WantableGPT.V Bool)
     rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
         Finset.sum_insert (by decide), Finset.sum_singleton]]
   exact h
+
+/-! ### deltaIndicatorLin distinguishes distinct vertices -/
+
+/-- For w ≠ v, deltaIndicatorLin w (vertex w) = 1 ≠ 0 = deltaIndicatorLin w (vertex v). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w v : W)
+    (h : w ≠ v) :
+    deltaIndicatorLin w (Perspectival.WantableGPT.vertex W w) ≠
+    deltaIndicatorLin w (Perspectival.WantableGPT.vertex W v) := by
+  rw [deltaIndicatorLin_vertex_self,
+      deltaIndicatorLin_vertex_other w v (Ne.symm h)]
+  norm_num
+
+/-- For convex combo α • vertex w + (1-α) • vertex v with w ≠ v,
+deltaIndicatorLin w gives back α. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w v : W)
+    (h : w ≠ v) (α : ℝ) :
+    deltaIndicatorLin w (α • Perspectival.WantableGPT.vertex W w
+                         + (1 - α) • Perspectival.WantableGPT.vertex W v) = α := by
+  rw [map_add, map_smul, map_smul]
+  show α * deltaIndicatorLin w (Perspectival.WantableGPT.vertex W w)
+     + (1 - α) * deltaIndicatorLin w (Perspectival.WantableGPT.vertex W v)
+     = α
+  rw [deltaIndicatorLin_vertex_self,
+      deltaIndicatorLin_vertex_other w v (Ne.symm h)]
+  ring
+
+/-- For convex combo α • vertex true + (1-α) • vertex false on Bool,
+deltaIndicatorLin true gives α back. -/
+example (α : ℝ) :
+    deltaIndicatorLin true (α • Perspectival.WantableGPT.vertex Bool true
+                          + (1 - α) • Perspectival.WantableGPT.vertex Bool false) = α := by
+  rw [map_add, map_smul, map_smul]
+  show α * deltaIndicatorLin true (Perspectival.WantableGPT.vertex Bool true)
+     + (1 - α) * deltaIndicatorLin true (Perspectival.WantableGPT.vertex Bool false)
+     = α
+  rw [deltaIndicatorLin_vertex_self,
+      deltaIndicatorLin_vertex_other true false (by decide)]
+  ring
+
+/-- Similarly for deltaIndicatorLin false. -/
+example (α : ℝ) :
+    deltaIndicatorLin false (α • Perspectival.WantableGPT.vertex Bool true
+                            + (1 - α) • Perspectival.WantableGPT.vertex Bool false)
+      = 1 - α := by
+  rw [map_add, map_smul, map_smul]
+  show α * deltaIndicatorLin false (Perspectival.WantableGPT.vertex Bool true)
+     + (1 - α) * deltaIndicatorLin false (Perspectival.WantableGPT.vertex Bool false)
+     = 1 - α
+  rw [deltaIndicatorLin_vertex_self,
+      deltaIndicatorLin_vertex_other false true (by decide)]
+  ring
