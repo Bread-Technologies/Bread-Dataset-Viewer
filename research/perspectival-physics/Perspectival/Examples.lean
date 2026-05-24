@@ -6651,6 +6651,25 @@ example : (Meeting.prodMk (Meeting.mk_fromSide Bool true)
 Wantable Bool×Bool instance. -/
 example : Wantable.complement ((true, false) : Bool × Bool) = (false, true) := rfl
 
+/-- New theorem: prodMap of identities on Bool gives identity PTrans on
+Bool × Bool. -/
+example : PTrans.prodMap (1 : PTrans Bool) (1 : PTrans Bool)
+        = (1 : PTrans (Bool × Bool)) :=
+  PTrans.prodMap_one_one Bool Bool
+
+/-- New theorem: sumMap of identities on Bool gives identity PTrans on
+Bool ⊕ Bool. -/
+example : PTrans.sumMap (1 : PTrans Bool) (1 : PTrans Bool)
+        = (1 : PTrans (Bool ⊕ Bool)) :=
+  PTrans.sumMap_one_one Bool Bool
+
+/-- prodMap of complement and identity on Bool. -/
+example : PTrans.prodMap (PTrans.complement : PTrans Bool) (1 : PTrans Bool)
+            ≠ 1 := by
+  intro h
+  have hap := congrArg (fun (φ : PTrans (Bool × Bool)) => φ.toFun (true, true)) h
+  exact absurd hap (by decide)
+
 /-- New theorem: vertex 0..3 of WantableGPT (Fin 4) are all pairwise
 distinguishable (6 pairs). -/
 theorem WantableGPT_Fin4_six_distinguishable :
