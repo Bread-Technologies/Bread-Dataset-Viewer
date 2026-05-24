@@ -98,6 +98,17 @@ example (m : Meeting Bool) :
 example : (Perspectival.Meeting.mk_fromSide (Fin 2) 0).side₂ = 1 := rfl
 example : (Perspectival.Meeting.mk_fromSide (Fin 2) 1).side₂ = 0 := rfl
 
+/-- `Fin 4` with reflection `complement i := 3 - i` is a Wantable
+(0↔3, 1↔2). -/
+instance : Wantable (Fin 4) where
+  complement i := 3 - i
+  complement_involutive i := by fin_cases i <;> decide
+
+example : Wantable.complement (0 : Fin 4) = 3 := by decide
+example : Wantable.complement (1 : Fin 4) = 2 := by decide
+example : Wantable.complement (2 : Fin 4) = 1 := by decide
+example : Wantable.complement (3 : Fin 4) = 0 := by decide
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
