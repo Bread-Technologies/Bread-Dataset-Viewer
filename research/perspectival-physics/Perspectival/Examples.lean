@@ -3063,6 +3063,16 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4 × Fin 4)) = 16 
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4 ⊕ Fin 4)) = 8 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
 
+/-- For Fin 4: rich vertex set on the (id-complement) Wantable. -/
+example : ((Finset.univ : Finset (Fin 4)).image
+            (Perspectival.WantableGPT.vertex (Fin 4))).card = 4 := by
+  rw [Perspectival.WantableGPT.vertex_image_card]; decide
+
+/-- For Fin 3: rich vertex set on the id-complement Wantable. -/
+example : ((Finset.univ : Finset (Fin 3)).image
+            (Perspectival.WantableGPT.vertex (Fin 3))).card = 3 := by
+  rw [Perspectival.WantableGPT.vertex_image_card]; decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
