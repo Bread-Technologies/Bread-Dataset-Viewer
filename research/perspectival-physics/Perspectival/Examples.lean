@@ -466,6 +466,16 @@ def WantableEquiv.trans {W₁ W₂ W₃ : Type u}
        = Wantable.complement (e₂.toEquiv (e₁.toEquiv w))
     rw [e₁.resp_complement, e₂.resp_complement]
 
+/-- `refl` is a left identity for `trans`. -/
+@[simp] theorem WantableEquiv.refl_trans {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (e : WantableEquiv W₁ W₂) :
+    (WantableEquiv.refl W₁).trans e = e := rfl
+
+/-- `refl` is a right identity for `trans`. -/
+@[simp] theorem WantableEquiv.trans_refl {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (e : WantableEquiv W₁ W₂) :
+    e.trans (WantableEquiv.refl W₂) = e := rfl
+
 /-- A `Bool ≃ Fin 2` equivalence that respects the swap-complement structures. -/
 def boolEquivFin2 : WantableEquiv Bool (Fin 2) where
   toEquiv :=
