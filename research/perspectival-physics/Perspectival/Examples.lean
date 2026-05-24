@@ -208,6 +208,12 @@ example (m : Meeting (Fin 3)) : m.side₁ = m.side₂ := by
   rw [← this]
   rfl
 
+/-- The complement PTrans on Fin 3 (with id complement) IS the identity. -/
+example : (PTrans.complement : PTrans (Fin 3)) = 1 := by
+  apply PTrans.ext
+  intro i
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
