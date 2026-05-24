@@ -2716,6 +2716,16 @@ noncomputable example : Module.Basis (Bool × Bool × Bool) ℝ
     (Perspectival.WantableGPT.V (Bool × Bool × Bool)) :=
   Perspectival.WantableGPT.vertexBasis (Bool × Bool × Bool)
 
+/-- The Bool³ effect vector set contains the zero vector. -/
+example : (0 : Perspectival.WantableGPT.V (Bool × Bool × Bool))
+        ∈ Perspectival.WantableGPT.effectVec (Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.zero_in_effectVec (Bool × Bool × Bool)
+
+/-- The Bool³ effect vector set contains the constant-1 vector. -/
+example : (fun _ : Bool × Bool × Bool => (1 : ℝ))
+        ∈ Perspectival.WantableGPT.effectVec (Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.one_in_effectVec (Bool × Bool × Bool)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
