@@ -2605,6 +2605,12 @@ example : boolEquivFin2.mapPTransMulEquiv boolSwap *
          by apply PTrans.ext; intro b; cases b <;> rfl];
         exact boolEquivFin2.mapPTransMulEquiv.map_one)
 
+/-- Wantable.complement on Bool ⊕ Bool: inl true ↔ inl false (within left summand). -/
+example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := rfl
+
+/-- Wantable.complement on Bool ⊕ Bool: inr false ↔ inr true (within right summand). -/
+example : Wantable.complement (Sum.inr false : Bool ⊕ Bool) = Sum.inr true := rfl
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
