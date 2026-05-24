@@ -8633,3 +8633,22 @@ example : leftMarginal diagonalState = leftMarginal antiDiagonalState := by
     show uniformBool false = antiDiagonalState (false, true) + antiDiagonalState (false, false)
     show (1/2 : ℝ) = 1/2 + 0
     norm_num
+
+/-- New: leftMarginal is linear: applies to sums of two states. -/
+example (f g : Perspectival.WantableGPT.V (Bool × Bool)) :
+    leftMarginal (f + g) = leftMarginal f + leftMarginal g := by
+  rw [map_add]
+
+/-- New: leftMarginal is scaled by scalar multiples. -/
+example (c : ℝ) (f : Perspectival.WantableGPT.V (Bool × Bool)) :
+    leftMarginal (c • f) = c • leftMarginal f := by
+  rw [map_smul]
+
+/-- New: rightMarginal is linear too. -/
+example (f g : Perspectival.WantableGPT.V (Bool × Bool)) :
+    rightMarginal (f + g) = rightMarginal f + rightMarginal g := by
+  rw [map_add]
+
+example (c : ℝ) (f : Perspectival.WantableGPT.V (Bool × Bool)) :
+    rightMarginal (c • f) = c • rightMarginal f := by
+  rw [map_smul]
