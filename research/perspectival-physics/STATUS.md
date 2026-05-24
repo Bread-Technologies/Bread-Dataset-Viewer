@@ -78,6 +78,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | `ClosedAgency` class (composition closure refinement of `HasConnectedAgency`) | `Continuity.lean :: ClosedAgency` | ✓ |
 | `Reachable` is transitive under `ClosedAgency` | `Continuity.lean :: Reachable.trans` | ✓ |
 | `Reversible.comp` (composition of reversible transformations) | `Continuity.lean :: Reversible.comp` | ✓ |
+| `path_via_affineLine` — generic affine interpolation path | `Continuity.lean :: path_via_affineLine` | ✓ |
+| `singletonAgency` / `pairAgency` — generic builders for `HasConnectedAgency` | `Continuity.lean` | ✓ |
 | `ContinuousWantable` class (Wantable on a topological space with continuous complement) | `Examples.lean :: ContinuousWantable` | ✓ |
 | `ContinuousPTrans` structure (PTrans with continuous toFun); id, complement, comp | `Examples.lean :: ContinuousPTrans` | ✓ |
 | Wantable instances on ℝ (Wantable + ContinuousWantable) | `Examples.lean` | ✓ |
