@@ -862,6 +862,22 @@ example {W : Type u} [Wantable W] (n : ℕ) :
     show Wantable.complement (Wantable.complement w) = w
     exact Wantable.complement_involutive w
 
+/-- complementEquiv squared = 1 in any Wantable. -/
+example {W : Type u} [Wantable W] :
+    (complementEquiv : Equiv.Perm W) ^ 4 = 1 := by
+  show (complementEquiv : Equiv.Perm W) ^ (2 * 2) = 1
+  exact by
+    rw [pow_mul]
+    show ((complementEquiv : Equiv.Perm W) ^ 2) ^ 2 = 1
+    have h : (complementEquiv : Equiv.Perm W) ^ 2 = 1 := by
+      show (complementEquiv : Equiv.Perm W) * complementEquiv * 1 = 1
+      rw [mul_one]
+      apply Equiv.ext
+      intro w
+      exact Wantable.complement_involutive w
+    rw [h]
+    simp
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
