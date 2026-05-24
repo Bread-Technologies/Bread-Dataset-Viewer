@@ -43,6 +43,10 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Hardy Axioms 2–5 stated as Lean predicates | `Hardy.lean` | ✓ (statement only; categorization argued) |
 | **No-cloning theorem** — cross-term vanishing from linearity | `NoCloning.lean :: cross_terms_vanish` | ✓ |
 | **No-cloning theorem** — contradiction with distinguishing bilinear form | `NoCloning.lean :: no_cloning` | ✓ |
+| Classical n-outcome GPT — full construction | `Classical.lean :: gpt` | ✓ |
+| Classical GPT — convex states (std simplex) | `Classical.lean :: states_convex` | ✓ |
+| Classical GPT — convex effects | `Classical.lean :: effects_convex` | ✓ |
+| Classical GPT — probabilities in [0,1] | `Classical.lean :: prob_in_unit_interval` | ✓ |
 
 ## What is NOT YET done — honest open list
 
