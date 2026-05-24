@@ -1018,6 +1018,9 @@ example : (complementEquiv : Equiv.Perm ℤ).toFun (complementEquiv.toFun 1) = 1
   show Wantable.complement (Wantable.complement (1 : ℤ)) = 1
   rfl
 
+/-- Bool's complement Equiv equals Bool.not as an Equiv. -/
+example : (complementEquiv : Equiv.Perm Bool).toFun = Bool.not := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
