@@ -9,3 +9,4 @@ import Perspectival.NoCloning
 import Perspectival.Classical
 import Perspectival.Continuity
 import Perspectival.Distinguish
+import Perspectival.Examples

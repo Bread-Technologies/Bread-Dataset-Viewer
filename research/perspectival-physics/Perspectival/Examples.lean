@@ -1,0 +1,110 @@
+/-
+Perspectival Physics — Worked Examples
+========================================
+
+Concrete instantiations of the framework's abstract theorems on small
+worked examples. Each example chains together multiple verified
+results to show the framework operating end-to-end.
+
+Status: ✓ all examples compile without `sorry`.
+-/
+
+import Perspectival.Ontology
+import Perspectival.Transformations
+import Perspectival.Composition
+import Perspectival.Classical
+import Perspectival.Distinguish
+import Perspectival.NoCloning
+
+namespace Perspectival
+namespace Examples
+
+/-! ## Example 1 — A boolean Wantable
+
+The simplest non-trivial Wantable: `Bool` with `complement := not`.
+-/
+
+instance : Wantable Bool where
+  complement := not
+  complement_involutive := by intro b; cases b <;> rfl
+
+example : (Wantable.complement true : Bool) = false := rfl
+example : Wantable.complement (Wantable.complement true : Bool) = true := by
+  exact (Wantable.complement_involutive true)
+
+/-- A specific meeting in the boolean Wantable. -/
+def trueMeetsFalse : Meeting Bool where
+  side₁ := true
+  side₂ := false
+  complementary := rfl
+
+example : trueMeetsFalse.swap.swap = trueMeetsFalse := Meeting.swap_swap _
+
+/-! ## Example 2 — The classical 2-outcome GPT (classical bit)
+
+Build the n=2 classical GPT and verify concrete properties.
+-/
+
+abbrev TwoOutcome := Classical.V 2
+
+/-- The "heads" state: vertex 0 of the 2-simplex. -/
+def heads : TwoOutcome := Classical.vertex 2 0
+
+/-- The "tails" state: vertex 1 of the 2-simplex. -/
+def tails : TwoOutcome := Classical.vertex 2 1
+
+example : heads ∈ (Classical.gpt 2).states := Classical.vertex_in_states 2 0
+example : tails ∈ (Classical.gpt 2).states := Classical.vertex_in_states 2 1
+
+/-- The "is heads" effect: project onto coordinate 0. -/
+def isHeads : TwoOutcome →ₗ[ℝ] ℝ := Classical.proj 2 0
+
+example : isHeads heads = 1 := by
+  show Classical.proj 2 0 (Classical.vertex 2 0) = 1
+  simp [Classical.proj_vertex]
+
+example : isHeads tails = 0 := by
+  show Classical.proj 2 0 (Classical.vertex 2 1) = 0
+  simp [Classical.proj_vertex]
+
+/-! ## Example 3 — Vertices of the 3-simplex are linearly independent
+
+A direct instance of the abstract theorem on a concrete classical GPT. -/
+
+example : LinearIndependent ℝ (Classical.vertex 3) :=
+  Classical.vertex_linear_independent 3
+
+/-! ## Example 4 — Composition: heads-of-coin-1 has no meeting with tails-of-coin-2
+
+A direct instance of the structural no-cross-system meeting theorem. -/
+
+example (m : Meeting (Bool ⊕ Bool)) :
+    (∃ a b : Bool, m.side₁ = .inl a ∧ m.side₂ = .inl b) ∨
+    (∃ a b : Bool, m.side₁ = .inr a ∧ m.side₂ = .inr b) :=
+  Meeting.sum_no_cross m
+
+/-! ## Example 5 — Group structure on Wantable transformations
+
+PTrans Bool is a group; here we verify the identity and inverse laws
+on a concrete element. -/
+
+/-- The "swap" perspectival transformation on Bool (negation). -/
+def boolSwap : PTrans Bool where
+  toFun := not
+  invFun := not
+  left_inv := by intro b; cases b <;> rfl
+  right_inv := by intro b; cases b <;> rfl
+  resp_complement := by intro b; cases b <;> rfl
+
+example : boolSwap * boolSwap = (1 : PTrans Bool) := by
+  apply PTrans.ext
+  intro b
+  cases b <;> rfl
+
+example : boolSwap⁻¹ = boolSwap := by
+  apply PTrans.ext
+  intro b
+  cases b <;> rfl
+
+end Examples
+end Perspectival
