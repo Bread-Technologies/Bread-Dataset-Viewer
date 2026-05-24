@@ -9929,3 +9929,30 @@ example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
   constructor
   · intro _; trivial
   · intro _; exact Or.inr trivial
+
+/-- Reality is essentially Meeting W → Prop. -/
+example {W : Type u} [Wantable W] : Reality W = (Meeting W → Prop) := rfl
+
+/-- Pattern is essentially Reality W → Prop. -/
+example {W : Type u} [Wantable W] : Pattern W = (Reality W → Prop) := rfl
+
+/-- A Reality on Bool can be the universal predicate. -/
+example : Reality Bool := fun _ => True
+
+/-- A Reality on Bool can be the false predicate. -/
+example : Reality Bool := fun _ => False
+
+/-- A Reality singleton: "is this exactly meeting m". -/
+example (m : Meeting Bool) : Reality Bool := fun m' => m' = m
+
+/-- A Pattern that's trivially satisfied. -/
+example : Pattern Bool := Pattern.trivial Bool
+
+/-- A Pattern that's never satisfied. -/
+example : Pattern Bool := Pattern.empty Bool
+
+/-- A Pattern conjunction. -/
+example (P Q : Pattern Bool) : Pattern Bool := Pattern.and P Q
+
+/-- A Pattern disjunction. -/
+example (P Q : Pattern Bool) : Pattern Bool := Pattern.or P Q
