@@ -9,7 +9,8 @@ A summary of accomplishments from this development session.
   alone past 12,800 lines
 - **~900+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1153+ commits** to the research branch
+- **1159+ commits** to the research branch
+- **Classical.lean grew from 261 to 1333 lines (+1072)** with the R6 work
 
 ## R6 COMPLETE for n=2: Birkhoff disconnect formally proven (no hypotheses)
 
