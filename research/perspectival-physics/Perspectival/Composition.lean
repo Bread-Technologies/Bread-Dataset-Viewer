@@ -130,6 +130,22 @@ def Meeting.prodMk {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (Meeting.prodMk m₁ m₂).prodSnd = m₂ := by
   cases m₂; rfl
 
+/-- Component-wise PTrans on the product Wantable. -/
+def PTrans.prodMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ × W₂) where
+  toFun p := (f₁.toFun p.1, f₂.toFun p.2)
+  invFun p := (f₁.invFun p.1, f₂.invFun p.2)
+  left_inv p := by
+    show (f₁.invFun (f₁.toFun p.1), f₂.invFun (f₂.toFun p.2)) = p
+    rw [f₁.left_inv, f₂.left_inv]
+  right_inv p := by
+    show (f₁.toFun (f₁.invFun p.1), f₂.toFun (f₂.invFun p.2)) = p
+    rw [f₁.right_inv, f₂.right_inv]
+  resp_complement p := by
+    show (f₁.toFun (Wantable.complement p.1), f₂.toFun (Wantable.complement p.2))
+       = (Wantable.complement (f₁.toFun p.1), Wantable.complement (f₂.toFun p.2))
+    rw [f₁.resp_complement, f₂.resp_complement]
+
 def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ ⊕ W₂) where
   toFun := fun
