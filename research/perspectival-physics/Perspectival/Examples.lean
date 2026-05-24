@@ -2996,6 +2996,14 @@ example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Bool × Bool × Bool × 
       (Perspectival.WantableGPT.gpt (Bool × Bool × Bool × Bool)) ρ₁ ρ₂ :=
   Perspectival.WantableGPT.exists_two_distinguishable (Bool × Bool × Bool × Bool) (by decide)
 
+/-- Trivial dim instance: WantableGPT Unit has dim 1. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Unit) = 1 :=
+  Perspectival.WantableGPT.wantableGPT_trivial_dim Unit (by decide)
+
+/-- Empty dim instance: WantableGPT Empty has dim 0. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Empty) = 0 :=
+  Perspectival.WantableGPT.wantableGPT_empty_dim Empty (by decide)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
