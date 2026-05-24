@@ -578,6 +578,18 @@ theorem wantableGPT_not_quaternionicQM [Fintype W] (h : 2 ≤ Fintype.card W) :
   have : 1 = 2 * n - 1 := Nat.eq_of_mul_eq_mul_left hpos hmul
   omega
 
+/-- **Hardy-signature dichotomy.** For finite Wantable W with `|W| ≥ 2`,
+the WantableGPT satisfies the classical signature `K = N = |W|` and
+*does not* satisfy any of the standard non-classical signatures
+(quantum K=N², real-QM 2K=N(N+1), quaternionic-QM K=N(2N-1)). -/
+theorem wantableGPT_classical_dichotomy [Fintype W] (h : 2 ≤ Fintype.card W) :
+    Module.finrank ℝ (V W) = Fintype.card W ∧
+    Module.finrank ℝ (V W) ≠ Fintype.card W * Fintype.card W ∧
+    Module.finrank ℝ (V W) * 2 ≠ Fintype.card W * (Fintype.card W + 1) ∧
+    Module.finrank ℝ (V W) ≠ Fintype.card W * (2 * Fintype.card W - 1) :=
+  ⟨finrank_V_eq_card W, wantableGPT_not_quantum W h,
+   wantableGPT_not_realQM W h, wantableGPT_not_quaternionicQM W h⟩
+
 /-- **Hardy's "classical signature" `N = K` is satisfied for the
 WantableGPT bridge.** The maximal perfectly-distinguishable family is
 the vertex family (size `|W|`), and the state-space dimension is also
