@@ -185,6 +185,13 @@ example : (PTrans.complement : PTrans (Bool × Bool))
   cases p
   rfl
 
+/-- Similarly for the disjoint union. -/
+example : (PTrans.complement : PTrans (Bool ⊕ Bool))
+        = PTrans.sumMap PTrans.complement PTrans.complement := by
+  apply PTrans.ext
+  intro p
+  cases p <;> rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
