@@ -2513,6 +2513,17 @@ example (φ : PTrans Bool) :
   rw [(boolEquivFin2.toEquiv).symm_apply_apply,
       (boolEquivFin2.toEquiv).symm_apply_apply]
 
+/-- Other direction: boolEquivFin2.mapPTransMulEquiv inverts boolEquivFin2.symm.mapPTransMulEquiv. -/
+example (φ : PTrans (Fin 2)) :
+    boolEquivFin2.mapPTransMulEquiv (boolEquivFin2.symm.mapPTransMulEquiv φ) = φ := by
+  apply PTrans.ext
+  intro i
+  show (boolEquivFin2.toEquiv)
+        ((boolEquivFin2.toEquiv).symm (φ.toFun
+          ((boolEquivFin2.toEquiv) ((boolEquivFin2.toEquiv).symm i)))) = φ.toFun i
+  rw [(boolEquivFin2.toEquiv).apply_symm_apply,
+      (boolEquivFin2.toEquiv).apply_symm_apply]
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
