@@ -355,5 +355,48 @@ theorem vertex_n2_one_coords :
   · show (if (1 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
     simp
 
+/-! For Classical n=2 GPT, a state-preserving linear map R sends the
+vertex 0 to either vertex 0 or another state with first coord ≥ 0 and
+both coords summing to 1. Specifically if R is also injective (= a
+bijection), R must send vertices to vertices. -/
+
+/-- Any V 2 state with `ρ 0 = 1` is exactly vertex 2 0. -/
+theorem classical_n2_first_coord_one_iff (ρ : V 2) (hρ : ρ ∈ states 2) :
+    ρ = vertex 2 0 ↔ ρ 0 = 1 := by
+  refine ⟨?_, ?_⟩
+  · intro h
+    rw [h]
+    exact (vertex_n2_zero_coords).1
+  · intro h
+    funext j
+    have hsum := classical_n2_state_sum ρ hρ
+    have h2 : ρ 1 = 0 := by linarith
+    fin_cases j
+    · show ρ 0 = vertex 2 0 0
+      rw [h]
+      exact (vertex_n2_zero_coords).1.symm
+    · show ρ 1 = vertex 2 0 1
+      rw [h2]
+      exact (vertex_n2_zero_coords).2.symm
+
+/-- Any V 2 state with `ρ 1 = 1` is exactly vertex 2 1. -/
+theorem classical_n2_second_coord_one_iff (ρ : V 2) (hρ : ρ ∈ states 2) :
+    ρ = vertex 2 1 ↔ ρ 1 = 1 := by
+  refine ⟨?_, ?_⟩
+  · intro h
+    rw [h]
+    exact (vertex_n2_one_coords).2
+  · intro h
+    funext j
+    have hsum := classical_n2_state_sum ρ hρ
+    have h0 : ρ 0 = 0 := by linarith
+    fin_cases j
+    · show ρ 0 = vertex 2 1 0
+      rw [h0]
+      exact (vertex_n2_one_coords).1.symm
+    · show ρ 1 = vertex 2 1 1
+      rw [h]
+      exact (vertex_n2_one_coords).2.symm
+
 end Classical
 end Perspectival
