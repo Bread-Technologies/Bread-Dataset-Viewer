@@ -10997,3 +10997,26 @@ example (m : Meeting (Fin 4)) : PTrans.actMeeting (1 : PTrans (Fin 4)) m = m :=
 example (m : Meeting (Bool × Bool)) :
     PTrans.actMeeting (1 : PTrans (Bool × Bool)) m = m :=
   PTrans.actMeeting_id m
+
+/-- actReality applications. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (R : Reality W) :
+    Reality W := PTrans.actReality φ R
+
+example {W : Type u} [Wantable W] (R : Reality W) :
+    PTrans.actReality (1 : PTrans W) R = R :=
+  PTrans.actReality_one R
+
+example {W : Type u} [Wantable W] (ψ φ : PTrans W) (R : Reality W) :
+    PTrans.actReality (ψ * φ) R
+      = PTrans.actReality ψ (PTrans.actReality φ R) :=
+  PTrans.actReality_mul ψ φ R
+
+/-- actReality on Bool with identity. -/
+example (R : Reality Bool) : PTrans.actReality (1 : PTrans Bool) R = R :=
+  PTrans.actReality_one R
+
+/-- actReality_and: distributes over conjunction. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (R₁ R₂ : Reality W) :
+    PTrans.actReality φ (fun m => R₁ m ∧ R₂ m)
+      = fun m => PTrans.actReality φ R₁ m ∧ PTrans.actReality φ R₂ m :=
+  PTrans.actReality_and φ R₁ R₂
