@@ -10338,3 +10338,25 @@ example (p : Bool × Bool) :
 example (i : Fin 4) :
     Wantable.complement (Wantable.complement i) = i :=
   Wantable.complement_involutive i
+
+/-- complement is injective across all types. -/
+example {W : Type u} [Wantable W] : Function.Injective (Wantable.complement : W → W) :=
+  Wantable.complement_injective
+
+example : Function.Injective (Wantable.complement : Bool → Bool) :=
+  Wantable.complement_injective
+
+example : Function.Injective (Wantable.complement : Fin 4 → Fin 4) :=
+  Wantable.complement_injective
+
+example : Function.Injective (Wantable.complement : Bool × Bool → Bool × Bool) :=
+  Wantable.complement_injective
+
+example : Function.Injective (Wantable.complement : Bool ⊕ Bool → Bool ⊕ Bool) :=
+  Wantable.complement_injective
+
+example : Function.Injective (Wantable.complement : List Bool → List Bool) :=
+  Wantable.complement_injective
+
+example : Function.Injective (Wantable.complement : Option Bool → Option Bool) :=
+  Wantable.complement_injective
