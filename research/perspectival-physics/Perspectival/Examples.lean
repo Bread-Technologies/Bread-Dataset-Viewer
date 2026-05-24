@@ -9956,3 +9956,20 @@ example (P Q : Pattern Bool) : Pattern Bool := Pattern.and P Q
 
 /-- A Pattern disjunction. -/
 example (P Q : Pattern Bool) : Pattern Bool := Pattern.or P Q
+
+/-- Meeting is a structure. -/
+example : Meeting Bool := ⟨true, false, rfl⟩
+
+example : Meeting Bool := ⟨false, true, rfl⟩
+
+example : Meeting (Fin 4) := ⟨0, 3, rfl⟩
+
+example : Meeting (Fin 4) := ⟨1, 2, rfl⟩
+
+example : Meeting ℤ := ⟨5, -5, rfl⟩
+
+example : Meeting (Bool × Bool) := ⟨(true, false), (false, true), rfl⟩
+
+/-- A meeting's swap exchanges its sides. -/
+example (m : Meeting Bool) : m.swap.side₁ = m.side₂ := by cases m; rfl
+example (m : Meeting Bool) : m.swap.side₂ = m.side₁ := by cases m; rfl
