@@ -7849,3 +7849,49 @@ theorem diagonalIndicator_add_antiDiagonalIndicator :
   cases a <;> cases b <;> (
     show (if _ ∨ _ then (1 : ℝ) else 0) + (if _ ∨ _ then (1 : ℝ) else 0) = 1
     simp)
+
+/-- antiDiagonalIndicatorLin gives 0 on diagonalState. -/
+theorem antiDiagonalIndicatorLin_on_diagonalState :
+    antiDiagonalIndicatorLin diagonalState = 0 := by
+  show ∑ p, antiDiagonalIndicator p * diagonalState p = 0
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by
+      decide,
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show antiDiagonalIndicator (true, true) * diagonalState (true, true) +
+        (antiDiagonalIndicator (true, false) * diagonalState (true, false) +
+          (antiDiagonalIndicator (false, true) * diagonalState (false, true) +
+            antiDiagonalIndicator (false, false) * diagonalState (false, false))) = 0
+  show (0 : ℝ) * (1/2 : ℝ) + (1 * 0 + (1 * 0 + 0 * (1/2 : ℝ))) = 0
+  norm_num
+
+/-- antiDiagonalIndicatorLin gives 1 on antiDiagonalState. -/
+theorem antiDiagonalIndicatorLin_on_antiDiagonalState :
+    antiDiagonalIndicatorLin antiDiagonalState = 1 := by
+  show ∑ p, antiDiagonalIndicator p * antiDiagonalState p = 1
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by
+      decide,
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show antiDiagonalIndicator (true, true) * antiDiagonalState (true, true) +
+        (antiDiagonalIndicator (true, false) * antiDiagonalState (true, false) +
+          (antiDiagonalIndicator (false, true) * antiDiagonalState (false, true) +
+            antiDiagonalIndicator (false, false) * antiDiagonalState (false, false))) = 1
+  show (0 : ℝ) * 0 + (1 * (1/2 : ℝ) + (1 * (1/2 : ℝ) + 0 * 0)) = 1
+  norm_num
+
+/-- Reverse distinguishability: antiDiagonalState is distinguishable from
+diagonalState (in the opposite direction). -/
+theorem antiDiagonalState_distinguishable_diagonalState :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool))
+      antiDiagonalState diagonalState :=
+  ⟨antiDiagonalIndicatorLin, antiDiagonalIndicatorLin_in_effects,
+   antiDiagonalIndicatorLin_on_antiDiagonalState,
+   antiDiagonalIndicatorLin_on_diagonalState⟩
