@@ -249,6 +249,12 @@ instance {W : Type u} [Wantable W] : Wantable (List W) where
 
 example : Wantable.complement ([true, false, true] : List Bool) = [false, true, false] := rfl
 
+/-- Double complement is identity on a concrete list. -/
+example :
+    Wantable.complement (Wantable.complement ([true, false] : List Bool))
+    = [true, false] :=
+  Wantable.complement_involutive _
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
