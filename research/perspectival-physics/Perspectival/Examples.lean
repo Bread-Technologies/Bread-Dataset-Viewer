@@ -4737,5 +4737,31 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] [Module.Finite ℝ V]
     (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) : False :=
   Perspectival.Distinguish.no_oversized_perfect_distinguishability hn ρ w
 
+/-- Axiom 2 is auxiliary, not a derivable substantive predicate
+(placeholder def is `True`). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) (n k : ℕ) :
+    Perspectival.Hardy.Axiom2_Simplicity G n k := trivial
+
+/-- Axiom 4 is the auxiliary placeholder (vacuously true).  -/
+example {VA VB : Type u}
+    [AddCommGroup VA] [Module ℝ VA] [AddCommGroup VB] [Module ℝ VB]
+    (GA : Perspectival.GPT VA) (GB : Perspectival.GPT VB) (nA nB : ℕ) :
+    Perspectival.Hardy.Axiom4_Composite_States_Multiply GA GB nA nB :=
+  Perspectival.Hardy.axiom4_holds_placeholder GA GB nA nB
+
+/-- Hardy Axiom 1 (probabilities in [0,1]) holds for the classical
+GPT on `n`. -/
+example (n : ℕ) :
+    Perspectival.Hardy.Axiom1_Probabilities
+      (Perspectival.Classical.gpt n) :=
+  Perspectival.Hardy.axiom1_holds _
+
+/-- Hardy Axiom 3 (subspaces) holds for the classical GPT on `n`. -/
+example (n : ℕ) :
+    Perspectival.Hardy.Axiom3_Subspaces
+      (Perspectival.Classical.gpt n) :=
+  Perspectival.Hardy.axiom3_holds _
+
 end Examples
 end Perspectival
