@@ -3477,6 +3477,17 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
 
 -- (Tsirelson bound examples require importing CHSH module — Examples doesn't import it.)
 
+/-- Hardy.Distinguishable is symmetric in the special case of perfectly-disjoint effects
+(but in general it's NOT symmetric — see the asymmetric definition). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ρ₁ ρ₂ : V}
+    (e : V →ₗ[ℝ] ℝ) (he : e ∈ G.effects) (h1 : e ρ₁ = 1) (h2 : e ρ₂ = 0) :
+    Perspectival.Hardy.Distinguishable G ρ₁ ρ₂ := ⟨e, he, h1, h2⟩
+
+/-- The unit functional gives probability 1 on any normalized state (boundary case). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] {G : Perspectival.GPT V}
+    {ρ : V} (hρ : ρ ∈ G.states) : G.unit ρ = 1 := G.states_normalized ρ hρ
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
