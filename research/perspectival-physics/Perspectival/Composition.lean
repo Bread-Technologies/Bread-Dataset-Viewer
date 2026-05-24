@@ -162,6 +162,13 @@ theorem Meeting.prod_swap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   cases m
   rfl
 
+/-- Project from product Meeting back gives the original (functoriality). -/
+@[simp] theorem Meeting.prodMk_prodFst_prodSnd {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (m : Meeting (W₁ × W₂)) :
+    Meeting.prodMk m.prodFst m.prodSnd = m := by
+  cases m
+  rfl
+
 def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ ⊕ W₂) where
   toFun := fun
