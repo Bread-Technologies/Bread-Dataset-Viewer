@@ -448,6 +448,19 @@ example : (Perspectival.Meeting.mk_fromSide ℤ 0).side₂ = 0 := rfl
 example : (Perspectival.Meeting.mk_fromSide ℤ 0).side₁
         = (Perspectival.Meeting.mk_fromSide ℤ 0).side₂ := rfl
 
+/-- 0 is the only ℤ-self-meeting (n is a self-meeting iff n = 0). -/
+example (n : ℤ) :
+    (Perspectival.Meeting.mk_fromSide ℤ n).side₁
+    = (Perspectival.Meeting.mk_fromSide ℤ n).side₂ ↔ n = 0 := by
+  constructor
+  · intro h
+    show n = 0
+    have : n = -n := h
+    linarith
+  · intro h
+    subst h
+    rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
