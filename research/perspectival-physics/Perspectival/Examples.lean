@@ -2195,6 +2195,14 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
   Perspectival.WantableGPT.finrank_V_eq_card W
 
+/-- The vertex set forms a Hardy distinguishability set for the
+WantableGPT. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.Hardy.DistinguishabilitySet
+      (Perspectival.WantableGPT.gpt W)
+      ((Finset.univ : Finset W).image (Perspectival.WantableGPT.vertex W)) :=
+  Perspectival.WantableGPT.vertex_distinguishability_set W
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
