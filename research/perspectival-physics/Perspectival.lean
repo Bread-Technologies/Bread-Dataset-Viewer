@@ -8,3 +8,4 @@ import Perspectival.Hardy
 import Perspectival.NoCloning
 import Perspectival.Classical
 import Perspectival.Continuity
+import Perspectival.Distinguish
