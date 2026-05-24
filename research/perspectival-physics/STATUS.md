@@ -57,6 +57,11 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Transform composition (`Transform.comp`) | `GPT.lean :: Transform.comp` | ✓ |
 | Reachable is reflexive | `Continuity.lean :: Reachable.refl` | ✓ |
 | Trivial HasConnectedAgency instance | `Continuity.lean :: trivialAgency` | ✓ |
+| Product Wantable structure | `Composition.lean :: instWantableProd` | ✓ |
+| Meeting.prodFst / prodSnd / prodMk for product Wantable | `Composition.lean` | ✓ |
+| Product Meeting bijection lemmas (`prodFst_prodMk`, `prodSnd_prodMk`) | `Composition.lean` | ✓ |
+| Wantable instances on Bool, ℤ, Fin 2, Unit, Empty | `Examples.lean` | ✓ |
+| complementTransform squared = id (Transform level) | `WantableGPT.lean :: complementTransform_sq` | ✓ |
 | Classical n-outcome GPT — full construction | `Classical.lean :: gpt` | ✓ |
 | Classical GPT — convex states (std simplex) | `Classical.lean :: states_convex` | ✓ |
 | Classical GPT — convex effects | `Classical.lean :: effects_convex` | ✓ |
