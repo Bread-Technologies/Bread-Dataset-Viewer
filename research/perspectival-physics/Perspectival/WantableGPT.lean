@@ -387,6 +387,12 @@ theorem vertex_injective [Fintype W] : Function.Injective (vertex W) := by
   rw [h1, h2] at h3
   linarith
 
+/-- The image of vertex (the vertex set) has cardinality |W|. -/
+theorem vertex_image_card [Fintype W] :
+    ((Finset.univ : Finset W).image (vertex W)).card = Fintype.card W := by
+  rw [Finset.card_image_of_injective _ (vertex_injective W)]
+  simp
+
 /-- The vertex set forms a Hardy-style distinguishability set. -/
 theorem vertex_distinguishability_set :
     Perspectival.Hardy.DistinguishabilitySet (gpt W)
