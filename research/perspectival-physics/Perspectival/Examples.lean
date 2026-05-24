@@ -12367,3 +12367,57 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
     (∑ w, deltaIndicatorLin w f) = 1 := by
   rw [sum_deltaIndicatorLin f]
   exact hf.2
+
+/-! ### Any state is decomposable via Born-rule coefficients -/
+
+/-- Every state f equals ∑ w, (deltaIndicatorLin w f) • (vertex w). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) :
+    f = ∑ w, deltaIndicatorLin w f • Perspectival.WantableGPT.vertex W w := by
+  funext w'
+  rw [Finset.sum_apply]
+  show f w' = ∑ w, deltaIndicatorLin w f
+                * Perspectival.WantableGPT.vertex W w w'
+  rw [Finset.sum_eq_single w']
+  · show f w' = deltaIndicatorLin w' f
+                  * Perspectival.WantableGPT.vertex W w' w'
+    rw [deltaIndicatorLin_eq_apply]
+    show f w' = f w' * (if w' = w' then (1 : ℝ) else 0)
+    simp
+  · intro w _ hne
+    show deltaIndicatorLin w f * Perspectival.WantableGPT.vertex W w w' = 0
+    show deltaIndicatorLin w f * (if w = w' then (1 : ℝ) else 0) = 0
+    rw [if_neg hne]; ring
+  · intro h
+    exact absurd (Finset.mem_univ w') h
+
+/-- Concrete: any Bool state f = (f true) • vertex true + (f false) • vertex false. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    f = (f true) • Perspectival.WantableGPT.vertex Bool true
+      + (f false) • Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  cases b with
+  | true =>
+    show f true = (f true) * (if true = true then (1 : ℝ) else 0)
+                + (f false) * (if true = false then (1 : ℝ) else 0)
+    simp
+  | false =>
+    show f false = (f true) * (if false = true then (1 : ℝ) else 0)
+                 + (f false) * (if false = false then (1 : ℝ) else 0)
+    simp
+
+/-- Concrete: uniformBool = (1/2) • vertex true + (1/2) • vertex false. -/
+example : uniformBool = (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool true
+                      + (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  cases b with
+  | true =>
+    show uniformBool true = (1/2 : ℝ) * (if true = true then (1 : ℝ) else 0)
+                          + (1/2 : ℝ) * (if true = false then (1 : ℝ) else 0)
+    show (1/2 : ℝ) = (1/2 : ℝ) * 1 + (1/2 : ℝ) * 0
+    norm_num
+  | false =>
+    show uniformBool false = (1/2 : ℝ) * (if false = true then (1 : ℝ) else 0)
+                           + (1/2 : ℝ) * (if false = false then (1 : ℝ) else 0)
+    show (1/2 : ℝ) = (1/2 : ℝ) * 0 + (1/2 : ℝ) * 1
+    norm_num
