@@ -14264,6 +14264,44 @@ example (α : ℝ) (hα : 0 ≤ α) (hα1 : α ≤ 1) :
     (Perspectival.WantableGPT.vertex_in_states Bool false)
     hα (by linarith) (by ring)
 
+/-! ### Hardy axiom 1 (probabilities) for Bool/Fin types -/
+
+/-- Hardy axiom 1 for Bool: probabilities are in [0, 1]. -/
+example (e : Perspectival.WantableGPT.V Bool →ₗ[ℝ] ℝ)
+    (he : e ∈ Perspectival.WantableGPT.effects Bool)
+    (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) :
+    0 ≤ e f ∧ e f ≤ 1 :=
+  (Perspectival.WantableGPT.gpt Bool).prob_in_unit_interval e he f hf
+
+/-- Hardy axiom 1 for Fin 3. -/
+example (e : Perspectival.WantableGPT.V (Fin 3) →ₗ[ℝ] ℝ)
+    (he : e ∈ Perspectival.WantableGPT.effects (Fin 3))
+    (f : Perspectival.WantableGPT.V (Fin 3))
+    (hf : f ∈ Perspectival.WantableGPT.states (Fin 3)) :
+    0 ≤ e f ∧ e f ≤ 1 :=
+  (Perspectival.WantableGPT.gpt (Fin 3)).prob_in_unit_interval e he f hf
+
+/-- Hardy axiom 1 for Bool × Bool. -/
+example (e : Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ] ℝ)
+    (he : e ∈ Perspectival.WantableGPT.effects (Bool × Bool))
+    (f : Perspectival.WantableGPT.V (Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    0 ≤ e f ∧ e f ≤ 1 :=
+  (Perspectival.WantableGPT.gpt (Bool × Bool)).prob_in_unit_interval e he f hf
+
+/-- deltaIndicatorLin Bool true on a state has probability in [0, 1]. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) :
+    0 ≤ deltaIndicatorLin true f ∧ deltaIndicatorLin true f ≤ 1 := by
+  rw [deltaIndicatorLin_eq_apply]
+  refine ⟨hf.1 true, ?_⟩
+  have hsum := hf.2
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
+  have h_false := hf.1 false
+  linarith
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
