@@ -8174,3 +8174,20 @@ uniformState (Bool × Bool). -/
 example : productState uniformBool uniformBool = uniformState (Bool × Bool) := by
   rw [uniformState_prod_factor]
   congr 1 <;> (funext _; rfl)
+
+/-- Classical-correlation: diagonalState is the "Bell-state-like" perfectly
+correlated state — measuring with diagonalIndicator gives 1 (probability
+1 of "same outcome"). -/
+example : diagonalIndicatorLin diagonalState = 1 :=
+  diagonalIndicatorLin_on_diagonalState
+
+/-- And measuring with antiDiagonalIndicator gives 0 (no anti-correlation). -/
+example : antiDiagonalIndicatorLin diagonalState = 0 :=
+  antiDiagonalIndicatorLin_on_diagonalState
+
+/-- antiDiagonalState is the dual perfectly-anti-correlated state. -/
+example : diagonalIndicatorLin antiDiagonalState = 0 :=
+  diagonalIndicatorLin_on_antiDiagonalState
+
+example : antiDiagonalIndicatorLin antiDiagonalState = 1 :=
+  antiDiagonalIndicatorLin_on_antiDiagonalState
