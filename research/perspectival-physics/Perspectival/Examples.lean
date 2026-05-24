@@ -6014,5 +6014,25 @@ example : (Wantable.complement ∘ Wantable.complement
             : Bool × Bool → Bool × Bool) = id :=
   Wantable.complement_complement_eq_id
 
+/-- Bool ⊕ Bool: complement is injective. -/
+example : Function.Injective
+    (Wantable.complement : Bool ⊕ Bool → Bool ⊕ Bool) :=
+  Wantable.complement_injective
+
+/-- Bool ⊕ Bool: complement is surjective. -/
+example : Function.Surjective
+    (Wantable.complement : Bool ⊕ Bool → Bool ⊕ Bool) :=
+  Wantable.complement_surjective
+
+/-- complement_eq_iff applied on Bool: complement true = false iff true = complement false. -/
+example : Wantable.complement (true : Bool) = false
+        ↔ true = Wantable.complement (false : Bool) :=
+  Wantable.complement_eq_iff _ _
+
+/-- complement_eq_iff applied on ℤ: complement 5 = -5 iff 5 = complement (-5). -/
+example : Wantable.complement (5 : ℤ) = -5
+        ↔ 5 = Wantable.complement (-5 : ℤ) :=
+  Wantable.complement_eq_iff _ _
+
 end Examples
 end Perspectival
