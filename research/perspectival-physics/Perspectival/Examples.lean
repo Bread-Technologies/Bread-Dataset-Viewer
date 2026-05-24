@@ -429,6 +429,11 @@ example (f : ℝ →ₗ[ℝ] ℝ) (x : ℝ) : f x = f 1 * x := by
   rw [smul_eq_mul, smul_eq_mul, mul_one] at h
   rw [h, mul_comm]
 
+/-- Every ℝ-linear map ℝ → ℝ satisfies `f(-x) = -f(x)` automatically
+(linearity over a Z-algebra is enough). -/
+example (f : ℝ →ₗ[ℝ] ℝ) (x : ℝ) : f (-x) = -f x := by
+  rw [map_neg]
+
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
