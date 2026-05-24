@@ -10251,3 +10251,20 @@ example (p : Bool × Bool × Bool × Bool) :
                              Wantable.complement p.2.1,
                              Wantable.complement p.2.2.1,
                              Wantable.complement p.2.2.2) := rfl
+
+/-- New: Wantable instances exist for List (with element-wise complement). -/
+example : Wantable (List Bool) := inferInstance
+
+example : Wantable (List ℤ) := inferInstance
+
+example : Wantable (List (Fin 4)) := inferInstance
+
+/-- Wantable on Option. -/
+example : Wantable (Option Bool) := inferInstance
+
+example : Wantable (Option (Fin 4)) := inferInstance
+
+/-- Wantable on function spaces (Bool → Bool). -/
+example : Wantable (Bool → Bool) := inferInstance
+
+example : Wantable (Fin 4 → Bool) := inferInstance
