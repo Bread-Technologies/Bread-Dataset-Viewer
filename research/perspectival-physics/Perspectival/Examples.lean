@@ -4898,5 +4898,33 @@ example {W : Type u} [Wantable W] (a b : W) :
     Wantable.complement a = b ↔ a = Wantable.complement b :=
   Wantable.complement_eq_iff a b
 
+/-- `Transform.ext` (generic): equal underlying linear maps ⇒ equal Transforms. -/
+example {V V' : Type u} [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup V'] [Module ℝ V']
+    {G : Perspectival.GPT V} {G' : Perspectival.GPT V'}
+    {T T' : Perspectival.GPT.Transform G G'}
+    (h : T.toLin = T'.toLin) : T = T' :=
+  Perspectival.GPT.Transform.ext h
+
+/-- Two Bool-self Transforms with the same toLin are equal. -/
+example (T T' : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt Bool)
+                  (Perspectival.WantableGPT.gpt Bool))
+    (h : T.toLin = T'.toLin) : T = T' :=
+  Perspectival.GPT.Transform.ext h
+
+/-- The Transform constructed from the identity LinearMap is the identity Transform. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) :
+    (Perspectival.GPT.Transform.id G).toLin = LinearMap.id :=
+  Perspectival.GPT.Transform.id_toLin G
+
+/-- `Transform.id` squared is `Transform.id`. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) :
+    Perspectival.GPT.Transform.id G * Perspectival.GPT.Transform.id G
+      = Perspectival.GPT.Transform.id G :=
+  Perspectival.GPT.Transform.id_sq G
+
 end Examples
 end Perspectival
