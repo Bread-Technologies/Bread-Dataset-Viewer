@@ -9,7 +9,32 @@ A summary of accomplishments from this development session.
   alone past 12,800 lines
 - **~900+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1136+ commits** to the research branch
+- **1148+ commits** to the research branch
+
+## R6 MAJOR MILESTONE: Birkhoff disconnect proven for Classical n=2
+
+**`classical_n2_no_strict_path_id_to_swap`** — Lean-verified theorem:
+no continuous path of bijective state-preserving linear maps connects
+id to swap on Classical n=2 GPT. So the framework's
+StrictConnectedAgency rules out classical Bool from supporting agency
+between distinct permutation reversibles.
+
+Proof chain:
+1. `n2_disc_det R = R(vertex 0) 0 - R(vertex 1) 0` — equals det of
+   underlying 2×2 doubly-stochastic matrix.
+2. `n2_disc_det_id = 1`, `n2_disc_det_swap = -1`.
+3. `ivt_path_one_to_neg_one` — IVT for continuous f : [0,1] → ℝ.
+4. `n2_no_continuous_path_id_to_swap_through_bijections` — combining
+   (1)(2)(3): any continuous path from id to swap passes through
+   det = 0.
+5. `n2_disc_det_zero_implies_not_injective` — det = 0 ⇒ R(v0) = R(v1)
+   ⇒ R not injective.
+6. Combine: any state-preserving path from id to swap MUST fail
+   bijectivity at some t.
+
+This is the first **formally proven** R6 framework-distinctive
+content: classical GPTs cannot host nontrivial path-connected
+reversible dynamics. Quantum GPTs (U(N) connected Lie group) CAN.
 
 ## R6 substantive progress (this session — pivot from corollaries to roadmap)
 
