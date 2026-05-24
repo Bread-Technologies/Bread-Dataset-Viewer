@@ -355,6 +355,13 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 :=
   rw [Module.finrank_pi]
   simp
 
+/-- For product Wantables, finrank multiplies. -/
+example {W₁ W₂ : Type u} [Fintype W₁] [Fintype W₂] :
+    Module.finrank ℝ (W₁ × W₂ → ℝ)
+    = Module.finrank ℝ (W₁ → ℝ) * Module.finrank ℝ (W₂ → ℝ) := by
+  rw [Module.finrank_pi, Module.finrank_pi, Module.finrank_pi]
+  exact Fintype.card_prod W₁ W₂
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
