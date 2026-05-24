@@ -8813,3 +8813,19 @@ example : leftMarginal
      = (∑ b₂, diagonalState (b, b₂))
   rw [diagonalState_left_marginal, diagonalState_left_marginal]
   cases b <;> rfl
+
+/-- Marginals are mutually inverse to productState restricted to product
+states: starting from a product state, marginalizing gives the factors,
+and rebuilding gives the product state back. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (h₁ : f₁ ∈ Perspectival.WantableGPT.states W₁)
+    (h₂ : f₂ ∈ Perspectival.WantableGPT.states W₂) :
+    productState (leftMarginal (productState f₁ f₂))
+                 (rightMarginal (productState f₁ f₂))
+    = productState f₁ f₂ := by
+  rw [show leftMarginal (productState f₁ f₂) = f₁ from by
+        funext w₁; exact productState_left_marginal_state f₁ f₂ h₂ w₁]
+  rw [show rightMarginal (productState f₁ f₂) = f₂ from by
+        funext w₂; exact productState_right_marginal_state f₁ f₂ h₁ w₂]
