@@ -2446,6 +2446,24 @@ theorem WantableEquiv.preserves_not_quantum {W₁ W₂ : Type u}
     ≠ Fintype.card W₂ * Fintype.card W₂ :=
   Perspectival.WantableGPT.wantableGPT_not_quantum W₂ (e.preserves_card ▸ h)
 
+/-- WantableEquiv preserves no-real-QM signature too. -/
+theorem WantableEquiv.preserves_not_realQM {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂]
+    (e : WantableEquiv W₁ W₂) (h : 2 ≤ Fintype.card W₁) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W₂) * 2
+    ≠ Fintype.card W₂ * (Fintype.card W₂ + 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_realQM W₂ (e.preserves_card ▸ h)
+
+/-- WantableEquiv preserves no-quaternionic-QM signature too. -/
+theorem WantableEquiv.preserves_not_quaternionicQM {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂]
+    (e : WantableEquiv W₁ W₂) (h : 2 ≤ Fintype.card W₁) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W₂)
+    ≠ Fintype.card W₂ * (2 * Fintype.card W₂ - 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_quaternionicQM W₂ (e.preserves_card ▸ h)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
