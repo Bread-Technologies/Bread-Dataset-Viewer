@@ -1772,5 +1772,20 @@ id, (012), (021). Odd permutations (det=-1): (01), (02), (12).
 A continuous path through this subset must preserve sign of det. So no
 path connects id to swap01. -/
 
+/-! ## Continuity helpers for paths -/
+
+/-- For any continuous family γ : unitInterval → V n →ₗ V n (in the
+joint-continuity sense), the map t ↦ γ(t)(vertex i)(j) is continuous. -/
+theorem n_vertex_coord_continuous_of_joint
+    (γ : unitInterval → V n →ₗ[ℝ] V n)
+    (hcont : Continuous (fun p : unitInterval × V n => γ p.1 p.2))
+    (i j : Fin n) :
+    Continuous (fun t => γ t (vertex n i) j) := by
+  have hpair : Continuous (fun t : unitInterval => (t, vertex n i)) :=
+    Continuous.prodMk continuous_id continuous_const
+  have h1 : Continuous (fun t : unitInterval => γ t (vertex n i)) :=
+    hcont.comp hpair
+  exact (continuous_apply j).comp h1
+
 end Classical
 end Perspectival
