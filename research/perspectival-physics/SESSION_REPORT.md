@@ -9,12 +9,17 @@ A summary of accomplishments from this development session.
   alone past 12,800 lines
 - **~900+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1172+ commits** to the research branch
-- **Classical.lean grew from 261 to 1480 lines (+1219)** with the R6 work
+- **1178+ commits** to the research branch
+- **Classical.lean grew from 261 to 1690 lines (+1429)** with the R6 work
 - **R6 generalization**: `classical_vertex_collision_implies_not_injective`
   and `classical_bijective_distinct_vertex_images` for any n. So bijective
   state-preserving R on V n maps distinct vertices to distinct images,
   the foundation for the general R6 disconnect theorem at n ≥ 3.
+- **R6 n=3 transpositions**: `swap01Lin` (the (01) transposition on V 3)
+  bundled as `swap01Reversible` and `swap01StrictReversible`, verified
+  distinct from id. With the 3-cycle `cyclicShiftLin`, Classical n=3
+  has at least 3 distinct StrictReversibles ⇒ Classical n=3 cannot
+  have a fully-connected StrictConnectedAgency in the framework.
 
 ## R6 COMPLETE for n=2: Birkhoff disconnect formally proven (no hypotheses)
 
