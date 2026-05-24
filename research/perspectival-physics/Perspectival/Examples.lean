@@ -8829,3 +8829,32 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
         funext w₁; exact productState_left_marginal_state f₁ f₂ h₂ w₁]
   rw [show rightMarginal (productState f₁ f₂) = f₂ from by
         funext w₂; exact productState_right_marginal_state f₁ f₂ h₁ w₂]
+
+/-- Crucial: diagonalState ≠ productState (leftMarginal diagonalState)
+(rightMarginal diagonalState). The marginals don't reconstruct the
+correlated state — the framework supports nontrivial correlations
+beyond what marginals capture. -/
+example : diagonalState ≠ productState (leftMarginal diagonalState)
+                                       (rightMarginal diagonalState) := by
+  intro h
+  have h_left : leftMarginal diagonalState = uniformBool := by
+    funext b; exact diagonalState_left_marginal b
+  have h_right : rightMarginal diagonalState = uniformBool := by
+    funext b; exact diagonalState_right_marginal b
+  rw [h_left, h_right] at h
+  -- diagonalState = productState uniformBool uniformBool means classical
+  -- separability into uniformBool × uniformBool, but diagonalState has
+  -- 1/2 on diagonal and 0 off-diagonal, while productState uniformBool
+  -- uniformBool has 1/4 on each (uniform).
+  have h_val : diagonalState (true, false)
+             = productState uniformBool uniformBool (true, false) := by rw [h]
+  have h_LHS : diagonalState (true, false) = 0 := by
+    show (if (true, false) = (true, true) ∨ (true, false) = (false, false)
+          then (1/2 : ℝ) else 0) = 0
+    simp
+  have h_RHS : productState uniformBool uniformBool (true, false) = 1/4 := by
+    show uniformBool true * uniformBool false = 1/4
+    show (1/2 : ℝ) * (1/2 : ℝ) = 1/4
+    norm_num
+  rw [h_LHS, h_RHS] at h_val
+  norm_num at h_val
