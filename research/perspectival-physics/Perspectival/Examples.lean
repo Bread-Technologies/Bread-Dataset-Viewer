@@ -954,6 +954,11 @@ example : (complementEquiv : Equiv.Perm (Fin 2)) ^ 2 = 1 := by
   intro i
   fin_cases i <;> rfl
 
+example : (complementEquiv : Equiv.Perm (Fin 4)) ^ 2 = 1 := by
+  apply Equiv.ext
+  intro i
+  fin_cases i <;> rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
