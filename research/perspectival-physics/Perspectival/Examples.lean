@@ -3071,6 +3071,17 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
         ≠ Fintype.card Bool * (2 * Fintype.card Bool - 1) :=
   Perspectival.WantableGPT.wantableGPT_not_quaternionicQM Bool (by decide)
 
+/-- The no-go is a structural property of the WantableGPT bridge,
+not specific to Bool. Concrete instance on `Bool × Bool` (|W|=4): -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool))
+        ≠ Fintype.card (Bool × Bool) * Fintype.card (Bool × Bool) :=
+  Perspectival.WantableGPT.wantableGPT_not_quantum (Bool × Bool) (by decide)
+
+/-- On `Bool ⊕ Bool` (|W|=4): real-QM signature ruled out. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) * 2
+        ≠ Fintype.card (Bool ⊕ Bool) * (Fintype.card (Bool ⊕ Bool) + 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_realQM (Bool ⊕ Bool) (by decide)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
