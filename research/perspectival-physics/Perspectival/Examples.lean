@@ -14606,6 +14606,31 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
     (hρ : ρ ∈ Perspectival.WantableGPT.states W) :
     ∑ w, ρ w = 1 := hρ.2
 
+/-! ### Concrete checks on diagonalState/antiDiagonalState membership -/
+
+/-- diagonalState is a state in the GPT sense. -/
+example : diagonalState ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).states :=
+  diagonalState_in_states
+
+/-- antiDiagonalState is a state in the GPT sense. -/
+example : antiDiagonalState ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).states :=
+  antiDiagonalState_in_states
+
+/-- mixedCorrelatedState is a state. -/
+example : mixedCorrelatedState ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).states :=
+  WantableGPT_convex_combo_in_states _ _ (1/2) (1/2)
+    diagonalState_in_states antiDiagonalState_in_states
+    (by norm_num) (by norm_num) (by norm_num)
+
+/-- uniformState (Bool × Bool) is a state. -/
+example : uniformState (Bool × Bool) ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).states :=
+  uniformState_in_states
+
+/-- vertex (Bool × Bool) (true, true) is a state. -/
+example : Perspectival.WantableGPT.vertex (Bool × Bool) (true, true)
+    ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).states :=
+  Perspectival.WantableGPT.vertex_in_states _ _
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
