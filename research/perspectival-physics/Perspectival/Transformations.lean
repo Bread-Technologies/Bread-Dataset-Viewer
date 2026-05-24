@@ -209,6 +209,17 @@ theorem actMeeting_complement_sq (m : Meeting W) :
     actMeeting (complement : PTrans W) (actMeeting complement m) = m := by
   rw [actMeeting_complement, actMeeting_complement, Meeting.swap_swap]
 
+/-- The action of `PTrans W` on `Meeting W` is faithful: if two
+transformations act identically on every meeting, they are equal. -/
+theorem actMeeting_faithful (f g : PTrans W)
+    (h : ∀ m : Meeting W, actMeeting f m = actMeeting g m) : f = g := by
+  apply PTrans.ext
+  intro w
+  have hm := h (Meeting.mk_fromSide W w)
+  have : (actMeeting f (Meeting.mk_fromSide W w)).side₁
+       = (actMeeting g (Meeting.mk_fromSide W w)).side₁ := by rw [hm]
+  exact this
+
 end PTrans
 
 end Perspectival
