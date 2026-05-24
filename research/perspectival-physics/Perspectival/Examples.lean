@@ -444,6 +444,14 @@ example (f : ℝ →ₗ[ℝ] ℝ) (h_one : f 1 ≠ 0) (x : ℝ) :
   rw [smul_eq_mul, smul_eq_mul, mul_one] at h
   rw [h, mul_comm]
 
+/-- Bijective linear ℝ → ℝ has `f 1 ≠ 0`. -/
+example (f : ℝ →ₗ[ℝ] ℝ) (hf : Function.Injective f) : f 1 ≠ 0 := by
+  intro h
+  -- f 1 = 0 = f 0, so by injectivity, 1 = 0 (false).
+  have hf0 : f 0 = 0 := f.map_zero
+  have : (1 : ℝ) = 0 := hf (h.trans hf0.symm)
+  exact one_ne_zero this
+
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
