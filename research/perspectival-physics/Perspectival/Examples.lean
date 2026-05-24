@@ -455,6 +455,17 @@ def WantableEquiv.symm {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     rw [e.toEquiv.apply_symm_apply, e.resp_complement]
     rw [e.toEquiv.apply_symm_apply]
 
+/-- Composition of Wantable-isomorphisms. -/
+def WantableEquiv.trans {W₁ W₂ W₃ : Type u}
+    [Wantable W₁] [Wantable W₂] [Wantable W₃]
+    (e₁ : WantableEquiv W₁ W₂) (e₂ : WantableEquiv W₂ W₃) :
+    WantableEquiv W₁ W₃ where
+  toEquiv := e₁.toEquiv.trans e₂.toEquiv
+  resp_complement w := by
+    show e₂.toEquiv (e₁.toEquiv (Wantable.complement w))
+       = Wantable.complement (e₂.toEquiv (e₁.toEquiv w))
+    rw [e₁.resp_complement, e₂.resp_complement]
+
 /-- A `Bool ≃ Fin 2` equivalence that respects the swap-complement structures. -/
 def boolEquivFin2 : WantableEquiv Bool (Fin 2) where
   toEquiv :=
