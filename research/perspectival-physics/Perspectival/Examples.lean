@@ -6636,6 +6636,21 @@ theorem WantableGPT_Fin3_three_distinguishable :
    Perspectival.WantableGPT.vertices_distinguishable (Fin 3) 0 2 (by decide),
    Perspectival.WantableGPT.vertices_distinguishable (Fin 3) 1 2 (by decide)⟩
 
+/-- Concrete: Meeting on Bool × Bool built from prodMk. -/
+example : (Meeting.prodMk (Meeting.mk_fromSide Bool true)
+                          (Meeting.mk_fromSide Bool false)).side₁
+        = (true, false) := rfl
+
+/-- Concrete: Meeting on Bool × Bool built from prodMk has the correct
+side₂. -/
+example : (Meeting.prodMk (Meeting.mk_fromSide Bool true)
+                          (Meeting.mk_fromSide Bool false)).side₂
+        = (false, true) := rfl
+
+/-- Concrete: complement of (true, false) = (false, true) via the
+Wantable Bool×Bool instance. -/
+example : Wantable.complement ((true, false) : Bool × Bool) = (false, true) := rfl
+
 /-- New theorem: vertex 0..3 of WantableGPT (Fin 4) are all pairwise
 distinguishable (6 pairs). -/
 theorem WantableGPT_Fin4_six_distinguishable :
