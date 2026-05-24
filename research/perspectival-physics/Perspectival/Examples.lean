@@ -6103,5 +6103,33 @@ example : (Perspectival.WantableGPT.gpt Bool).unit.comp
         = (Perspectival.WantableGPT.gpt Bool).unit :=
   (Perspectival.Continuity.Reversible.id _).preserves_unit
 
+/-- `Reversible.id` preserves any state. -/
+example (ρ : Perspectival.WantableGPT.V Bool)
+    (hρ : ρ ∈ (Perspectival.WantableGPT.gpt Bool).states) :
+    (Perspectival.Continuity.Reversible.id
+      (Perspectival.WantableGPT.gpt Bool)).toLin ρ
+    ∈ (Perspectival.WantableGPT.gpt Bool).states :=
+  (Perspectival.Continuity.Reversible.id _).preserves_states ρ hρ
+
+/-- `trivialAgency` instance on Bool's WantableGPT. -/
+example : Perspectival.Continuity.HasConnectedAgency
+            (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Continuity.trivialAgency _
+
+/-- `trivialAgency`'s avail set contains the identity. -/
+example : Perspectival.Continuity.Reversible.id
+            (Perspectival.WantableGPT.gpt Bool)
+        ∈ Perspectival.Continuity.HasConnectedAgency.avail
+            (G := Perspectival.WantableGPT.gpt Bool)
+            (self := Perspectival.Continuity.trivialAgency _) := rfl
+
+/-- Under trivialAgency on Bool, vertex true is reachable from itself. -/
+example : @Perspectival.Continuity.Reachable _ _ _ _
+            (Perspectival.WantableGPT.gpt Bool)
+            (Perspectival.Continuity.trivialAgency _)
+            (Perspectival.WantableGPT.vertex Bool true)
+            (Perspectival.WantableGPT.vertex Bool true) :=
+  Perspectival.Continuity.trivialAgency_reachable_refl _ _
+
 end Examples
 end Perspectival
