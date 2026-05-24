@@ -67,6 +67,12 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Concrete classification `PTrans Bool = {1, boolSwap}` | `Examples.lean :: ptrans_bool_classification` | ✓ |
 | `SelfComplementary`, `FixedPointFreeComplement` predicates | `Ontology.lean` | ✓ |
 | **Even-cardinality theorem**: fixed-point-free complement + finite + linear order ⇒ `|W|` even | `Examples.lean :: card_even_of_fixedPointFree` | ✓ |
+| `WantableEquiv W₁ W₂` structure (Wantable isomorphism) | `Examples.lean :: WantableEquiv` | ✓ |
+| `WantableEquiv` induces MulEquiv `PTrans W₁ ≃* PTrans W₂` (functoriality) | `Examples.lean :: WantableEquiv.mapPTransMulEquiv` | ✓ |
+| Concrete classifications: `PTrans Unit = {1}`, `PTrans Empty = {1}`, `PTrans (Fin 2) = {1, fin2Swap}` | `Examples.lean :: ptrans_unit_classification`, etc. | ✓ |
+| `ClosedAgency` class (composition closure refinement of `HasConnectedAgency`) | `Continuity.lean :: ClosedAgency` | ✓ |
+| `Reachable` is transitive under `ClosedAgency` | `Continuity.lean :: Reachable.trans` | ✓ |
+| `Reversible.comp` (composition of reversible transformations) | `Continuity.lean :: Reversible.comp` | ✓ |
 | Self-Transforms form a Monoid | `GPT.lean (instance)` | ✓ |
 | Transform composition (`Transform.comp`) | `GPT.lean :: Transform.comp` | ✓ |
 | Reachable is reflexive | `Continuity.lean :: Reachable.refl` | ✓ |
