@@ -2515,6 +2515,17 @@ example : (Perspectival.WantableGPT.perfectWitness Bool).e true
   have := (Perspectival.WantableGPT.perfectWitness Bool).kronecker true false
   simpa using this
 
+/-- The PerfectWitness on Fin 2: similar pattern. -/
+example : (Perspectival.WantableGPT.perfectWitness (Fin 2)).e 0
+            (Perspectival.WantableGPT.vertex (Fin 2) 0) = 1 := by
+  have := (Perspectival.WantableGPT.perfectWitness (Fin 2)).kronecker 0 0
+  simpa using this
+
+example : (Perspectival.WantableGPT.perfectWitness (Fin 2)).e 0
+            (Perspectival.WantableGPT.vertex (Fin 2) 1) = 0 := by
+  have := (Perspectival.WantableGPT.perfectWitness (Fin 2)).kronecker 0 1
+  simpa using this
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
