@@ -3173,6 +3173,15 @@ example : ∃ γ : unitInterval → Perspectival.WantableGPT.V Bool →ₗ[ℝ]
             (Perspectival.WantableGPT.gpt Bool)).toLin :=
   Perspectival.Continuity.path_via_affineLine _ _ _
 
+/-- Reversible.id is in trivialAgency's avail set. -/
+example :
+    Perspectival.Continuity.Reversible.id (Perspectival.WantableGPT.gpt Bool)
+    ∈ Perspectival.Continuity.HasConnectedAgency.avail
+        (G := Perspectival.WantableGPT.gpt Bool)
+        (self := Perspectival.Continuity.trivialAgency _) := rfl
+
+-- (Removed: id_avail synthesis was finicky; the avail-membership example above suffices.)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
