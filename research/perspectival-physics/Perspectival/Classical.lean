@@ -213,6 +213,19 @@ theorem vertices_distinguishable (i j : Fin n) (hij : i ≠ j) :
     rw [proj_vertex]
     simp [Ne.symm hij]
 
+/-- The set of vertices forms a Hardy-style distinguishability set. -/
+theorem vertex_distinguishability_set :
+    Perspectival.Hardy.DistinguishabilitySet (gpt n)
+      ((Finset.univ : Finset (Fin n)).image (vertex n)) := by
+  constructor
+  · intro ρ hρ
+    obtain ⟨i, _, rfl⟩ := Finset.mem_image.mp hρ
+    exact vertex_in_states n i
+  · intro ρ₁ hρ₁ ρ₂ hρ₂ hne
+    obtain ⟨i, _, rfl⟩ := Finset.mem_image.mp hρ₁
+    obtain ⟨j, _, rfl⟩ := Finset.mem_image.mp hρ₂
+    exact vertices_distinguishable n i j (fun h => hne (by rw [h]))
+
 -- NOTE: A natural follow-up theorem `vertex_is_extreme i : IsExtreme ℝ
 -- (states n) {vertex n i}` (vertices are pure states) would tie this
 -- module to `Continuity.PureState`. The proof requires coordinate-wise
