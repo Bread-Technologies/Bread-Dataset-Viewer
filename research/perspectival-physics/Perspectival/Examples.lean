@@ -3525,6 +3525,16 @@ example {V V' : Type u} [AddCommGroup V] [Module ℝ V]
     G'.unit (T.toLin ρ) = G.unit ρ :=
   Perspectival.GPT.Transform.prob_invariant T ρ
 
+/-- Transform.id_sq: id ∘ id = id. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    Perspectival.GPT.Transform.id G * Perspectival.GPT.Transform.id G
+    = Perspectival.GPT.Transform.id G := Perspectival.GPT.Transform.id_sq G
+
+/-- Transform.id_toLin: id has LinearMap.id as toLin. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    (Perspectival.GPT.Transform.id G).toLin = LinearMap.id :=
+  Perspectival.GPT.Transform.id_toLin G
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
