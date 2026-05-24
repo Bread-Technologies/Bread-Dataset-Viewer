@@ -14099,6 +14099,58 @@ example (i : Fin 3) :
   rw [Perspectival.WantableGPT.transformAction_vertex]
   rfl
 
+/-! ### Verified WantableGPT structural properties -/
+
+/-- The WantableGPT state space has the standard simplex structure. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W)
+    (hf : f ∈ Perspectival.WantableGPT.states W) :
+    (∀ w, 0 ≤ f w) ∧ Perspectival.WantableGPT.unitFn W f = 1 :=
+  ⟨hf.1, hf.2⟩
+
+/-- Bool state membership: nonneg + sum = 1. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (h1 : 0 ≤ f true) (h2 : 0 ≤ f false) (h3 : f true + f false = 1) :
+    f ∈ Perspectival.WantableGPT.states Bool := by
+  refine ⟨?_, ?_⟩
+  · intro b; cases b
+    · exact h2
+    · exact h1
+  · show ∑ b, f b = 1
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    exact h3
+
+/-- Concrete: (1, 0) is a Bool state. -/
+example :
+    (fun b => if b = true then (1 : ℝ) else 0)
+    ∈ Perspectival.WantableGPT.states Bool := by
+  refine ⟨?_, ?_⟩
+  · intro b
+    show 0 ≤ (if b = true then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show ∑ b, (if b = true then (1 : ℝ) else 0) = 1
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    show (if true = true then (1 : ℝ) else 0) + (if false = true then (1 : ℝ) else 0) = 1
+    simp
+
+/-- Concrete: (1/3, 2/3) is a Bool state. -/
+example :
+    (fun b : Bool => if b = true then (1/3 : ℝ) else 2/3)
+    ∈ Perspectival.WantableGPT.states Bool := by
+  refine ⟨?_, ?_⟩
+  · intro b
+    show 0 ≤ (if b = true then (1/3 : ℝ) else 2/3)
+    split <;> norm_num
+  · show ∑ b, (if b = true then (1/3 : ℝ) else (2/3 : ℝ)) = 1
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    show (if true = true then (1/3 : ℝ) else (2/3 : ℝ))
+       + (if false = true then (1/3 : ℝ) else (2/3 : ℝ)) = 1
+    simp
+    norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
