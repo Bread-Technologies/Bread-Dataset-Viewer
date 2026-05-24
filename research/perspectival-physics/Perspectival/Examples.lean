@@ -282,6 +282,28 @@ instance : ContinuousWantable ℝ where
 example : (Wantable.complement (3.14 : ℝ)) = -3.14 := rfl
 example (x : ℝ) : Wantable.complement (Wantable.complement x) = x := neg_neg x
 
+/-- A *continuous* PTrans on a ContinuousWantable: a perspectival
+transformation whose `toFun` is continuous. -/
+structure ContinuousPTrans (W : Type u) [Wantable W] [TopologicalSpace W]
+    extends PTrans W where
+  toFun_continuous : Continuous toPTrans.toFun
+
+/-- The identity is a continuous PTrans (on any TopologicalSpace W). -/
+def ContinuousPTrans.id (W : Type u) [Wantable W] [TopologicalSpace W] :
+    ContinuousPTrans W where
+  toPTrans := 1
+  toFun_continuous := continuous_id
+
+/-- The complement PTrans is continuous when the Wantable structure
+is `ContinuousWantable`. -/
+def ContinuousPTrans.complement (W : Type u) [Wantable W] [TopologicalSpace W]
+    [ContinuousWantable W] : ContinuousPTrans W where
+  toPTrans := PTrans.complement
+  toFun_continuous := ContinuousWantable.complement_continuous
+
+example : ContinuousPTrans ℝ := ContinuousPTrans.complement ℝ
+example : ContinuousPTrans ℝ := ContinuousPTrans.id ℝ
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
