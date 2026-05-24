@@ -13358,6 +13358,53 @@ example :
     show (if false = true then (1 : ℝ) else 0) = (if true = false then (1 : ℝ) else 0)
     simp
 
+/-! ### Sum-rule checks for various small Wantables -/
+
+/-- Sum over Fin 2 of vertex 0 = 1. -/
+example : ∑ j, Perspectival.WantableGPT.vertex (Fin 2) 0 j = 1 := by
+  rw [show (Finset.univ : Finset (Fin 2)) = {0, 1} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show (if (0 : Fin 2) = 0 then (1 : ℝ) else 0)
+     + (if (0 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
+  simp
+
+/-- Sum over Fin 2 of vertex 1 = 1. -/
+example : ∑ j, Perspectival.WantableGPT.vertex (Fin 2) 1 j = 1 := by
+  rw [show (Finset.univ : Finset (Fin 2)) = {0, 1} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show (if (1 : Fin 2) = 0 then (1 : ℝ) else 0)
+     + (if (1 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
+  simp
+
+/-- Sum over Fin 3 of vertex 0 = 1. -/
+example : ∑ j, Perspectival.WantableGPT.vertex (Fin 3) 0 j = 1 := by
+  rw [show (Finset.univ : Finset (Fin 3)) = {0, 1, 2} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show (if (0 : Fin 3) = 0 then (1 : ℝ) else 0)
+     + ((if (0 : Fin 3) = 1 then (1 : ℝ) else 0)
+     + (if (0 : Fin 3) = 2 then (1 : ℝ) else 0)) = 1
+  simp
+
+/-- For any state f on Fin 3, sum of f values = 1. -/
+example (f : Perspectival.WantableGPT.V (Fin 3))
+    (hf : f ∈ Perspectival.WantableGPT.states (Fin 3)) :
+    ∑ j, f j = 1 := hf.2
+
+/-- For any state f on Fin 4, sum of f values = 1. -/
+example (f : Perspectival.WantableGPT.V (Fin 4))
+    (hf : f ∈ Perspectival.WantableGPT.states (Fin 4)) :
+    ∑ j, f j = 1 := hf.2
+
+/-- For any state f on Bool, sum of f true + f false = 1. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) :
+    f true + f false = 1 := by
+  have hsum := hf.2
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
+  exact hsum
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
