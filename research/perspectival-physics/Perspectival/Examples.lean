@@ -798,6 +798,14 @@ example : (boolEquivFin2.toEquiv.symm.trans boolEquivFin2.toEquiv)
         = Equiv.refl (Fin 2) :=
   Equiv.symm_trans_self boolEquivFin2.toEquiv
 
+/-- For any element b : Bool, boolEquivFin2.symm sends it back consistently. -/
+example (b : Bool) : boolEquivFin2.toEquiv.symm (boolEquivFin2.toEquiv b) = b :=
+  boolEquivFin2.toEquiv.symm_apply_apply b
+
+/-- For any element i : Fin 2, boolEquivFin2 sends it back consistently. -/
+example (i : Fin 2) : boolEquivFin2.toEquiv (boolEquivFin2.toEquiv.symm i) = i :=
+  boolEquivFin2.toEquiv.apply_symm_apply i
+
 /-- A Wantable isomorphism induces a PTrans isomorphism: conjugate a
 PTrans of W₁ by the equiv to get a PTrans of W₂. -/
 def WantableEquiv.mapPTrans {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
