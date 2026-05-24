@@ -9641,3 +9641,19 @@ example : PTrans Bool := Perspectival.WantableGPT.complementPTrans Bool
 
 /-- complementPTrans on Fin 4 is a PTrans. -/
 example : PTrans (Fin 4) := Perspectival.WantableGPT.complementPTrans (Fin 4)
+
+/-- complementPTrans toFun applied. -/
+example : (Perspectival.WantableGPT.complementPTrans Bool).toFun true = false := rfl
+
+example : (Perspectival.WantableGPT.complementPTrans Bool).toFun false = true := rfl
+
+/-- complementPTrans is its own inverse (PTrans-level). -/
+example : (Perspectival.WantableGPT.complementPTrans Bool).invFun true = false := rfl
+
+example : (Perspectival.WantableGPT.complementPTrans Bool).invFun false = true := rfl
+
+/-- complementPTrans on Fin 4 toFun. -/
+example : (Perspectival.WantableGPT.complementPTrans (Fin 4)).toFun 0 = 3 := by decide
+example : (Perspectival.WantableGPT.complementPTrans (Fin 4)).toFun 3 = 0 := by decide
+example : (Perspectival.WantableGPT.complementPTrans (Fin 4)).toFun 1 = 2 := by decide
+example : (Perspectival.WantableGPT.complementPTrans (Fin 4)).toFun 2 = 1 := by decide
