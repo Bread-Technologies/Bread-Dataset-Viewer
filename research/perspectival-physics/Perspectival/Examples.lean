@@ -7302,5 +7302,32 @@ example : uniformState (Bool × Bool)
         = productState (uniformState Bool) (uniformState Bool) :=
   uniformState_prod_factor
 
+/-- New: a non-product state on Bool × Bool exists: e.g., (1/2)(vertex
+(true, true) + vertex (false, false)) cannot be written as
+productState f₁ f₂. -/
+noncomputable def diagonalState : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p = (true, true) ∨ p = (false, false) then (1/2 : ℝ) else 0
+
+/-- The diagonal state has coords (1/2, 0, 0, 1/2). -/
+example : diagonalState (true, true) = (1/2 : ℝ) := by
+  show (if (true, true) = (true, true) ∨ (true, true) = (false, false)
+        then (1/2 : ℝ) else 0) = 1/2
+  simp
+
+example : diagonalState (true, false) = (0 : ℝ) := by
+  show (if (true, false) = (true, true) ∨ (true, false) = (false, false)
+        then (1/2 : ℝ) else 0) = 0
+  simp
+
+example : diagonalState (false, true) = (0 : ℝ) := by
+  show (if (false, true) = (true, true) ∨ (false, true) = (false, false)
+        then (1/2 : ℝ) else 0) = 0
+  simp
+
+example : diagonalState (false, false) = (1/2 : ℝ) := by
+  show (if (false, false) = (true, true) ∨ (false, false) = (false, false)
+        then (1/2 : ℝ) else 0) = 1/2
+  simp
+
 end Examples
 end Perspectival
