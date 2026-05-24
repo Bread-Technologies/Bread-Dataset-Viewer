@@ -2671,6 +2671,16 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool))
             ≠ Fintype.card (Bool × Bool × Bool) * (2 * Fintype.card (Bool × Bool × Bool) - 1) :=
   Perspectival.WantableGPT.wantableGPT_classical_dichotomy (Bool × Bool × Bool) (by decide)
 
+/-- nontrivial_classical on Bool³. -/
+example : (∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Bool × Bool × Bool),
+            ρ₁ ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool) ∧
+            ρ₂ ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool) ∧
+            Perspectival.Hardy.Distinguishable
+              (Perspectival.WantableGPT.gpt (Bool × Bool × Bool)) ρ₁ ρ₂) ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool))
+            = Fintype.card (Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.wantableGPT_nontrivial_classical (Bool × Bool × Bool) (by decide)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
