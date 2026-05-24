@@ -3314,6 +3314,15 @@ example (f : Perspectival.WantableGPT.V Bool)
       ∈ Perspectival.WantableGPT.states Bool :=
   Perspectival.WantableGPT.complementAction_preserves_states Bool f hf
 
+/-- complementTransform is a GPT.Transform on Bool's WantableGPT. -/
+example : Perspectival.GPT.Transform (Perspectival.WantableGPT.gpt Bool)
+                                     (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.WantableGPT.complementTransform Bool
+
+/-- complementTransform on Bool has toLin = complementAction. -/
+example : (Perspectival.WantableGPT.complementTransform Bool).toLin
+        = Perspectival.WantableGPT.complementAction Bool := rfl
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
