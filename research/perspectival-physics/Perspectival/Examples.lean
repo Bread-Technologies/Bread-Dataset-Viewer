@@ -15450,6 +15450,38 @@ example :
       (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, false, false)) :=
   vertices_distinguishable_via_delta _ _ (by decide)
 
+/-! ### Verified properties of antiDiagonalState -/
+
+/-- antiDiagonalState is a state. -/
+example : antiDiagonalState ∈ Perspectival.WantableGPT.states (Bool × Bool) :=
+  antiDiagonalState_in_states
+
+/-- antiDiagonalState (true, true) = 0. -/
+example : antiDiagonalState (true, true) = 0 := rfl
+
+/-- antiDiagonalState (true, false) = 1/2. -/
+example : antiDiagonalState (true, false) = (1/2 : ℝ) := rfl
+
+/-- antiDiagonalState (false, true) = 1/2. -/
+example : antiDiagonalState (false, true) = (1/2 : ℝ) := rfl
+
+/-- antiDiagonalState (false, false) = 0. -/
+example : antiDiagonalState (false, false) = 0 := rfl
+
+/-- antiDiagonalState sum of all probabilities = 1. -/
+example :
+    antiDiagonalState (true, true) + antiDiagonalState (true, false)
+    + antiDiagonalState (false, true) + antiDiagonalState (false, false) = 1 := by
+  show (0 : ℝ) + 1/2 + 1/2 + 0 = 1
+  norm_num
+
+/-- diagonalState sum of all probabilities = 1. -/
+example :
+    diagonalState (true, true) + diagonalState (true, false)
+    + diagonalState (false, true) + diagonalState (false, false) = 1 := by
+  show (1/2 : ℝ) + 0 + 0 + 1/2 = 1
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
