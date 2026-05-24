@@ -9295,3 +9295,32 @@ example (n : ℕ) :
 example (n : ℕ) :
     (Perspectival.Classical.gpt n).effects = Perspectival.Classical.effects n :=
   rfl
+
+/-- Born-rule on Classical: prob (proj i) (vertex j) = δ_{ji}. -/
+example (n : ℕ) (i j : Fin n) :
+    (Perspectival.Classical.gpt n).prob
+      (Perspectival.Classical.proj n i)
+      (Perspectival.Classical.vertex n j)
+    = if j = i then 1 else 0 :=
+  Perspectival.Classical.proj_vertex n i j
+
+/-- Concrete: prob (proj 0) (vertex 0) = 1 on Classical Fin 2. -/
+example : (Perspectival.Classical.gpt 2).prob
+            (Perspectival.Classical.proj 2 0)
+            (Perspectival.Classical.vertex 2 0) = 1 := by
+  show Perspectival.Classical.proj 2 0 (Perspectival.Classical.vertex 2 0) = 1
+  rw [Perspectival.Classical.proj_vertex]; simp
+
+/-- Concrete: prob (proj 0) (vertex 1) = 0 on Classical Fin 2. -/
+example : (Perspectival.Classical.gpt 2).prob
+            (Perspectival.Classical.proj 2 0)
+            (Perspectival.Classical.vertex 2 1) = 0 := by
+  show Perspectival.Classical.proj 2 0 (Perspectival.Classical.vertex 2 1) = 0
+  rw [Perspectival.Classical.proj_vertex]; simp
+
+/-- Concrete: prob (proj 1) (vertex 1) = 1 on Classical Fin 3. -/
+example : (Perspectival.Classical.gpt 3).prob
+            (Perspectival.Classical.proj 3 1)
+            (Perspectival.Classical.vertex 3 1) = 1 := by
+  show Perspectival.Classical.proj 3 1 (Perspectival.Classical.vertex 3 1) = 1
+  rw [Perspectival.Classical.proj_vertex]; simp
