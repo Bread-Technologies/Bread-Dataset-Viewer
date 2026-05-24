@@ -228,6 +228,14 @@ instance {W : Type u} [Wantable W] : Wantable (Option W) where
 example : Wantable.complement (some true : Option Bool) = some false := rfl
 example : (Wantable.complement (none : Option Bool)) = none := rfl
 
+/-- Function spaces lift Wantable: `(A → W)` is Wantable when `W` is,
+with complement applied pointwise. -/
+instance {A : Type u} {W : Type u} [Wantable W] : Wantable (A → W) where
+  complement f := fun a => Wantable.complement (f a)
+  complement_involutive f := by
+    funext a
+    exact Wantable.complement_involutive (f a)
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
