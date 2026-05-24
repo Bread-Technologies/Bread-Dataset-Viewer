@@ -6370,5 +6370,34 @@ example : Perspectival.WantableGPT.unitFn (Fin 4) (fun _ : Fin 4 => (1 : ℝ)) =
   rw [WantableGPT_unit_const_one]
   norm_num
 
+/-- `Reachable.refl_symm_trans`: with closed agency and per-element
+inverse availability, Reachable is refl + symm + trans. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.ClosedAgency G]
+    (h_inv : ∀ R : Perspectival.Continuity.Reversible G,
+              R ∈ Perspectival.Continuity.HasConnectedAgency.avail (G := G) →
+              ∃ S : Perspectival.Continuity.Reversible G,
+                S ∈ Perspectival.Continuity.HasConnectedAgency.avail (G := G) ∧
+                ∀ v : V, S.toLin (R.toLin v) = v) :
+    (∀ ρ : V, Perspectival.Continuity.Reachable (G := G) ρ ρ) ∧
+    (∀ ρ₁ ρ₂ : V, Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂ →
+                   Perspectival.Continuity.Reachable (G := G) ρ₂ ρ₁) ∧
+    (∀ ρ₁ ρ₂ ρ₃ : V, Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂ →
+                     Perspectival.Continuity.Reachable (G := G) ρ₂ ρ₃ →
+                     Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₃) :=
+  Perspectival.Continuity.Reachable.refl_symm_trans h_inv
+
+/-- `Reachable.equivalence`: with the same hypotheses, Reachable is
+an `Equivalence`. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.ClosedAgency G]
+    (h_inv : ∀ R : Perspectival.Continuity.Reversible G,
+              R ∈ Perspectival.Continuity.HasConnectedAgency.avail (G := G) →
+              ∃ S : Perspectival.Continuity.Reversible G,
+                S ∈ Perspectival.Continuity.HasConnectedAgency.avail (G := G) ∧
+                ∀ v : V, S.toLin (R.toLin v) = v) :
+    Equivalence (Perspectival.Continuity.Reachable (G := G)) :=
+  Perspectival.Continuity.Reachable.equivalence h_inv
+
 end Examples
 end Perspectival
