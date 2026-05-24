@@ -2401,6 +2401,22 @@ example : ∀ x : Bool × Bool,
   intro ⟨b₁, b₂⟩
   cases b₁ <;> cases b₂ <;> simp
 
+/-- Direct verification: the only two PTrans on Bool are `1` and `boolSwap`,
+and they are not equal. -/
+example : (1 : PTrans Bool) ≠ boolSwap := by
+  intro h
+  have h1 : (1 : PTrans Bool).toFun true = boolSwap.toFun true := by rw [h]
+  -- LHS = true, RHS = false
+  exact Bool.false_ne_true (h1.symm : false = true)
+
+/-- And for Fin 2: the only two PTrans are `1` and `fin2Swap`, and they're distinct. -/
+example : (1 : PTrans (Fin 2)) ≠ fin2Swap := by
+  intro h
+  have h1 : (1 : PTrans (Fin 2)).toFun 0 = fin2Swap.toFun 0 := by rw [h]
+  -- LHS = 0, RHS = 1
+  have : (0 : Fin 2) = 1 := h1
+  exact absurd this (by decide)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
