@@ -811,5 +811,25 @@ theorem complementTransform_sq :
   show f (Wantable.complement (Wantable.complement w)) = f w
   rw [Wantable.complement_involutive]
 
+/-! ### Hardy Axiom 4: dimension half for WantableGPT
+
+The dimension-counting half of Hardy's Axiom 4 (K_AB = K_A · K_B) holds
+*automatically* for the WantableGPT bridge on the product Wantable, by
+`finrank_V_prod_eq_mul`. The remaining content of Axiom 4 (states
+factorize as tensor products) requires additional structure beyond the
+bare bridge — see the productState construction in Examples.lean for a
+specific factorization-producing operation.
+
+This upgrades Hardy Axiom 4 from AUXILIARY to PARTIALLY DERIVABLE: the
+dimension claim is derivable; the tensor-state structure is achievable
+via productState but not auto-derived from I–IV. -/
+
+theorem Hardy_Axiom4_WantableGPT_dimension
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (V (W₁ × W₂))
+    = (Module.finrank ℝ (V W₁)) * (Module.finrank ℝ (V W₂)) := by
+  rw [finrank_V_prod_eq_mul, finrank_V_eq_card, finrank_V_eq_card]
+
 end WantableGPT
 end Perspectival
