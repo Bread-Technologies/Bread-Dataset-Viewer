@@ -6287,5 +6287,30 @@ theorem WantableGPT_const_zero_in_effectVec
 example : (fun _ : Bool => (0 : ℝ)) ∈ Perspectival.WantableGPT.effectVec Bool :=
   WantableGPT_const_zero_in_effectVec
 
+/-- New theorem: proj w equals innerLin of vertex w (on `V W`). -/
+theorem WantableGPT_proj_eq_innerLin_vertex
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.proj W w
+      = Perspectival.WantableGPT.innerLin W
+          (Perspectival.WantableGPT.vertex W w) := by
+  apply LinearMap.ext
+  intro f
+  show f w = ∑ v, Perspectival.WantableGPT.vertex W w v * f v
+  symm
+  rw [Finset.sum_eq_single w
+    (fun v _ hvw => by
+      show Perspectival.WantableGPT.vertex W w v * f v = 0
+      show (if w = v then (1 : ℝ) else 0) * f v = 0
+      rw [if_neg hvw.symm]; ring)
+    (fun h => absurd (Finset.mem_univ w) h)]
+  show (if w = w then (1 : ℝ) else 0) * f w = f w
+  rw [if_pos rfl]; ring
+
+/-- Concrete: on Bool, proj true = innerLin (vertex true). -/
+example : Perspectival.WantableGPT.proj Bool true
+        = Perspectival.WantableGPT.innerLin Bool
+            (Perspectival.WantableGPT.vertex Bool true) :=
+  WantableGPT_proj_eq_innerLin_vertex true
+
 end Examples
 end Perspectival
