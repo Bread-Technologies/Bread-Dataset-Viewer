@@ -4653,5 +4653,27 @@ example (n : ℕ) :
             (Perspectival.WantableGPT.gpt Bool)
             (Perspectival.WantableGPT.gpt Bool)) ^ n = 1 := one_pow n
 
+/-- Transform identity carries the linear identity map. -/
+example : (1 : Perspectival.GPT.Transform
+                (Perspectival.WantableGPT.gpt Bool)
+                (Perspectival.WantableGPT.gpt Bool)).toLin
+        = LinearMap.id := rfl
+
+/-- Transform composition carries linear composition. -/
+example (T₁ T₂ : Perspectival.GPT.Transform
+                   (Perspectival.WantableGPT.gpt Bool)
+                   (Perspectival.WantableGPT.gpt Bool)) :
+    (T₁ * T₂).toLin = T₁.toLin ∘ₗ T₂.toLin := rfl
+
+/-- Self-Transforms on WantableGPT (Fin 4) form a Monoid. -/
+example : Monoid (Perspectival.GPT.Transform
+                    (Perspectival.WantableGPT.gpt (Fin 4))
+                    (Perspectival.WantableGPT.gpt (Fin 4))) := inferInstance
+
+/-- Self-Transforms on WantableGPT (Bool × Bool) form a Monoid. -/
+example : Monoid (Perspectival.GPT.Transform
+                    (Perspectival.WantableGPT.gpt (Bool × Bool))
+                    (Perspectival.WantableGPT.gpt (Bool × Bool))) := inferInstance
+
 end Examples
 end Perspectival
