@@ -16338,3 +16338,53 @@ theorem bool_more_stable_than_fin3 :
     rw [PatternStableWantable.stable_nontrivial_iff]
     intro h
     exact h rfl
+
+/-! ## Stable_nontrivial ⇒ PTrans non-trivial
+
+The framework's pattern-stability discriminator connects to the
+operational level: if a Wantable W has any element with non-trivial
+pattern stability (complement-orbit > 1), then PTrans W is non-trivial. -/
+
+/-- If Stable_nontrivial holds for some `w : W`, then PTrans.complement
+on W is not the identity — operational structure follows from pattern
+non-triviality. -/
+theorem stable_nontrivial_implies_complement_ne_one {W : Type u}
+    [Wantable W] [DecidableEq W] (w : W)
+    (h : PatternStableWantable.Stable_nontrivial w) :
+    (PTrans.complement : PTrans W) ≠ 1 := by
+  rw [PatternStableWantable.stable_nontrivial_iff] at h
+  intro hcomp
+  apply h
+  -- If complement = 1, then (PTrans.complement).toFun w = (1 : PTrans W).toFun w = w
+  -- But (PTrans.complement).toFun w = Wantable.complement w
+  have heq : (PTrans.complement : PTrans W).toFun w = (1 : PTrans W).toFun w := by
+    rw [hcomp]
+  -- (1 : PTrans W).toFun w = w
+  have h1 : (1 : PTrans W).toFun w = w := rfl
+  -- (PTrans.complement : PTrans W).toFun w = Wantable.complement w
+  have hc : (PTrans.complement : PTrans W).toFun w = Wantable.complement w := rfl
+  rw [hc, h1] at heq
+  exact heq.symm
+
+/-- Concrete on Bool: PTrans.complement ≠ 1 (already known, but derived here
+from Stable_nontrivial). -/
+example : (PTrans.complement : PTrans Bool) ≠ 1 := by
+  apply stable_nontrivial_implies_complement_ne_one (W := Bool) true
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  decide
+
+/-- The contrapositive: if complement = 1 (i.e., complement acts trivially),
+then NO want has Stable_nontrivial. (This is the Fin 3-with-id case.) -/
+theorem complement_eq_one_implies_no_nontrivial {W : Type u}
+    [Wantable W] [DecidableEq W]
+    (h : (PTrans.complement : PTrans W) = 1) (w : W) :
+    ¬ PatternStableWantable.Stable_nontrivial w := by
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  intro hne
+  apply hne
+  have heq : (PTrans.complement : PTrans W).toFun w = (1 : PTrans W).toFun w := by
+    rw [h]
+  have h1 : (1 : PTrans W).toFun w = w := rfl
+  have hc : (PTrans.complement : PTrans W).toFun w = Wantable.complement w := rfl
+  rw [hc, h1] at heq
+  exact heq.symm
