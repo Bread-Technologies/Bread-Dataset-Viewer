@@ -60,6 +60,12 @@ instance : Wantable Unit where
 
 example : (Wantable.complement () = ()) := rfl
 
+/-- The empty Wantable: `Empty` has no elements so vacuously involutive.
+"No existence" — nothing to direct, nothing to meet. -/
+instance : Wantable Empty where
+  complement := fun e => e.elim
+  complement_involutive := fun e => e.elim
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
