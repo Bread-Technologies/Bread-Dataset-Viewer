@@ -13977,6 +13977,15 @@ example :
      = 1
   norm_num
 
+/-- productState uniformBool uniformBool = uniformState (Bool × Bool). -/
+example :
+    productState uniformBool uniformBool = uniformState (Bool × Bool) := by
+  funext p
+  show uniformBool p.1 * uniformBool p.2 = uniformState (Bool × Bool) p
+  show (1/2 : ℝ) * (1/2 : ℝ) = (1 : ℝ) / Fintype.card (Bool × Bool)
+  rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
