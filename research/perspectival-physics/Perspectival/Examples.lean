@@ -10873,3 +10873,19 @@ example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) (m : Meeting W) :
 /-- Reality De Morgan's law: ¬ (R₁ ∨ R₂) ↔ ¬R₁ ∧ ¬R₂. -/
 example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) (m : Meeting W) :
     ¬ (R₁ m ∨ R₂ m) ↔ ¬ R₁ m ∧ ¬ R₂ m := not_or
+
+/-- The PTrans action on Reality is functorial: 1 • R = R. -/
+example {W : Type u} [Wantable W] (R : Reality W) :
+    (1 : PTrans W) • R = R := one_smul _ _
+
+/-- The PTrans action on Reality respects multiplication. -/
+example {W : Type u} [Wantable W] (φ ψ : PTrans W) (R : Reality W) :
+    (φ * ψ) • R = φ • (ψ • R) := mul_smul _ _ _
+
+/-- The PTrans action on Meeting is functorial: 1 • m = m. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    (1 : PTrans W) • m = m := one_smul _ _
+
+/-- The PTrans action on Meeting respects multiplication. -/
+example {W : Type u} [Wantable W] (φ ψ : PTrans W) (m : Meeting W) :
+    (φ * ψ) • m = φ • (ψ • m) := mul_smul _ _ _
