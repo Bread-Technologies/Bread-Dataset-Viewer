@@ -8961,7 +8961,26 @@ example : leftMarginal (uniformState (Bool × Bool))
   show leftMarginal (uniformState (Bool × Bool))
      = (1/2 : ℝ) • leftMarginal diagonalState
      + (1/2 : ℝ) • leftMarginal antiDiagonalState
-  -- Use the convex-combination decomposition
+  have hcom : uniformState (Bool × Bool)
+            = (1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState := by
+    funext p
+    rcases p with ⟨a, b⟩
+    cases a <;> cases b <;>
+      (show (1 / ((Fintype.card (Bool × Bool) : ℝ)))
+          = (1/2 : ℝ) * diagonalState _ + (1/2 : ℝ) * antiDiagonalState _) <;>
+      (simp only [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_cast]) <;>
+      (first | (show ((1 : ℝ) / 4) = (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * 0; norm_num)
+             | (show ((1 : ℝ) / 4) = (1/2 : ℝ) * 0 + (1/2 : ℝ) * (1/2 : ℝ); norm_num))
+  rw [hcom]
+  rw [LinearMap.map_add, LinearMap.map_smul, LinearMap.map_smul]
+
+/-- Same for rightMarginal: linearity carries over. -/
+example : rightMarginal (uniformState (Bool × Bool))
+        = (1/2 : ℝ) • rightMarginal diagonalState
+        + (1/2 : ℝ) • rightMarginal antiDiagonalState := by
+  show rightMarginal (uniformState (Bool × Bool))
+     = (1/2 : ℝ) • rightMarginal diagonalState
+     + (1/2 : ℝ) • rightMarginal antiDiagonalState
   have hcom : uniformState (Bool × Bool)
             = (1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState := by
     funext p
