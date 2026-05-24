@@ -15692,3 +15692,364 @@ example : ∃ φ₁ φ₂ φ₃ : PTrans ℝ, φ₁ ≠ φ₂ ∧ φ₁ ≠ φ�
       have := Units.ext_iff.mp this
       exact this
     norm_num at h3
+
+/-! ## Tier 3 #11: MultiSectorWantable — dark matter as the non-unique default
+
+The framework's Tier 3 claim about dark matter (see
+`research/perspectival-physics/TIER3_DARK_MATTER.md`) is that *the axioms
+do not privilege a single hidden sector*. Concretely: given any family
+`W : Fin n → Type u` of Wantables, the dependent sum `Σ i, W i` is again
+a Wantable, with complement acting *within* each sector. No cross-sector
+meetings exist (generalizing `Meeting.sum_no_cross` to dependent sums).
+
+The honesty claim this formalization earns: a `MultiSectorWantable n W`
+exists for *every* `n ≥ 1` and *every* sector family `W`, so
+single-species dark matter (`n = 1`) is one model among many — not a
+consequence of axioms I–IV. The framework declines to privilege `n = 1`.
+-/
+
+/-- The dependent-sum Wantable: complement acts within each sector,
+no cross-sector meetings. This is the multi-sector generalization of
+`instWantableSum`: where `Sum` is `Σ i : Fin 2, ...`, multi-sector is
+`Σ i : Fin n, ...` for arbitrary `n`. -/
+instance instMultiSectorWantable {n : ℕ} (W : Fin n → Type u)
+    [∀ i, Wantable (W i)] : Wantable (Σ i : Fin n, W i) where
+  complement := fun ⟨i, w⟩ => ⟨i, Wantable.complement w⟩
+  complement_involutive := by
+    intro ⟨i, w⟩
+    simp [Wantable.complement_involutive]
+
+/-- The named constructor for the multi-sector Wantable instance — this
+is the formal object the §7 brief asks for. Just exposes the typeclass
+above under the documentation-target name. -/
+abbrev MultiSectorWantable (n : ℕ) (W : Fin n → Type u)
+    [∀ i, Wantable (W i)] : Wantable (Σ i : Fin n, W i) :=
+  instMultiSectorWantable W
+
+/-- Complement on a multi-sector Wantable factors through the chosen
+sector: it does not change the sector index. This is the structural
+content of "no cross-sector meetings" at the complement level. -/
+@[simp] theorem multiSector_complement_fst {n : ℕ} (W : Fin n → Type u)
+    [∀ i, Wantable (W i)] (p : Σ i : Fin n, W i) :
+    (Wantable.complement p).1 = p.1 := by
+  rcases p with ⟨i, w⟩
+  rfl
+
+/-- Complement on a multi-sector Wantable acts as the sector-internal
+complement on the second component. -/
+@[simp] theorem multiSector_complement_snd {n : ℕ} (W : Fin n → Type u)
+    [∀ i, Wantable (W i)] (i : Fin n) (w : W i) :
+    (Wantable.complement (⟨i, w⟩ : Σ i : Fin n, W i))
+      = ⟨i, Wantable.complement w⟩ := rfl
+
+/-- **Multi-sector generalization of `Meeting.sum_no_cross`.**
+Every meeting in `Σ i, W i` has both sides in the same sector. There
+are no cross-sector meetings — exactly the "disjoint sectors do not
+interact via meetings" claim of TIER3_DARK_MATTER.md §2 step (c)
+generalized to `n` sectors. -/
+theorem Meeting.multiSector_no_cross {n : ℕ} (W : Fin n → Type u)
+    [∀ i, Wantable (W i)]
+    (m : Meeting (Σ i : Fin n, W i)) :
+    m.side₁.1 = m.side₂.1 := by
+  have hc := m.complementary
+  -- complement preserves the sector index, and side₂ is complement side₁
+  have h1 : (Wantable.complement m.side₁).1 = m.side₁.1 :=
+    multiSector_complement_fst W m.side₁
+  rw [hc] at h1
+  exact h1.symm
+
+/-- Strong form: the two sides lie in a common sector, and the second
+side is the within-sector complement of the first. -/
+theorem Meeting.multiSector_same_sector {n : ℕ} (W : Fin n → Type u)
+    [∀ i, Wantable (W i)]
+    (m : Meeting (Σ i : Fin n, W i)) :
+    ∃ (i : Fin n) (a b : W i),
+      m.side₁ = ⟨i, a⟩ ∧ m.side₂ = ⟨i, b⟩ ∧
+      Wantable.complement a = b := by
+  refine ⟨m.side₁.1, m.side₁.2, Wantable.complement m.side₁.2, ?_, ?_, rfl⟩
+  · -- m.side₁ = ⟨m.side₁.1, m.side₁.2⟩ -- η for Sigma
+    rfl
+  · -- m.side₂ = ⟨m.side₁.1, complement m.side₁.2⟩
+    have hc := m.complementary
+    -- complement m.side₁ = m.side₂ : as Σ
+    -- complement m.side₁ = ⟨m.side₁.1, complement m.side₁.2⟩
+    rw [← hc]
+    rfl
+
+/-! ### Sanity check: n = 1 case recovers the underlying Wantable
+
+For `n = 1`, the multi-sector Wantable on `fun _ => W` is "essentially"
+just `W`. We exhibit a `WantableEquiv` between the two.
+-/
+
+/-- For `n = 1`, the sigma-type carrier of the multi-sector Wantable
+is in bijection with the underlying sector `W` (sector index is forced). -/
+def multiSectorOne_equiv (W : Type u) [Wantable W] :
+    (Σ _ : Fin 1, W) ≃ W where
+  toFun := fun ⟨_, w⟩ => w
+  invFun := fun w => ⟨0, w⟩
+  left_inv := by
+    rintro ⟨i, w⟩
+    have hi : i = 0 := by
+      apply Fin.ext
+      omega
+    subst hi
+    rfl
+  right_inv := fun _ => rfl
+
+/-- The `n = 1` multi-sector Wantable is Wantable-isomorphic to `W`.
+This is the sanity check requested in TIER3_DARK_MATTER.md: single-sector
+is one valid configuration, just one among many. -/
+def multiSectorOne_wantableEquiv (W : Type u) [Wantable W] :
+    WantableEquiv (Σ _ : Fin 1, W) W where
+  toEquiv := multiSectorOne_equiv W
+  resp_complement := by
+    rintro ⟨i, w⟩
+    rfl
+
+/-! ### Concrete distinctness: 2-sector Bool ≠ 1-sector Bool
+
+`MultiSectorWantable 2 (fun _ => Bool)` has carrier of cardinality 4,
+while `Wantable Bool` has carrier of cardinality 2. They are not even
+in bijection. This is the formal content of the framework's
+non-uniqueness claim: the axioms permit `n = 2` as a separate model.
+-/
+
+/-- The 2-sector all-Bool multi-sector carrier has 4 elements. -/
+example : Fintype.card (Σ _ : Fin 2, Bool) = 4 := by
+  rw [Fintype.card_sigma]
+  decide
+
+/-- Bool alone has 2 elements. -/
+example : Fintype.card Bool = 2 := by decide
+
+/-- 2-sector Bool and 1-sector Bool have different cardinalities — so
+they are not equivalent as types, *a fortiori* not as Wantables.
+This is the concrete sense in which multi-sector is not single-sector. -/
+example : Fintype.card (Σ _ : Fin 2, Bool) ≠ Fintype.card Bool := by
+  rw [Fintype.card_sigma]
+  decide
+
+/-! ### Worked example sectors
+
+The axioms allow ANY combination of sector Wantables. Below, five
+concrete `MultiSectorWantable` configurations.
+-/
+
+/-- **Example A.** Two-sector dark matter: each sector is `Bool`.
+A "baryonic mirror" toy where both sectors have identical internal
+structure but are pairwise non-meeting. -/
+example : Wantable (Σ _ : Fin 2, Bool) := inferInstance
+
+/-- **Example B.** Three-sector dark matter with heterogeneous sectors:
+sector 0 is `Bool` (Z/2 complement), sector 1 is `Fin 3` (id-complement
+→ self-meeting sector), sector 2 is `Bool × Bool` (product Wantable).
+We use `Fin.cases` style via explicit pattern match in the def, which
+plays well with typeclass inference. -/
+def ThreeSector (i : Fin 3) : Type :=
+  match i with
+  | ⟨0, _⟩ => Bool
+  | ⟨1, _⟩ => Fin 3
+  | ⟨2, _⟩ => Bool × Bool
+  | ⟨n+3, h⟩ => absurd h (by omega)
+
+instance threeSector_wantable : ∀ i, Wantable (ThreeSector i)
+  | ⟨0, _⟩ => (inferInstance : Wantable Bool)
+  | ⟨1, _⟩ => (inferInstance : Wantable (Fin 3))
+  | ⟨2, _⟩ => (inferInstance : Wantable (Bool × Bool))
+  | ⟨n+3, h⟩ => absurd h (by omega)
+
+instance threeSector_fintype : ∀ i, Fintype (ThreeSector i)
+  | ⟨0, _⟩ => (inferInstance : Fintype Bool)
+  | ⟨1, _⟩ => (inferInstance : Fintype (Fin 3))
+  | ⟨2, _⟩ => (inferInstance : Fintype (Bool × Bool))
+  | ⟨n+3, h⟩ => absurd h (by omega)
+
+example : Wantable (Σ i : Fin 3, ThreeSector i) := inferInstance
+
+/-- **Example C.** Four-sector with mixed parities: `Bool`, `Fin 2`,
+`Fin 3`, `Fin 4`. Sectors 0,1,3 have fixed-point-free complement; sector
+2 has identity complement. The framework permits this heterogeneity. -/
+def FourSector (i : Fin 4) : Type :=
+  match i with
+  | ⟨0, _⟩ => Bool
+  | ⟨1, _⟩ => Fin 2
+  | ⟨2, _⟩ => Fin 3
+  | ⟨3, _⟩ => Fin 4
+  | ⟨n+4, h⟩ => absurd h (by omega)
+
+instance fourSector_wantable : ∀ i, Wantable (FourSector i)
+  | ⟨0, _⟩ => (inferInstance : Wantable Bool)
+  | ⟨1, _⟩ => (inferInstance : Wantable (Fin 2))
+  | ⟨2, _⟩ => (inferInstance : Wantable (Fin 3))
+  | ⟨3, _⟩ => (inferInstance : Wantable (Fin 4))
+  | ⟨n+4, h⟩ => absurd h (by omega)
+
+instance fourSector_fintype : ∀ i, Fintype (FourSector i)
+  | ⟨0, _⟩ => (inferInstance : Fintype Bool)
+  | ⟨1, _⟩ => (inferInstance : Fintype (Fin 2))
+  | ⟨2, _⟩ => (inferInstance : Fintype (Fin 3))
+  | ⟨3, _⟩ => (inferInstance : Fintype (Fin 4))
+  | ⟨n+4, h⟩ => absurd h (by omega)
+
+example : Wantable (Σ i : Fin 4, FourSector i) := inferInstance
+
+/-- **Example D.** Three-sector dark matter where each sector is itself
+a 2-sector multi-sector. (Multi-sectors compose: the framework permits
+arbitrary nesting.) Each "outer" sector is `Σ _ : Fin 2, Bool`. -/
+example : Wantable (Σ _ : Fin 3, Σ _ : Fin 2, Bool) := inferInstance
+
+/-- **Example E.** Two-sector configuration with a degenerate (Unit)
+sector and a structured (Bool × Bool) sector. The framework permits
+"empty-information" sectors coexisting with rich ones. -/
+def MixedTwoSector (i : Fin 2) : Type :=
+  match i with
+  | ⟨0, _⟩ => Unit
+  | ⟨1, _⟩ => Bool × Bool
+  | ⟨n+2, h⟩ => absurd h (by omega)
+
+instance mixedTwoSector_wantable : ∀ i, Wantable (MixedTwoSector i)
+  | ⟨0, _⟩ => (inferInstance : Wantable Unit)
+  | ⟨1, _⟩ => (inferInstance : Wantable (Bool × Bool))
+  | ⟨n+2, h⟩ => absurd h (by omega)
+
+instance mixedTwoSector_fintype : ∀ i, Fintype (MixedTwoSector i)
+  | ⟨0, _⟩ => (inferInstance : Fintype Unit)
+  | ⟨1, _⟩ => (inferInstance : Fintype (Bool × Bool))
+  | ⟨n+2, h⟩ => absurd h (by omega)
+
+example : Wantable (Σ i : Fin 2, MixedTwoSector i) := inferInstance
+
+/-! ### Cardinality of multi-sector carriers
+
+The carrier of `Σ i : Fin n, W i` has cardinality `Σ_i |W i|`. Several
+worked instances. -/
+
+/-- |ThreeSector total| = |Bool| + |Fin 3| + |Bool × Bool| = 2 + 3 + 4 = 9. -/
+example : Fintype.card (Σ i : Fin 3, ThreeSector i) = 9 := by
+  rw [Fintype.card_sigma]
+  decide
+
+/-- |FourSector total| = 2 + 2 + 3 + 4 = 11. -/
+example : Fintype.card (Σ i : Fin 4, FourSector i) = 11 := by
+  rw [Fintype.card_sigma]
+  decide
+
+/-- |MixedTwoSector total| = |Unit| + |Bool × Bool| = 1 + 4 = 5. -/
+example : Fintype.card (Σ i : Fin 2, MixedTwoSector i) = 5 := by
+  rw [Fintype.card_sigma]
+  decide
+
+/-- Three-sector all-Bool: |Σ _ : Fin 3, Bool| = 6. -/
+example : Fintype.card (Σ _ : Fin 3, Bool) = 6 := by
+  rw [Fintype.card_sigma]
+  decide
+
+/-- Nested example D: |Σ _ : Fin 3, Σ _ : Fin 2, Bool| = 12. -/
+example : Fintype.card (Σ _ : Fin 3, Σ _ : Fin 2, Bool) = 12 := by
+  rw [Fintype.card_sigma]
+  decide
+
+/-! ### No-cross-sector meetings: worked instances
+
+The general theorem `Meeting.multiSector_no_cross` instantiates to give
+concrete no-cross facts on each of the worked examples. -/
+
+example (m : Meeting (Σ _ : Fin 2, Bool)) : m.side₁.1 = m.side₂.1 :=
+  Meeting.multiSector_no_cross _ m
+
+example (m : Meeting (Σ i : Fin 3, ThreeSector i)) : m.side₁.1 = m.side₂.1 :=
+  Meeting.multiSector_no_cross _ m
+
+example (m : Meeting (Σ i : Fin 4, FourSector i)) : m.side₁.1 = m.side₂.1 :=
+  Meeting.multiSector_no_cross _ m
+
+/-! ### Constructing meetings within a chosen sector
+
+Given a want in sector `i`, the within-sector meeting embeds into the
+multi-sector Wantable. This is the multi-sector analog of
+`Meeting.sumInl` / `Meeting.sumInr`. -/
+
+/-- Embed a meeting in sector `i` as a multi-sector meeting. -/
+def Meeting.inSector {n : ℕ} (W : Fin n → Type u) [∀ i, Wantable (W i)]
+    (i : Fin n) (m : Meeting (W i)) : Meeting (Σ i : Fin n, W i) where
+  side₁ := ⟨i, m.side₁⟩
+  side₂ := ⟨i, m.side₂⟩
+  complementary := by
+    show (⟨i, Wantable.complement m.side₁⟩ : Σ i : Fin n, W i) = ⟨i, m.side₂⟩
+    rw [m.complementary]
+
+@[simp] theorem Meeting.inSector_fst {n : ℕ} (W : Fin n → Type u)
+    [∀ i, Wantable (W i)] (i : Fin n) (m : Meeting (W i)) :
+    (Meeting.inSector W i m).side₁.1 = i := rfl
+
+/-- Build a multi-sector meeting from a want in a chosen sector. -/
+def Meeting.mk_inSector {n : ℕ} (W : Fin n → Type u) [∀ i, Wantable (W i)]
+    (i : Fin n) (w : W i) : Meeting (Σ i : Fin n, W i) :=
+  Meeting.inSector W i (Meeting.mk_fromSide (W i) w)
+
+/-- A concrete multi-sector meeting: in two-sector Bool, sector 0,
+the want `true` meets `false`. -/
+example : (Meeting.mk_inSector (fun _ : Fin 2 => Bool) 0 true).side₁
+            = ⟨0, true⟩ := rfl
+
+example : (Meeting.mk_inSector (fun _ : Fin 2 => Bool) 0 true).side₂
+            = ⟨0, false⟩ := rfl
+
+/-- A concrete multi-sector meeting in sector 1 of the same multi-sector. -/
+example : (Meeting.mk_inSector (fun _ : Fin 2 => Bool) 1 true).side₁
+            = ⟨1, true⟩ := rfl
+
+/-- In the heterogeneous ThreeSector, a meeting in the `Fin 3` sector
+(sector index 1) has both sides equal (because Fin 3 uses id-complement). -/
+example : (Meeting.mk_inSector ThreeSector 1 (2 : Fin 3)).side₁
+            = ⟨1, (2 : Fin 3)⟩ := rfl
+
+example : (Meeting.mk_inSector ThreeSector 1 (2 : Fin 3)).side₂
+            = ⟨1, (2 : Fin 3)⟩ := rfl
+
+/-! ### The honesty claim: single-sector is not forced
+
+The framework's load-bearing claim for #11 is that nothing in I–IV
+picks out `n = 1`. We exhibit this by showing both `n = 1` and `n = 2`
+configurations are inhabited Wantables; the framework gives no
+principle distinguishing them. -/
+
+/-- Single-sector configuration: inhabited. -/
+example : Nonempty (Wantable (Σ _ : Fin 1, Bool)) := ⟨inferInstance⟩
+
+/-- Two-sector configuration: inhabited. -/
+example : Nonempty (Wantable (Σ _ : Fin 2, Bool)) := ⟨inferInstance⟩
+
+/-- Three-sector configuration: inhabited. -/
+example : Nonempty (Wantable (Σ _ : Fin 3, Bool)) := ⟨inferInstance⟩
+
+/-- Four-sector configuration: inhabited. -/
+example : Nonempty (Wantable (Σ _ : Fin 4, Bool)) := ⟨inferInstance⟩
+
+/-- Heterogeneous three-sector configuration: inhabited. -/
+example : Nonempty (Wantable (Σ i : Fin 3, ThreeSector i)) := ⟨inferInstance⟩
+
+/-- The 1-sector and 2-sector configurations on `Bool` have different
+cardinalities (2 vs 4), so they cannot be Wantable-isomorphic. The
+framework permits both; the axioms do not rule either out. -/
+example : Fintype.card (Σ _ : Fin 1, Bool) ≠ Fintype.card (Σ _ : Fin 2, Bool) := by
+  rw [Fintype.card_sigma, Fintype.card_sigma]
+  decide
+
+/-- For any n ≥ 1, the multi-sector configuration with `n` Bool sectors
+is inhabited. This is the formal statement that the axioms admit a
+multi-sector model at every cardinality.
+
+Note: stated for the unbundled `Wantable` typeclass via `inferInstance`
+since `instMultiSectorWantable` is the witness. -/
+example (n : ℕ) : Nonempty (Wantable (Σ _ : Fin n, Bool)) :=
+  ⟨inferInstance⟩
+
+-- NOTE (DEFERRED, not sorry'd): a fully formal statement of "the axioms
+-- are silent on n" would quantify over models of (Wantable, Meeting) and
+-- show neither `n = 1` nor `n ≥ 2` is derivable. That requires set-up
+-- of "model of the axioms" as a structure-level object, deferred to
+-- follow-up work. The cardinality and existence examples above are the
+-- concrete witnesses available at the level of formalization currently
+-- in this file.
