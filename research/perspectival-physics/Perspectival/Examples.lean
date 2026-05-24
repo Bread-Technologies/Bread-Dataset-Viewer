@@ -6938,5 +6938,40 @@ theorem productState_swap
   show f₁ p.1 * f₂ p.2 = f₂ p.2 * f₁ p.1
   ring
 
+/-- New: an effect-vector on W₁ × W₂ which is a product of two
+effect-vectors. -/
+noncomputable def productEffectVec
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (g₁ : Perspectival.WantableGPT.V W₁) (g₂ : Perspectival.WantableGPT.V W₂) :
+    Perspectival.WantableGPT.V (W₁ × W₂) :=
+  fun p => g₁ p.1 * g₂ p.2
+
+/-- New theorem: productEffectVec is in effectVec if both factors are. -/
+theorem productEffectVec_in_effectVec
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (g₁ : Perspectival.WantableGPT.V W₁) (g₂ : Perspectival.WantableGPT.V W₂)
+    (h₁ : g₁ ∈ Perspectival.WantableGPT.effectVec W₁)
+    (h₂ : g₂ ∈ Perspectival.WantableGPT.effectVec W₂) :
+    productEffectVec g₁ g₂ ∈ Perspectival.WantableGPT.effectVec (W₁ × W₂) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ g₁ p.1 * g₂ p.2
+    exact mul_nonneg (h₁ p.1).1 (h₂ p.2).1
+  · show g₁ p.1 * g₂ p.2 ≤ 1
+    have : g₁ p.1 * g₂ p.2 ≤ 1 * 1 := by
+      apply mul_le_mul (h₁ p.1).2 (h₂ p.2).2 (h₂ p.2).1
+      norm_num
+    linarith
+
+/-- Concrete: vertex true × vertex false as a product effect vector. -/
+example : productEffectVec (Perspectival.WantableGPT.vertex Bool true)
+                            (Perspectival.WantableGPT.vertex Bool false)
+        ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) :=
+  productEffectVec_in_effectVec _ _
+    (WantableGPT_vertex_in_effectVec true)
+    (WantableGPT_vertex_in_effectVec false)
+
 end Examples
 end Perspectival
