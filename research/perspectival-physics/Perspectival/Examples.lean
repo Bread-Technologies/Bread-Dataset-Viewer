@@ -11371,3 +11371,23 @@ example : (PTrans.complement : PTrans Bool)⁻¹ = PTrans.complement :=
 example {W : Type u} [Wantable W] (φ : PTrans W) :
     φ * (PTrans.complement : PTrans W) * φ⁻¹ = PTrans.complement :=
   PTrans_complement_conj φ
+
+/-- complement commutes with itself (trivially). -/
+example {W : Type u} [Wantable W] :
+    Commute (PTrans.complement : PTrans W) PTrans.complement :=
+  Commute.refl _
+
+/-- complement commutes with identity. -/
+example {W : Type u} [Wantable W] :
+    Commute (PTrans.complement : PTrans W) 1 := Commute.one_right _
+
+/-- identity commutes with complement. -/
+example {W : Type u} [Wantable W] :
+    Commute (1 : PTrans W) PTrans.complement := Commute.one_left _
+
+/-- Any element commutes with itself. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) : Commute φ φ := Commute.refl _
+
+/-- Identity always commutes with anything. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) : Commute (1 : PTrans W) φ :=
+  Commute.one_left _
