@@ -16,6 +16,7 @@ Calibrated status:
 
 import Perspectival.Ontology
 import Mathlib.Algebra.Group.Defs
+import Mathlib.GroupTheory.GroupAction.Defs
 
 namespace Perspectival
 
@@ -163,6 +164,13 @@ def actMeeting (f : PTrans W) (m : Meeting W) : Meeting W where
 
 theorem actMeeting_comp (g f : PTrans W) (m : Meeting W) :
     actMeeting (comp g f) m = actMeeting g (actMeeting f m) := rfl
+
+/-- The natural action of `PTrans W` on `Meeting W` (via `actMeeting`)
+is a Mathlib `MulAction`. -/
+instance : MulAction (PTrans W) (Meeting W) where
+  smul := actMeeting
+  one_smul := actMeeting_id
+  mul_smul := actMeeting_comp
 
 end PTrans
 
