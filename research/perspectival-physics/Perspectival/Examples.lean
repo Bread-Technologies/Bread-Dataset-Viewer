@@ -554,6 +554,9 @@ example : (1 : PTrans ℤ).toFun 42 = 42 := rfl
 example : (1 : PTrans (Bool × Bool)).toFun (true, true) = (true, true) := rfl
 example : (1 : PTrans (Bool ⊕ Bool)).toFun (Sum.inl false) = Sum.inl false := rfl
 
+example : (1 : PTrans (Option Bool)).toFun (some true) = some true := rfl
+example : (1 : PTrans (Option Bool)).toFun none = none := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
