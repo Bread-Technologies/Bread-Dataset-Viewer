@@ -15087,6 +15087,46 @@ example :
   · exact hf_false h
   · exact hg_false h
 
+/-! ### Hardy Axiom 3 (subspaces) -- via vertices -/
+
+/-- For Bool, the projection onto vertex true gives a sub-GPT effect. -/
+example : deltaIndicatorLin (true : Bool)
+            ∈ Perspectival.WantableGPT.effects Bool :=
+  deltaIndicatorLin_in_effects true
+
+/-- For Fin 3, projection onto vertex 0 gives a sub-GPT effect. -/
+example : deltaIndicatorLin (0 : Fin 3)
+            ∈ Perspectival.WantableGPT.effects (Fin 3) :=
+  deltaIndicatorLin_in_effects 0
+
+/-- For Bool × Bool, projection onto vertex (t, t) is an effect. -/
+example : deltaIndicatorLin ((true, true) : Bool × Bool)
+            ∈ Perspectival.WantableGPT.effects (Bool × Bool) :=
+  deltaIndicatorLin_in_effects (true, true)
+
+/-! ### unitFn is in effects -/
+
+/-- The unit functional is always an effect (trivially: probability 1). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.WantableGPT.unitFn W ∈ Perspectival.WantableGPT.effects W :=
+  (Perspectival.WantableGPT.gpt W).unit_is_effect
+
+/-- Concrete: unitFn Bool is an effect. -/
+example :
+    Perspectival.WantableGPT.unitFn Bool ∈ Perspectival.WantableGPT.effects Bool :=
+  (Perspectival.WantableGPT.gpt Bool).unit_is_effect
+
+/-- Concrete: unitFn (Bool × Bool) is an effect. -/
+example :
+    Perspectival.WantableGPT.unitFn (Bool × Bool)
+    ∈ Perspectival.WantableGPT.effects (Bool × Bool) :=
+  (Perspectival.WantableGPT.gpt (Bool × Bool)).unit_is_effect
+
+/-- Unit on any state = 1. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) (hf : f ∈ Perspectival.WantableGPT.states W) :
+    Perspectival.WantableGPT.unitFn W f = 1 := hf.2
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
