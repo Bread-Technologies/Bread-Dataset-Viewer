@@ -8910,3 +8910,31 @@ theorem WantableGPT_no_signaling_right
   apply Finset.sum_congr rfl
   intro w₁ _
   exact h w₁ w₂
+
+/-- Concrete: diagonalState and antiDiagonalState (with disjoint
+support!) still have the same marginals — neither side can
+"signal" which state it's in by looking at its own marginal. -/
+example : leftMarginal diagonalState = leftMarginal antiDiagonalState := by
+  funext b
+  show (∑ b₂, diagonalState (b, b₂)) = (∑ b₂, antiDiagonalState (b, b₂))
+  rw [diagonalState_left_marginal]
+  rw [show (∑ b₂, antiDiagonalState (b, b₂))
+        = antiDiagonalState (b, true) + antiDiagonalState (b, false) from by
+      rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+          Finset.sum_insert (by decide), Finset.sum_singleton]]
+  cases b with
+  | true => show uniformBool true = (0 : ℝ) + 1/2; norm_num; rfl
+  | false => show uniformBool false = (1/2 : ℝ) + 0; norm_num; rfl
+
+/-- Similarly: right marginals are equal. -/
+example : rightMarginal diagonalState = rightMarginal antiDiagonalState := by
+  funext b
+  show (∑ b₁, diagonalState (b₁, b)) = (∑ b₁, antiDiagonalState (b₁, b))
+  rw [diagonalState_right_marginal]
+  rw [show (∑ b₁, antiDiagonalState (b₁, b))
+        = antiDiagonalState (true, b) + antiDiagonalState (false, b) from by
+      rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+          Finset.sum_insert (by decide), Finset.sum_singleton]]
+  cases b with
+  | true => show uniformBool true = (0 : ℝ) + 1/2; norm_num; rfl
+  | false => show uniformBool false = (1/2 : ℝ) + 0; norm_num; rfl
