@@ -3271,6 +3271,17 @@ example : Wantable.complement (Wantable.complement (id : Bool → Bool)) = id :=
   show Wantable.complement (Wantable.complement b) = b
   exact Wantable.complement_involutive b
 
+/-- The "complement composed with id" function on Bool: still pointwise. -/
+example : Wantable.complement (id : Bool → Bool) = Bool.not := by
+  funext b
+  rfl
+
+/-- The complement-of-complement function on Bool is the identity. -/
+example : Wantable.complement (Bool.not : Bool → Bool) = id := by
+  funext b
+  show Wantable.complement (Bool.not b) = b
+  cases b <;> rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
