@@ -10,6 +10,29 @@ available durable storage for the work. The research is unrelated to
 the dataset viewer; it is parked here because it is the authorized
 push target.
 
+**Headline results** (all machine-verified, no `sorry`):
+1. **No-go theorem**: the bare-ontology bridge `WantableGPT.gpt W`
+   always yields the *classical* signature `N = K = |W|`
+   (`WantableGPT.lean :: wantableGPT_is_classical`).
+2. **Structural characterization**: `PTrans W` is exactly the centralizer
+   of `Wantable.complement` in the symmetric group `Equiv.Perm W`
+   (`Transformations.lean :: mem_range_toEquivPermHom_iff`).
+3. **Hardy Axiom 5 from agency**: continuous reversible
+   transformations between pure states derived from the framework's
+   libertarian-agency postulate (`Continuity.lean`).
+4. **Tsirelson 2√2** as the framework's natural CHSH bound, via
+   Mathlib's `tsirelson_inequality` and the philosophical
+   identification commutativity ↔ observer-independent joint ledger
+   (`CHSH.lean`).
+5. **Continuous extension**: Lie group `ℝˣ` embeds into `PTrans ℝ`
+   via `scaleHom`, demonstrating Lie-group structure in the
+   continuous setting (path toward ROADMAP R6/R7).
+
+The no-go theorem is the framework's most distinctive recent
+contribution: it makes precise what the bare axioms can and cannot
+deliver, sharpening the next research step (R6/R7 agency
+strengthening).
+
 ## Layout
 
 **Lean code** (`Perspectival/`):
