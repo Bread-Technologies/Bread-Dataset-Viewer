@@ -18,6 +18,7 @@ import Perspectival.NoCloning
 import Perspectival.NoBroadcasting
 import Perspectival.WantableGPT
 import Perspectival.Hardy
+import Perspectival.Continuity
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 
 namespace Perspectival
@@ -2255,6 +2256,21 @@ example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2
 /-- The MulEquiv version sends complement to complement (via the iso). -/
 example : boolEquivFin2.mapPTransMulEquiv (PTrans.complement : PTrans Bool)
         = boolEquivFin2.mapPTrans PTrans.complement := rfl
+
+/-- Reachable is reflexive: every state can reach itself via the identity. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ : Perspectival.WantableGPT.V W) :
+    @Perspectival.Continuity.Reachable _ _ _ _ (Perspectival.WantableGPT.gpt W)
+      (Perspectival.Continuity.trivialAgency _) ρ ρ :=
+  @Perspectival.Continuity.Reachable.refl _ _ _ _ (Perspectival.WantableGPT.gpt W)
+    (Perspectival.Continuity.trivialAgency _) ρ
+
+/-- Under trivial agency on the WantableGPT, only equal states are reachable. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ₁ ρ₂ : Perspectival.WantableGPT.V W) :
+    (@Perspectival.Continuity.Reachable _ _ _ _ (Perspectival.WantableGPT.gpt W)
+       (Perspectival.Continuity.trivialAgency _) ρ₁ ρ₂) ↔ ρ₁ = ρ₂ :=
+  Perspectival.Continuity.trivialAgency_reachable_iff _ _ _
 
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
