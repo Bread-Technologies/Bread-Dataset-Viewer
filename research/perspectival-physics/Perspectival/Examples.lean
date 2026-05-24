@@ -818,6 +818,14 @@ example : (complementEquiv : Equiv.Perm Unit) = 1 := by
   cases u
   rfl
 
+example : (complementEquiv : Equiv.Perm (Fin 2)) ≠ 1 := by
+  intro h
+  have hap : (complementEquiv : Equiv.Perm (Fin 2)).toFun 0 = (1 : Equiv.Perm (Fin 2)).toFun 0 := by
+    rw [h]
+  -- LHS = complement 0 = 1, RHS = 0. So 1 = 0 in Fin 2.
+  have : (1 : Fin 2) = 0 := hap
+  exact (by decide : (1 : Fin 2) ≠ 0) this
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
