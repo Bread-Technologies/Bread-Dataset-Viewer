@@ -12448,3 +12448,63 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W] :
     rw [if_neg hne]; ring
   · intro h
     exact absurd (Finset.mem_univ w') h
+
+/-! ### Marginal applied to vertex states (joint→single) -/
+
+/-- leftMarginal (vertex (w₁, w₂)) is the vertex on w₁. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w₁ : W₁) (w₂ : W₂) :
+    leftMarginal (Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂))
+      = Perspectival.WantableGPT.vertex W₁ w₁ := by
+  funext v₁
+  show (∑ v₂, Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂) (v₁, v₂))
+     = Perspectival.WantableGPT.vertex W₁ w₁ v₁
+  show (∑ v₂, (if (w₁, w₂) = (v₁, v₂) then (1 : ℝ) else 0))
+     = (if w₁ = v₁ then (1 : ℝ) else 0)
+  by_cases hw : w₁ = v₁
+  · rw [if_pos hw]
+    rw [Finset.sum_eq_single w₂]
+    · simp [hw]
+    · intro v _ hne
+      have : ¬ ((w₁, w₂) = (v₁, v)) := by
+        intro heq
+        exact hne (Prod.mk.inj heq).2.symm
+      rw [if_neg this]
+    · intro h; exact absurd (Finset.mem_univ w₂) h
+  · rw [if_neg hw]
+    apply Finset.sum_eq_zero
+    intro v _
+    have : ¬ ((w₁, w₂) = (v₁, v)) := by
+      intro heq
+      exact hw (Prod.mk.inj heq).1
+    rw [if_neg this]
+
+/-- rightMarginal (vertex (w₁, w₂)) is the vertex on w₂. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w₁ : W₁) (w₂ : W₂) :
+    rightMarginal (Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂))
+      = Perspectival.WantableGPT.vertex W₂ w₂ := by
+  funext v₂
+  show (∑ v₁, Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂) (v₁, v₂))
+     = Perspectival.WantableGPT.vertex W₂ w₂ v₂
+  show (∑ v₁, (if (w₁, w₂) = (v₁, v₂) then (1 : ℝ) else 0))
+     = (if w₂ = v₂ then (1 : ℝ) else 0)
+  by_cases hw : w₂ = v₂
+  · rw [if_pos hw]
+    rw [Finset.sum_eq_single w₁]
+    · simp [hw]
+    · intro v _ hne
+      have : ¬ ((w₁, w₂) = (v, v₂)) := by
+        intro heq
+        exact hne (Prod.mk.inj heq).1.symm
+      rw [if_neg this]
+    · intro h; exact absurd (Finset.mem_univ w₁) h
+  · rw [if_neg hw]
+    apply Finset.sum_eq_zero
+    intro v _
+    have : ¬ ((w₁, w₂) = (v, v₂)) := by
+      intro heq
+      exact hw (Prod.mk.inj heq).2
+    rw [if_neg this]
