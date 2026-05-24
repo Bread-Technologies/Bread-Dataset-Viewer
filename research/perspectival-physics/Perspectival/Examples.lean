@@ -2450,6 +2450,22 @@ example : Perspectival.Classical.vertex 2 0 ∈ Perspectival.Classical.states 2 
 example : Perspectival.Classical.vertex 2 1 ∈ Perspectival.Classical.states 2 :=
   Perspectival.Classical.vertex_in_states 2 1
 
+/-- Product-composition dimension on Bool: K(Bool × Bool) = 2 * 2 = 4. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) = 4 :=
+  Perspectival.WantableGPT.finrank_V_prod_eq_mul.trans (by decide)
+
+/-- Sum-composition dimension on Bool: K(Bool ⊕ Bool) = 2 + 2 = 4. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 :=
+  Perspectival.WantableGPT.finrank_V_sum_eq_add.trans (by decide)
+
+/-- Product composition of Bool × Fin 3: K = 2 * 3 = 6. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Fin 3)) = 6 :=
+  Perspectival.WantableGPT.finrank_V_prod_eq_mul.trans (by decide)
+
+/-- Sum composition of Bool ⊕ Fin 3: K = 2 + 3 = 5. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3)) = 5 :=
+  Perspectival.WantableGPT.finrank_V_sum_eq_add.trans (by decide)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
