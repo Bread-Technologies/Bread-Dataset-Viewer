@@ -2865,6 +2865,13 @@ example : Fintype.card (Bool ⊕ Unit) = 3 := by decide
 /-- Bool × Unit has cardinality 2. -/
 example : Fintype.card (Bool × Unit) = 2 := by decide
 
+/-- Wantable.complement on Bool × Unit is componentwise. -/
+example : Wantable.complement ((true, ()) : Bool × Unit) = (false, ()) := rfl
+
+/-- WantableGPT on Bool × Unit has finrank 2. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Unit)) = 2 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
