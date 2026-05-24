@@ -301,6 +301,128 @@ in new vocabulary.
   3. Whether the connected group is necessarily a Lie group; the
      theorem we proved is purely topological.
 
+---
+
+### 5.2 Result D — R6 Birkhoff disconnect for Classical n = 2
+
+(Lean: `Perspectival.Classical`,
+theorem `classical_n2_strict_reversible_path_id_swap_empty`.)
+
+The libertarian-agency derivation of Hardy Axiom 5 (Section 5.1) is
+cheap when the path requirement is weak — `path_via_affineLine` shows
+that any two linear maps on a topological `V` are connected by an
+affine path, and so the bare `HasConnectedAgency` postulate is
+generically satisfiable. The substantive question is whether the
+strengthened path notion — paths that remain *bijective* and *state-
+preserving at every intermediate point* — is also generically
+satisfiable. Section 5.1 leaves this open.
+
+This subsection records the *first* verified result that closes the
+question in the direction the framework wants: for the Classical
+n = 2 GPT, the strengthened agency postulate cannot connect the
+identity to the non-trivial swap.
+
+**The strict-path hierarchy.** `Continuity.lean` introduces three
+nested path notions:
+
+  ✓ `StatePreservingPath G R₁ R₂` — a continuous path `γ : [0,1] →
+    (V →ₗ V)` with `γ 0 = R₁`, `γ 1 = R₂`, jointly continuous in
+    `(t, v)`, and `γ t ρ ∈ G.states` for every `t` and every
+    state `ρ`.
+  ✓ `ReversiblePath G R₁ R₂` — strengthens `StatePreservingPath`
+    to a path of *Reversibles* (state-and-unit-preserving linear
+    maps).
+  ✓ `StrictReversiblePath G R₁ R₂` — strengthens `ReversiblePath`
+    further by requiring `γ t` to be *bijective* at every `t`.
+
+The corresponding agency postulates are `StatePreservingAgency`,
+`ReversibleAgency`, `StrictConnectedAgency`. The framework's
+*genuine* path-connectedness commitment — perspectives evolving
+continuously through admissible (i.e., reversible *and* state-
+preserving *and* bijective) transformations — is `StrictConnectedAgency`.
+This is the strengthening that R6 of `ROADMAP.md` asks for.
+
+**The Birkhoff disconnect.** On the Classical n = 2 GPT
+(`Classical.gpt 2`, state space the 2-simplex in `ℝ²`), the
+bijective state-preserving linear maps are exactly the 2 × 2
+doubly-stochastic matrices with non-zero determinant. Parametrising
+such a matrix as `[[a, b], [1−a, 1−b]]` with `a, b ∈ [0,1]`, the
+bijectivity locus is `{(a, b) ∈ [0,1]² : a ≠ b}`. This set has
+exactly two connected components:
+
+  - `{a > b}`, containing `id` (`a = 1, b = 0`),
+  - `{a < b}`, containing `swap` (`a = 0, b = 1`),
+
+separated by the singular line `a = b`. Any continuous path from
+`id` to `swap` must cross this line — at which point bijectivity
+fails. Formally:
+
+  ✓ `classical_n2_strict_reversible_path_id_swap_empty` — there is
+    no `StrictReversiblePath` from the identity to the swap on
+    `Classical.gpt 2`. Proof: the *first-column determinant*
+    `n2_disc_det R := R(vertex 0) 0 − R(vertex 1) 0` is `+1` at `id`
+    and `−1` at `swap`; joint continuity of the path pushes
+    `n2_disc_det` to a continuous map `[0,1] → ℝ`; the Intermediate
+    Value Theorem produces a `t*` with `n2_disc_det (γ t*) = 0`; but
+    `n2_disc_det = 0` together with state-preservation forces
+    `γ t*` to send `vertex 0` and `vertex 1` to the same vector,
+    contradicting bijectivity.
+
+  ✓ `classical_n2_no_two_element_strict_agency` — corollary: there
+    is no `StrictConnectedAgency` on `Classical.gpt 2` whose
+    availability set contains both `id` and `swap`.
+
+  ✓ `classical_n2_det_one_eq_id` — the n = 2 enumeration: every
+    bijective state-preserving linear map `R : V 2 → V 2` with
+    `n2_disc_det R = 1` is exactly the identity, and (by symmetric
+    argument) every such map with `n2_disc_det R = −1` is exactly
+    `swap`. Combined with the disconnect, the bijective state-
+    preserving linear maps on `V 2` are *exactly* `{id, swap} =
+    S_2`.
+
+**Framework reading.** The n = 2 Birkhoff disconnect is the
+framework's first formally verified instance of the structural
+divergence between classical and quantum reversible dynamics. The
+classical reversible group `S_N` is *discrete* — its bijective
+state-preserving stratum decomposes into `N!` connected components,
+one per permutation — whereas the quantum reversible group `U(N)`
+is *connected*. The agency commitment, formalized as
+`StrictConnectedAgency`, is therefore *vacuously trivial* (only the
+single-element trivial agency exists) over a classical GPT but
+*non-vacuously substantive* over a quantum-like GPT.
+
+This is the first machine-verified result in the codebase that
+shows the framework *picks out* quantum-like structure: any GPT in
+which the libertarian-agency postulate is genuinely instantiated
+(rather than reduced to triviality) cannot be the Classical n = 2
+simplex. The result generalizes in principle to all `n ≥ 2`: the
+Birkhoff polytope's bijection locus has `n!` connected components
+(sign of permutation as topological invariant), so the same
+disconnect argument applies; only the n = 2 case is currently
+machine-verified.
+
+**Honest qualifications.**
+
+  ?  The full `n ≥ 3` generalization needs the `n × n` determinant
+     and a finer matrix-analytic argument; it is sketched but not
+     proven in `Classical.lean`.
+  ?  The result rules out *classical* GPTs as carriers of strict
+     agency; it does not yet positively *construct* a non-classical
+     GPT in which strict agency is satisfied. That construction —
+     plausibly via complex-amplitude or qubit-like Wantable
+     refinements — is the natural Tier 1 follow-up.
+  ?  The "agency forces strict connectedness" half — i.e., the
+     philosophical-to-formal half of R6 — remains an input, not a
+     theorem.
+
+What the result does *positively* accomplish: it converts R6 from a
+heuristic ("the agency postulate should be substantive, not vacuous")
+into a verified non-trivial constraint ("on classical GPTs the
+postulate has only the trivial witness, hence selects against
+classical realizations of agency"). This is, together with the
+agency → Hardy Axiom 5 derivation of 5.1, the framework's most
+distinctive machine-verified content.
+
 ## 6. Classical GPT instance
 
 (Lean: `Perspectival.Classical`.)
@@ -461,7 +583,274 @@ and physical structures are different surfaces.
 
 ---
 
-## 10. Status of this draft
+### 9.1 Comparison to existing reconstruction programs
+
+The framework is one of several programs aiming to *derive* (rather
+than *postulate*) quantum-mechanical structure from a smaller set of
+operationally or philosophically motivated axioms. A precise
+comparison is required if the claim "the framework adds value over
+the existing literature" is to be defensible.
+
+**Hardy 2001 (template).** Lucien Hardy's five-axiom reconstruction
+— Probabilities, Simplicity, Subspaces, Composite Systems, Continuity
+— is the *template* of operational reconstructions: GPTs as the
+genus, quantum mechanics as the differentia picked out by Axiom 5
+(continuous reversible transformations between pure states). The
+present framework adopts Hardy's GPT scaffolding wholesale
+(`Perspectival.GPT`, `Perspectival.Hardy`) and our principal positive
+contribution at the operational level is the *derivation* of
+Hardy's Axiom 5 from a more basic libertarian-agency postulate
+(`hardy_axiom5_transitive`, Section 5.1) plus the disconnect
+witness for the classical case (`classical_n2_strict_reversible_
+path_id_swap_empty`, Section 5.2). Hardy treats continuity as a
+postulate; we re-derive it from agency and document the
+*classical*-side incompatibility. Where Hardy leaves Axiom 1 and
+Axiom 3 as inputs in his original paper, our codebase has formally
+proved them (`axiom1_holds`, `axiom3_holds`).
+
+  ✓ verified: our derivation of Axioms 1, 3, 5; Hardy's full
+    quantum reconstruction theorem remains, in our framework,
+    DERIVABLE-but-not-derived (`Hardy.lean` predicates).
+  ○ argued: that libertarian-agency is a stronger philosophical
+    motivation than continuity-as-postulate.
+
+**Clifton, Bub, Halvorson 2003 ("CBH"; no-broadcasting).** CBH derive
+the qualitative quantum features (no-cloning, no-broadcasting,
+no-bit-commitment) from C*-algebraic information-theoretic
+constraints. The framework's no-cloning chain (`Distinguish.lean ::
+no_cloning_of_distinguishable`, `no_cloning_of_linear_independent`)
+recovers the no-cloning half operationally. We do *not* attempt
+no-broadcasting in this codebase — `NoBroadcasting.lean` is a
+placeholder. The CBH-style derivation imports the C*-algebraic
+structure; our derivation imports only linear-algebraic structure.
+This is logically weaker (CBH's reading via C* is stronger evidence
+for "quantum mechanics is information theory") but is genuinely
+performed in our setting without the C*-axioms.
+
+  ✓ verified: no-cloning from distinguishability and from linear
+    independence.
+  ?  open: no-broadcasting; the C*-algebraic vs. linear-algebraic
+    comparison would need its own writeup.
+
+**Markus Müller (algorithmic idealism).** Müller's "algorithmic
+idealism" — the universe is the structure of computational
+processes, observers as algorithmic agents, physical structure as
+the structural shadow of Solomonoff-style induction — is the
+*closest* sibling program to ours. We share: ontological priority
+of perspective (Müller's observer-centric formalism), rejection of
+substance-realism (Müller's third-person ontology only as a
+derivative), and the methodological commitment to derive rather than
+postulate. We diverge: Müller's foundation is *algorithmic*
+(Kolmogorov-complexity-style induction); ours is *libertarian-
+agentic* (genuine indeterministic choice, formalized as path-
+connectedness of the strict-reversible group, Section 5.2). The
+algorithmic foundation is naturally deterministic at the Solomonoff
+level; ours is naturally indeterministic. Whether the two foundations
+yield equivalent operational predictions is an open
+*meta-comparison* question we do not resolve.
+
+  ○ argued: the libertarian-agency divergence from Müller's
+    algorithmic foundation; whether this divergence is empirically
+    consequential is open.
+  ?  open: a formal mapping between Müller's third-person
+    derivation and our Wantable bridge would be a valuable target.
+
+**Renou et al. 2021 (real-QM rule-out).** Renou and collaborators
+showed experimentally that real-amplitude QM is incompatible with
+quantum-network correlations: certain three-source network Bell
+scenarios cannot be reproduced by any real-Hilbert-space model
+with the standard tensor rule. This is an *empirical* falsification
+*within the assumed quantum framework*. Our framework's
+corresponding target (TIER1_5_HILBERT.md, Tier 1 #5) is a
+*structural* falsification: starting from axioms I–IV strengthened
+by `StrictConnectedAgency` and local tomography, real-QM should
+fail to be a model. The two results would be complementary:
+*nature* is not real-QM (Renou); *the framework's axioms* cannot
+be realized by real-QM (our hoped-for extension). At present, our
+codebase has the *trivial* triple-no-go (`wantableGPT_not_realQM`,
+`wantableGPT_not_quaternionicQM`, `wantableGPT_not_quantum`)
+which rules out *all three* non-classical signatures because the
+bare `WantableGPT` bridge always lands classical. The non-trivial
+content — ruling out real-QM and quaternionic-QM for the
+*strengthened* bridge — is open and is the principal Tier 1
+follow-up.
+
+  ✓ verified: the trivial no-go for the bare bridge.
+  ?  open: the non-trivial structural rule-out parallel to
+    Renou's empirical one.
+
+**Other sibling programs (brief).** Masanes–Müller 2011
+(reconstructive axioms from invariance), Chiribella–D'Ariano–
+Perinotti 2011 ("Informational derivation of QM" via Purification),
+Hardy's later "Causaloid" framework, Wilce's Jordan-algebraic
+reconstruction, the Brukner–Zeilinger information-theoretic
+foundations — each isolates a different operational axiom as the
+quantum-distinctive one. The present framework's distinctive
+contribution is not the operational axiom (we recover Hardy's
+Axiom 5) but the *philosophical reading* of that axiom:
+libertarian agency as the substantive content of path-
+connectedness, and the corresponding disconnect-on-classical-GPTs
+as the formal witness that the reading does technical work.
+
+---
+
+## 10. Predictions
+
+A calibrated catalog of empirical predictions flowing from the
+framework is maintained in `PREDICTIONS.md`. We summarize here and
+highlight the prediction with the most distinctive testable content.
+
+**Calibration legend** (consistent with `PREDICTIONS.md`):
+D = Derived; C = Consistent; S = Suggested; X = Speculative.
+
+| # | Prediction | Status | Comment |
+|---|------------|--------|---------|
+| P1 | Tsirelson saturation, not Bell saturation | D | Verified experimentally; framework's contribution is the realist-ledger reading (`bound_perspectival`). |
+| P2 | No-cloning of distinguishable states | D | Framework-agnostic (`no_cloning_of_distinguishable`). |
+| P3 | Continuous reversible transformations between pure states | D, conditional | Conditional on the agency postulate (`hardy_axiom5_transitive`). |
+| P4 | N ≤ K (operational dim ≤ state-space dim) | D | `operational_dim_le_state_dim`. |
+| P5 | Dark matter is multi-species (multi-sector) | S | Qualitative only; *most distinctive* framework prediction. |
+| P6 | Λ as relational artifact | X | Interpretive only. |
+| P7 | Fine-tuning as coherence-forcing | X | No quantitative path. |
+| P8 | Hard-problem dissolution | D conceptually | Philosophical dissolution, not derivation. |
+| P9 | Partial panexperientialism | X | Whitehead-style. |
+| P10 | Sharper Bell-style inequalities from observer plurality | S | Frauchiger–Renner-style; testable in principle. |
+
+**The distinctive prediction (P5).** The framework's
+`Composition.lean :: Meeting.sum_no_cross` theorem shows that
+disjoint-union Wantables admit *no cross-system meetings*:
+independent perspectival sectors are *structurally* prohibited from
+non-gravitational interactions. If gravity is geometric (acting on
+all sectors uniformly as part of the universal patterning of
+Axiom IV) but other forces are sector-internal connections (as
+Axiom IV reads "forces are connections"), then dark matter should
+consist of *multiple* Wantable sectors, distinguished from
+baryonic matter by incompatible complement structures.
+
+Concrete experimental signatures (from `PREDICTIONS.md`):
+
+  - **Halo substructure.** Multi-sector dark matter with different
+    self-interaction cross-sections per sector produces distinct
+    small-scale clustering features (cusp-vs-core morphology;
+    satellite-galaxy abundance) that single-species cold dark
+    matter cannot mimic.
+  - **Cluster kinematics.** Sectors with different
+    temperatures/dissipation timescales yield distinct velocity
+    dispersions in galaxy-cluster environments.
+  - **Power-spectrum scale dependence.** Multi-sector composition
+    can give a clustering signal whose scale-dependence diverges
+    from the ΛCDM single-fluid prediction.
+
+  S  **Honest qualification.** The prediction is *qualitative* —
+     the framework picks out *plurality* of dark sectors as
+     natural; quantitative cross-sections, mass ratios, or sector
+     count are *not* derived. Sharpening to a quantitative
+     prediction would require either an N-sector model
+     parametrized by composition data (Axiom III with multiple
+     disjoint Wantables) or a Lagrangian-level specification —
+     neither present in this codebase. Even so, the *qualitative*
+     claim "dark matter is plural, not singular" is a structural
+     framework prediction that ΛCDM does not make, and any null
+     observation in favor of single-species CDM would constitute
+     evidence against the framework.
+
+The remaining predictions P1–P4 are recoverable (or framework-
+agnostic) under any reconstruction; the suggestive predictions
+P6–P10 are honest interpretive moves rather than derivations. The
+program's quantitative honesty is concentrated in P1–P4 and its
+philosophical distinctiveness in P5–P10.
+
+---
+
+## 11. Open problems
+
+A catalog of the principal open problems, organised by Tier per
+`ORIGINAL_PROMPT.md` and `ROADMAP.md`. Each is annotated with the
+codebase artifact most relevant to its closure.
+
+**Tier 1 — Foundational reconstruction.**
+
+  ?  **O.T1.a** Hardy reconstruction in full (`K = N²` selection).
+     The remaining cQM-vs-rQM-vs-qQM uniqueness theorem requires
+     local-tomography for a genuine GPT tensor (`gptTensor`, not
+     yet constructed) plus a connected-reversibles argument that
+     rules out the disconnected `O(N)` reversible group of rQM.
+     `TIER1_5_HILBERT.md` sketches the chain in detail.
+  ?  **O.T1.b** Generalize the n = 2 Birkhoff disconnect (Section
+     5.2) to `n ≥ 3`. The structural argument is the same — n!
+     connected components in the Birkhoff bijection locus — but
+     the Lean formalization requires the `n × n` determinant and
+     its sign-of-permutation invariant.
+  ?  **O.T1.c** Construct a non-classical GPT in which
+     `StrictConnectedAgency` is *non-vacuously* satisfied. The
+     natural candidate is a complex-amplitude or qubit Wantable
+     refinement; the bare finite-Wantable bridge always lands
+     classical (`wantableGPT_classical_dichotomy`).
+  ?  **O.T1.d** Derive the ★-algebra picture from axioms I–IV.
+     CHSH/Tsirelson is currently imported from Mathlib.
+  ?  **O.T1.e** Formalize no-broadcasting in the framework's
+     vocabulary. `NoBroadcasting.lean` is a placeholder.
+
+**Tier 2 — Standard-model structure.**
+
+  ?  **O.T2.a** Gauge group `U(1) × SU(2) × SU(3)`. The
+     `TIER2_GAUGE_SCOPING.md` note identifies the *one tractable
+     step*: a `u(1)`-valued connection one-form on the trivial
+     bundle, on the `ContinuousWantable W = ℝ` case where
+     `scaleHom : ℝˣ ↪ PTrans ℝ` already embeds the abelian Lie
+     subgroup. The non-abelian factors and the specific factor
+     count remain open in any axiomatic framework.
+  ?  **O.T2.b** Three fermion generations. Open under any known
+     framework.
+  ?  **O.T2.c** Particle representations (chirality, hypercharge
+     assignments, the 16 of `SO(10)`). Open under any known
+     framework.
+  ?  **O.T2.d** Promote `Meeting W` from a *global* to a *local*
+     (sheaf/bundle) structure — the formal home for "meetings
+     happen at places."
+
+**Tier 3 — Cosmology.**
+
+  ?  **O.T3.a** Quantitative form of P5 (multi-sector dark
+     matter). Currently qualitative only.
+  ?  **O.T3.b** Cosmological-constant value. The
+     "vacuum-as-absence-of-meetings" reading (P6) gives no
+     quantitative path.
+  ?  **O.T3.c** Fine-tuning forcing (P7). No quantitative path.
+  ?  **O.T3.d** QM/GR unification. The framework provides a
+     setting; no technical fix is offered.
+
+**Tier 4 — Foundations of consciousness.**
+
+  ?  **O.T4.a** Formal counterpart to the hard-problem
+     dissolution. The reading (matter is how consciousness appears
+     under perspectivization) is philosophical, not derivational.
+  ?  **O.T4.b** A formal statement of Whitehead-style partial
+     panexperientialism (P9).
+
+**Cross-tier.**
+
+  ?  **O.X.a** Move A.H1 entries of `FINDINGS.md` (Hardy axioms 2,
+     3, 4 categorizations) from ARGUED to verified or honestly
+     downgrade.
+  ?  **O.X.b** Move A.P1 (Quine–Rovelli parallel) toward a formal
+     category-theoretic statement (e.g., a universal property
+     identifying the semantic-relativity and the relational-QM
+     limits).
+  ?  **O.X.c** Address `WantableGPT` uniqueness: does the
+     operational structure *uniquely determine* the GPT given a
+     Wantable, or does it admit a family of consistent GPTs?
+
+The critical path to "earning the keep" — per Section 8 — runs
+through O.T1.a–c. The framework's *philosophically distinctive*
+content is concentrated in P5 and O.T3.a; the framework's
+*technically distinctive* current content is the agency → Hardy
+Axiom 5 derivation (Section 5.1) together with the Birkhoff
+disconnect (Section 5.2).
+
+---
+
+## 12. Status of this draft
 
 In-progress. Updates committed to
 `research/perspectival-physics/PAPER_DRAFT.md`. Companion data:
@@ -481,3 +870,130 @@ content is the well-established CHSH/Tsirelson / no-cloning / Hardy
 material, recast in the framework's vocabulary. The framework's
 distinctive contribution remains to be earned by the open derivations
 above.
+
+---
+
+## Appendix A — Latest verified results (session log)
+
+This appendix records, in compact form, the substantive Lean
+contributions added in the most recent working sessions. Each entry
+is keyed to a Lean theorem name; all are machine-verified (✓) unless
+otherwise marked.
+
+**A.1 Strict-agency hierarchy** (`Continuity.lean`).
+The three nested path notions referenced in Section 5.2 are now
+formal Lean structures:
+
+  ✓ `StatePreservingPath G R₁ R₂` — continuous linear-map path
+    with state preservation at every intermediate `t`.
+  ✓ `ReversiblePath G R₁ R₂` — path of `Reversible`s.
+  ✓ `StrictReversiblePath G R₁ R₂` — path of bijective
+    `StrictReversible`s.
+  ✓ `StatePreservingAgency`, `ReversibleAgency`,
+    `StrictConnectedAgency` — agency classes parametrised by
+    each path notion.
+  ✓ `HasConnectedAgency.ofStatePreservingAgency` — instance:
+    StatePreservingAgency implies the weaker HasConnectedAgency.
+  ✓ `continuous_state_preserving_path` — under
+    `StatePreservingAgency`, the continuous path stays inside the
+    state space the whole time (the R6 improvement over Hardy's
+    original Axiom 5).
+
+**A.2 R6 Birkhoff disconnect for Classical n = 2**
+(`Classical.lean`). Section 5.2 of the main text; theorems:
+
+  ✓ `n2_disc_det` — the first-column determinant on `V 2 →ₗ V 2`.
+  ✓ `n2_disc_det_id = 1`, `n2_disc_det_swap = −1`.
+  ✓ `ivt_path_one_to_neg_one` — IVT specialization
+    `[0,1] → ℝ` with endpoints `+1` and `−1`.
+  ✓ `n2_no_continuous_path_id_to_swap_through_bijections` — the
+    IVT-pushed root of `n2_disc_det ∘ γ` on any path id → swap.
+  ✓ `n2_disc_det_zero_implies_not_injective` — the bridge from
+    `n2_disc_det = 0` to failure of injectivity (using state
+    preservation).
+  ✓ `classical_n2_no_strict_path_id_to_swap` — combined
+    contradiction lemma for any state-preserving bijective
+    continuous path from id to swap.
+  ✓ `n2_disc_det_path_continuous` — joint continuity of the
+    StrictReversiblePath's `γ` pushes through `n2_disc_det`.
+  ✓ `classical_n2_strict_reversible_path_id_swap_empty` — the
+    main result: no `StrictReversiblePath` from id to swap exists
+    on Classical n = 2.
+  ✓ `classical_n2_strict_reversible_path_id_swap_nonempty_false`
+    — contrapositive form (Nonempty negation).
+  ✓ `classical_n2_strict_reversible_path_swap_id_nonempty_false`
+    — symmetric direction via path-reversal.
+  ✓ `classical_n2_no_two_element_strict_agency` — no
+    `StrictConnectedAgency` contains both id and swap.
+
+**A.3 n = 2 enumeration** (`Classical.lean`). Every bijective
+state-preserving linear map on `V 2` is exactly id or swap:
+
+  ✓ `classical_n2_bijection_image_vertex0_form` — image of
+    vertex 0 is determined by its coordinates.
+  ✓ `classical_n2_bijection_image_vertex1_form` — same for
+    vertex 1.
+  ✓ `classical_n2_det_one_eq_id` — det = +1 forces R = id.
+  ✓ (symmetric corollary) — det = −1 forces R = swap.
+  ✓ `classical_n2_no_bijective_state_pres_joint_path` — cleaner
+    form of the disconnect using only joint continuity at the
+    linear-map level.
+
+**A.4 Product-state structure and classical correlation** (`Examples.lean`).
+The `productState` construction on Bool × Bool, together with the
+`diagonalState` and `antiDiagonalState` examples, makes the
+classical-side composition structure concrete:
+
+  ✓ `productState f₁ f₂` — product of two single-system states
+    as a state on the product Wantable.
+  ✓ `productState_unitFn` — unit of product = product of units.
+  ✓ `productState_nonneg`, `productState_in_states` —
+    state-axioms preserved.
+  ✓ `productState_vertex` — products of vertices = pair vertex.
+  ✓ `diagonalState` — uniform on the diagonal of Bool × Bool;
+    `diagonalState_left_marginal`, `diagonalState_right_marginal`
+    — both marginals are uniform.
+  ✓ `diagonalState_ne_productState_uniformBool` — **the
+    diagonal state is NOT a product state**: a classical
+    correlation that cannot factorise into independent marginals.
+    This is the framework's smallest verified instance of
+    correlation-without-factorisation, and it sets up the
+    contrast with quantum entanglement (which would require a
+    further non-classical structure).
+  ✓ `diagonalState_in_states` — `diagonalState` is a valid GPT
+    state.
+  ✓ `diagonalIndicatorLin_on_diagonalState = 1`,
+    `antiDiagonalIndicatorLin_on_diagonalState = 0`,
+    `diagonalState_distinguishable_antiDiagonalState` — the
+    diagonal and antidiagonal classical correlations are
+    perfectly distinguishable.
+
+**A.5 Complement subgroup is central** (`Examples.lean`).
+
+  ✓ `complementSubgroup W` — the subgroup of `PTrans W`
+    generated by `complement`.
+  ✓ Centrality (`example` form, `Examples.lean`):
+    `complementSubgroup W ≤ Subgroup.center (PTrans W)`. The
+    complement involution commutes with every perspectival
+    transformation. This is the formal expression of the fact
+    that `complement` is *not* a representative of agency — it is
+    a *structural symmetry of every agent*, central in the PTrans
+    group, and therefore appears uniformly in every Z/2-
+    equivariant perspectival dynamics.
+
+**A.6 Cumulative count.** The codebase as of this appendix has
+~140+ machine-verified theorems (cf. `STATUS.md`), no `sorry`s in
+the main proof line, and four philosophically motivated structural
+results that go beyond restating standard GPT content:
+
+  ✓ Hardy Axiom 5 from libertarian agency (Section 5.1).
+  ✓ R6 Birkhoff disconnect: classical-side incompatibility with
+    strict agency (Section 5.2).
+  ✓ Triple no-go: bare WantableGPT bridge always lands classical
+    (Section 6.1).
+  ✓ Vertex-decomposition + structural identification of
+    PTrans as Z/2-equivariant permutations (Section 3.1).
+
+These four together form the framework's current load-bearing
+formal content. Every other verified theorem is either an
+infrastructural lemma or a recasting of standard material.
