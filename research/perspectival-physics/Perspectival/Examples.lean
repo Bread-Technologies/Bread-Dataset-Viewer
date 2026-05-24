@@ -12766,3 +12766,47 @@ example (f : Perspectival.WantableGPT.V Bool) :
     Perspectival.WantableGPT.transformAction Bool (1 * PTrans.complement) f =
     Perspectival.WantableGPT.transformAction Bool PTrans.complement f := by
   rw [one_mul]
+
+/-! ### Concrete powers of complement -/
+
+/-- complement^0 = 1. -/
+example {W : Type u} [Wantable W] : (PTrans.complement : PTrans W) ^ 0 = 1 := by
+  rw [pow_zero]
+
+/-- complement^1 = complement. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) ^ 1 = PTrans.complement := by
+  rw [pow_one]
+
+/-- complement^2 = 1. -/
+example {W : Type u} [Wantable W] : (PTrans.complement : PTrans W) ^ 2 = 1 := by
+  rw [sq]
+  exact PTrans.complement_sq
+
+/-- complement^3 = complement. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) ^ 3 = PTrans.complement := by
+  show (PTrans.complement : PTrans W) ^ 3 = PTrans.complement
+  rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add, sq, PTrans.complement_sq, one_mul, pow_one]
+
+/-- complement^4 = 1. -/
+example {W : Type u} [Wantable W] : (PTrans.complement : PTrans W) ^ 4 = 1 := by
+  have h2 : (PTrans.complement : PTrans W) ^ 2 = 1 := by
+    rw [sq]; exact PTrans.complement_sq
+  show (PTrans.complement : PTrans W) ^ 4 = 1
+  rw [show (4 : ℕ) = 2 * 2 from rfl, pow_mul, h2, one_pow]
+
+/-- complement^5 = complement. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) ^ 5 = PTrans.complement := by
+  have h2 : (PTrans.complement : PTrans W) ^ 2 = 1 := by
+    rw [sq]; exact PTrans.complement_sq
+  have h4 : (PTrans.complement : PTrans W) ^ 4 = 1 := by
+    rw [show (4 : ℕ) = 2 * 2 from rfl, pow_mul, h2, one_pow]
+  rw [show (5 : ℕ) = 4 + 1 from rfl, pow_add, h4, one_mul, pow_one]
+
+/-- complement^6 = 1. -/
+example {W : Type u} [Wantable W] : (PTrans.complement : PTrans W) ^ 6 = 1 := by
+  have h2 : (PTrans.complement : PTrans W) ^ 2 = 1 := by
+    rw [sq]; exact PTrans.complement_sq
+  rw [show (6 : ℕ) = 2 * 3 from rfl, pow_mul, h2, one_pow]
