@@ -2417,6 +2417,15 @@ example : (1 : PTrans (Fin 2)) ≠ fin2Swap := by
   have : (0 : Fin 2) = 1 := h1
   exact absurd this (by decide)
 
+/-- The PTrans Bool group has 2 distinct elements: `1` and `boolSwap`.
+By the classification, these are ALL the elements. -/
+example : ∀ f : PTrans Bool, f = 1 ∨ f = boolSwap :=
+  ptrans_bool_classification
+
+/-- The PTrans Fin 2 group has 2 distinct elements: `1` and `fin2Swap`. -/
+example : ∀ f : PTrans (Fin 2), f = 1 ∨ f = fin2Swap :=
+  ptrans_fin2_classification
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
