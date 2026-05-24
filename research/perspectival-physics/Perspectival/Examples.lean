@@ -11269,3 +11269,18 @@ example {W : Type u} [Wantable W] (φ : PTrans W) :
     [φ].foldr (· * ·) 1 = φ := by
   show φ * 1 = φ
   exact mul_one φ
+
+/-- Concrete: foldl of [complement, complement] on Bool. -/
+example : ([(PTrans.complement : PTrans Bool), PTrans.complement].foldl (· * ·) 1) = 1 := by
+  show 1 * (PTrans.complement : PTrans Bool) * PTrans.complement = 1
+  rw [one_mul, PTrans.complement_sq]
+
+/-- Concrete: foldr of [complement, complement] on Bool. -/
+example : ([(PTrans.complement : PTrans Bool), PTrans.complement].foldr (· * ·) 1) = 1 := by
+  show (PTrans.complement : PTrans Bool) * (PTrans.complement * 1) = 1
+  rw [mul_one, PTrans.complement_sq]
+
+/-- Concrete: foldr of [complement, 1, complement] on Bool. -/
+example : ([(PTrans.complement : PTrans Bool), 1, PTrans.complement].foldr (· * ·) 1) = 1 := by
+  show (PTrans.complement : PTrans Bool) * (1 * (PTrans.complement * 1)) = 1
+  rw [mul_one, one_mul, PTrans.complement_sq]
