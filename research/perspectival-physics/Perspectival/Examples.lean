@@ -7093,5 +7093,35 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     LinearIndependent ℝ (Perspectival.WantableGPT.vertex (W₁ × W₂)) :=
   Perspectival.WantableGPT.vertex_linear_independent_of_fintype (W₁ × W₂)
 
+/-- New: the finrank of `V (W₁ × W₂)` factorizes as a product. -/
+theorem WantableGPT_finrank_prod
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (Perspectival.WantableGPT.V (W₁ × W₂))
+      = Module.finrank ℝ (Perspectival.WantableGPT.V W₁)
+      * Module.finrank ℝ (Perspectival.WantableGPT.V W₂) :=
+  Perspectival.WantableGPT.wantableGPT_dim_prod
+
+/-- New: the finrank of `V (W₁ ⊕ W₂)` adds. -/
+theorem WantableGPT_finrank_sum
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (Perspectival.WantableGPT.V (W₁ ⊕ W₂))
+      = Module.finrank ℝ (Perspectival.WantableGPT.V W₁)
+      + Module.finrank ℝ (Perspectival.WantableGPT.V W₂) :=
+  Perspectival.WantableGPT.wantableGPT_dim_sum
+
+/-- Concrete: Bool × Bool has finrank 2 * 2 = 4. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool))
+        = Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+        * Module.finrank ℝ (Perspectival.WantableGPT.V Bool) :=
+  WantableGPT_finrank_prod
+
+/-- Concrete: Bool ⊕ Fin 3 has finrank 2 + 3 = 5. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3))
+        = Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+        + Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) :=
+  WantableGPT_finrank_sum
+
 end Examples
 end Perspectival
