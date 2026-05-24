@@ -2486,6 +2486,16 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × (Bool ⊕ Bool
   rw [Perspectival.WantableGPT.finrank_V_eq_card]
   decide
 
+/-- The WantableGPT Bool's vertex map is a perfect-distinguishability
+witness: the projection at `b` separates `vertex b` from `vertex b'`. -/
+example : Perspectival.Distinguish.PerfectWitness
+            (G := Perspectival.WantableGPT.gpt Bool)
+            (Perspectival.WantableGPT.vertex Bool) :=
+  Perspectival.WantableGPT.perfectWitness Bool
+
+/-- N (size of perfect-distinguishability family) for Bool is exactly 2. -/
+example : Fintype.card Bool = 2 := by decide
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
