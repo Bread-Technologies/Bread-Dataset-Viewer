@@ -486,6 +486,20 @@ theorem finrank_V_sum_eq_add {W₁ W₂ : Type u}
     Module.finrank ℝ (V (W₁ ⊕ W₂)) = Fintype.card W₁ + Fintype.card W₂ := by
   rw [finrank_V_eq_card (W₁ ⊕ W₂), Fintype.card_sum]
 
+/-- For a non-trivial Wantable (cardinality ≥ 2), the WantableGPT has
+at least two perfectly distinguishable states. -/
+theorem exists_two_distinguishable [Fintype W]
+    (h : 2 ≤ Fintype.card W) :
+    ∃ ρ₁ ρ₂ : V W,
+      ρ₁ ∈ states W ∧ ρ₂ ∈ states W ∧
+      Perspectival.Hardy.Distinguishable (gpt W) ρ₁ ρ₂ := by
+  -- Two distinct elements of W give two distinct vertices.
+  obtain ⟨w, v, hwv⟩ : ∃ w v : W, w ≠ v := by
+    rw [← Fintype.one_lt_card_iff]
+    omega
+  refine ⟨vertex W w, vertex W v, vertex_in_states W w, vertex_in_states W v, ?_⟩
+  exact vertices_distinguishable W w v hwv
+
 /-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
 give distinct linear maps on the state space.
 
