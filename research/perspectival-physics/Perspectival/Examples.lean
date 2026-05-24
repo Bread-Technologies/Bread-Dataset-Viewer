@@ -485,6 +485,10 @@ IS fixed-point-free (not has no fixed point). -/
 example (b : Bool) : Wantable.complement b ≠ b := by
   cases b <;> simp [Wantable.complement]
 
+/-- Fin 4 with reflection complement has no fixed points either. -/
+example (i : Fin 4) : Wantable.complement i ≠ i := by
+  fin_cases i <;> decide
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
