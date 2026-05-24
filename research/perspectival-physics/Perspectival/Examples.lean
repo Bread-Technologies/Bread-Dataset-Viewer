@@ -3170,6 +3170,13 @@ example : Perspectival.WantableGPT.states Bool = stdSimplex ℝ Bool := rfl
 /-- Concrete: WantableGPT (Fin 3) states is stdSimplex (Fin 3). -/
 example : Perspectival.WantableGPT.states (Fin 3) = stdSimplex ℝ (Fin 3) := rfl
 
+/-- The WantableGPT states are convex. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Convex ℝ (Perspectival.WantableGPT.states W) := convex_stdSimplex ℝ W
+
+/-- Bool's WantableGPT states are convex. -/
+example : Convex ℝ (Perspectival.WantableGPT.states Bool) := convex_stdSimplex ℝ Bool
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
