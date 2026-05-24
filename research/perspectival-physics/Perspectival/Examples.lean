@@ -3039,6 +3039,14 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 :=
   rw [show Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = 2 from by
     rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide]
 
+/-- Bool × Bool × Bool has dim 8 via repeated dim_prod. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool)) = 8 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
+/-- WantableGPT (Bool × Bool ⊕ Bool) has dim 4 + 2 = 6. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool ⊕ Bool)) = 6 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
