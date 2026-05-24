@@ -1143,6 +1143,24 @@ def intComplementHom : ℤ →+ ℤ where
 
 example : (intComplementHom (5 : ℤ)) = -5 := rfl
 
+/-- The complement AddMonoidHom on ℤ composed with itself is the identity. -/
+example : intComplementHom.comp intComplementHom = AddMonoidHom.id ℤ := by
+  apply AddMonoidHom.ext
+  intro n
+  show Wantable.complement (Wantable.complement n) = n
+  exact Wantable.complement_involutive n
+
+/-- On ℤ, `Wantable.complement` is an additive group automorphism (an `AddEquiv`). -/
+def intComplementEquiv : ℤ ≃+ ℤ where
+  toFun := Wantable.complement
+  invFun := Wantable.complement
+  left_inv := Wantable.complement_involutive
+  right_inv := Wantable.complement_involutive
+  map_add' m n := by show -(m + n) = -m + -n; ring
+
+example : intComplementEquiv (5 : ℤ) = -5 := rfl
+example : intComplementEquiv.symm (5 : ℤ) = -5 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
