@@ -10974,3 +10974,26 @@ example (m : Meeting (Bool × Bool)) :
     PTrans.actMeeting (PTrans.complement : PTrans (Bool × Bool))
       (PTrans.actMeeting PTrans.complement m) = m :=
   PTrans.actMeeting_complement_sq m
+
+/-- Trivial: actMeeting of identity is identity. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    PTrans.actMeeting (1 : PTrans W) m = m :=
+  PTrans.actMeeting_id m
+
+/-- actMeeting is composition-respecting. -/
+example {W : Type u} [Wantable W] (g f : PTrans W) (m : Meeting W) :
+    PTrans.actMeeting (g * f) m = PTrans.actMeeting g (PTrans.actMeeting f m) :=
+  PTrans.actMeeting_comp g f m
+
+/-- actMeeting on Bool with identity. -/
+example (m : Meeting Bool) : PTrans.actMeeting (1 : PTrans Bool) m = m :=
+  PTrans.actMeeting_id m
+
+/-- actMeeting on Fin 4 with identity. -/
+example (m : Meeting (Fin 4)) : PTrans.actMeeting (1 : PTrans (Fin 4)) m = m :=
+  PTrans.actMeeting_id m
+
+/-- actMeeting on Bool×Bool with identity. -/
+example (m : Meeting (Bool × Bool)) :
+    PTrans.actMeeting (1 : PTrans (Bool × Bool)) m = m :=
+  PTrans.actMeeting_id m
