@@ -6699,6 +6699,34 @@ example (p : Bool × Bool) :
       * Perspectival.WantableGPT.vertex Bool false p.2 :=
   WantableGPT_vertex_prod_decomp true false p
 
+/-- New theorem: vertex on W₁ ⊕ W₂ at inl w gives the W₁ vertex
+component on inl, and 0 on inr. -/
+theorem WantableGPT_vertex_sum_inl
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w : W₁) (q : W₁ ⊕ W₂) :
+    Perspectival.WantableGPT.vertex (W₁ ⊕ W₂) (Sum.inl w) q
+      = match q with
+        | .inl v => Perspectival.WantableGPT.vertex W₁ w v
+        | .inr _ => (0 : ℝ) := by
+  rcases q with v | v
+  · show (if (Sum.inl w : W₁ ⊕ W₂) = Sum.inl v then (1 : ℝ) else 0)
+        = (if w = v then 1 else 0)
+    by_cases h : w = v
+    · simp [h]
+    · have hne : (Sum.inl w : W₁ ⊕ W₂) ≠ Sum.inl v := by
+        intro he; exact h (Sum.inl.inj he)
+      simp [hne, h]
+  · show (if (Sum.inl w : W₁ ⊕ W₂) = Sum.inr v then (1 : ℝ) else 0)
+        = 0
+    simp
+
+/-- Concrete: vertex on Bool ⊕ Bool at inl true: at inl true gives 1,
+at inr anything gives 0. -/
+example : Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl true)
+            (Sum.inr true) = 0 := by
+  rw [WantableGPT_vertex_sum_inl]
+
 /-- New theorem: vertex 0..3 of WantableGPT (Fin 4) are all pairwise
 distinguishable (6 pairs). -/
 theorem WantableGPT_Fin4_six_distinguishable :
