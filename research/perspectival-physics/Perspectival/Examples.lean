@@ -13934,6 +13934,49 @@ example : rightMarginal mixedCorrelatedState = uniformBool := by
   show (1/2 : ℝ) * uniformBool b + (1/2 : ℝ) * uniformBool b = uniformBool b
   ring
 
+/-! ### productState commutativity (almost — swap factors) -/
+
+/-- For symmetric states (swap-invariant), productState f f is swap-invariant. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    productState f f (true, false) = productState f f (false, true) := by
+  show f true * f false = f false * f true
+  ring
+
+/-- For uniformBool, productState uniformBool uniformBool is constant 1/4. -/
+example (p : Bool × Bool) :
+    productState uniformBool uniformBool p = (1/4 : ℝ) := by
+  show uniformBool p.1 * uniformBool p.2 = 1/4
+  show (1/2 : ℝ) * (1/2 : ℝ) = 1/4
+  norm_num
+
+/-- productState uniformBool uniformBool is symmetric. -/
+example :
+    productState uniformBool uniformBool
+    = fun (_ : Bool × Bool) => (1/4 : ℝ) := by
+  funext p
+  show uniformBool p.1 * uniformBool p.2 = 1/4
+  show (1/2 : ℝ) * (1/2 : ℝ) = 1/4
+  norm_num
+
+/-- productState uniformBool uniformBool sums to 1. -/
+example :
+    ∑ p, productState uniformBool uniformBool p = 1 := by
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show productState uniformBool uniformBool (true, true)
+     + (productState uniformBool uniformBool (true, false)
+     + (productState uniformBool uniformBool (false, true)
+     + productState uniformBool uniformBool (false, false)))
+     = 1
+  show (1/2 : ℝ) * (1/2 : ℝ)
+     + ((1/2 : ℝ) * (1/2 : ℝ)
+     + ((1/2 : ℝ) * (1/2 : ℝ)
+     + (1/2 : ℝ) * (1/2 : ℝ)))
+     = 1
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
