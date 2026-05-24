@@ -16388,3 +16388,46 @@ theorem complement_eq_one_implies_no_nontrivial {W : Type u}
   have hc : (PTrans.complement : PTrans W).toFun w = Wantable.complement w := rfl
   rw [hc, h1] at heq
   exact heq.symm
+
+/-! ## Bool × Bool has Stable_nontrivial everywhere (no fixed points of complement) -/
+
+/-- For Bool × Bool, the complement (a, b) ↦ (¬a, ¬b) is fixed-point-free
+because no Bool element equals its own complement. -/
+theorem bool_prod_bool_no_fixed_points (p : Bool × Bool) :
+    p ≠ Wantable.complement p := by
+  intro h
+  obtain ⟨a, b⟩ := p
+  have ha : a = !a := by
+    have := congr_arg Prod.fst h
+    show a = (Wantable.complement a)
+    exact this
+  cases a <;> simp at ha
+
+/-- Every element of Bool × Bool has Stable_nontrivial. -/
+theorem bool_prod_bool_stable_nontrivial (p : Bool × Bool) :
+    PatternStableWantable.Stable_nontrivial p := by
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  exact bool_prod_bool_no_fixed_points p
+
+/-- PTrans.complement on Bool × Bool is non-trivial. -/
+example : (PTrans.complement : PTrans (Bool × Bool)) ≠ 1 :=
+  stable_nontrivial_implies_complement_ne_one (true, true)
+    (bool_prod_bool_stable_nontrivial (true, true))
+
+/-! ## Bool³ also has Stable_nontrivial everywhere -/
+
+/-- Bool³ has no fixed points under componentwise complement. -/
+theorem bool3_no_fixed_points (p : Bool × Bool × Bool) :
+    p ≠ Wantable.complement p := by
+  intro h
+  obtain ⟨a, b, c⟩ := p
+  have ha : a = !a := by
+    have := congr_arg Prod.fst h
+    show a = (Wantable.complement a)
+    exact this
+  cases a <;> simp at ha
+
+example (p : Bool × Bool × Bool) :
+    PatternStableWantable.Stable_nontrivial p := by
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  exact bool3_no_fixed_points p
