@@ -2337,6 +2337,35 @@ example : boolEquivFin2.mapPTransMulEquiv boolSwap = fin2Swap := by
   intro i
   fin_cases i <;> rfl
 
+/-- A WantableEquiv induces a WantableEquiv on disjoint unions. -/
+def WantableEquiv.sumMap {W₁ W₂ W₃ W₄ : Type u}
+    [Wantable W₁] [Wantable W₂] [Wantable W₃] [Wantable W₄]
+    (e₁ : WantableEquiv W₁ W₂) (e₂ : WantableEquiv W₃ W₄) :
+    WantableEquiv (W₁ ⊕ W₃) (W₂ ⊕ W₄) where
+  toEquiv := e₁.toEquiv.sumCongr e₂.toEquiv
+  resp_complement w := by
+    cases w with
+    | inl w =>
+      show Sum.inl (e₁.toEquiv (Wantable.complement w))
+         = Sum.inl (Wantable.complement (e₁.toEquiv w))
+      rw [e₁.resp_complement]
+    | inr w =>
+      show Sum.inr (e₂.toEquiv (Wantable.complement w))
+         = Sum.inr (Wantable.complement (e₂.toEquiv w))
+      rw [e₂.resp_complement]
+
+/-- A WantableEquiv induces a WantableEquiv on products. -/
+def WantableEquiv.prodMap {W₁ W₂ W₃ W₄ : Type u}
+    [Wantable W₁] [Wantable W₂] [Wantable W₃] [Wantable W₄]
+    (e₁ : WantableEquiv W₁ W₂) (e₂ : WantableEquiv W₃ W₄) :
+    WantableEquiv (W₁ × W₃) (W₂ × W₄) where
+  toEquiv := e₁.toEquiv.prodCongr e₂.toEquiv
+  resp_complement := by
+    intro ⟨w₁, w₂⟩
+    show (e₁.toEquiv (Wantable.complement w₁), e₂.toEquiv (Wantable.complement w₂))
+       = (Wantable.complement (e₁.toEquiv w₁), Wantable.complement (e₂.toEquiv w₂))
+    rw [e₁.resp_complement, e₂.resp_complement]
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
