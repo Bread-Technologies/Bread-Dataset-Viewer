@@ -9657,3 +9657,21 @@ example : (Perspectival.WantableGPT.complementPTrans (Fin 4)).toFun 0 = 3 := by 
 example : (Perspectival.WantableGPT.complementPTrans (Fin 4)).toFun 3 = 0 := by decide
 example : (Perspectival.WantableGPT.complementPTrans (Fin 4)).toFun 1 = 2 := by decide
 example : (Perspectival.WantableGPT.complementPTrans (Fin 4)).toFun 2 = 1 := by decide
+
+/-- complementPTrans is its own inverse via PTrans group structure. -/
+example : (Perspectival.WantableGPT.complementPTrans Bool)⁻¹
+        = Perspectival.WantableGPT.complementPTrans Bool :=
+  Perspectival.WantableGPT.complementPTrans_inv Bool
+
+example : (Perspectival.WantableGPT.complementPTrans (Fin 4))⁻¹
+        = Perspectival.WantableGPT.complementPTrans (Fin 4) :=
+  Perspectival.WantableGPT.complementPTrans_inv (Fin 4)
+
+/-- complementPTrans squared = id PTrans. -/
+example : (Perspectival.WantableGPT.complementPTrans Bool) *
+          (Perspectival.WantableGPT.complementPTrans Bool) = 1 :=
+  Perspectival.WantableGPT.complementPTrans_sq Bool
+
+example : (Perspectival.WantableGPT.complementPTrans (Fin 4)) *
+          (Perspectival.WantableGPT.complementPTrans (Fin 4)) = 1 :=
+  Perspectival.WantableGPT.complementPTrans_sq (Fin 4)
