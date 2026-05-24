@@ -2854,6 +2854,16 @@ example {W : Type u} [Wantable W] (w : W) :
     (Meeting.mk_fromSide W w).side₂ = Wantable.complement w :=
   Meeting.mk_fromSide_side₂ w
 
+/-- swap of mk_fromSide w equals mk_fromSide of complement w (closed gap). -/
+example {W : Type u} [Wantable W] (w : W) :
+    (Meeting.mk_fromSide W w).swap = Meeting.mk_fromSide W (Wantable.complement w) :=
+  Meeting.swap_mk_fromSide w
+
+/-- mk_fromSide is an inverse to side₁: applying it then taking side₁ gets w back. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    Meeting.mk_fromSide W m.side₁ = m :=
+  Meeting.mk_fromSide_side₁_inv W m
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
