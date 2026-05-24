@@ -1764,5 +1764,28 @@ example :
   show f (Wantable.complement (Wantable.complement b)) = f b
   rw [Wantable.complement_involutive]
 
+/-! ## Example 13 — Concrete dimensions of WantableGPTs -/
+
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = 2 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 2)) = 2 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) = 3 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) = 4 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Unit) = 1 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) = 4 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
 end Examples
 end Perspectival
