@@ -5434,5 +5434,40 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
       ≠ Fintype.card W * (2 * Fintype.card W - 1) :=
   Perspectival.WantableGPT.wantableGPT_not_quaternionicQM W h
 
+/-- Generic `finrank_V_prod_eq_mul`: product composition rule. -/
+example {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (Perspectival.WantableGPT.V (W₁ × W₂))
+      = Fintype.card W₁ * Fintype.card W₂ :=
+  Perspectival.WantableGPT.finrank_V_prod_eq_mul
+
+/-- Generic `finrank_V_sum_eq_add`: sum composition rule. -/
+example {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (Perspectival.WantableGPT.V (W₁ ⊕ W₂))
+      = Fintype.card W₁ + Fintype.card W₂ :=
+  Perspectival.WantableGPT.finrank_V_sum_eq_add
+
+/-- Generic `zero_in_effectVec`: the zero effect is in the effect vector set. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (0 : Perspectival.WantableGPT.V W) ∈ Perspectival.WantableGPT.effectVec W :=
+  Perspectival.WantableGPT.zero_in_effectVec W
+
+/-- Generic `one_in_effectVec`: the constant-1 effect is in the effect
+vector set. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (fun _ : W => (1 : ℝ)) ∈ Perspectival.WantableGPT.effectVec W :=
+  Perspectival.WantableGPT.one_in_effectVec W
+
+/-- Generic `effectVec_eq_hypercube`: the effect vector set is the unit
+hypercube. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.WantableGPT.effectVec W
+      = { g : Perspectival.WantableGPT.V W |
+          ∀ w, g w ∈ Set.Icc (0 : ℝ) 1 } :=
+  Perspectival.WantableGPT.effectVec_eq_hypercube W
+
 end Examples
 end Perspectival
