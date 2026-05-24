@@ -2635,6 +2635,20 @@ example : Perspectival.Hardy.Axiom4_Composite_States_Multiply
     (Perspectival.WantableGPT.gpt Bool) 2 2 :=
   Perspectival.Hardy.axiom4_holds_placeholder _ _ 2 2
 
+/-- Distinguishability of two specific WantableGPT Bool vertices. -/
+example : Perspectival.Hardy.Distinguishable
+    (Perspectival.WantableGPT.gpt Bool)
+    (Perspectival.WantableGPT.vertex Bool true)
+    (Perspectival.WantableGPT.vertex Bool false) :=
+  Perspectival.WantableGPT.vertices_distinguishable Bool true false (by decide)
+
+/-- Distinguishability of two specific Classical 3-outcome vertices. -/
+example : Perspectival.Hardy.Distinguishable
+    (Perspectival.Classical.gpt 3)
+    (Perspectival.Classical.vertex 3 0)
+    (Perspectival.Classical.vertex 3 1) :=
+  Perspectival.Classical.vertices_distinguishable 3 0 1 (by decide)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
