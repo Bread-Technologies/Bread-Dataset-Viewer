@@ -10183,3 +10183,30 @@ example : (PTrans.complement : PTrans (Bool × Bool))⁻¹ = PTrans.complement :
 /-- The PTrans complement on Bool⊕Bool is its own inverse. -/
 example : (PTrans.complement : PTrans (Bool ⊕ Bool))⁻¹ = PTrans.complement :=
   PTrans.complement_inv
+
+/-- Generic theorem: there exists a non-identity element in PTrans W whenever
+W has a non-self-complementary element (specifically the complement PTrans). -/
+example {W : Type u} [Wantable W] (hne : ∃ w : W, ¬ SelfComplementary w) :
+    ∃ φ : PTrans W, φ ≠ 1 := by
+  obtain ⟨w, hw⟩ := hne
+  refine ⟨PTrans.complement, ?_⟩
+  intro h
+  apply hw
+  have : (PTrans.complement : PTrans W).toFun w = (1 : PTrans W).toFun w := by rw [h]
+  exact this
+
+/-- Concrete: Bool has a non-trivial PTrans (complement ≠ identity). -/
+example : ∃ φ : PTrans Bool, φ ≠ 1 := by
+  refine ⟨PTrans.complement, ?_⟩
+  intro h
+  have : (PTrans.complement : PTrans Bool).toFun true = (1 : PTrans Bool).toFun true := by
+    rw [h]
+  exact absurd this (by decide)
+
+/-- Concrete: Fin 4 has a non-trivial PTrans. -/
+example : ∃ φ : PTrans (Fin 4), φ ≠ 1 := by
+  refine ⟨PTrans.complement, ?_⟩
+  intro h
+  have : (PTrans.complement : PTrans (Fin 4)).toFun 0
+       = (1 : PTrans (Fin 4)).toFun 0 := by rw [h]
+  exact absurd this (by decide)
