@@ -15352,6 +15352,44 @@ example :
       (Perspectival.WantableGPT.vertex (Bool × Bool) (false, true)) :=
   vertices_distinguishable_via_delta (true, false) (false, true) (by decide)
 
+/-! ### Bool ⊕ Bool vertex distinguishability -/
+
+/-- vertex (Sum.inl true) and vertex (Sum.inr true) on Bool ⊕ Bool
+are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl true))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr true)) :=
+  vertices_distinguishable_via_delta (Sum.inl true) (Sum.inr true) (by decide)
+
+/-- vertex (Sum.inl true) and vertex (Sum.inl false) on Bool ⊕ Bool
+are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl true))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl false)) :=
+  vertices_distinguishable_via_delta (Sum.inl true) (Sum.inl false) (by decide)
+
+/-- vertex (Sum.inr true) and vertex (Sum.inr false) on Bool ⊕ Bool
+are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr true))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr false)) :=
+  vertices_distinguishable_via_delta (Sum.inr true) (Sum.inr false) (by decide)
+
+/-- vertex (Sum.inl true) and vertex (Sum.inr false) on Bool ⊕ Bool
+are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl true))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr false)) :=
+  vertices_distinguishable_via_delta (Sum.inl true) (Sum.inr false) (by decide)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
