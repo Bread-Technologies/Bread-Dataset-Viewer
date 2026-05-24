@@ -10826,3 +10826,29 @@ example : ¬ Pattern.empty Bool (fun _ : Meeting Bool => False) := id
 
 /-- The "nothing" Reality satisfies Pattern.trivial. -/
 example : Pattern.trivial Bool (fun _ : Meeting Bool => False) := trivial
+
+/-- The framework supports Reality intersections. -/
+example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) : Reality W :=
+  fun m => R₁ m ∧ R₂ m
+
+/-- The framework supports Reality unions. -/
+example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) : Reality W :=
+  fun m => R₁ m ∨ R₂ m
+
+/-- The framework supports Reality negations. -/
+example {W : Type u} [Wantable W] (R : Reality W) : Reality W :=
+  fun m => ¬ R m
+
+/-- The framework supports Reality implications. -/
+example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) : Reality W :=
+  fun m => R₁ m → R₂ m
+
+/-- Reality intersection is associative. -/
+example {W : Type u} [Wantable W] (R₁ R₂ R₃ : Reality W) (m : Meeting W) :
+    ((fun m => R₁ m ∧ R₂ m ∧ R₃ m) m : Prop)
+    ↔ ((fun m => (R₁ m ∧ R₂ m) ∧ R₃ m) m : Prop) := by
+  exact and_assoc.symm
+
+/-- Reality intersection is commutative. -/
+example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) (m : Meeting W) :
+    (R₁ m ∧ R₂ m) ↔ (R₂ m ∧ R₁ m) := And.comm
