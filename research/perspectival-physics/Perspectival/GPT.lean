@@ -131,6 +131,11 @@ instance {V : Type u} [AddCommGroup V] [Module ℝ V] (G : GPT V) :
   one_mul T := Transform.ext (LinearMap.id_comp _)
   mul_one T := Transform.ext (LinearMap.comp_id _)
 
+/-- `Transform.id * Transform.id = Transform.id`. -/
+@[simp] theorem Transform.id_sq {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : GPT V) : Transform.id G * Transform.id G = Transform.id G :=
+  one_mul _
+
 end GPT
 
 end Perspectival
