@@ -3505,6 +3505,18 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V)
     (e : V →ₗ[ℝ] ℝ) (he : e ∈ G.effects) (ρ : V) (hρ : ρ ∈ G.states) :
     0 ≤ e ρ ∧ e ρ ≤ 1 := G.prob_in_unit_interval e he ρ hρ
 
+/-- Transform identity. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    Perspectival.GPT.Transform G G := Perspectival.GPT.Transform.id G
+
+/-- Transform composition. -/
+example {V V' V'' : Type u}
+    [AddCommGroup V] [Module ℝ V] [AddCommGroup V'] [Module ℝ V']
+    [AddCommGroup V''] [Module ℝ V'']
+    {G : Perspectival.GPT V} {G' : Perspectival.GPT V'} {G'' : Perspectival.GPT V''}
+    (T' : Perspectival.GPT.Transform G' G'') (T : Perspectival.GPT.Transform G G') :
+    Perspectival.GPT.Transform G G'' := Perspectival.GPT.Transform.comp T' T
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
