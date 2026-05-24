@@ -3496,6 +3496,15 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
 example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
     Convex ℝ G.effects := G.effects_convex
 
+/-- GPT.unit is itself an effect (axiom). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    G.unit ∈ G.effects := G.unit_is_effect
+
+/-- GPT probabilities are in [0,1] (axiom). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V)
+    (e : V →ₗ[ℝ] ℝ) (he : e ∈ G.effects) (ρ : V) (hρ : ρ ∈ G.states) :
+    0 ≤ e ρ ∧ e ρ ≤ 1 := G.prob_in_unit_interval e he ρ hρ
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
