@@ -327,6 +327,13 @@ example : Even (Fintype.card Bool) := card_even_of_fixedPointFree (W := Bool) (b
   · exact Bool.false_ne_true hb.symm
   · exact Bool.false_ne_true hb)
 
+/-- **Concrete classification of `PTrans Unit`.** Since `Unit` has
+only one element, only the identity transformation exists. -/
+theorem ptrans_unit_classification (f : PTrans Unit) : f = (1 : PTrans Unit) := by
+  apply PTrans.ext
+  intro u
+  cases u; cases f.toFun (); rfl
+
 /-- The `Option` type lifts a Wantable structure: `none` is its own
 complement, `some w` complements to `some (complement w)`. -/
 instance {W : Type u} [Wantable W] : Wantable (Option W) where
