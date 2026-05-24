@@ -207,5 +207,20 @@ example (n : ℕ) :
     Perspectival.Hardy.Axiom3_Subspaces (Perspectival.Classical.gpt n) :=
   Perspectival.Hardy.axiom3_holds _
 
+/-! ## Example 12 — Concrete bridge instance: boolSwap as complementAction
+
+On the boolean WantableGPT, the perspectival transformation `boolSwap`
+(which is just `not`) lifts via `fromPTrans` to a linear map equal to
+`complementAction`. The bridge is concretely computable. -/
+
+example :
+    (Perspectival.WantableGPT.fromPTrans Bool boolSwap).toLin
+    = Perspectival.WantableGPT.complementAction Bool := by
+  apply LinearMap.ext
+  intro f
+  funext b
+  show f (boolSwap.invFun b) = f (Wantable.complement b)
+  cases b <;> rfl
+
 end Examples
 end Perspectival
