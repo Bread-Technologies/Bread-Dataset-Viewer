@@ -2524,6 +2524,10 @@ example (φ : PTrans (Fin 2)) :
   rw [(boolEquivFin2.toEquiv).apply_symm_apply,
       (boolEquivFin2.toEquiv).apply_symm_apply]
 
+/-- The MulEquiv preserves the complement PTrans on the Bool side. -/
+example : boolEquivFin2.mapPTransMulEquiv (PTrans.complement : PTrans Bool)
+        = boolEquivFin2.mapPTrans PTrans.complement := rfl
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
