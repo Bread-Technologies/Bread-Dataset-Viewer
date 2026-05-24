@@ -772,6 +772,10 @@ example {W : Type u} [Wantable W] :
   show Wantable.complement (Wantable.complement w) = w
   exact Wantable.complement_involutive w
 
+/-- complementEquiv inverse is itself. -/
+example {W : Type u} [Wantable W] :
+    (complementEquiv : Equiv.Perm W).symm = complementEquiv := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
