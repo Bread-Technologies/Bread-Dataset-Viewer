@@ -3249,6 +3249,14 @@ example : ¬ SelfComplementary ([true, false] : List Bool) := by
 example (l : List Bool) : Wantable.complement (Wantable.complement l) = l :=
   Wantable.complement_involutive l
 
+/-- The complement is injective on List Bool. -/
+example : Function.Injective (Wantable.complement : List Bool → List Bool) :=
+  Wantable.complement_injective
+
+/-- The complement is surjective on List Bool. -/
+example : Function.Surjective (Wantable.complement : List Bool → List Bool) :=
+  Wantable.complement_surjective
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
