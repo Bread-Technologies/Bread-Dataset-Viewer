@@ -5740,5 +5740,34 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     (e u : V →ₗ[ℝ] ℝ) (x y : V) :
     Perspectival.Distinguish.outerForm e u x y = e x * u y := rfl
 
+/-- `actMeeting_id`: identity action on meetings is identity. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    PTrans.actMeeting (PTrans.id : PTrans W) m = m :=
+  PTrans.actMeeting_id m
+
+/-- `actMeeting_complement`: complement acts as swap on meetings. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    PTrans.actMeeting (PTrans.complement : PTrans W) m = m.swap :=
+  PTrans.actMeeting_complement m
+
+/-- `actMeeting_faithful`: the PTrans action on meetings is faithful. -/
+example {W : Type u} [Wantable W] (f g : PTrans W)
+    (h : ∀ m : Meeting W, PTrans.actMeeting f m = PTrans.actMeeting g m) :
+    f = g :=
+  PTrans.actMeeting_faithful f g h
+
+/-- `PTrans.complement_sq`: complement is an involution. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * PTrans.complement = 1 :=
+  PTrans.complement_sq
+
+/-- `Meeting` admits a `MulAction` instance from PTrans. -/
+example {W : Type u} [Wantable W] : MulAction (PTrans W) (Meeting W) := inferInstance
+
+/-- `actReality_one`: identity action on Reality is identity. -/
+example {W : Type u} [Wantable W] (R : Reality W) :
+    PTrans.actReality (1 : PTrans W) R = R :=
+  PTrans.actReality_one R
+
 end Examples
 end Perspectival
