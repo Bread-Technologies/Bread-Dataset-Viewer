@@ -349,6 +349,12 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) = 4 := 
   rw [Module.finrank_pi]
   simp
 
+/-- WantableGPT(Bool ⊕ Bool) has 4-dim carrier (disjoint union). -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 := by
+  show Module.finrank ℝ (Bool ⊕ Bool → ℝ) = 4
+  rw [Module.finrank_pi]
+  simp
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
