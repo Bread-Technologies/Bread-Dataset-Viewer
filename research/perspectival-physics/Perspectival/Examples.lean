@@ -11222,3 +11222,25 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
 /-- Classical.effectVec is the unit hypercube. -/
 example (n : ℕ) :
     Perspectival.Classical.effectVec n = { f | ∀ i, 0 ≤ f i ∧ f i ≤ 1 } := rfl
+
+/-- A function in effectVec stays componentwise in [0,1]. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (g : Perspectival.WantableGPT.V W)
+    (hg : g ∈ Perspectival.WantableGPT.effectVec W) (w : W) :
+    0 ≤ g w ∧ g w ≤ 1 := hg w
+
+/-- A state stays componentwise nonneg with components summing to 1. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W)
+    (hf : f ∈ Perspectival.WantableGPT.states W) :
+    (∀ w, 0 ≤ f w) ∧ ∑ w, f w = 1 := hf
+
+/-- A classical state's components sum to 1. -/
+example (n : ℕ) (f : Perspectival.Classical.V n)
+    (hf : f ∈ Perspectival.Classical.states n) :
+    ∑ i, f i = 1 := hf.2
+
+/-- A classical state's components are all nonneg. -/
+example (n : ℕ) (f : Perspectival.Classical.V n)
+    (hf : f ∈ Perspectival.Classical.states n) (i : Fin n) :
+    0 ≤ f i := hf.1 i
