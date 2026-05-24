@@ -62,6 +62,7 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | WantableGPT is the classical simplex on `W` (convex-hull characterization) | `WantableGPT.lean :: state_is_convex_combination_of_vertices` | ✓ |
 | WantableGPT vertices form a basis; `finrank (V W) = |W|` | `WantableGPT.lean :: vertexBasis, finrank_V_eq_card` | ✓ |
 | **No-go: WantableGPT-from-finite-Wantable is always classical** (`N = K`) | `WantableGPT.lean :: wantableGPT_is_classical` | ✓ |
+| **Classical signature explicit**: PerfectWitness family of size `|W|` with `n = finrank V W` | `WantableGPT.lean :: wantableGPT_classical_signature` | ✓ |
 | WantableGPT product-composition dimension: `K(W₁ × W₂) = |W₁| · |W₂|` | `WantableGPT.lean :: finrank_V_prod_eq_mul` | ✓ |
 | WantableGPT sum-composition dimension: `K(W₁ ⊕ W₂) = |W₁| + |W₂|` | `WantableGPT.lean :: finrank_V_sum_eq_add` | ✓ |
 | Concrete classification `PTrans Bool = {1, boolSwap}` | `Examples.lean :: ptrans_bool_classification` | ✓ |
