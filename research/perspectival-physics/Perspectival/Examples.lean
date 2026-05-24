@@ -443,6 +443,46 @@ theorem WantableEquiv.mapPTrans_mul {W₁ W₂ : Type u}
      = e.toEquiv (φ.toFun (e.toEquiv.symm (e.toEquiv (ψ.toFun (e.toEquiv.symm w)))))
   rw [e.toEquiv.symm_apply_apply]
 
+/-- A Wantable isomorphism induces a MonoidHom `PTrans W₁ →* PTrans W₂`. -/
+def WantableEquiv.mapPTransHom {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (e : WantableEquiv W₁ W₂) :
+    PTrans W₁ →* PTrans W₂ where
+  toFun := e.mapPTrans
+  map_one' := e.mapPTrans_one
+  map_mul' := e.mapPTrans_mul
+
+/-- A Wantable isomorphism induces a MulEquiv `PTrans W₁ ≃* PTrans W₂`. -/
+def WantableEquiv.mapPTransMulEquiv {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (e : WantableEquiv W₁ W₂) :
+    PTrans W₁ ≃* PTrans W₂ where
+  toFun := e.mapPTrans
+  invFun := e.symm.mapPTrans
+  left_inv := by
+    intro φ
+    apply PTrans.ext
+    intro w
+    show e.symm.toEquiv ((e.mapPTrans φ).toFun (e.symm.toEquiv.symm w)) = φ.toFun w
+    show e.toEquiv.symm (e.toEquiv (φ.toFun (e.toEquiv.symm (e.symm.toEquiv.symm w))))
+       = φ.toFun w
+    -- e.symm.toEquiv.symm = e.toEquiv (since symm-symm = self)
+    rw [e.toEquiv.symm_apply_apply]
+    show φ.toFun (e.toEquiv.symm (e.symm.toEquiv.symm w)) = φ.toFun w
+    have : e.symm.toEquiv.symm w = e.toEquiv w := rfl
+    rw [this, e.toEquiv.symm_apply_apply]
+  right_inv := by
+    intro φ
+    apply PTrans.ext
+    intro w
+    show e.toEquiv ((e.symm.mapPTrans φ).toFun (e.toEquiv.symm w)) = φ.toFun w
+    show e.toEquiv (e.symm.toEquiv (φ.toFun (e.symm.toEquiv.symm (e.toEquiv.symm w))))
+       = φ.toFun w
+    have h_inv : e.symm.toEquiv = e.toEquiv.symm := rfl
+    rw [h_inv, e.toEquiv.apply_symm_apply]
+    show φ.toFun (e.symm.toEquiv.symm (e.toEquiv.symm w)) = φ.toFun w
+    have h_inv2 : e.symm.toEquiv.symm = e.toEquiv := rfl
+    rw [h_inv2, e.toEquiv.apply_symm_apply]
+  map_mul' := e.mapPTrans_mul
+
 /-- **Concrete classification of `PTrans (Fin 2)`.** Either the
 identity or `fin2Swap`. -/
 theorem ptrans_fin2_classification (f : PTrans (Fin 2)) :
