@@ -6888,5 +6888,27 @@ example :
     (Perspectival.WantableGPT.vertex_in_states Bool true)
     (Perspectival.WantableGPT.vertex_in_states Bool false)
 
+/-- New theorem: productState of vertices equals the vertex of the pair.
+This is the simplex-tensor identification at the vertex level. -/
+theorem productState_vertex
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w₁ : W₁) (w₂ : W₂) :
+    productState (Perspectival.WantableGPT.vertex W₁ w₁)
+                 (Perspectival.WantableGPT.vertex W₂ w₂)
+      = Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂) := by
+  funext p
+  show Perspectival.WantableGPT.vertex W₁ w₁ p.1
+     * Perspectival.WantableGPT.vertex W₂ w₂ p.2
+     = Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂) p
+  rw [WantableGPT_vertex_prod_decomp]
+
+/-- Concrete: vertex true ⊗ vertex false on Bool × Bool = vertex (true, false). -/
+example :
+    productState (Perspectival.WantableGPT.vertex Bool true)
+                 (Perspectival.WantableGPT.vertex Bool false)
+      = Perspectival.WantableGPT.vertex (Bool × Bool) (true, false) :=
+  productState_vertex true false
+
 end Examples
 end Perspectival
