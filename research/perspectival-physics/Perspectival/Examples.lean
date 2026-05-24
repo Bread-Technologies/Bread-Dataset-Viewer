@@ -11391,3 +11391,17 @@ example {W : Type u} [Wantable W] (φ : PTrans W) : Commute φ φ := Commute.ref
 /-- Identity always commutes with anything. -/
 example {W : Type u} [Wantable W] (φ : PTrans W) : Commute (1 : PTrans W) φ :=
   Commute.one_left _
+
+/-- complement is in Subgroup.center (a subgroup of PTrans). -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) ∈ Subgroup.center (PTrans W) := by
+  rw [Subgroup.mem_center_iff]
+  intro φ
+  exact (PTrans_complement_central φ).symm
+
+/-- The identity is in the center. -/
+example {W : Type u} [Wantable W] :
+    (1 : PTrans W) ∈ Subgroup.center (PTrans W) := by
+  rw [Subgroup.mem_center_iff]
+  intro φ
+  rw [one_mul, mul_one]
