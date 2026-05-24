@@ -2961,6 +2961,15 @@ example : ∀ n : ℤ, (Equiv.refl ℤ) (Wantable.complement n) =
                     Wantable.complement ((Equiv.refl ℤ) n) :=
   fun _ => rfl
 
+/-- The "not" Equiv.Perm Bool is in the centralizer of "not" (= complement). -/
+example : ∀ b : Bool, (Equiv.mk Bool.not Bool.not (fun b => by cases b <;> rfl)
+                                                  (fun b => by cases b <;> rfl))
+                        (Wantable.complement b) =
+                       Wantable.complement
+                         ((Equiv.mk Bool.not Bool.not (fun b => by cases b <;> rfl)
+                                                  (fun b => by cases b <;> rfl)) b) :=
+  fun b => by cases b <;> rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
