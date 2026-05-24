@@ -14736,6 +14736,47 @@ example : deltaIndicatorLin (true, true, true)
             (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, false, false)) = 0 :=
   deltaIndicatorLin_vertex_other _ _ (by decide)
 
+/-! ### Bool³ vertex pairwise distinguishability -/
+
+/-- Bool³ vertices (t,t,t) and (f,f,f) are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, false, false)) :=
+  vertices_distinguishable_via_delta _ _ (by decide)
+
+/-- Bool³ vertices (t,t,t) and (t,t,f) are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, false)) :=
+  vertices_distinguishable_via_delta _ _ (by decide)
+
+/-- Bool³ vertices (t,f,t) and (f,t,f) are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, true))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, true, false)) :=
+  vertices_distinguishable_via_delta _ _ (by decide)
+
+/-! ### productState on Bool³: associativity-like -/
+
+/-- vertex (a, b, c) = productState (vertex a) (productState (vertex b) (vertex c))
+on Bool³. Verifying tensor structure. -/
+example (a b c : Bool) :
+    Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (a, b, c) (true, true, true)
+    = Perspectival.WantableGPT.vertex Bool a true
+    * Perspectival.WantableGPT.vertex Bool b true
+    * Perspectival.WantableGPT.vertex Bool c true := by
+  show (if (a, b, c) = (true, true, true) then (1 : ℝ) else 0)
+     = (if a = true then (1 : ℝ) else 0)
+     * (if b = true then (1 : ℝ) else 0)
+     * (if c = true then (1 : ℝ) else 0)
+  cases a <;> cases b <;> cases c <;> simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
