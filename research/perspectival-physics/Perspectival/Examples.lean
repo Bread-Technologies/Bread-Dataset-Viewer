@@ -16432,6 +16432,195 @@ example (p : Bool × Bool × Bool) :
   rw [PatternStableWantable.stable_nontrivial_iff]
   exact bool3_no_fixed_points p
 
+/-! ## u(1) gauge toy: connection 1-form on the trivial bundle ℝ × U(1) → ℝ
+
+Implementation of the `u(1)` toy described in `TIER2_GAUGE_SCOPING.md` §7.
+
+The picture: `scaleHom : ℝˣ → PTrans ℝ` provides an embedding of the
+multiplicative reals into `PTrans ℝ`. Restricting to the positive
+component `(0, ∞) ⊂ ℝˣ` and parametrising via `t ↦ 1 + t * 0.01` near
+`t = 0`, we obtain a smooth 1-parameter family of perspectival
+transformations realising `u(1)` (the abelian Lie algebra of `U(1)`)
+at the level of the framework's continuous Wantable `ℝ`.
+
+The *compensating field* `A : ℝ → ℝ` plays the role of a `u(1)`-valued
+connection 1-form on the trivial bundle `ℝ × U(1) → ℝ`: at each base
+point `x ∈ ℝ` it specifies the infinitesimal generator of a local
+rescaling. A *position-dependent rescaling* `rescale : ℝ → ℝˣ`
+together with `gaugeFamily` then gives a position-and-time-dependent
+family of `PTrans ℝ`s — the framework's reading of "local U(1) gauge
+transformation."
+
+This is the smallest non-vacuous instance of "local perspectival
+transformation forces a connection." It uses only the abelian case
+(no non-commutativity), reuses `scaleHom_injective`, and connects to
+the `u(1)` gauge field — the framework's analogue of electromagnetism.
+
+See `TIER2_GAUGE_SCOPING.md` §7 for the conceptual framing. -/
+
+section U1GaugeToy
+
+/-- Auxiliary: for `|t| < 100`, the linear parametrisation `1 + t * 0.01`
+is strictly positive, hence nonzero. -/
+private lemma one_add_smallT_pos {t : ℝ} (ht : |t| < 100) :
+    (0 : ℝ) < 1 + t * 0.01 := by
+  have habs : -100 < t := by
+    have := abs_lt.mp ht
+    linarith [this.1]
+  have : t * 0.01 > -1 := by nlinarith
+  linarith
+
+private lemma one_add_smallT_ne_zero {t : ℝ} (ht : |t| < 100) :
+    (1 + t * 0.01 : ℝ) ≠ 0 :=
+  (one_add_smallT_pos ht).ne'
+
+/-- A 1-parameter family of perspectival transformations on `ℝ`,
+realising the abelian Lie algebra `u(1)` locally near `t = 0`.
+
+For `t` such that `1 + t * 0.01 ≠ 0`, this is the scaling PTrans by
+the factor `1 + t * 0.01`. For the singular value `t = -100` (where
+the linear parametrisation hits zero and `Units.mk0` would fail), we
+default to the identity. The interesting structure lives on the
+neighbourhood `{t : |t| < 100}` around `0`. -/
+noncomputable def gaugeFamily (t : ℝ) : PTrans ℝ :=
+  if h : (1 + t * 0.01 : ℝ) ≠ 0 then
+    scaleHom (Units.mk0 (1 + t * 0.01) h)
+  else
+    1
+
+/-- At `t = 0`, the gauge transformation is the identity: there is no
+gauge rotation to perform at the basepoint. This is the framework's
+version of "the identity component of the U(1) gauge group is reached
+at the zero of its Lie algebra." -/
+theorem gaugeFamily_zero : gaugeFamily 0 = 1 := by
+  unfold gaugeFamily
+  have h : (1 + (0 : ℝ) * 0.01 : ℝ) ≠ 0 := by norm_num
+  rw [dif_pos h]
+  -- Now: scaleHom (Units.mk0 (1 + 0 * 0.01) h) = 1
+  have hval : (Units.mk0 (1 + (0 : ℝ) * 0.01) h : ℝˣ) = 1 := by
+    apply Units.ext
+    show (1 + (0 : ℝ) * 0.01) = (1 : ℝˣ).val
+    norm_num
+  rw [hval, scaleHom.map_one]
+
+/-- On the neighbourhood `|t| < 100`, the family is given by the
+scaleHom of a non-zero unit. (Convenience unfolding for the
+neighbourhood case.) -/
+theorem gaugeFamily_eq_scaleHom {t : ℝ} (ht : |t| < 100) :
+    gaugeFamily t = scaleHom (Units.mk0 (1 + t * 0.01) (one_add_smallT_ne_zero ht)) := by
+  unfold gaugeFamily
+  rw [dif_pos (one_add_smallT_ne_zero ht)]
+
+/-- *Local injectivity:* distinct parameter values `s, t` in the
+neighbourhood `|·| < 100` of `0` give distinct PTrans. This is the
+formal statement that `gaugeFamily` embeds an open neighbourhood of
+`0 ∈ u(1)` faithfully into `PTrans ℝ`. -/
+theorem gaugeFamily_injOn :
+    Set.InjOn gaugeFamily {t : ℝ | |t| < 100} := by
+  intro s hs t ht hst
+  -- Unfold on both sides:
+  rw [gaugeFamily_eq_scaleHom hs, gaugeFamily_eq_scaleHom ht] at hst
+  -- scaleHom is injective:
+  have h_units : Units.mk0 (1 + s * 0.01) (one_add_smallT_ne_zero hs)
+               = Units.mk0 (1 + t * 0.01) (one_add_smallT_ne_zero ht) :=
+    scaleHom_injective hst
+  -- Units.mk0 is injective on the underlying values:
+  have h_val : (1 + s * 0.01 : ℝ) = 1 + t * 0.01 :=
+    (Units.mk0_inj _ _).mp h_units
+  -- The map `s ↦ 1 + s * 0.01` is injective:
+  have : s * 0.01 = t * 0.01 := by linarith
+  have h001 : (0.01 : ℝ) ≠ 0 := by norm_num
+  exact mul_right_cancel₀ h001 this
+
+/-- The compensating field `A : ℝ → ℝ` (a `u(1)`-valued connection
+1-form on the trivial bundle `ℝ × U(1) → ℝ`). At each base point
+`x ∈ ℝ` it specifies the infinitesimal generator of the local
+rescaling. For the toy, we take the simplest non-trivial choice — a
+constant `A x = 1`. This is the framework's analogue of a uniform
+electromagnetic potential. -/
+def compensatingField : ℝ → ℝ := fun _ => 1
+
+/-- The compensating field is constant `1`. -/
+theorem compensatingField_eq_one (x : ℝ) : compensatingField x = 1 := rfl
+
+/-- The compensating field is continuous (a smooth `u(1)`-valued
+1-form on `ℝ`). -/
+theorem compensatingField_continuous : Continuous compensatingField :=
+  continuous_const
+
+/-- A *position-dependent rescaling*: at each point `x ∈ ℝ` we choose a
+unit `rescale x ∈ ℝˣ`. For the toy, we use `x ↦ x^2 + 1`, which is
+always strictly positive (so the `Units.mk0` is total) and varies
+non-trivially with position. This is the framework's reading of "a
+local gauge transformation parametrised by base point." We use a
+polynomial rather than `Real.exp` to avoid a heavy Mathlib import. -/
+noncomputable def rescale (x : ℝ) : ℝˣ :=
+  Units.mk0 (x^2 + 1) (by positivity)
+
+/-- The rescaling map at `x = 0` is the unit `1`. -/
+theorem rescale_zero : rescale 0 = 1 := by
+  apply Units.ext
+  show (0 : ℝ)^2 + 1 = (1 : ℝˣ).val
+  norm_num
+
+/-- The underlying real of `rescale x` is `x^2 + 1`. -/
+theorem rescale_val (x : ℝ) : (rescale x : ℝ) = x^2 + 1 := rfl
+
+/-- The "combined gauge family": at base point `x` and parameter `t`,
+the perspectival transformation is the composition of the
+position-dependent rescaling `scaleHom (rescale x)` with the
+1-parameter family element `gaugeFamily t`. This is the framework's
+version of "a local U(1) gauge transformation acting on a fibre
+above the base point `x`, evaluated at gauge-Lie-algebra point `t`." -/
+noncomputable def combinedFamily (x t : ℝ) : PTrans ℝ :=
+  scaleHom (rescale x) * gaugeFamily t
+
+/-- *The "rescale × gaugeFamily" family is genuinely a family of
+PTrans.* Group closure of `PTrans ℝ` makes this automatic; we
+record it as a lemma to document the construction. -/
+theorem combinedFamily_isPTrans (x t : ℝ) :
+    ∃ φ : PTrans ℝ, φ = combinedFamily x t :=
+  ⟨combinedFamily x t, rfl⟩
+
+/-- At `t = 0` the combined family reduces to the pure
+position-dependent rescaling: the "gauge piece" is trivial. -/
+theorem combinedFamily_at_zero (x : ℝ) :
+    combinedFamily x 0 = scaleHom (rescale x) := by
+  unfold combinedFamily
+  rw [gaugeFamily_zero, mul_one]
+
+/-- At `x = 0` the combined family reduces to the pure gauge family:
+the "position piece" is trivial (since `rescale 0 = 1`). -/
+theorem combinedFamily_at_zero_pos (t : ℝ) :
+    combinedFamily 0 t = gaugeFamily t := by
+  unfold combinedFamily
+  rw [rescale_zero, scaleHom.map_one, one_mul]
+
+/-- The combined family value at base point `x` and parameter `t`,
+evaluated at the test point `1 ∈ ℝ`, equals `(x^2 + 1) * (1 + t * 0.01)`
+on the neighbourhood `|t| < 100`. This makes concrete the
+"position-times-gauge" structure. -/
+theorem combinedFamily_eval_one {t : ℝ} (ht : |t| < 100) (x : ℝ) :
+    (combinedFamily x t).toFun 1 = (x^2 + 1) * (1 + t * 0.01) := by
+  unfold combinedFamily
+  rw [gaugeFamily_eq_scaleHom ht]
+  -- (φ * ψ).toFun w = φ.toFun (ψ.toFun w)
+  show (scaleHom (rescale x)).toFun
+        ((scaleHom (Units.mk0 (1 + t * 0.01) _)).toFun 1)
+       = (x^2 + 1) * (1 + t * 0.01)
+  show (rescale x : ℝ) * ((1 + t * 0.01) * 1) = (x^2 + 1) * (1 + t * 0.01)
+  rw [rescale_val]
+  ring
+
+/-- The position-dependent rescaling `rescale` composed with the
+gauge family is, at each `(x, t)`, an element of `PTrans ℝ` — and
+hence the combined map `(x, t) ↦ combinedFamily x t` is a family
+of `PTrans ℝ` parametrised by `ℝ × ℝ` (base × gauge parameter). -/
+noncomputable def combinedFamilyOnProduct : ℝ × ℝ → PTrans ℝ :=
+  fun p => combinedFamily p.1 p.2
+
+end U1GaugeToy
+
 /-! ## Stable_nontrivial is PTrans-invariant
 
 The framework's pattern-stability predicate is preserved by perspectival
@@ -16473,3 +16662,34 @@ example :
   apply stable_nontrivial_ptrans_invariant
   rw [PatternStableWantable.stable_nontrivial_iff]
   decide
+
+/-! ## Non-trivial PatternStableWantable instance using Stable_nontrivial -/
+
+/-- Construction: build a PatternStableWantable using `Stable_nontrivial`
+as the stability predicate, given a witness of non-trivial stability. -/
+def PatternStableWantable.ofStableNontrivialWitness {W : Type u}
+    [Wantable W] [DecidableEq W]
+    (w_witness : W)
+    (h_witness : PatternStableWantable.Stable_nontrivial w_witness) :
+    PatternStableWantable W where
+  toWantable := inferInstance
+  Stable := PatternStableWantable.Stable_nontrivial
+  stable_complement := stable_nontrivial_complement
+  stable_nonempty := ⟨w_witness, h_witness⟩
+
+/-- Bool has a NON-TRIVIAL PatternStableWantable instance. -/
+example : PatternStableWantable Bool :=
+  PatternStableWantable.ofStableNontrivialWitness (W := Bool) true
+    (by rw [PatternStableWantable.stable_nontrivial_iff]; decide)
+
+/-- Bool × Bool has a NON-TRIVIAL PatternStableWantable instance. -/
+example : PatternStableWantable (Bool × Bool) :=
+  PatternStableWantable.ofStableNontrivialWitness (W := Bool × Bool) (true, true)
+    (bool_prod_bool_stable_nontrivial (true, true))
+
+/-- The framework's discrimination: NO element of Fin 3 has Stable_nontrivial. -/
+example : ¬ ∃ (w : Fin 3), PatternStableWantable.Stable_nontrivial w := by
+  intro ⟨w, hw⟩
+  rw [PatternStableWantable.stable_nontrivial_iff] at hw
+  apply hw
+  rfl
