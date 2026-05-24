@@ -6850,5 +6850,43 @@ example (f₁ f₂ : Perspectival.WantableGPT.V Bool)
     Perspectival.WantableGPT.unitFn (Bool × Bool) (productState f₁ f₂) = 1 := by
   rw [productState_unitFn, h₁, h₂]; ring
 
+/-- New theorem: productState's nonnegativity is preserved if both
+factors are nonnegative. -/
+theorem productState_nonneg
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (h₁ : ∀ w₁, 0 ≤ f₁ w₁) (h₂ : ∀ w₂, 0 ≤ f₂ w₂) :
+    ∀ p : W₁ × W₂, 0 ≤ productState f₁ f₂ p := by
+  intro p
+  show 0 ≤ f₁ p.1 * f₂ p.2
+  exact mul_nonneg (h₁ p.1) (h₂ p.2)
+
+/-- New theorem: productState of two states is a state on W₁ × W₂. -/
+theorem productState_in_states
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (h₁ : f₁ ∈ Perspectival.WantableGPT.states W₁)
+    (h₂ : f₂ ∈ Perspectival.WantableGPT.states W₂) :
+    productState f₁ f₂ ∈ Perspectival.WantableGPT.states (W₁ × W₂) := by
+  refine ⟨productState_nonneg f₁ f₂ h₁.1 h₂.1, ?_⟩
+  show ∑ p : W₁ × W₂, productState f₁ f₂ p = 1
+  rw [Fintype.sum_prod_type]
+  show ∑ w₁ : W₁, ∑ w₂ : W₂, f₁ w₁ * f₂ w₂ = 1
+  have key : (∑ w₁ : W₁, ∑ w₂ : W₂, f₁ w₁ * f₂ w₂)
+           = (∑ w₁, f₁ w₁) * (∑ w₂, f₂ w₂) := by
+    rw [Finset.sum_mul_sum]
+  rw [key, h₁.2, h₂.2]; ring
+
+/-- Concrete: vertex true ⊗ vertex false on Bool × Bool is a state. -/
+example :
+    productState (Perspectival.WantableGPT.vertex Bool true)
+                 (Perspectival.WantableGPT.vertex Bool false)
+    ∈ Perspectival.WantableGPT.states (Bool × Bool) :=
+  productState_in_states _ _
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+    (Perspectival.WantableGPT.vertex_in_states Bool false)
+
 end Examples
 end Perspectival
