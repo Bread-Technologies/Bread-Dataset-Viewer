@@ -60,6 +60,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | WantableGPT vertices linearly independent | `WantableGPT.lean :: vertex_linear_independent_of_fintype` | ✓ |
 | WantableGPT vertex decomposition: `f = ∑ w, f w • vertex w` | `WantableGPT.lean :: vertex_decomposition` | ✓ |
 | WantableGPT is the classical simplex on `W` (convex-hull characterization) | `WantableGPT.lean :: state_is_convex_combination_of_vertices` | ✓ |
+| WantableGPT vertices form a basis; `finrank (V W) = |W|` | `WantableGPT.lean :: vertexBasis, finrank_V_eq_card` | ✓ |
+| **No-go: WantableGPT-from-finite-Wantable is always classical** (`N = K`) | `WantableGPT.lean :: wantableGPT_is_classical` | ✓ |
 | Concrete classification `PTrans Bool = {1, boolSwap}` | `Examples.lean :: ptrans_bool_classification` | ✓ |
 | Self-Transforms form a Monoid | `GPT.lean (instance)` | ✓ |
 | Transform composition (`Transform.comp`) | `GPT.lean :: Transform.comp` | ✓ |
@@ -138,6 +140,17 @@ deflations: the perspectival vocabulary picks out no new mathematics
 beyond Z/2-equivariant permutations. The research question is whether
 *additional* postulates beyond I–IV can pick out specifically quantum
 mathematics, not whether the bare ontology already does so.
+
+**No-go for the bare ontology (`wantableGPT_is_classical`).** The
+WantableGPT-from-finite-Wantable construction always satisfies
+`N = K = |W|` — the Hardy *classical* signature. There is therefore
+*no path* to non-classical / quantum structure that goes purely
+through Wantable + WantableGPT.gpt. Any derivation of quantum
+structure must come from additional postulates: continuous reversible
+agency (Continuity.lean's `HasConnectedAgency`), composition rules
+beyond disjoint union (Hardy Axiom 4 in non-placeholder form), or
+infinite-dimensional / non-finite Wantable structure. This narrows
+the research target sharply.
 
 **What would constitute the framework "earning its keep":**
 - A theorem of the form: *axioms I–IV (+ minimal compositional postulates)
