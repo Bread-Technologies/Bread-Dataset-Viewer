@@ -7647,3 +7647,32 @@ example : LinearIndependent ℝ ![Perspectival.WantableGPT.vertex Bool true,
 example : LinearIndependent ℝ ![Perspectival.WantableGPT.vertex (Fin 4) 0,
                                  Perspectival.WantableGPT.vertex (Fin 4) 1] :=
   WantableGPT_vertex_pair_independent 0 1 (by decide)
+
+/-- New theorem: No linear cloner exists on the (vertex true, vertex false)
+pair in V Bool. -/
+theorem no_cloning_Bool_vertices
+    {C : Perspectival.WantableGPT.V Bool →ₗ[ℝ]
+         Perspectival.WantableGPT.V Bool ⊗[ℝ] Perspectival.WantableGPT.V Bool}
+    {S : Set (Perspectival.WantableGPT.V Bool)}
+    (hC : Perspectival.IsLinearCloner S C)
+    (h₁ : Perspectival.WantableGPT.vertex Bool true ∈ S)
+    (h₂ : Perspectival.WantableGPT.vertex Bool false ∈ S)
+    (h_sum : Perspectival.WantableGPT.vertex Bool true +
+             Perspectival.WantableGPT.vertex Bool false ∈ S) : False :=
+  Perspectival.no_cloning_of_linear_independent hC h₁ h₂ h_sum
+    (WantableGPT_vertex_pair_independent true false (by decide))
+
+/-- New theorem: No linear cloner exists on the (vertex 0, vertex 1) pair
+in V (Fin 4). -/
+theorem no_cloning_Fin4_vertices
+    {C : Perspectival.WantableGPT.V (Fin 4) →ₗ[ℝ]
+         Perspectival.WantableGPT.V (Fin 4) ⊗[ℝ]
+         Perspectival.WantableGPT.V (Fin 4)}
+    {S : Set (Perspectival.WantableGPT.V (Fin 4))}
+    (hC : Perspectival.IsLinearCloner S C)
+    (h₁ : Perspectival.WantableGPT.vertex (Fin 4) 0 ∈ S)
+    (h₂ : Perspectival.WantableGPT.vertex (Fin 4) 1 ∈ S)
+    (h_sum : Perspectival.WantableGPT.vertex (Fin 4) 0 +
+             Perspectival.WantableGPT.vertex (Fin 4) 1 ∈ S) : False :=
+  Perspectival.no_cloning_of_linear_independent hC h₁ h₂ h_sum
+    (WantableGPT_vertex_pair_independent 0 1 (by decide))
