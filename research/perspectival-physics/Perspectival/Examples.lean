@@ -700,6 +700,10 @@ example {W : Type u} [Wantable W] (e : Existent W) :
     ∃ e' : Existent W, e'.want = Wantable.complement e.want :=
   ⟨⟨Wantable.complement e.want⟩, rfl⟩
 
+/-- Each existent has a meeting with its complement-existent. -/
+example {W : Type u} [Wantable W] (e : Existent W) :
+    Meeting W := Perspectival.Meeting.mk_fromSide W e.want
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
