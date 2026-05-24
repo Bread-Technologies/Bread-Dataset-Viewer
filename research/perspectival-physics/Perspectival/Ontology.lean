@@ -179,6 +179,29 @@ theorem ext_of_side₁ (m₁ m₂ : Meeting W) (h : m₁.side₁ = m₂.side₁)
 
 end Meeting
 
+/-- A *self-complementary* want is one that is its own complement.
+The framework's Axiom II requires complement to be involutive but
+does *not* forbid such fixed points; whether self-complementary wants
+are admissible is a refinement question. -/
+def SelfComplementary {W : Type u} [Wantable W] (w : W) : Prop :=
+  Wantable.complement w = w
+
+/-- If `w` is self-complementary, then a meeting with `w` on both sides
+exists (a degenerate "monad-meeting"). -/
+def Meeting.of_selfComplementary {W : Type u} [Wantable W]
+    {w : W} (h : SelfComplementary w) : Meeting W :=
+  ⟨w, w, h⟩
+
+/-- The *complement-fixed-point predicate* is invariant under PTrans-like
+operations that respect complement: if `f` commutes with complement,
+then `f` maps fixed points to fixed points. (Statement at the function
+level; the PTrans-specific version lives in `Transformations`.) -/
+theorem SelfComplementary.preserved {W : Type u} [Wantable W]
+    (f : W → W) (hf : ∀ w, f (Wantable.complement w) = Wantable.complement (f w))
+    (w : W) (h : SelfComplementary w) : SelfComplementary (f w) := by
+  show Wantable.complement (f w) = f w
+  rw [← hf, h]
+
 /-- Collective form of Axiom III: reality is a set (= predicate) of meetings. -/
 abbrev Reality (W : Type u) [Wantable W] := Meeting W → Prop
 
