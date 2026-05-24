@@ -126,6 +126,15 @@ See `PREDICTIONS.md` for the calibrated catalog.
 
 **Verdict:** Honest open questions; no formal content in this codebase.
 
+## Q10a. What are the simplest examples?
+
+**Framework answer:** The boolean Wantable (`Bool` with
+`complement := not`) is the canonical minimal non-trivial example.
+The WantableGPT on `Bool` has two vertices (`vertex true`, `vertex false`),
+the complement action swaps them, and the projection `proj true`
+operationally distinguishes them. See `Examples.lean` for these and
+others (Fin 2, ℤ, Unit, Empty, product Wantables).
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
