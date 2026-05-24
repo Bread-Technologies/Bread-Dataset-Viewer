@@ -81,6 +81,19 @@ structure Transform {V V' : Type u} [AddCommGroup V] [Module ℝ V]
   preserves_states : ∀ ρ ∈ G.states, toLin ρ ∈ G'.states
   preserves_unit : G'.unit.comp toLin = G.unit
 
+/-- A GPT transformation preserves probabilities: `e' (T ρ) = (e' ∘ T) ρ`
+holds by construction, but the deeper invariance is `G'.unit (T ρ) = G.unit ρ`
+which the `preserves_unit` field encodes. -/
+theorem Transform.prob_invariant
+    {V V' : Type u} [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup V'] [Module ℝ V']
+    {G : GPT V} {G' : GPT V'} (T : Transform G G') (ρ : V) :
+    G'.unit (T.toLin ρ) = G.unit ρ := by
+  have h := T.preserves_unit
+  -- G'.unit.comp T.toLin = G.unit, applied to ρ
+  have := congr_arg (fun (φ : V →ₗ[ℝ] ℝ) => φ ρ) h
+  simpa using this
+
 end GPT
 
 end Perspectival
