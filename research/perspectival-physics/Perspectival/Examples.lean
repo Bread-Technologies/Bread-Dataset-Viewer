@@ -2793,6 +2793,12 @@ example : (scaleByPTrans (-1) (by norm_num)).toFun 0 = 0 := by
 example : (PTrans.complement : PTrans ℤ).toFun 0 = 0 := by
   show -(0 : ℤ) = 0; ring
 
+/-- SelfComplementary 0 on ℤ. -/
+example : SelfComplementary (0 : ℤ) := by show -(0 : ℤ) = 0; ring
+
+/-- SelfComplementary 0 on ℝ. -/
+example : SelfComplementary (0 : ℝ) := by show -(0 : ℝ) = 0; ring
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
