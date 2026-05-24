@@ -2705,6 +2705,12 @@ example : Perspectival.Hardy.DistinguishabilitySet
               (Perspectival.WantableGPT.vertex (Bool × Bool × Bool))) :=
   Perspectival.WantableGPT.vertex_distinguishability_set (Bool × Bool × Bool)
 
+/-- Bool³ vertex linear independence (Hardy-style). -/
+example : LinearIndependent ℝ
+            (fun w : Bool × Bool × Bool =>
+              Perspectival.WantableGPT.vertex (Bool × Bool × Bool) w) :=
+  Perspectival.WantableGPT.vertex_linear_independent_of_fintype (Bool × Bool × Bool)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
