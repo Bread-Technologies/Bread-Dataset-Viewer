@@ -327,6 +327,20 @@ example : Even (Fintype.card Bool) := card_even_of_fixedPointFree (W := Bool) (b
   · exact Bool.false_ne_true hb.symm
   · exact Bool.false_ne_true hb)
 
+/-- For a Wantable with fixed-point-free complement, the
+`PTrans.complement` transformation is non-trivial (not equal to the
+identity PTrans). -/
+theorem PTrans.complement_ne_one_of_fixedPointFree {W : Type u} [Wantable W]
+    [Nonempty W] (h : FixedPointFreeComplement W) :
+    (PTrans.complement : PTrans W) ≠ (1 : PTrans W) := by
+  intro heq
+  obtain ⟨w⟩ := ‹Nonempty W›
+  have hw : (PTrans.complement : PTrans W).toFun w = (1 : PTrans W).toFun w := by
+    rw [heq]
+  -- LHS = Wantable.complement w, RHS = w
+  have : Wantable.complement w = w := hw
+  exact h w this
+
 /-- **Concrete classification of `PTrans Unit`.** Since `Unit` has
 only one element, only the identity transformation exists. -/
 theorem ptrans_unit_classification (f : PTrans Unit) : f = (1 : PTrans Unit) := by
