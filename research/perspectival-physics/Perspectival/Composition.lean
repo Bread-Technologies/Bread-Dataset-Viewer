@@ -146,6 +146,15 @@ def PTrans.prodMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
        = (Wantable.complement (f₁.toFun p.1), Wantable.complement (f₂.toFun p.2))
     rw [f₁.resp_complement, f₂.resp_complement]
 
+/-- `prodMap` of identities is the identity. -/
+@[simp] theorem PTrans.prodMap_one_one (W₁ W₂ : Type u)
+    [Wantable W₁] [Wantable W₂] :
+    PTrans.prodMap (1 : PTrans W₁) (1 : PTrans W₂) = 1 := by
+  apply PTrans.ext
+  intro p
+  cases p
+  rfl
+
 def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ ⊕ W₂) where
   toFun := fun
