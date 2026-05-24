@@ -9991,3 +9991,19 @@ example : Existent Bool := ⟨false⟩
 example : Existent (Fin 4) := ⟨2⟩
 example : Existent ℤ := ⟨42⟩
 example : Existent (Bool × Bool) := ⟨(true, true)⟩
+
+/-- Existent's want field accessor. -/
+example : (⟨true⟩ : Existent Bool).want = true := rfl
+example : (⟨false⟩ : Existent Bool).want = false := rfl
+example : (⟨2⟩ : Existent (Fin 4)).want = 2 := rfl
+example : (⟨42⟩ : Existent ℤ).want = 42 := rfl
+example : (⟨(true, false)⟩ : Existent (Bool × Bool)).want = (true, false) := rfl
+
+/-- The PTrans identity element. -/
+example : PTrans Bool := 1
+example : PTrans (Fin 4) := 1
+example : PTrans (Bool × Bool) := 1
+
+/-- The PTrans complement element. -/
+example : PTrans Bool := PTrans.complement
+example : PTrans (Fin 4) := PTrans.complement
