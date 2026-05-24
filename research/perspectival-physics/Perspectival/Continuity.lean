@@ -244,6 +244,23 @@ theorem path_via_affineLine {V : Type u} [AddCommGroup V] [Module ℝ V]
     show (1 - (1 : ℝ)) • R₁.toLin v + (1 : ℝ) • R₂.toLin v = R₂.toLin v
     simp
 
+/-- For any GPT G on a topological vector space V, any singleton availability
+set `{R}` extends to a `HasConnectedAgency` (the constant path works). -/
+@[reducible]
+def singletonAgency {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : GPT V) (R₀ : Reversible G)
+    (hR_id : ∀ v : V, R₀.toLin v = v) : HasConnectedAgency G where
+  avail := {R₀}
+  id_avail := ⟨R₀, rfl, hR_id⟩
+  path_connected R₁ R₂ hR₁ hR₂ := by
+    have hR₁eq : R₁ = R₀ := hR₁
+    have hR₂eq : R₂ = R₀ := hR₂
+    refine ⟨fun _ => R₀.toLin, ?_, ?_, ?_⟩
+    · exact R₀.continuous_toLin.comp continuous_snd
+    · rw [hR₁eq]
+    · rw [hR₂eq]
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
