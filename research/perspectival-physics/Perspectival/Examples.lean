@@ -10380,3 +10380,24 @@ example : Function.Surjective (Wantable.complement : Bool ⊕ Bool → Bool ⊕ 
 /-- complement is bijective across all types. -/
 example {W : Type u} [Wantable W] : Function.Bijective (Wantable.complement : W → W) :=
   ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
+
+/-- complement is bijective on Bool. -/
+example : Function.Bijective (Wantable.complement : Bool → Bool) :=
+  ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
+
+/-- complement is bijective on Fin 4. -/
+example : Function.Bijective (Wantable.complement : Fin 4 → Fin 4) :=
+  ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
+
+/-- complement is bijective on Bool × Bool. -/
+example : Function.Bijective (Wantable.complement : Bool × Bool → Bool × Bool) :=
+  ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
+
+/-- complement is bijective on Bool ⊕ Bool. -/
+example : Function.Bijective (Wantable.complement : Bool ⊕ Bool → Bool ⊕ Bool) :=
+  ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
+
+/-- complement is bijective on Bool × Bool × Bool. -/
+example : Function.Bijective
+    (Wantable.complement : Bool × Bool × Bool → Bool × Bool × Bool) :=
+  ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
