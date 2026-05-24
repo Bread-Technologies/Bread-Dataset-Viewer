@@ -3336,6 +3336,16 @@ example (ρ : Perspectival.WantableGPT.V Bool)
       ∈ (Perspectival.WantableGPT.gpt Bool).states :=
   (Perspectival.WantableGPT.complementTransform Bool).preserves_states ρ hρ
 
+/-- The continuous Wantable instance on ℝ. -/
+example : ContinuousWantable ℝ := inferInstance
+
+/-- The continuous Wantable instance on ℤ. -/
+example : ContinuousWantable ℤ := inferInstance
+
+/-- The complement is continuous on ℝ. -/
+example : Continuous (Wantable.complement : ℝ → ℝ) :=
+  ContinuousWantable.complement_continuous
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
