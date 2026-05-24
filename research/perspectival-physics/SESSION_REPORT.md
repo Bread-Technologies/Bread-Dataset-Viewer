@@ -5,10 +5,10 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~2,500 lines of Lean** (excluding Mathlib dependencies)
-- **~80 verified theorems** (no `sorry` outside documented placeholders)
-- **14 documentation files** (~50 KB of structured exposition)
-- **230+ commits** to the research branch (extended session)
+- **~4,000 lines of Lean** (excluding Mathlib dependencies)
+- **~100 verified theorems** (no `sorry` outside documented placeholders)
+- **14 documentation files** (~60 KB of structured exposition)
+- **600+ commits** to the research branch (extended session)
 
 ## Major technical results
 
@@ -25,6 +25,16 @@ A summary of accomplishments from this development session.
 | N ≤ K dimension inequality | `Distinguish.lean` | Hardy-style bound |
 | Classical GPT instance (full) | `Classical.lean` | Concrete verification |
 | WantableGPT bridge (with injective MonoidHom) | `WantableGPT.lean` | **Two-level bridge formalized** |
+| `PTrans W` = centralizer of complement in `Equiv.Perm W` | `Transformations.lean` | **Deflation theorem** — the framework's vocabulary picks out a standard algebraic object |
+| `WantableGPT-from-finite-Wantable is always classical` (N = K) | `WantableGPT.lean` | **No-go theorem** — bare ontology cannot derive non-classical structure |
+| `K(W₁ × W₂) = |W₁| · |W₂|`, `K(W₁ ⊕ W₂) = |W₁| + |W₂|` | `WantableGPT.lean` | Composition dimension theorems |
+| Vertex decomposition `f = ∑ w, f w • vertex w` | `WantableGPT.lean`, `Classical.lean` | WantableGPT IS the simplex |
+| `vertexBasis`, `finrank V W = |W|` | `WantableGPT.lean` | State-space basis |
+| `actMeeting complement = swap` | `Transformations.lean` | PTrans/Meeting identification |
+| `ClosedAgency` ⇒ `Reachable` transitive | `Continuity.lean` | First step of R6 strengthening |
+| `card_even_of_fixedPointFree` | `Examples.lean` | Cardinality theorem |
+| `ptrans_bool_classification`, `ptrans_fin2_classification` | `Examples.lean` | Concrete PTrans enumerations |
+| `WantableEquiv.mapPTrans` | `Examples.lean` | Wantable iso ⇒ PTrans iso |
 
 ### Negative results (honestly documented)
 
