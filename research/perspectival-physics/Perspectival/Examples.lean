@@ -8288,3 +8288,23 @@ example (f₁ f₂ : Perspectival.WantableGPT.V Bool) :
         ((Perspectival.WantableGPT.fromPTrans Bool
           (Perspectival.WantableGPT.complementPTrans Bool)).toLin f₂) :=
   fromPTrans_prodMap_apply_productState _ _ f₁ f₂
+
+/-- New: PTrans.prodMap (1, 1) ∘ productState f₁ f₂ = productState f₁ f₂. -/
+theorem fromPTrans_prodMap_id_id_eq
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂) :
+    (Perspectival.WantableGPT.fromPTrans (W₁ × W₂)
+        (PTrans.prodMap (1 : PTrans W₁) (1 : PTrans W₂))).toLin
+      (productState f₁ f₂)
+    = productState f₁ f₂ := by
+  rw [fromPTrans_prodMap_apply_productState]
+  rw [WantableGPT_fromPTrans_one_apply, WantableGPT_fromPTrans_one_apply]
+
+/-- Concrete: fromPTrans (prodMap 1 1) on productState uniformBool uniformBool. -/
+example :
+    (Perspectival.WantableGPT.fromPTrans (Bool × Bool)
+        (PTrans.prodMap (1 : PTrans Bool) (1 : PTrans Bool))).toLin
+      (productState uniformBool uniformBool)
+    = productState uniformBool uniformBool :=
+  fromPTrans_prodMap_id_id_eq _ _
