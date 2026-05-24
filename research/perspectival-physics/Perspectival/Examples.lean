@@ -9154,3 +9154,32 @@ example : Module.finrank ℝ
     * (2 * Fintype.card (Bool × Bool × Bool) - 1) :=
   Perspectival.WantableGPT.wantableGPT_not_quaternionicQM (Bool × Bool × Bool)
     (by decide)
+
+/-- Classical signature N = K explicit for Bool³ (N = K = 8). -/
+example : Fintype.card (Bool × Bool × Bool) = 8 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool)) = 8 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Classical signature N = K explicit for Bool⁴ (N = K = 16). -/
+example : Fintype.card (Bool × Bool × Bool × Bool) = 16 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V
+            (Bool × Bool × Bool × Bool)) = 16 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Classical signature N = K explicit for Fin 3 × Fin 4 (N = K = 12). -/
+example : Fintype.card (Fin 3 × Fin 4) = 12 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 × Fin 4)) = 12 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Classical signature N = K explicit for Fin 4 ⊕ Bool (N = K = 6). -/
+example : Fintype.card (Fin 4 ⊕ Bool) = 6 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4 ⊕ Bool)) = 6 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
