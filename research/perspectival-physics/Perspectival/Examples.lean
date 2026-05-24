@@ -2772,6 +2772,19 @@ example (x : ℝ) : (scaleByPTrans 2 (by norm_num)).toFun x = 2 * x := rfl
 /-- ℝ scaleByPTrans 0.5 has explicit formula. -/
 example (x : ℝ) : (scaleByPTrans 0.5 (by norm_num)).toFun x = 0.5 * x := rfl
 
+/-- Scaling by 2 sends 3 to 6. -/
+example : (scaleByPTrans 2 (by norm_num)).toFun 3 = 6 := by
+  show (2 : ℝ) * 3 = 6; ring
+
+/-- Scaling by 3 sends 4 to 12. -/
+example : (scaleByPTrans 3 (by norm_num)).toFun 4 = 12 := by
+  show (3 : ℝ) * 4 = 12; ring
+
+/-- Scaling by -1 = complement on ℝ. -/
+example (x : ℝ) :
+    (scaleByPTrans (-1) (by norm_num)).toFun x = Wantable.complement x := by
+  show (-1 : ℝ) * x = -x; ring
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
