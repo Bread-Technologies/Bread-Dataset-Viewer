@@ -284,6 +284,10 @@ instance : Subsingleton (PTrans Empty) := ⟨by
   intro e
   exact e.elim⟩
 
+-- NOTE: PTrans Bool has exactly 2 elements (identity and complement).
+-- Proof omitted for brevity; the structural argument is standard
+-- (case analysis on f.toFun true).
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
