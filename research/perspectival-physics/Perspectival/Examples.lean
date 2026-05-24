@@ -5609,5 +5609,37 @@ example (n : ℕ) (i j : Fin n) :
       = if j = i then 1 else 0 :=
   Perspectival.Classical.proj_vertex n i j
 
+/-- `Classical.unit_in_effects`: the unit is an effect. -/
+example (n : ℕ) : Perspectival.Classical.unitFn n ∈ Perspectival.Classical.effects n :=
+  Perspectival.Classical.unit_in_effects n
+
+/-- `Classical.unit_is_innerLin_one`: unit equals innerLin of all-ones. -/
+example (n : ℕ) :
+    Perspectival.Classical.unitFn n
+      = Perspectival.Classical.innerLin n (fun _ => 1) :=
+  Perspectival.Classical.unit_is_innerLin_one n
+
+/-- `Classical.states_convex`: states are convex. -/
+example (n : ℕ) : Convex ℝ (Perspectival.Classical.states n) :=
+  Perspectival.Classical.states_convex n
+
+/-- `Classical.effects_convex`: effects are convex. -/
+example (n : ℕ) : Convex ℝ (Perspectival.Classical.effects n) :=
+  Perspectival.Classical.effects_convex n
+
+/-- `Classical.unit_eq_one_on_states`: unit normalizes states. -/
+example (n : ℕ) (x : Perspectival.Classical.V n)
+    (hx : x ∈ Perspectival.Classical.states n) :
+    Perspectival.Classical.unitFn n x = 1 :=
+  Perspectival.Classical.unit_eq_one_on_states n x hx
+
+/-- `Classical.prob_in_unit_interval`: effects give probabilities in [0,1]. -/
+example (n : ℕ) (e : Perspectival.Classical.V n →ₗ[ℝ] ℝ)
+    (he : e ∈ Perspectival.Classical.effects n)
+    (x : Perspectival.Classical.V n)
+    (hx : x ∈ Perspectival.Classical.states n) :
+    0 ≤ e x ∧ e x ≤ 1 :=
+  Perspectival.Classical.prob_in_unit_interval n e he x hx
+
 end Examples
 end Perspectival
