@@ -14705,6 +14705,37 @@ example :
   exact productState_right_marginal_state _ _
     (Perspectival.WantableGPT.vertex_in_states Bool true) b
 
+/-! ### Composite Bool³ structure -/
+
+/-- vertex (t, t, t) on Bool³ is a state. -/
+example : Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true)
+    ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.vertex_in_states _ _
+
+/-- All 8 vertex states on Bool³. -/
+example (a b c : Bool) :
+    Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (a, b, c)
+    ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.vertex_in_states _ _
+
+/-- Bool³ has 8 = 2 * 2 * 2 vertex states. -/
+example : Fintype.card (Bool × Bool × Bool) = 8 := by decide
+
+/-- uniformState (Bool³) has probability 1/8 at every outcome. -/
+example (p : Bool × Bool × Bool) : uniformState (Bool × Bool × Bool) p = (1/8 : ℝ) := by
+  show (1 : ℝ) / Fintype.card (Bool × Bool × Bool) = 1/8
+  rw [show (Fintype.card (Bool × Bool × Bool) : ℝ) = 8 from by norm_num]
+
+/-- Born rule on Bool³ vertex state. -/
+example : deltaIndicatorLin (true, true, true)
+            (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true)) = 1 :=
+  deltaIndicatorLin_vertex_self _
+
+/-- Born rule: distinct Bool³ vertices give 0. -/
+example : deltaIndicatorLin (true, true, true)
+            (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, false, false)) = 0 :=
+  deltaIndicatorLin_vertex_other _ _ (by decide)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
