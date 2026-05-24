@@ -33,6 +33,7 @@ operational level but does not show one produces the other.
 import Perspectival.Ontology
 import Perspectival.Transformations
 import Perspectival.GPT
+import Perspectival.Hardy
 import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Data.Real.Basic
 
@@ -277,6 +278,34 @@ def proj (w : W) : V W →ₗ[ℝ] ℝ where
     proj W w (vertex W v) = if v = w then (1 : ℝ) else 0 := by
   show (if v = w then (1 : ℝ) else 0) = if v = w then 1 else 0
   rfl
+
+/-- The projection `proj w` is a valid effect (witness: vertex coefficient). -/
+theorem proj_in_effects (w : W) : proj W w ∈ effects W := by
+  refine ⟨vertex W w, ?_, ?_⟩
+  · intro v
+    show 0 ≤ (if w = v then (1 : ℝ) else 0) ∧ (if w = v then (1 : ℝ) else 0) ≤ 1
+    split <;> simp
+  · apply LinearMap.ext
+    intro f
+    show ∑ v, vertex W w v * f v = f w
+    rw [Finset.sum_eq_single w (fun v _ hvw => by
+        show vertex W w v * f v = 0
+        rw [show vertex W w v = 0 from if_neg hvw.symm]; ring)
+        (by intro h; exact absurd (Finset.mem_univ w) h)]
+    show vertex W w w * f w = f w
+    rw [show vertex W w w = 1 from if_pos rfl]
+    ring
+
+/-- Vertices of the WantableGPT are pairwise distinguishable. -/
+theorem vertices_distinguishable (w v : W) (hwv : w ≠ v) :
+    Perspectival.Hardy.Distinguishable (gpt W) (vertex W w) (vertex W v) := by
+  refine ⟨proj W w, proj_in_effects W w, ?_, ?_⟩
+  · show proj W w (vertex W w) = 1
+    rw [proj_vertex]
+    simp
+  · show proj W w (vertex W v) = 0
+    rw [proj_vertex]
+    simp [Ne.symm hwv]
 
 /-! ## Bridge back: the complement function as PTrans -/
 
