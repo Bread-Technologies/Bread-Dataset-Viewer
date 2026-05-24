@@ -8,7 +8,7 @@ A summary of accomplishments from this development session.
 - **~7,100 lines of Lean** (excluding Mathlib dependencies) — 7000-line milestone passed
 - **~180+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **650+ commits** to the research branch (extended session — 650 milestone)
+- **700+ commits** to the research branch (extended session — 700 milestone reached)
 
 ## Major new content (latest batch)
 
