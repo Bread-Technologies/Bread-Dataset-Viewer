@@ -393,6 +393,9 @@ theorem vertex_image_card [Fintype W] :
   rw [Finset.card_image_of_injective _ (vertex_injective W)]
   simp
 
+-- wantableGPT_nontrivial_classical: defined below, after both
+-- exists_two_distinguishable and finrank_V_eq_card.
+
 /-- The vertex set forms a Hardy-style distinguishability set. -/
 theorem vertex_distinguishability_set :
     Perspectival.Hardy.DistinguishabilitySet (gpt W)
@@ -605,6 +608,15 @@ theorem wantableGPT_not_quaternionicQM [Fintype W] (h : 2 ≤ Fintype.card W) :
   have hmul : n * 1 = n * (2 * n - 1) := by rw [mul_one]; exact heq
   have : 1 = 2 * n - 1 := Nat.eq_of_mul_eq_mul_left hpos hmul
   omega
+
+/-- The general no-go for non-trivial WantableGPTs. For |W| ≥ 2, the
+WantableGPT bridge satisfies N ≥ 2 (at least two distinguishable states)
+AND `K = N` (classical signature). -/
+theorem wantableGPT_nontrivial_classical [Fintype W] (h : 2 ≤ Fintype.card W) :
+    (∃ ρ₁ ρ₂ : V W, ρ₁ ∈ states W ∧ ρ₂ ∈ states W ∧
+      Perspectival.Hardy.Distinguishable (gpt W) ρ₁ ρ₂) ∧
+    Module.finrank ℝ (V W) = Fintype.card W :=
+  ⟨exists_two_distinguishable W h, finrank_V_eq_card W⟩
 
 /-- **Hardy-signature dichotomy.** For finite Wantable W with `|W| ≥ 2`,
 the WantableGPT satisfies the classical signature `K = N = |W|` and
