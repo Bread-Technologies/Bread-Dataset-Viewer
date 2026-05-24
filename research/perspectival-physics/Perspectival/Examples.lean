@@ -14436,6 +14436,36 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
     (w : W) (state : Perspectival.WantableGPT.V W) :
     deltaIndicatorLin w state = state w := deltaIndicatorLin_eq_apply w state
 
+/-! ### State-space convexity examples -/
+
+/-- Convex combination of two Bool states is a Bool state. -/
+example (f g : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool)
+    (hg : g ∈ Perspectival.WantableGPT.states Bool)
+    (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
+    a • f + b • g ∈ Perspectival.WantableGPT.states Bool :=
+  WantableGPT_convex_combo_in_states _ _ a b hf hg ha hb hab
+
+/-- 1/3 vertex true + 2/3 vertex false is a Bool state. -/
+example :
+    (1/3 : ℝ) • Perspectival.WantableGPT.vertex Bool true
+    + (2/3 : ℝ) • Perspectival.WantableGPT.vertex Bool false
+    ∈ Perspectival.WantableGPT.states Bool :=
+  WantableGPT_convex_combo_in_states _ _ (1/3) (2/3)
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+    (Perspectival.WantableGPT.vertex_in_states Bool false)
+    (by norm_num) (by norm_num) (by norm_num)
+
+/-- 1/4 vertex 0 + 3/4 vertex 1 is a Fin 3 state. -/
+example :
+    (1/4 : ℝ) • Perspectival.WantableGPT.vertex (Fin 3) 0
+    + (3/4 : ℝ) • Perspectival.WantableGPT.vertex (Fin 3) 1
+    ∈ Perspectival.WantableGPT.states (Fin 3) :=
+  WantableGPT_convex_combo_in_states _ _ (1/4) (3/4)
+    (Perspectival.WantableGPT.vertex_in_states (Fin 3) 0)
+    (Perspectival.WantableGPT.vertex_in_states (Fin 3) 1)
+    (by norm_num) (by norm_num) (by norm_num)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
