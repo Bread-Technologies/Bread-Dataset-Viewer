@@ -1064,6 +1064,8 @@ example : (complementEquiv : Equiv.Perm (List Bool)).toFun [true, true, true] = 
 
 example : (complementEquiv : Equiv.Perm (List Bool)).toFun [false, false, false] = [true, true, true] := rfl
 
+example : (complementEquiv : Equiv.Perm (List Bool)).toFun [true, false, true] = [false, true, false] := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
