@@ -42,6 +42,28 @@ instance instWantableSum (W₁ W₂ : Type u) [Wantable W₁] [Wantable W₂] :
     | inl w => simp [Wantable.complement_involutive]
     | inr w => simp [Wantable.complement_involutive]
 
+/-- Embed a meeting in `W₁` as a meeting in `W₁ ⊕ W₂` (via the left
+injection). -/
+def Meeting.sumInl {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m : Meeting W₁) : Meeting (W₁ ⊕ W₂) where
+  side₁ := Sum.inl m.side₁
+  side₂ := Sum.inl m.side₂
+  complementary := by
+    show (Sum.inl (Wantable.complement m.side₁) : W₁ ⊕ W₂)
+       = Sum.inl m.side₂
+    rw [m.complementary]
+
+/-- Embed a meeting in `W₂` as a meeting in `W₁ ⊕ W₂` (via the right
+injection). -/
+def Meeting.sumInr {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m : Meeting W₂) : Meeting (W₁ ⊕ W₂) where
+  side₁ := Sum.inr m.side₁
+  side₂ := Sum.inr m.side₂
+  complementary := by
+    show (Sum.inr (Wantable.complement m.side₁) : W₁ ⊕ W₂)
+       = Sum.inr m.side₂
+    rw [m.complementary]
+
 /-- A meeting in the disjoint union never has cross-component sides:
     both sides are in the same summand. This is the structural form of
     no-interaction across independent systems. -/
