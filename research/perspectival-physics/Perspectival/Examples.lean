@@ -1082,6 +1082,8 @@ example : (complementEquiv : Equiv.Perm ℤ).toFun (10^9) = -(10^9) := rfl
 example : Wantable.complement (10^9 : ℤ) = -(10^9) := rfl
 example : Wantable.complement (-(10^9 : ℤ)) = 10^9 := by show -(-(10^9 : ℤ)) = 10^9; ring
 
+example : Wantable.complement ((1 : ℤ) + 1) = -2 := by show -((1 : ℤ) + 1) = -2; ring
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
