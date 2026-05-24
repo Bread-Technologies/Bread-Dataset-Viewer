@@ -13668,6 +13668,68 @@ example :
       show (0 : ℝ) + 0 + 0 + 1 = 1
       norm_num
 
+/-! ### Bool ⊕ Bool vertex computations -/
+
+/-- Wantable (Bool ⊕ Bool) supports complement that swaps inside-component. -/
+example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := rfl
+example : Wantable.complement (Sum.inl false : Bool ⊕ Bool) = Sum.inl true := rfl
+example : Wantable.complement (Sum.inr true : Bool ⊕ Bool) = Sum.inr false := rfl
+example : Wantable.complement (Sum.inr false : Bool ⊕ Bool) = Sum.inr true := rfl
+
+/-- vertex (Sum.inl true) on Bool ⊕ Bool is a state. -/
+example :
+    Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl true)
+      ∈ Perspectival.WantableGPT.states (Bool ⊕ Bool) :=
+  Perspectival.WantableGPT.vertex_in_states _ _
+
+/-- vertex (Sum.inr false) on Bool ⊕ Bool is a state. -/
+example :
+    Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr false)
+      ∈ Perspectival.WantableGPT.states (Bool ⊕ Bool) :=
+  Perspectival.WantableGPT.vertex_in_states _ _
+
+/-- Sum of all 4 vertex states on Bool ⊕ Bool gives the unit. -/
+example :
+    Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl true)
+    + Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl false)
+    + Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr true)
+    + Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr false)
+    = (fun _ => (1 : ℝ)) := by
+  funext s
+  cases s with
+  | inl b =>
+    cases b with
+    | true =>
+      show (if Sum.inl true = Sum.inl true then (1 : ℝ) else 0)
+         + (if Sum.inl false = Sum.inl true then (1 : ℝ) else 0)
+         + (if Sum.inr true = Sum.inl true then (1 : ℝ) else 0)
+         + (if Sum.inr false = Sum.inl true then (1 : ℝ) else 0)
+         = 1
+      simp
+    | false =>
+      show (if Sum.inl true = Sum.inl false then (1 : ℝ) else 0)
+         + (if Sum.inl false = Sum.inl false then (1 : ℝ) else 0)
+         + (if Sum.inr true = Sum.inl false then (1 : ℝ) else 0)
+         + (if Sum.inr false = Sum.inl false then (1 : ℝ) else 0)
+         = 1
+      simp
+  | inr b =>
+    cases b with
+    | true =>
+      show (if Sum.inl true = Sum.inr true then (1 : ℝ) else 0)
+         + (if Sum.inl false = Sum.inr true then (1 : ℝ) else 0)
+         + (if Sum.inr true = Sum.inr true then (1 : ℝ) else 0)
+         + (if Sum.inr false = Sum.inr true then (1 : ℝ) else 0)
+         = 1
+      simp
+    | false =>
+      show (if Sum.inl true = Sum.inr false then (1 : ℝ) else 0)
+         + (if Sum.inl false = Sum.inr false then (1 : ℝ) else 0)
+         + (if Sum.inr true = Sum.inr false then (1 : ℝ) else 0)
+         + (if Sum.inr false = Sum.inr false then (1 : ℝ) else 0)
+         = 1
+      simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
