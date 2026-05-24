@@ -444,6 +444,10 @@ example : (Perspectival.Meeting.mk_fromSide ℤ 100).side₂ = -100 := rfl
 
 example : (Perspectival.Meeting.mk_fromSide ℤ 0).side₂ = 0 := rfl
 
+/-- Meeting with 0 in ℤ is a self-meeting (both sides equal). -/
+example : (Perspectival.Meeting.mk_fromSide ℤ 0).side₁
+        = (Perspectival.Meeting.mk_fromSide ℤ 0).side₂ := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
