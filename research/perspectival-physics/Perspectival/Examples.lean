@@ -10268,3 +10268,21 @@ example : Wantable (Option (Fin 4)) := inferInstance
 example : Wantable (Bool → Bool) := inferInstance
 
 example : Wantable (Fin 4 → Bool) := inferInstance
+
+/-- complement on List Bool reverses bits in each element. -/
+example : Wantable.complement ([true, false, true] : List Bool)
+        = [false, true, false] := by
+  show List.map Wantable.complement [true, false, true] = [false, true, false]
+  rfl
+
+example : Wantable.complement ([] : List Bool) = [] := rfl
+
+example : Wantable.complement (Option.some true : Option Bool) = Option.some false := rfl
+
+example : Wantable.complement (Option.some false : Option Bool) = Option.some true := rfl
+
+example : Wantable.complement (Option.none : Option Bool) = Option.none := rfl
+
+/-- Wantable on function spaces is pointwise complement. -/
+example (f : Bool → Bool) (b : Bool) :
+    (Wantable.complement f) b = Wantable.complement (f b) := rfl
