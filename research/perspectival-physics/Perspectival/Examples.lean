@@ -833,6 +833,12 @@ example : (complementEquiv : Equiv.Perm Bool) ≠ 1 := by
   have : (false : Bool) = true := hap
   exact Bool.false_ne_true this
 
+example : (complementEquiv : Equiv.Perm ℤ) ≠ 1 := by
+  intro h
+  have hap : (complementEquiv : Equiv.Perm ℤ).toFun 1 = (1 : Equiv.Perm ℤ).toFun 1 := by rw [h]
+  have : (-1 : ℤ) = 1 := hap
+  linarith
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
