@@ -8952,3 +8952,25 @@ example : uniformState (Bool × Bool)
     (show ((1 : ℝ) / 4) = (1/2 : ℝ) * _ + (1/2 : ℝ) * _) <;>
     (first | (show _ = (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * 0; norm_num)
            | (show _ = (1/2 : ℝ) * 0 + (1/2 : ℝ) * (1/2 : ℝ); norm_num))
+
+/-- The diagonal and antiDiagonal states' marginals together coincide
+with the marginals of uniformState (which is their 50/50 mixture). -/
+example : leftMarginal (uniformState (Bool × Bool))
+        = (1/2 : ℝ) • leftMarginal diagonalState
+        + (1/2 : ℝ) • leftMarginal antiDiagonalState := by
+  show leftMarginal (uniformState (Bool × Bool))
+     = (1/2 : ℝ) • leftMarginal diagonalState
+     + (1/2 : ℝ) • leftMarginal antiDiagonalState
+  -- Use the convex-combination decomposition
+  have hcom : uniformState (Bool × Bool)
+            = (1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState := by
+    funext p
+    rcases p with ⟨a, b⟩
+    cases a <;> cases b <;>
+      (show (1 / ((Fintype.card (Bool × Bool) : ℝ)))
+          = (1/2 : ℝ) * diagonalState _ + (1/2 : ℝ) * antiDiagonalState _) <;>
+      (simp only [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_cast]) <;>
+      (first | (show ((1 : ℝ) / 4) = (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * 0; norm_num)
+             | (show ((1 : ℝ) / 4) = (1/2 : ℝ) * 0 + (1/2 : ℝ) * (1/2 : ℝ); norm_num))
+  rw [hcom]
+  rw [LinearMap.map_add, LinearMap.map_smul, LinearMap.map_smul]
