@@ -13787,6 +13787,48 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   rw [show ∑ w₁, f w₁ = 1 from hf, show ∑ w₂, g w₂ = 1 from hg]
   ring
 
+/-! ### productState distributivity / linearity tests -/
+
+/-- productState is linear in first argument (additive). -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ f₂ : Perspectival.WantableGPT.V W₁) (g : Perspectival.WantableGPT.V W₂) :
+    productState (f₁ + f₂) g = productState f₁ g + productState f₂ g := by
+  funext p
+  show (f₁ + f₂) p.1 * g p.2 = f₁ p.1 * g p.2 + f₂ p.1 * g p.2
+  show (f₁ p.1 + f₂ p.1) * g p.2 = f₁ p.1 * g p.2 + f₂ p.1 * g p.2
+  ring
+
+/-- productState is linear in second argument (additive). -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V W₁) (g₁ g₂ : Perspectival.WantableGPT.V W₂) :
+    productState f (g₁ + g₂) = productState f g₁ + productState f g₂ := by
+  funext p
+  show f p.1 * (g₁ + g₂) p.2 = f p.1 * g₁ p.2 + f p.1 * g₂ p.2
+  show f p.1 * (g₁ p.2 + g₂ p.2) = f p.1 * g₁ p.2 + f p.1 * g₂ p.2
+  ring
+
+/-- productState scales in first argument. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (c : ℝ) (f : Perspectival.WantableGPT.V W₁) (g : Perspectival.WantableGPT.V W₂) :
+    productState (c • f) g = c • productState f g := by
+  funext p
+  show (c • f) p.1 * g p.2 = c * (f p.1 * g p.2)
+  show c * f p.1 * g p.2 = c * (f p.1 * g p.2)
+  ring
+
+/-- productState scales in second argument. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (c : ℝ) (f : Perspectival.WantableGPT.V W₁) (g : Perspectival.WantableGPT.V W₂) :
+    productState f (c • g) = c • productState f g := by
+  funext p
+  show f p.1 * (c • g) p.2 = c * (f p.1 * g p.2)
+  show f p.1 * (c * g p.2) = c * (f p.1 * g p.2)
+  ring
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
