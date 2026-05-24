@@ -9973,3 +9973,21 @@ example : Meeting (Bool × Bool) := ⟨(true, false), (false, true), rfl⟩
 /-- A meeting's swap exchanges its sides. -/
 example (m : Meeting Bool) : m.swap.side₁ = m.side₂ := by cases m; rfl
 example (m : Meeting Bool) : m.swap.side₂ = m.side₁ := by cases m; rfl
+
+/-- swap is involutive. -/
+example (m : Meeting Bool) : m.swap.swap = m := Meeting.swap_swap m
+example (m : Meeting (Fin 4)) : m.swap.swap = m := Meeting.swap_swap m
+example (m : Meeting (Bool × Bool)) : m.swap.swap = m := Meeting.swap_swap m
+
+/-- Meeting.mk_fromSide constructs a meeting from one side. -/
+example : Meeting Bool := Meeting.mk_fromSide Bool true
+example : Meeting Bool := Meeting.mk_fromSide Bool false
+example : Meeting (Fin 4) := Meeting.mk_fromSide (Fin 4) 2
+example : Meeting (Bool × Bool) := Meeting.mk_fromSide (Bool × Bool) (true, false)
+
+/-- Existent on Bool. -/
+example : Existent Bool := ⟨true⟩
+example : Existent Bool := ⟨false⟩
+example : Existent (Fin 4) := ⟨2⟩
+example : Existent ℤ := ⟨42⟩
+example : Existent (Bool × Bool) := ⟨(true, true)⟩
