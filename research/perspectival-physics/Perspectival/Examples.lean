@@ -85,6 +85,15 @@ example (b₁ b₂ : Bool) :
     Wantable.complement ((b₁, b₂) : Bool × Bool)
     = (Wantable.complement b₁, Wantable.complement b₂) := rfl
 
+/-- Constructing a meeting from a side: mk_fromSide on Bool. -/
+example : (Perspectival.Meeting.mk_fromSide Bool true).side₂ = false := rfl
+example : (Perspectival.Meeting.mk_fromSide Bool false).side₂ = true := rfl
+
+/-- Every meeting on Bool is determined by its first side. -/
+example (m : Meeting Bool) :
+    m = Perspectival.Meeting.mk_fromSide Bool m.side₁ :=
+  (Perspectival.Meeting.mk_fromSide_side₁_inv Bool m).symm
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
