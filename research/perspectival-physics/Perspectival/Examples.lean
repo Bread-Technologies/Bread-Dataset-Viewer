@@ -2971,6 +2971,13 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool �
               * (2 * Fintype.card (Bool × Bool × Bool × Bool) - 1) :=
   Perspectival.WantableGPT.wantableGPT_classical_dichotomy (Bool × Bool × Bool × Bool) (by decide)
 
+/-- Bool⁴ has 16 distinguishable states (the entire vertex set). -/
+example : Perspectival.Hardy.DistinguishabilitySet
+            (Perspectival.WantableGPT.gpt (Bool × Bool × Bool × Bool))
+            ((Finset.univ : Finset (Bool × Bool × Bool × Bool)).image
+              (Perspectival.WantableGPT.vertex (Bool × Bool × Bool × Bool))) :=
+  Perspectival.WantableGPT.vertex_distinguishability_set (Bool × Bool × Bool × Bool)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
