@@ -13025,3 +13025,31 @@ example (f : Perspectival.WantableGPT.V (Fin 4)) :
       Finset.sum_insert (by decide), Finset.sum_insert (by decide),
       Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
   linarith [hsum]
+
+/-! ### Born-rule probabilities sum on Fin 4 states -/
+
+/-- For any state on Bool, the two probabilities are in [0,1]. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
+    0 ≤ f b := hf.1 b
+
+/-- For any state on Bool, the two probabilities are in [0,1]. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
+    0 ≤ f b ∧ f b ≤ 1 := by
+  refine ⟨hf.1 b, ?_⟩
+  have hsum : f true + f false = 1 := by
+    have hs := hf.2
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton] at hs
+    linarith
+  have hn := hf.1
+  cases b with
+  | true =>
+    have h0 := hn true
+    have h1 := hn false
+    linarith
+  | false =>
+    have h0 := hn true
+    have h1 := hn false
+    linarith
