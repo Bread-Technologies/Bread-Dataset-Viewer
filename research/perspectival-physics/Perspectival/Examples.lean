@@ -6191,5 +6191,38 @@ theorem WantableGPT_complementTransform_invertible
   show f (Wantable.complement (Wantable.complement w)) = f w
   rw [Wantable.complement_involutive]
 
+/-- Concrete: on Bool, the complementTransform involution sends f back. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    (Perspectival.WantableGPT.complementTransform Bool).toLin
+      ((Perspectival.WantableGPT.complementTransform Bool).toLin f) = f :=
+  WantableGPT_complementTransform_invertible f
+
+/-- Concrete: on Fin 4, the complementTransform involution sends f back. -/
+example (f : Perspectival.WantableGPT.V (Fin 4)) :
+    (Perspectival.WantableGPT.complementTransform (Fin 4)).toLin
+      ((Perspectival.WantableGPT.complementTransform (Fin 4)).toLin f) = f :=
+  WantableGPT_complementTransform_invertible f
+
+/-- Bijectivity from involution: complementTransform is bijective. -/
+theorem WantableGPT_complementTransform_bijective
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Function.Bijective
+      (Perspectival.WantableGPT.complementTransform W).toLin := by
+  refine ⟨?_, ?_⟩
+  · -- Injective: from C(f) = C(g), apply C again to get f = g.
+    intro f g h
+    have hC : (Perspectival.WantableGPT.complementTransform W).toLin
+                ((Perspectival.WantableGPT.complementTransform W).toLin f)
+            = (Perspectival.WantableGPT.complementTransform W).toLin
+                ((Perspectival.WantableGPT.complementTransform W).toLin g) := by
+      rw [h]
+    rw [WantableGPT_complementTransform_invertible,
+        WantableGPT_complementTransform_invertible] at hC
+    exact hC
+  · -- Surjective: for any f, C(C f) = f, so C f is a preimage.
+    intro f
+    refine ⟨(Perspectival.WantableGPT.complementTransform W).toLin f, ?_⟩
+    exact WantableGPT_complementTransform_invertible f
+
 end Examples
 end Perspectival
