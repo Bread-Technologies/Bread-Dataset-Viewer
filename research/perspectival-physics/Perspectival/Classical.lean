@@ -398,5 +398,47 @@ theorem classical_n2_second_coord_one_iff (ρ : V 2) (hρ : ρ ∈ states 2) :
       rw [h]
       exact (vertex_n2_one_coords).2.symm
 
+/-- The midpoint state of V 2 stdSimplex, namely (1/2, 1/2). -/
+noncomputable def n2_midpoint : V 2 := fun _ => (1/2 : ℝ)
+
+/-- The midpoint state is in states 2. -/
+theorem n2_midpoint_in_states : n2_midpoint ∈ states 2 := by
+  refine ⟨?_, ?_⟩
+  · intro j
+    show (0 : ℝ) ≤ 1/2
+    norm_num
+  · show ∑ j, (1/2 : ℝ) = 1
+    rw [show (Finset.univ : Finset (Fin 2)) = {0, 1} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    norm_num
+
+/-- The midpoint is NOT a vertex (extreme point). -/
+theorem n2_midpoint_ne_vertex_zero : n2_midpoint ≠ vertex 2 0 := by
+  intro h
+  have := congr_fun h 0
+  rw [show n2_midpoint 0 = (1/2 : ℝ) from rfl] at this
+  rw [(vertex_n2_zero_coords).1] at this
+  norm_num at this
+
+/-- Midpoint ≠ vertex 1 either. -/
+theorem n2_midpoint_ne_vertex_one : n2_midpoint ≠ vertex 2 1 := by
+  intro h
+  have := congr_fun h 1
+  rw [show n2_midpoint 1 = (1/2 : ℝ) from rfl] at this
+  rw [(vertex_n2_one_coords).2] at this
+  norm_num at this
+
+/-- The midpoint is `(1/2) • vertex 0 + (1/2) • vertex 1`. -/
+theorem n2_midpoint_decomp :
+    n2_midpoint = (1/2 : ℝ) • vertex 2 0 + (1/2 : ℝ) • vertex 2 1 := by
+  funext j
+  fin_cases j
+  · show (1/2 : ℝ) = (1/2 : ℝ) * vertex 2 0 0 + (1/2 : ℝ) * vertex 2 1 0
+    rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
+    norm_num
+  · show (1/2 : ℝ) = (1/2 : ℝ) * vertex 2 0 1 + (1/2 : ℝ) * vertex 2 1 1
+    rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]
+    norm_num
+
 end Classical
 end Perspectival
