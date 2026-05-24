@@ -10505,3 +10505,22 @@ example {W : Type u} [Wantable W] :
   apply Equiv.ext
   intro w
   rfl
+
+/-- toEquivPerm_commutes_complement: PTrans permutations commute with
+the complement permutation. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    PTrans.toEquivPerm φ * PTrans.toEquivPerm (PTrans.complement : PTrans W)
+    = PTrans.toEquivPerm (PTrans.complement : PTrans W) * PTrans.toEquivPerm φ :=
+  PTrans.toEquivPerm_commutes_complement φ
+
+/-- ofEquivPerm constructs a PTrans from a complement-commuting permutation. -/
+example {W : Type u} [Wantable W] (σ : Equiv.Perm W)
+    (h : ∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) :
+    PTrans W := PTrans.ofEquivPerm σ h
+
+/-- ofEquivPerm of identity Equiv = PTrans.id. -/
+example {W : Type u} [Wantable W] :
+    PTrans.ofEquivPerm (1 : Equiv.Perm W) (fun w => rfl) = (1 : PTrans W) := by
+  apply PTrans.ext
+  intro w
+  rfl
