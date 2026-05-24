@@ -3414,6 +3414,21 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     {G : Perspectival.GPT V} {ρ : V} (h : ρ ∈ G.states) : ρ ≠ 0 :=
   Perspectival.Distinguish.state_ne_zero h
 
+/-- Distinguishable states are linearly independent. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ρ₁ ρ₂ : V}
+    (h₁ : ρ₁ ∈ G.states) (h₂ : ρ₂ ∈ G.states)
+    (hd : Perspectival.Hardy.Distinguishable G ρ₁ ρ₂) :
+    LinearIndependent ℝ ![ρ₁, ρ₂] :=
+  Perspectival.Distinguish.distinguishable_imp_linear_independent h₁ h₂ hd
+
+/-- N perfectly distinguishable states are linearly independent. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {n : ℕ} (ρ : Fin n → V)
+    (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) :
+    LinearIndependent ℝ ρ :=
+  Perspectival.Distinguish.perfect_distinguishable_imp_linear_independent ρ w
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
