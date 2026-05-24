@@ -10852,3 +10852,24 @@ example {W : Type u} [Wantable W] (R₁ R₂ R₃ : Reality W) (m : Meeting W) :
 /-- Reality intersection is commutative. -/
 example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) (m : Meeting W) :
     (R₁ m ∧ R₂ m) ↔ (R₂ m ∧ R₁ m) := And.comm
+
+/-- Reality union is associative. -/
+example {W : Type u} [Wantable W] (R₁ R₂ R₃ : Reality W) (m : Meeting W) :
+    ((R₁ m ∨ R₂ m) ∨ R₃ m) ↔ (R₁ m ∨ (R₂ m ∨ R₃ m)) :=
+  or_assoc
+
+/-- Reality union is commutative. -/
+example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) (m : Meeting W) :
+    (R₁ m ∨ R₂ m) ↔ (R₂ m ∨ R₁ m) := Or.comm
+
+/-- Reality double negation is original (classical). -/
+example {W : Type u} [Wantable W] (R : Reality W) (m : Meeting W) :
+    (¬ ¬ R m) ↔ R m := not_not
+
+/-- Reality De Morgan's law: ¬ (R₁ ∧ R₂) ↔ ¬R₁ ∨ ¬R₂ (classical). -/
+example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) (m : Meeting W) :
+    ¬ (R₁ m ∧ R₂ m) ↔ ¬ R₁ m ∨ ¬ R₂ m := not_and_or
+
+/-- Reality De Morgan's law: ¬ (R₁ ∨ R₂) ↔ ¬R₁ ∧ ¬R₂. -/
+example {W : Type u} [Wantable W] (R₁ R₂ : Reality W) (m : Meeting W) :
+    ¬ (R₁ m ∨ R₂ m) ↔ ¬ R₁ m ∧ ¬ R₂ m := not_or
