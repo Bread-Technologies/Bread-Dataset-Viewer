@@ -2812,6 +2812,13 @@ example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
   show ¬ (P R ∧ Q R) ↔ (¬ P R) ∨ (¬ Q R)
   tauto
 
+/-- DeMorgan's other direction: complement(P ∨ Q) ↔ (¬P ∧ ¬Q). -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
+    complementPattern (Pattern.or P Q) R ↔
+    Pattern.and (complementPattern P) (complementPattern Q) R := by
+  show ¬ (P R ∨ Q R) ↔ (¬ P R) ∧ (¬ Q R)
+  tauto
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
