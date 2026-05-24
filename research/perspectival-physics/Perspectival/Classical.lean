@@ -833,5 +833,26 @@ theorem classical_n2_no_strict_path_id_to_swap
   have hinj : Function.Injective (γ t) := (hbij t).1
   exact n2_disc_det_zero_implies_not_injective (γ t) (hpreserve t) ht hinj
 
+/-- **R6 FINAL FORM (modulo continuity hypothesis).** No
+StrictReversiblePath from `swapStrictReversible` to
+`StrictReversible.id` exists on Classical n=2 GPT, given the
+continuity hypothesis that n2_disc_det ∘ γ is a continuous map. -/
+theorem classical_n2_no_strict_reversible_path
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt 2)
+              (Perspectival.Continuity.StrictReversible.id (gpt 2))
+              swapStrictReversible)
+    (hcont : Continuous (fun t => n2_disc_det (p.γ t))) :
+    False := by
+  apply classical_n2_no_strict_path_id_to_swap p.γ hcont
+    p.preserves_states_along p.bijective_along
+  · -- p.γ 0 = LinearMap.id (from p.start and StrictReversible.id_toLin)
+    show p.γ 0 = LinearMap.id
+    rw [p.start]
+    rfl
+  · -- p.γ 1 = swapLin (from p.finish)
+    show p.γ 1 = swapLin
+    rw [p.finish]
+    rfl
+
 end Classical
 end Perspectival
