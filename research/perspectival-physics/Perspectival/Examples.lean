@@ -3024,6 +3024,9 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3))
           Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) :=
   Perspectival.WantableGPT.wantableGPT_dim_sum
 
+-- (Bool×W and Bool⊕W universe-polymorphic dim theorems deferred — needs
+-- explicit `Type u` rather than `Type*` to align with Bool's Wantable instance.)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
