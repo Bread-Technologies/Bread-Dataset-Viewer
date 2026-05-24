@@ -317,6 +317,15 @@ example : LinearIndependent ℝ
 example : (Wantable.complement true = false) ↔ true = Wantable.complement false :=
   Wantable.complement_eq_iff true false
 
+/-- fromPTrans of PTrans.complement on Bool gives the complement action. -/
+example :
+    (Perspectival.WantableGPT.fromPTrans Bool PTrans.complement).toLin
+    = Perspectival.WantableGPT.complementAction Bool := by
+  apply LinearMap.ext
+  intro f
+  funext b
+  cases b <;> rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
