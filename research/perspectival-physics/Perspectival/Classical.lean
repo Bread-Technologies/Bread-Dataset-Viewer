@@ -1805,5 +1805,23 @@ example
   exact (n_vertex_coord_continuous_of_joint (n := 2) γ hcont 0 0).sub
         (n_vertex_coord_continuous_of_joint (n := 2) γ hcont 1 0)
 
+/-! ## Cleaner alternative form of R6 n=2 disconnect -/
+
+/-- Cleaner: any bijective state-preserving continuous path on V 2
+joining id and swap is impossible. The continuity is just joint continuity
+of γ at the linear-map level. -/
+theorem classical_n2_no_bijective_state_pres_joint_path
+    (γ : unitInterval → V 2 →ₗ[ℝ] V 2)
+    (hcont : Continuous (fun p : unitInterval × V 2 => γ p.1 p.2))
+    (hpreserve : ∀ t, ∀ ρ ∈ states 2, (γ t) ρ ∈ states 2)
+    (hbij : ∀ t, Function.Bijective (γ t))
+    (h0 : γ 0 = LinearMap.id)
+    (h1 : γ 1 = swapLin) :
+    False :=
+  classical_n2_no_strict_path_id_to_swap γ
+    ((n_vertex_coord_continuous_of_joint (n := 2) γ hcont 0 0).sub
+     (n_vertex_coord_continuous_of_joint (n := 2) γ hcont 1 0))
+    hpreserve hbij h0 h1
+
 end Classical
 end Perspectival
