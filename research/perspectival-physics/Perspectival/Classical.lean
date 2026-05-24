@@ -232,5 +232,31 @@ theorem vertex_distinguishability_set :
 -- analysis of an open-segment representation and is non-trivial; left
 -- for follow-up. See ROADMAP.md R1.
 
+/-- **Vertex decomposition for the classical GPT.** Every element of
+`V n = Fin n → ℝ` is its coordinate-wise vertex combination. -/
+theorem vertex_decomposition (f : V n) :
+    f = ∑ i, f i • vertex n i := by
+  funext j
+  show f j = (∑ i, f i • vertex n i) j
+  rw [Finset.sum_apply]
+  rw [Finset.sum_eq_single j
+    (fun i _ hij => by
+      show f i • vertex n i j = 0
+      show f i * (if i = j then (1 : ℝ) else 0) = 0
+      simp [hij])
+    (fun h => absurd (Finset.mem_univ j) h)]
+  symm
+  show (f j • vertex n j) j = f j
+  show f j * (if j = j then (1 : ℝ) else 0) = f j
+  simp
+
+/-- The classical-GPT vertices span `V n`. -/
+theorem vertices_span : Submodule.span ℝ (Set.range (vertex n)) = ⊤ := by
+  rw [eq_top_iff]
+  intro f _
+  rw [vertex_decomposition n f]
+  exact Submodule.sum_mem _ (fun i _ =>
+    Submodule.smul_mem _ (f i) (Submodule.subset_span ⟨i, rfl⟩))
+
 end Classical
 end Perspectival
