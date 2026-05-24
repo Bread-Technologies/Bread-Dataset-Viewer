@@ -160,6 +160,10 @@ example : (PTrans.complement : PTrans ℤ) ≠ 1 := by
   have : (-1 : ℤ) = 1 := hap
   linarith
 
+/-- Squared complement on ℤ is identity. -/
+example : (PTrans.complement : PTrans ℤ) * PTrans.complement = 1 :=
+  PTrans.complement_sq
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
