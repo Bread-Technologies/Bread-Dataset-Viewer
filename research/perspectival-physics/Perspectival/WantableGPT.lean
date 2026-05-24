@@ -527,6 +527,31 @@ theorem exists_two_distinguishable [Fintype W]
   refine ⟨vertex W w, vertex W v, vertex_in_states W w, vertex_in_states W v, ?_⟩
   exact vertices_distinguishable W w v hwv
 
+/-- **Stronger no-go.** For any finite Wantable `W` with `|W| ≥ 2`, the
+WantableGPT does NOT have quantum signature (K = N²). This is a
+strict-inequality version of `wantableGPT_is_classical` ruling out
+the quantum case explicitly. -/
+theorem wantableGPT_not_quantum [Fintype W] (h : 2 ≤ Fintype.card W) :
+    Module.finrank ℝ (V W) ≠ Fintype.card W * Fintype.card W := by
+  rw [finrank_V_eq_card]
+  intro heq
+  -- |W| = |W| * |W| with |W| ≥ 2 forces |W| = 0 or |W| = 1
+  set n := Fintype.card W with hn
+  have hn2 : 2 ≤ n := h
+  have hnn : n = n * n := heq
+  -- n * (n - 1) = 0 from n = n*n (working in ℕ)
+  have : n * 1 = n * n := by rw [mul_one]; exact hnn
+  have hn1 : n = 1 ∨ n = 0 := by
+    have hmul : n * 1 = n * n := this
+    have : 1 = n ∨ n = 0 := by
+      rcases Nat.eq_zero_or_pos n with hz | hpos
+      · exact Or.inr hz
+      · left; exact (Nat.eq_of_mul_eq_mul_left hpos hmul)
+    rcases this with h | h
+    · exact Or.inl h.symm
+    · exact Or.inr h
+  omega
+
 /-- **Hardy's "classical signature" `N = K` is satisfied for the
 WantableGPT bridge.** The maximal perfectly-distinguishable family is
 the vertex family (size `|W|`), and the state-space dimension is also
