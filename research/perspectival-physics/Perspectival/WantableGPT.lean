@@ -656,6 +656,9 @@ theorem wantableGPT_dim_sum {W₁ W₂ : Type u}
     = Module.finrank ℝ (V W₁) + Module.finrank ℝ (V W₂) := by
   rw [finrank_V_eq_card, finrank_V_eq_card, finrank_V_eq_card, Fintype.card_sum]
 
+-- (Bool-specialised dim theorems live in Examples.lean since Wantable Bool
+-- is defined there.)
+
 /-- **Hardy-signature dichotomy.** For finite Wantable W with `|W| ≥ 2`,
 the WantableGPT satisfies the classical signature `K = N = |W|` and
 *does not* satisfy any of the standard non-classical signatures
