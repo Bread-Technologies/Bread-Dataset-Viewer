@@ -15168,6 +15168,46 @@ example (α : ℝ) :
   show α * 0 + (1 - α) * 1 = 1 - α
   ring
 
+/-! ### Distinguishability sets (perfectly orthogonal pairs) -/
+
+/-- diagonalState and antiDiagonalState are perfectly distinguishable
+(diagonalIndicator gives 1 vs 0). -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool))
+      diagonalState antiDiagonalState :=
+  diagonalState_distinguishable_antiDiagonalState
+
+/-- antiDiagonalState and diagonalState are perfectly distinguishable
+(antiDiagonalIndicator gives 1 vs 0). -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool))
+      antiDiagonalState diagonalState :=
+  antiDiagonalState_distinguishable_diagonalState
+
+/-- NOTE: diagonalState and uniformState (Bool × Bool) are NOT perfectly
+distinguishable — diagonalIndicator gives 1 vs 1/2. They are merely
+distinguishable in a probabilistic sense, not deterministically. -/
+example :
+    ¬ (diagonalIndicatorLin diagonalState = 1
+       ∧ diagonalIndicatorLin (uniformState (Bool × Bool)) = 0) := by
+  intro ⟨_, h2⟩
+  -- diagonalIndicatorLin (uniformState) = 1/2, not 0
+  rw [show diagonalIndicatorLin (uniformState (Bool × Bool)) = 1/2 from by
+    show (∑ p, diagonalIndicator p * uniformState (Bool × Bool) p) = 1/2
+    rw [show (Finset.univ : Finset (Bool × Bool))
+          = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    have h_unif : ∀ p : Bool × Bool, uniformState (Bool × Bool) p = (1/4 : ℝ) := by
+      intro p; show (1 : ℝ) / Fintype.card (Bool × Bool) = 1/4
+      rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+    rw [h_unif (true, true), h_unif (true, false), h_unif (false, true), h_unif (false, false)]
+    show (1 : ℝ) * (1/4) + (0 * (1/4) + (0 * (1/4) + 1 * (1/4))) = 1/2
+    norm_num] at h2
+  norm_num at h2
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
