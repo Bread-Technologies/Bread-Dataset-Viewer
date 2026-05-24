@@ -12992,3 +12992,36 @@ example (f : Perspectival.WantableGPT.V (Fin 3))
       Finset.sum_insert (by decide), Finset.sum_insert (by decide),
       Finset.sum_singleton] at hsum
   linarith
+
+/-! ### deltaIndicator on Fin 4 -/
+
+/-- Fin 4 vertex 0 has δ_0 value 1. -/
+example : deltaIndicatorLin (W := Fin 4) 0 (Perspectival.WantableGPT.vertex (Fin 4) 0) = 1 :=
+  deltaIndicatorLin_vertex_self 0
+
+/-- Fin 4 vertex 3 has δ_0 value 0. -/
+example : deltaIndicatorLin (W := Fin 4) 0 (Perspectival.WantableGPT.vertex (Fin 4) 3) = 0 :=
+  deltaIndicatorLin_vertex_other 0 3 (by decide)
+
+/-- Fin 4 state has 4 probabilities summing to 1. -/
+example (f : Perspectival.WantableGPT.V (Fin 4))
+    (hf : f ∈ Perspectival.WantableGPT.states (Fin 4)) :
+    f 0 + f 1 + f 2 + f 3 = 1 := by
+  have hsum := hf.2
+  rw [show (Finset.univ : Finset (Fin 4)) = {0, 1, 2, 3} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
+  linarith
+
+/-- Fin 4 sum of all 4 delta indicators = unit. -/
+example (f : Perspectival.WantableGPT.V (Fin 4)) :
+    deltaIndicatorLin (0 : Fin 4) f
+    + deltaIndicatorLin (1 : Fin 4) f
+    + deltaIndicatorLin (2 : Fin 4) f
+    + deltaIndicatorLin (3 : Fin 4) f
+      = Perspectival.WantableGPT.unitFn (Fin 4) f := by
+  have hsum := sum_deltaIndicatorLin f
+  rw [show (Finset.univ : Finset (Fin 4)) = {0, 1, 2, 3} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
+  linarith [hsum]
