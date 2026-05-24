@@ -16118,3 +16118,37 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   rw [Fintype.sum_prod_type]
   show (∑ w₁, ∑ w₂, f w₁ * g w₂) = (∑ w₁, f w₁) * (∑ w₂, g w₂)
   rw [← Finset.sum_mul_sum]
+
+/-! ## PatternStableWantable concrete instances (axiom-refinement per PATTERN_STABLE_WANTABLE.md)
+
+Concrete instances of the `PatternStableWantable` typeclass from
+`Ontology.lean`. Currently uses the maximal "everything is stable"
+trivial construction; non-trivial Stable predicates (Markov-blanket
+flavor) are future refinement work. -/
+
+instance : PatternStableWantable Bool :=
+  PatternStableWantable.trivialOfNonempty Bool
+
+instance : PatternStableWantable (Fin 2) :=
+  PatternStableWantable.trivialOfNonempty (Fin 2)
+
+instance : PatternStableWantable (Fin 3) :=
+  PatternStableWantable.trivialOfNonempty (Fin 3)
+
+instance : PatternStableWantable (Fin 4) :=
+  PatternStableWantable.trivialOfNonempty (Fin 4)
+
+/-- For Bool, complement of `true` is stable (since complement of any stable thing is stable). -/
+example : PatternStableWantable.Stable (Wantable.complement true : Bool) := by
+  exact PatternStableWantable.stable_complement true trivial
+
+/-- Bool has a stable element (witness). -/
+example : ∃ b : Bool, PatternStableWantable.Stable b :=
+  PatternStableWantable.stable_nonempty
+
+/-- For products and sums of PatternStableWantable instances, the same
+"everything is stable" works. -/
+instance instPatternStableProd {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Nonempty W₁] [Nonempty W₂] :
+    PatternStableWantable (W₁ × W₂) :=
+  PatternStableWantable.trivialOfNonempty (W₁ × W₂)

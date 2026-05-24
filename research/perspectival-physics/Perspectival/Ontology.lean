@@ -247,4 +247,52 @@ def Pattern.and {W : Type u} [Wantable W] (P Q : Pattern W) : Pattern W :=
 def Pattern.or {W : Type u} [Wantable W] (P Q : Pattern W) : Pattern W :=
   fun R => P R ∨ Q R
 
+/-! ## Axiom IV refinement: PatternStableWantable
+
+The framework's Axiom IV says "particulars are stable patterns within
+meetings, not substances behind them." A bare `Wantable W` does not
+itself express the stability requirement. `PatternStableWantable`
+strengthens `Wantable` with an explicit `Stable : W → Prop` predicate.
+
+Per `PATTERN_STABLE_WANTABLE.md`, formulation (a) — informational
+sufficiency, à la Friston's Markov blanket — recommends:
+  `Stable w` iff there exists a finite-information predicate
+  determining `w` up to perspectival transformations.
+
+This file provides the minimal scaffold; the choice of Stable
+predicate is left open for downstream refinement modules.
+
+This is the framework's axiom-refinement per the user-authorized
+"metaphysics-fixed, axioms-adjustable" methodology. The metaphysical
+commitment (Axiom IV) is fixed; this is one concrete formalization. -/
+
+/-- A `PatternStableWantable W` is a `Wantable W` with an explicit
+predicate `Stable : W → Prop` marking which wants represent stable
+patterns. Constraints: (1) complement preserves stability — if `w` is
+a stable pattern, so is its complement (because complement is
+involutive and stability is a structural property of wants). (2) the
+stable subclass is non-empty — there is at least one stable pattern
+(otherwise no existents). -/
+class PatternStableWantable (W : Type u) extends Wantable W where
+  Stable : W → Prop
+  stable_complement : ∀ w, Stable w → Stable (Wantable.complement w)
+  stable_nonempty : ∃ w, Stable w
+
+namespace PatternStableWantable
+attribute [simp] stable_complement
+end PatternStableWantable
+
+/-- For any `Wantable W` where the "everything is stable" predicate is
+non-trivially inhabited, there is a `PatternStableWantable` instance
+with `Stable := fun _ => True`. This is the maximal-stability degenerate
+case; non-trivial formulations restrict `Stable` further. -/
+def PatternStableWantable.trivialOfNonempty (W : Type u) [Wantable W]
+    [Nonempty W] : PatternStableWantable W where
+  toWantable := inferInstance
+  Stable := fun _ => True
+  stable_complement := fun _ _ => trivial
+  stable_nonempty := by
+    obtain ⟨w⟩ := ‹Nonempty W›
+    exact ⟨w, trivial⟩
+
 end Perspectival
