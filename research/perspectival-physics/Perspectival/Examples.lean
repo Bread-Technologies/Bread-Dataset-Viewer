@@ -9241,3 +9241,27 @@ example (n : ℕ) : (∑ i, Perspectival.Classical.vertex n i)
   show Perspectival.Classical.vertex n j j = 1
   show (if j = j then (1 : ℝ) else 0) = 1
   simp
+
+/-- Classical.vertex is in WantableGPT-states-like simplex states. -/
+example (n : ℕ) (i : Fin n) :
+    Perspectival.Classical.vertex n i ∈ Perspectival.Classical.states n :=
+  Perspectival.Classical.vertex_in_states n i
+
+/-- Classical.gpt is a GPT. -/
+example (n : ℕ) : Perspectival.GPT (Perspectival.Classical.V n) :=
+  Perspectival.Classical.gpt n
+
+/-- WantableGPT.gpt is a GPT. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.GPT (Perspectival.WantableGPT.V W) :=
+  Perspectival.WantableGPT.gpt W
+
+/-- Concrete: classical 2-outcome GPT has dim 2. -/
+example : Module.finrank ℝ (Perspectival.Classical.V 2) = 2 := by
+  show Module.finrank ℝ (Fin 2 → ℝ) = 2
+  simp
+
+/-- Concrete: classical 3-outcome GPT has dim 3. -/
+example : Module.finrank ℝ (Perspectival.Classical.V 3) = 3 := by
+  show Module.finrank ℝ (Fin 3 → ℝ) = 3
+  simp
