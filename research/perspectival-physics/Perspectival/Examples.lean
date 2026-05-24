@@ -7056,5 +7056,26 @@ theorem productState_add_right
   show f₁ p.1 * (f₂ p.2 + f₂' p.2) = f₁ p.1 * f₂ p.2 + f₁ p.1 * f₂' p.2
   ring
 
+/-- New: productState commutes with PTrans.prodMap action via
+transformAction. -/
+theorem productState_transform_factor
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (φ₁ : PTrans W₁) (φ₂ : PTrans W₂)
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂) :
+    Perspectival.WantableGPT.transformAction (W₁ × W₂)
+        (PTrans.prodMap φ₁ φ₂) (productState f₁ f₂)
+      = productState
+          (Perspectival.WantableGPT.transformAction W₁ φ₁ f₁)
+          (Perspectival.WantableGPT.transformAction W₂ φ₂ f₂) := by
+  funext p
+  show productState f₁ f₂ ((PTrans.prodMap φ₁ φ₂).invFun p)
+     = (Perspectival.WantableGPT.transformAction W₁ φ₁ f₁) p.1
+     * (Perspectival.WantableGPT.transformAction W₂ φ₂ f₂) p.2
+  show f₁ ((PTrans.prodMap φ₁ φ₂).invFun p).1
+     * f₂ ((PTrans.prodMap φ₁ φ₂).invFun p).2
+     = f₁ (φ₁.invFun p.1) * f₂ (φ₂.invFun p.2)
+  rfl
+
 end Examples
 end Perspectival
