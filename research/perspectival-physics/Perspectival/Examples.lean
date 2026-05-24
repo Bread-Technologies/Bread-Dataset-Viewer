@@ -14574,6 +14574,38 @@ example :
       antiDiagonalIndicatorLin_on_antiDiagonalState]
   norm_num
 
+/-! ### Examples of states and effects via the GPT structure -/
+
+/-- The states set of a GPT is non-empty: at least one vertex. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Inhabited W] :
+    (Perspectival.WantableGPT.gpt W).states.Nonempty :=
+  ⟨_, Perspectival.WantableGPT.vertex_in_states W default⟩
+
+/-- The effects set of a GPT is non-empty (e.g., contains the unit functional). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.gpt W).effects.Nonempty :=
+  ⟨_, (Perspectival.WantableGPT.gpt W).unit_is_effect⟩
+
+/-- A state and an effect produce a probability in [0, 1]. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ : Perspectival.WantableGPT.V W) (e : Perspectival.WantableGPT.V W →ₗ[ℝ] ℝ)
+    (hρ : ρ ∈ Perspectival.WantableGPT.states W)
+    (he : e ∈ Perspectival.WantableGPT.effects W) :
+    0 ≤ e ρ ∧ e ρ ≤ 1 :=
+  (Perspectival.WantableGPT.gpt W).prob_in_unit_interval e he ρ hρ
+
+/-- States are nonneg as functions. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ : Perspectival.WantableGPT.V W)
+    (hρ : ρ ∈ Perspectival.WantableGPT.states W) (w : W) :
+    0 ≤ ρ w := hρ.1 w
+
+/-- States are normalized: sum = 1 (= unit functional applied = 1). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ : Perspectival.WantableGPT.V W)
+    (hρ : ρ ∈ Perspectival.WantableGPT.states W) :
+    ∑ w, ρ w = 1 := hρ.2
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
