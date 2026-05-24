@@ -387,6 +387,13 @@ example : PTrans.prodMap (PTrans.complement : PTrans Bool) (1 : PTrans Bool) ≠
 example : (PTrans.complement : PTrans (Bool × Bool)).toFun (true, true) = (false, false) :=
   rfl
 
+/-- PTrans.complement on Bool ⊕ Bool acts within each component. -/
+example : (PTrans.complement : PTrans (Bool ⊕ Bool)).toFun (Sum.inl true) = Sum.inl false :=
+  rfl
+
+example : (PTrans.complement : PTrans (Bool ⊕ Bool)).toFun (Sum.inr false) = Sum.inr true :=
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
