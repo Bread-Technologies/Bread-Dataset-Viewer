@@ -10226,3 +10226,28 @@ example (u : Unit) : Wantable.complement u = () := rfl
 
 /-- For Fin 3 (with id complement), complement is the identity. -/
 example (i : Fin 3) : Wantable.complement i = i := rfl
+
+/-- For Bool × Bool, complement is componentwise. -/
+example (p : Bool × Bool) :
+    Wantable.complement p = (Wantable.complement p.1, Wantable.complement p.2) :=
+  rfl
+
+/-- For Bool ⊕ Bool, complement is in the same summand. -/
+example (b : Bool) : Wantable.complement (Sum.inl b : Bool ⊕ Bool)
+                   = Sum.inl (Wantable.complement b) := rfl
+
+example (b : Bool) : Wantable.complement (Sum.inr b : Bool ⊕ Bool)
+                   = Sum.inr (Wantable.complement b) := rfl
+
+/-- For Bool × Bool × Bool, complement is triplewise. -/
+example (p : Bool × Bool × Bool) :
+    Wantable.complement p = (Wantable.complement p.1,
+                             Wantable.complement p.2.1,
+                             Wantable.complement p.2.2) := rfl
+
+/-- For Bool × Bool × Bool × Bool, complement is quadruplewise. -/
+example (p : Bool × Bool × Bool × Bool) :
+    Wantable.complement p = (Wantable.complement p.1,
+                             Wantable.complement p.2.1,
+                             Wantable.complement p.2.2.1,
+                             Wantable.complement p.2.2.2) := rfl
