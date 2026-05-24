@@ -53,15 +53,24 @@ A Lean 4 codebase formalizing the perspectival-physics research program:
    permutations. *The framework's vocabulary picks out a standard
    algebraic object* (Quinean ontological deflation).
 
-8. **No-go theorem for the bare ontology** — for any finite Wantable
-   `W`, the `WantableGPT.gpt W` construction always yields the
-   *classical* GPT signature `N = K = |W|`
-   (`WantableGPT.lean :: wantableGPT_is_classical`). Combined with
-   composition theorems `K(W₁ × W₂) = |W₁| · |W₂|` and
-   `K(W₁ ⊕ W₂) = |W₁| + |W₂|`, this delimits exactly what the bare
-   axioms can derive: classical structure only. Quantum derivation
-   requires additional postulates (agency / composition / non-finite
-   structure) beyond I–IV.
+8. **Triple no-go theorem for the bare ontology** — for any finite
+   Wantable `W` with `|W| ≥ 2`:
+   - The `WantableGPT.gpt W` construction always yields the *classical*
+     GPT signature `N = K = |W|` (`wantableGPT_is_classical`).
+   - The quantum signature `K = N²` is formally ruled out
+     (`wantableGPT_not_quantum`).
+   - The real-QM signature `2K = N(N+1)` is formally ruled out
+     (`wantableGPT_not_realQM`).
+   - The quaternionic-QM signature `K = N(2N-1)` is formally ruled out
+     (`wantableGPT_not_quaternionicQM`).
+   - Composition theorems give `K(W₁ × W₂) = |W₁| · |W₂|` and
+     `K(W₁ ⊕ W₂) = |W₁| + |W₂|`.
+
+   This is a comprehensive structural delimitation. Quantum
+   derivation requires additional postulates (agency / composition /
+   non-finite structure) beyond I–IV; the bare ontology *cannot* even
+   in principle produce a non-classical Hardy signature via the
+   WantableGPT bridge for `|W| ≥ 2`.
 
 ## The framework's distinctive contribution
 
