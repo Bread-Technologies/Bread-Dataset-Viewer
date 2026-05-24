@@ -215,6 +215,20 @@ example : (PTrans.complement : PTrans (Fin 3)) = 1 := by
   intro i
   rfl
 
+/-- The complement PTrans on Unit (with id complement) IS the identity. -/
+example : (PTrans.complement : PTrans Unit) = 1 := by
+  apply PTrans.ext
+  intro u
+  rfl
+
+/-- For Wantable Fin 3 with identity-complement, *every* element is
+self-complementary. -/
+example : ∀ i : Fin 3, SelfComplementary i := by
+  intro i; rfl
+
+/-- For Wantable Unit, the singleton element is self-complementary. -/
+example : SelfComplementary () := rfl
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
