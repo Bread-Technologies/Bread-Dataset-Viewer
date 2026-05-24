@@ -9324,3 +9324,33 @@ example : (Perspectival.Classical.gpt 3).prob
             (Perspectival.Classical.vertex 3 1) = 1 := by
   show Perspectival.Classical.proj 3 1 (Perspectival.Classical.vertex 3 1) = 1
   rw [Perspectival.Classical.proj_vertex]; simp
+
+/-- WantableGPT.gpt's prob applied to proj and vertex on Bool. -/
+example : (Perspectival.WantableGPT.gpt Bool).prob
+            (Perspectival.WantableGPT.proj Bool true)
+            (Perspectival.WantableGPT.vertex Bool true) = 1 := by
+  show Perspectival.WantableGPT.proj Bool true
+        (Perspectival.WantableGPT.vertex Bool true) = 1
+  rw [Perspectival.WantableGPT.proj_vertex]; simp
+
+example : (Perspectival.WantableGPT.gpt Bool).prob
+            (Perspectival.WantableGPT.proj Bool true)
+            (Perspectival.WantableGPT.vertex Bool false) = 0 := by
+  show Perspectival.WantableGPT.proj Bool true
+        (Perspectival.WantableGPT.vertex Bool false) = 0
+  rw [Perspectival.WantableGPT.proj_vertex]; simp
+
+/-- WantableGPT.gpt's prob on Fin 4. -/
+example : (Perspectival.WantableGPT.gpt (Fin 4)).prob
+            (Perspectival.WantableGPT.proj (Fin 4) 2)
+            (Perspectival.WantableGPT.vertex (Fin 4) 2) = 1 := by
+  show Perspectival.WantableGPT.proj (Fin 4) 2
+        (Perspectival.WantableGPT.vertex (Fin 4) 2) = 1
+  rw [Perspectival.WantableGPT.proj_vertex]; simp
+
+example : (Perspectival.WantableGPT.gpt (Fin 4)).prob
+            (Perspectival.WantableGPT.proj (Fin 4) 2)
+            (Perspectival.WantableGPT.vertex (Fin 4) 1) = 0 := by
+  show Perspectival.WantableGPT.proj (Fin 4) 2
+        (Perspectival.WantableGPT.vertex (Fin 4) 1) = 0
+  rw [Perspectival.WantableGPT.proj_vertex]; simp
