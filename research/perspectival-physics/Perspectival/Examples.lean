@@ -787,6 +787,17 @@ example : boolEquivFin2.symm.symm = boolEquivFin2 := rfl
 -- (boolEquivFin2 ⊕ symm composition examples skipped — proof structure for
 -- WantableEquiv equality is delicate; deferred to a follow-up.)
 
+/-- The underlying toEquiv of boolEquivFin2 composed with its symm is the
+identity-equiv at the Equiv level (this is the essence of equiv ⊕ symm = refl). -/
+example : (boolEquivFin2.toEquiv.trans boolEquivFin2.toEquiv.symm)
+        = Equiv.refl Bool :=
+  Equiv.self_trans_symm boolEquivFin2.toEquiv
+
+/-- symm ⊕ toEquiv at the underlying Equiv level. -/
+example : (boolEquivFin2.toEquiv.symm.trans boolEquivFin2.toEquiv)
+        = Equiv.refl (Fin 2) :=
+  Equiv.symm_trans_self boolEquivFin2.toEquiv
+
 /-- A Wantable isomorphism induces a PTrans isomorphism: conjugate a
 PTrans of W₁ by the equiv to get a PTrans of W₂. -/
 def WantableEquiv.mapPTrans {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
