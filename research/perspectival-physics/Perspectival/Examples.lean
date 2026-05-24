@@ -9400,3 +9400,30 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) = 3 := by
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) = 4 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]
   decide
+
+/-- WantableGPT.gpt Bool has states_convex by construction. -/
+example : Convex ℝ (Perspectival.WantableGPT.gpt Bool).states :=
+  (Perspectival.WantableGPT.gpt Bool).states_convex
+
+/-- WantableGPT.gpt Bool's effects are convex. -/
+example : Convex ℝ (Perspectival.WantableGPT.gpt Bool).effects :=
+  (Perspectival.WantableGPT.gpt Bool).effects_convex
+
+/-- States on WantableGPT Bool are normalized. -/
+example (ρ : Perspectival.WantableGPT.V Bool)
+    (hρ : ρ ∈ (Perspectival.WantableGPT.gpt Bool).states) :
+    (Perspectival.WantableGPT.gpt Bool).unit ρ = 1 :=
+  (Perspectival.WantableGPT.gpt Bool).states_normalized ρ hρ
+
+/-- Probabilities on WantableGPT Bool are in [0,1]. -/
+example (e : Perspectival.WantableGPT.V Bool →ₗ[ℝ] ℝ)
+    (he : e ∈ (Perspectival.WantableGPT.gpt Bool).effects)
+    (ρ : Perspectival.WantableGPT.V Bool)
+    (hρ : ρ ∈ (Perspectival.WantableGPT.gpt Bool).states) :
+    0 ≤ e ρ ∧ e ρ ≤ 1 :=
+  (Perspectival.WantableGPT.gpt Bool).prob_in_unit_interval e he ρ hρ
+
+/-- The unit on WantableGPT Bool is an effect. -/
+example : (Perspectival.WantableGPT.gpt Bool).unit
+        ∈ (Perspectival.WantableGPT.gpt Bool).effects :=
+  (Perspectival.WantableGPT.gpt Bool).unit_is_effect
