@@ -52,6 +52,13 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Classical vertices form a distinguishability set | `Classical.lean :: vertex_distinguishability_set` | ✓ |
 | Coordinate projections are valid effects | `Classical.lean :: proj_in_effects` | ✓ |
 | Vertices pairwise distinguishable via projections | `Classical.lean :: vertices_distinguishable` | ✓ |
+| **WantableGPT bridge — full GPT from finite Wantable** | `WantableGPT.lean :: gpt` | ✓ |
+| Wantable-complement action on state space | `WantableGPT.lean :: complementAction` | ✓ |
+| Complement action preserves states | `WantableGPT.lean :: complementAction_preserves_states` | ✓ |
+| Complement action is GPT automorphism | `WantableGPT.lean :: complementTransform` | ✓ |
+| GPT transformations preserve unit value | `GPT.lean :: Transform.prob_invariant` | ✓ |
+| Trivial HasConnectedAgency instance | `Continuity.lean :: trivialAgency` | ✓ |
+| Reversible.id (identity reversible transformation) | `Continuity.lean :: Reversible.id` | ✓ |
 | HasConnectedAgency postulate (libertarian agency formalized) | `Continuity.lean :: HasConnectedAgency` | ✓ |
 | **Agency ⇒ continuous-path between reachable states** | `Continuity.lean :: continuous_path_of_reachable` | ✓ |
 | **Agency ⇒ Hardy Axiom 5 (concrete form)** | `Continuity.lean :: hardy_axiom5_of_agency` | ✓ |
