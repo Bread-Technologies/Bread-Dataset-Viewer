@@ -3027,6 +3027,18 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3))
 -- (Bool×W and Bool⊕W universe-polymorphic dim theorems deferred — needs
 -- explicit `Type u` rather than `Type*` to align with Bool's Wantable instance.)
 
+/-- Bool × Bool has dim 4 via wantableGPT_dim_prod. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) = 4 := by
+  rw [Perspectival.WantableGPT.wantableGPT_dim_prod]
+  rw [show Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = 2 from by
+    rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide]
+
+/-- Bool ⊕ Bool has dim 4 via wantableGPT_dim_sum. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 := by
+  rw [Perspectival.WantableGPT.wantableGPT_dim_sum]
+  rw [show Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = 2 from by
+    rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide]
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
