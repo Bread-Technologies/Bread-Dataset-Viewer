@@ -9,7 +9,7 @@ A summary of accomplishments from this development session.
   alone past 12,800 lines
 - **~900+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1248+ commits** to the research branch (1200+ milestone passed)
+- **1250+ commits** to the research branch (1250 milestone passed)
 - **Examples.lean past 15,300 lines** (started at ~11,350; +4000 this session)
 - **diagonalState/antiDiagonalState are NOT product states** —
   explicit formal proof of the entanglement-like structure of
