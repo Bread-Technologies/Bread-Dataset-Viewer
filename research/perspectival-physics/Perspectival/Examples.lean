@@ -2368,6 +2368,18 @@ def WantableEquiv.prodMap {W₁ W₂ W₃ W₄ : Type u}
 
 -- (Reachable reflexivity demo skipped — needs careful instance synthesis.)
 
+/-- The Wantable structure on `Bool ⊕ Bool` makes `Sum.inl true` and
+`Sum.inl false` complementary (they pair within the left summand). -/
+example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := rfl
+
+/-- The Wantable structure on `Bool × Bool` makes `(true, true)` and
+`(false, false)` complementary. -/
+example : Wantable.complement ((true, true) : Bool × Bool) = (false, false) := rfl
+
+/-- The Wantable structure on `Bool × Bool` makes `(true, false)` and
+`(false, true)` complementary. -/
+example : Wantable.complement ((true, false) : Bool × Bool) = (false, true) := rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
