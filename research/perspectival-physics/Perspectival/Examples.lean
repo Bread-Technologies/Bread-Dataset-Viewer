@@ -10733,3 +10733,21 @@ example : (Perspectival.WantableGPT.complementPTrans Bool) ^ 200 = 1 :=
 example : (Perspectival.WantableGPT.complementPTrans Bool) ^ 999
         = Perspectival.WantableGPT.complementPTrans Bool :=
   complementPTrans_pow_two_n_succ 499
+
+/-- General PTrans.complement power theorems (group-level). -/
+theorem PTrans_complement_pow_two_n {W : Type u} [Wantable W] (n : ℕ) :
+    (PTrans.complement : PTrans W) ^ (2 * n) = 1 := by
+  rw [pow_mul, pow_two, PTrans.complement_sq, one_pow]
+
+theorem PTrans_complement_pow_two_n_succ {W : Type u} [Wantable W] (n : ℕ) :
+    (PTrans.complement : PTrans W) ^ (2 * n + 1)
+      = PTrans.complement := by
+  rw [pow_add, PTrans_complement_pow_two_n, one_mul, pow_one]
+
+/-- Concrete: PTrans.complement^200 = 1 on Bool. -/
+example : (PTrans.complement : PTrans Bool) ^ 200 = 1 :=
+  PTrans_complement_pow_two_n 100
+
+/-- Concrete: PTrans.complement^999 = complement on Bool. -/
+example : (PTrans.complement : PTrans Bool) ^ 999 = PTrans.complement :=
+  PTrans_complement_pow_two_n_succ 499
