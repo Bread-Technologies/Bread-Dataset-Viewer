@@ -11678,3 +11678,49 @@ example : mixedCorrelatedState ≠ antiDiagonalState := by
   rw [show antiDiagonalState (true, true) = 0 from rfl] at hval
   have : (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * 0 = 0 := hval
   norm_num at this
+
+/-! ### Distinguishability witnesses via diagonalIndicator -/
+
+/-- diagonalIndicatorLin applied to mixedCorrelatedState = 1/2. -/
+example :
+    diagonalIndicatorLin mixedCorrelatedState = (1/2 : ℝ) := by
+  show diagonalIndicatorLin ((1/2 : ℝ) • diagonalState
+                              + (1/2 : ℝ) • antiDiagonalState) = 1/2
+  rw [map_add, map_smul, map_smul]
+  show ((1/2 : ℝ) * diagonalIndicatorLin diagonalState)
+     + ((1/2 : ℝ) * diagonalIndicatorLin antiDiagonalState) = 1/2
+  rw [diagonalIndicatorLin_on_diagonalState,
+      diagonalIndicatorLin_on_antiDiagonalState]
+  norm_num
+
+/-- antiDiagonalIndicatorLin applied to mixedCorrelatedState = 1/2. -/
+example :
+    antiDiagonalIndicatorLin mixedCorrelatedState = (1/2 : ℝ) := by
+  show antiDiagonalIndicatorLin ((1/2 : ℝ) • diagonalState
+                                  + (1/2 : ℝ) • antiDiagonalState) = 1/2
+  rw [map_add, map_smul, map_smul]
+  show ((1/2 : ℝ) * antiDiagonalIndicatorLin diagonalState)
+     + ((1/2 : ℝ) * antiDiagonalIndicatorLin antiDiagonalState) = 1/2
+  rw [antiDiagonalIndicatorLin_on_diagonalState,
+      antiDiagonalIndicatorLin_on_antiDiagonalState]
+  norm_num
+
+/-- diagonalIndicatorLin applied to productState uniformBool uniformBool = 1/2. -/
+example :
+    diagonalIndicatorLin (productState uniformBool uniformBool) = (1/2 : ℝ) := by
+  show (∑ p, diagonalIndicator p * productState uniformBool uniformBool p) = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show diagonalIndicator (true, true) * productState uniformBool uniformBool (true, true)
+     + (diagonalIndicator (true, false) * productState uniformBool uniformBool (true, false)
+     + (diagonalIndicator (false, true) * productState uniformBool uniformBool (false, true)
+     + diagonalIndicator (false, false) * productState uniformBool uniformBool (false, false)))
+     = 1/2
+  show (1 : ℝ) * ((1/2 : ℝ) * (1/2 : ℝ))
+     + (0 * ((1/2 : ℝ) * (1/2 : ℝ))
+     + (0 * ((1/2 : ℝ) * (1/2 : ℝ))
+     + 1 * ((1/2 : ℝ) * (1/2 : ℝ))))
+     = 1/2
+  norm_num
