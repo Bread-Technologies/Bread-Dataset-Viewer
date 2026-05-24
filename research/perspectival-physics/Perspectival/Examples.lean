@@ -11866,3 +11866,77 @@ example : leftFalseIndicatorLin diagonalState = (1/2 : ℝ) := by
      = 1/2
   show (0 : ℝ) * (1/2 : ℝ) + (0 * 0 + (1 * 0 + 1 * (1/2 : ℝ))) = 1/2
   norm_num
+
+/-! ### Right coordinate projection indicators -/
+
+/-- "Second coordinate is true" indicator. -/
+noncomputable def rightTrueIndicator : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p.2 = true then (1 : ℝ) else 0
+
+/-- "Second coordinate is false" indicator. -/
+noncomputable def rightFalseIndicator : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p.2 = false then (1 : ℝ) else 0
+
+/-- rightTrueIndicator is in the effectVec. -/
+theorem rightTrueIndicator_in_effectVec :
+    rightTrueIndicator ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p.2 = true then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p.2 = true then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- rightFalseIndicator is in the effectVec. -/
+theorem rightFalseIndicator_in_effectVec :
+    rightFalseIndicator ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p.2 = false then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p.2 = false then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- rightTrueIndicator + rightFalseIndicator = unit. -/
+example :
+    rightTrueIndicator + rightFalseIndicator = (fun _ => (1 : ℝ)) := by
+  funext p
+  show (if p.2 = true then (1 : ℝ) else 0) + (if p.2 = false then (1 : ℝ) else 0) = 1
+  cases p.2 with
+  | true => simp
+  | false => simp
+
+/-- rightTrueIndicatorLin. -/
+noncomputable def rightTrueIndicatorLin :
+    Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ] ℝ :=
+  Perspectival.WantableGPT.innerLin (Bool × Bool) rightTrueIndicator
+
+/-- rightFalseIndicatorLin. -/
+noncomputable def rightFalseIndicatorLin :
+    Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ] ℝ :=
+  Perspectival.WantableGPT.innerLin (Bool × Bool) rightFalseIndicator
+
+/-- rightTrueIndicatorLin in effects. -/
+theorem rightTrueIndicatorLin_in_effects :
+    rightTrueIndicatorLin ∈ Perspectival.WantableGPT.effects (Bool × Bool) :=
+  ⟨rightTrueIndicator, rightTrueIndicator_in_effectVec, rfl⟩
+
+/-- rightFalseIndicatorLin in effects. -/
+theorem rightFalseIndicatorLin_in_effects :
+    rightFalseIndicatorLin ∈ Perspectival.WantableGPT.effects (Bool × Bool) :=
+  ⟨rightFalseIndicator, rightFalseIndicator_in_effectVec, rfl⟩
+
+/-- rightTrueIndicatorLin diagonalState = 1/2 (only (true,true) contributes). -/
+example : rightTrueIndicatorLin diagonalState = (1/2 : ℝ) := by
+  show ∑ p, rightTrueIndicator p * diagonalState p = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show rightTrueIndicator (true, true) * diagonalState (true, true)
+     + (rightTrueIndicator (true, false) * diagonalState (true, false)
+     + (rightTrueIndicator (false, true) * diagonalState (false, true)
+     + rightTrueIndicator (false, false) * diagonalState (false, false)))
+     = 1/2
+  show (1 : ℝ) * (1/2 : ℝ) + (0 * 0 + (1 * 0 + 0 * (1/2 : ℝ))) = 1/2
+  norm_num
