@@ -15,6 +15,7 @@ import Perspectival.Composition
 import Perspectival.Classical
 import Perspectival.Distinguish
 import Perspectival.NoCloning
+import Perspectival.WantableGPT
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 
 namespace Perspectival
@@ -144,6 +145,17 @@ example (n : ℕ) (i j : Fin n) (hij : i ≠ j)
       (Classical.vertex_in_states n i)
       (Classical.vertex_in_states n j)
       (Classical.vertices_distinguishable n i j hij))
+
+/-! ## Example 8 — Coe from PTrans to GPT.Transform
+
+Demonstrates the Coe instance: any perspectival transformation on a
+Wantable can be used directly as a GPT-transformation. -/
+
+example {W : Type*} [Wantable W] [Fintype W] [DecidableEq W]
+    (φ : PTrans W) :
+    Perspectival.GPT.Transform (Perspectival.WantableGPT.gpt W)
+                                (Perspectival.WantableGPT.gpt W) :=
+  φ  -- Lean inserts the Coe.
 
 end Examples
 end Perspectival
