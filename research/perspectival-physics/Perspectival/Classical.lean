@@ -2492,5 +2492,28 @@ disconnect: any path between an even and an odd permutation has a
 non-bijective point. This is the topologically content-bearing half
 of the theorem. -/
 
+/-- **n=3 disconnect theorem (conditional form).** Given the deferred
+det-zero-implies-not-injective hypothesis as input, the full R6 n=3
+disconnect follows: no StrictReversiblePath connects id to swap01 on
+Classical n=3 GPT. -/
+theorem classical_n3_no_strict_path_id_to_swap01_conditional
+    (h_det_inj : ∀ R : V 3 →ₗ[ℝ] V 3,
+      (∀ ρ ∈ states 3, R ρ ∈ states 3) →
+      n3_disc_det R = 0 → ¬ Function.Injective R)
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt 3)
+              (Perspectival.Continuity.StrictReversible.id (gpt 3))
+              swap01StrictReversible) :
+    False := by
+  obtain ⟨t, ht⟩ := classical_n3_strict_path_id_swap01_det_zero p
+  have hinj : Function.Injective (p.γ t) := (p.bijective_along t).1
+  exact h_det_inj (p.γ t) (p.preserves_states_along t) ht hinj
+
+/-- **The n=3 R6 main conjecture** stated formally (proof needs the
+deferred det-zero-not-injective lemma). -/
+def n3_R6_disconnect_conjecture : Prop :=
+  IsEmpty (Perspectival.Continuity.StrictReversiblePath (gpt 3)
+            (Perspectival.Continuity.StrictReversible.id (gpt 3))
+            swap01StrictReversible)
+
 end Classical
 end Perspectival
