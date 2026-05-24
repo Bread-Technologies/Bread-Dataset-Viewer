@@ -417,7 +417,12 @@ example (a : ℝˣ) : (scaleHom a)⁻¹ = scaleHom a⁻¹ := by
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
-constraint imposed by the complement-equivariance requirement. -/
+constraint imposed by the complement-equivariance requirement.
+
+(Note: PTrans ℝ is much larger than just `{scaleHom a | a ∈ ℝˣ}` — it
+includes every odd bijection of ℝ, e.g., `x ↦ x³`. The scalings are
+just the *linear* odd bijections. Quotienting by linearity recovers
+`scaleHom : ℝˣ ↪ PTrans ℝ` as a Lie subgroup, not the entire group.) -/
 example (c : ℝ) (hc : c ≠ 0) :
     ∃ x : ℝ, (Wantable.complement x + c) ≠ Wantable.complement (x + c) := by
   refine ⟨0, ?_⟩
