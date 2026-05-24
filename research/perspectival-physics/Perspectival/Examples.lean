@@ -176,6 +176,15 @@ example : Wantable (Bool × Unit) := inferInstance
 (Empty side has no elements). -/
 example : Wantable.complement (Sum.inl true : Bool ⊕ Empty) = Sum.inl false := rfl
 
+/-- The `PTrans.complement` on a product Wantable equals the
+componentwise prodMap of the per-component complements. -/
+example : (PTrans.complement : PTrans (Bool × Bool))
+        = PTrans.prodMap PTrans.complement PTrans.complement := by
+  apply PTrans.ext
+  intro p
+  cases p
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
