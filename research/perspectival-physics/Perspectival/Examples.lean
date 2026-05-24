@@ -3203,6 +3203,19 @@ example : (Perspectival.WantableGPT.gpt Bool).unit
         ∈ (Perspectival.WantableGPT.gpt Bool).effects :=
   (Perspectival.WantableGPT.gpt Bool).unit_is_effect
 
+/-- The states-normalization holds: for any state, unit applied = 1. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ : Perspectival.WantableGPT.V W)
+    (hρ : ρ ∈ (Perspectival.WantableGPT.gpt W).states) :
+    (Perspectival.WantableGPT.gpt W).unit ρ = 1 :=
+  (Perspectival.WantableGPT.gpt W).states_normalized ρ hρ
+
+/-- Concrete: vertex true on Bool gives unit = 1. -/
+example : (Perspectival.WantableGPT.gpt Bool).unit
+            (Perspectival.WantableGPT.vertex Bool true) = 1 :=
+  (Perspectival.WantableGPT.gpt Bool).states_normalized _
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
