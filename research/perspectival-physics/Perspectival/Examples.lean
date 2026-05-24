@@ -5769,5 +5769,26 @@ example {W : Type u} [Wantable W] (R : Reality W) :
     PTrans.actReality (1 : PTrans W) R = R :=
   PTrans.actReality_one R
 
+/-- `actReality_singleton`: singleton reality is sent to singleton at
+the acted meeting. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (m : Meeting W) :
+    PTrans.actReality φ (fun m' => m' = m)
+      = (fun m' => m' = PTrans.actMeeting φ m) :=
+  PTrans.actReality_singleton φ m
+
+/-- On Bool: applying complement to the vertex true gives vertex false. -/
+example : Perspectival.WantableGPT.complementAction Bool
+            (Perspectival.WantableGPT.vertex Bool true)
+        = Perspectival.WantableGPT.vertex Bool false := by
+  rw [Perspectival.WantableGPT.complementAction_vertex]
+  rfl
+
+/-- On Bool: applying complement to the vertex false gives vertex true. -/
+example : Perspectival.WantableGPT.complementAction Bool
+            (Perspectival.WantableGPT.vertex Bool false)
+        = Perspectival.WantableGPT.vertex Bool true := by
+  rw [Perspectival.WantableGPT.complementAction_vertex]
+  rfl
+
 end Examples
 end Perspectival
