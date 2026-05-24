@@ -248,6 +248,12 @@ example (σ : Equiv.Perm Unit) : σ = 1 := by
   apply Equiv.ext
   intro u; cases u; rfl
 
+/-- For Wantable (Fin 3) with id-complement: ANY permutation of Fin 3
+gives a valid PTrans. (So `|PTrans (Fin 3)| = 6 = |S_3|`.) -/
+example (σ : Equiv.Perm (Fin 3)) :
+    ∃ φ : PTrans (Fin 3), PTrans.toEquivPerm φ = σ :=
+  ⟨PTrans.ofPermWithIdComplement (fun _ => rfl) σ, rfl⟩
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
