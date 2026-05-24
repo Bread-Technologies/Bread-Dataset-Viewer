@@ -9576,3 +9576,21 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
 /-- Module instance on V W. -/
 example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     Module ℝ (Perspectival.WantableGPT.V W) := inferInstance
+
+/-- WantableGPT vertexBasis on Bool. -/
+noncomputable example : Module.Basis Bool ℝ (Perspectival.WantableGPT.V Bool) :=
+  Perspectival.WantableGPT.vertexBasis Bool
+
+/-- WantableGPT vertexBasis on Fin 4. -/
+noncomputable example : Module.Basis (Fin 4) ℝ (Perspectival.WantableGPT.V (Fin 4)) :=
+  Perspectival.WantableGPT.vertexBasis (Fin 4)
+
+/-- WantableGPT vertexBasis on Bool × Bool. -/
+noncomputable example : Module.Basis (Bool × Bool) ℝ
+            (Perspectival.WantableGPT.V (Bool × Bool)) :=
+  Perspectival.WantableGPT.vertexBasis (Bool × Bool)
+
+/-- Generic: vertexBasis exists for any finite DecidableEq Wantable. -/
+noncomputable example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Module.Basis W ℝ (Perspectival.WantableGPT.V W) :=
+  Perspectival.WantableGPT.vertexBasis W
