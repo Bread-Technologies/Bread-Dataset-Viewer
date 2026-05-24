@@ -2907,6 +2907,12 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Empty × Bool)) = 0 :=
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Empty ⊕ Bool)) = 2 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
 
+/-- |Empty| * |Bool| = 0 (multiplicative identity of empty). -/
+example : Fintype.card (Empty × Bool) = 0 := by decide
+
+/-- |Empty| + |Bool| = 2 (additive identity of empty). -/
+example : Fintype.card (Empty ⊕ Bool) = 2 := by decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
