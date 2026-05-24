@@ -434,6 +434,16 @@ example (f : ℝ →ₗ[ℝ] ℝ) (x : ℝ) : f x = f 1 * x := by
 example (f : ℝ →ₗ[ℝ] ℝ) (x : ℝ) : f (-x) = -f x := by
   rw [map_neg]
 
+/-- A non-zero linear map ℝ → ℝ has the form `x ↦ f(1) * x` with
+`f(1) ≠ 0`. So such an `f` is determined by — and represented by —
+its value at 1. (Stated as the existence claim; uniqueness is
+trivial since the linear-map equation determines `f(1)`.) -/
+example (f : ℝ →ₗ[ℝ] ℝ) (h_one : f 1 ≠ 0) (x : ℝ) :
+    f x = f 1 * x := by
+  have h := f.map_smul x 1
+  rw [smul_eq_mul, smul_eq_mul, mul_one] at h
+  rw [h, mul_comm]
+
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
