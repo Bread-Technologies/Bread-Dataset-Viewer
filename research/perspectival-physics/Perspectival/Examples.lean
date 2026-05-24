@@ -3098,6 +3098,16 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
   Perspectival.WantableGPT.finrank_V_eq_card W
 
+/-- The K = N classical signature holds (general statement). -/
+theorem WantableGPT_classical_K_eq_N {W : Type u}
+    [Wantable W] [Fintype W] [DecidableEq W] :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
+  Perspectival.WantableGPT.finrank_V_eq_card W
+
+/-- Verification: K = N concretely on Bool gives 2 = 2. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = Fintype.card Bool :=
+  WantableGPT_classical_K_eq_N
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
