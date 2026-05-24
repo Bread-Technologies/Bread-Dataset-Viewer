@@ -258,5 +258,56 @@ theorem vertices_span : Submodule.span ℝ (Set.range (vertex n)) = ⊤ := by
   exact Submodule.sum_mem _ (fun i _ =>
     Submodule.smul_mem _ (f i) (Submodule.subset_span ⟨i, rfl⟩))
 
+/-! ## R6 progress: Classical n=1 has only id as Reversible
+
+For the classical 1-outcome GPT, V_1 ≃ ℝ has a one-dimensional state
+space = {(1)} (the singleton stdSimplex). Any state-preserving linear
+map R : V_1 →ₗ V_1 must satisfy R(1-vec) = 1-vec, plus linearity.
+For the one-dim case, this forces R = id. -/
+
+/-- The unique state in V_1 is the vertex (1). -/
+theorem classical_unique_state (ρ : V 1) (hρ : ρ ∈ states 1) :
+    ρ = vertex 1 0 := by
+  funext j
+  have hj : j = 0 := Subsingleton.elim _ _
+  subst hj
+  -- ρ 0 = 1 because ρ ∈ stdSimplex and sum = 1 with only one term
+  have hsum := hρ.2
+  rw [show (Finset.univ : Finset (Fin 1)) = {0} from by decide,
+      Finset.sum_singleton] at hsum
+  show ρ 0 = vertex 1 0 0
+  show ρ 0 = (if (0 : Fin 1) = 0 then (1 : ℝ) else 0)
+  simp
+  exact hsum
+
+/-- A linear map V 1 → V 1 preserving the unit functional fixes the
+1-vector. Specifically, if `unit ∘ R = unit`, then R(δ₀) = δ₀ on V 1
+where δ₀ is the unique state. -/
+theorem classical_n1_state_preserving_eq_id
+    (R : V 1 →ₗ[ℝ] V 1)
+    (hR : ∀ ρ ∈ states 1, R ρ ∈ states 1) :
+    R = LinearMap.id := by
+  apply LinearMap.ext
+  intro v
+  -- v ∈ V 1 is determined by v 0 ∈ ℝ
+  -- writing v = (v 0) • vertex 1 0, linearity gives
+  -- R v = (v 0) • R (vertex 1 0)
+  -- and we need R (vertex 1 0) = vertex 1 0 (the unique state)
+  have hv_eq : v = (v 0) • vertex 1 0 := by
+    funext j
+    have hj : j = 0 := Subsingleton.elim _ _
+    subst hj
+    show v 0 = (v 0) * vertex 1 0 0
+    show v 0 = (v 0) * (if (0 : Fin 1) = 0 then (1 : ℝ) else 0)
+    simp
+  -- Apply linearity
+  rw [hv_eq, map_smul]
+  have hR0 : R (vertex 1 0) = vertex 1 0 :=
+    classical_unique_state (R (vertex 1 0))
+      (hR (vertex 1 0) (vertex_in_states 1 0))
+  rw [hR0]
+  show (v 0) • vertex 1 0 = LinearMap.id ((v 0) • vertex 1 0)
+  rfl
+
 end Classical
 end Perspectival
