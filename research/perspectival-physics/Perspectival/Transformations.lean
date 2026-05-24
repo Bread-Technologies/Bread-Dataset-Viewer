@@ -15,6 +15,7 @@ Calibrated status:
 -/
 
 import Perspectival.Ontology
+import Mathlib.Algebra.Group.Defs
 
 namespace Perspectival
 
@@ -96,6 +97,50 @@ theorem comp_id (f : PTrans W) : comp f id = f := by
 theorem comp_assoc (h g f : PTrans W) :
     comp (comp h g) f = comp h (comp g f) := by
   rfl
+
+/-- Inverse of a perspectival transformation. -/
+def inv (f : PTrans W) : PTrans W where
+  toFun := f.invFun
+  invFun := f.toFun
+  left_inv := f.right_inv
+  right_inv := f.left_inv
+  resp_complement := by
+    intro w
+    -- f.resp_complement : ∀ w, f (complement w) = complement (f w)
+    -- Apply invFun to both sides: invFun (f (complement w)) = invFun (complement (f w))
+    -- LHS = complement w (by left_inv). RHS = ?. We need invFun (complement (f w)) = complement (invFun (f w)).
+    -- Let u := invFun w. Then complement w = complement (f u) [since w = f u] = f (complement u).
+    -- So invFun (complement w) = invFun (f (complement u)) = complement u = complement (invFun w).
+    let u := f.invFun w
+    have hw : f.toFun u = w := f.right_inv w
+    have h1 : f.toFun (Wantable.complement u) = Wantable.complement (f.toFun u) :=
+      f.resp_complement u
+    -- Apply invFun: complement u = invFun (complement w).
+    have h2 : f.invFun (f.toFun (Wantable.complement u)) =
+              f.invFun (Wantable.complement (f.toFun u)) := by rw [h1]
+    rw [f.left_inv] at h2
+    -- h2 : complement u = invFun (complement (f u))
+    -- f u = w
+    rw [hw] at h2
+    -- h2 : complement u = invFun (complement w)
+    -- Goal: invFun (complement w) = complement (invFun w) = complement u
+    exact h2.symm
+
+instance : Group (PTrans W) where
+  mul := comp
+  one := id
+  inv := inv
+  mul_assoc := comp_assoc
+  one_mul := id_comp
+  mul_one := comp_id
+  inv_mul_cancel f := by
+    -- inv f * f = id, i.e. comp (inv f) f = id
+    show comp (inv f) f = id
+    -- comp (inv f) f has toFun (inv f).toFun ∘ f.toFun = f.invFun ∘ f.toFun = id
+    apply PTrans.ext
+    intro w
+    show (inv f).toFun (f.toFun w) = w
+    exact f.left_inv w
 
 /-! ## Action on meetings
 
