@@ -2984,6 +2984,18 @@ example : LinearIndependent ℝ
               Perspectival.WantableGPT.vertex (Bool × Bool × Bool × Bool) w) :=
   Perspectival.WantableGPT.vertex_linear_independent_of_fintype (Bool × Bool × Bool × Bool)
 
+/-- Bool⁴ vertex map is injective. -/
+example : Function.Injective (Perspectival.WantableGPT.vertex (Bool × Bool × Bool × Bool)) :=
+  Perspectival.WantableGPT.vertex_injective (Bool × Bool × Bool × Bool)
+
+/-- Bool⁴ has at least 2 distinguishable states. -/
+example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool),
+    ρ₁ ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool × Bool) ∧
+    ρ₂ ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool × Bool) ∧
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool × Bool × Bool)) ρ₁ ρ₂ :=
+  Perspectival.WantableGPT.exists_two_distinguishable (Bool × Bool × Bool × Bool) (by decide)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
