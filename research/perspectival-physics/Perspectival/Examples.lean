@@ -3207,6 +3207,17 @@ example (G : Perspectival.GPT (Perspectival.WantableGPT.V Bool))
 example : Wantable.complement (some true : Option Bool) = some false := rfl
 example : Wantable.complement (none : Option Bool) = none := rfl
 
+/-- `none ∈ Option Bool` is self-complementary. -/
+example : SelfComplementary (none : Option Bool) := rfl
+
+/-- `some true ∈ Option Bool` is NOT self-complementary. -/
+example : ¬ SelfComplementary (some true : Option Bool) := by
+  intro h
+  have : Wantable.complement (some true : Option Bool) = some true := h
+  have hh : some false = (some true : Option Bool) := this
+  injection hh with hh
+  exact Bool.false_ne_true hh
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
