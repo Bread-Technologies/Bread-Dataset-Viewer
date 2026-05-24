@@ -12698,3 +12698,37 @@ example :
   cases b with
   | true => simp [PTrans.complement]; rfl
   | false => simp [PTrans.complement]; rfl
+
+/-- transformAction at identity 1 is the identity. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) :
+    Perspectival.WantableGPT.transformAction W (1 : PTrans W) f = f := by
+  funext w
+  show f ((1 : PTrans W).invFun w) = f w
+  rfl
+
+/-- complement applied twice to any state gives back the state. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement
+      (Perspectival.WantableGPT.transformAction Bool PTrans.complement f) = f := by
+  funext b
+  show f ((PTrans.complement : PTrans Bool).invFun
+              ((PTrans.complement : PTrans Bool).invFun b)) = f b
+  cases b with
+  | true => rfl
+  | false => rfl
+
+/-- Concrete: complement applied twice to vertex true is vertex true. -/
+example :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement
+      (Perspectival.WantableGPT.transformAction Bool PTrans.complement
+        (Perspectival.WantableGPT.vertex Bool true))
+      = Perspectival.WantableGPT.vertex Bool true := by
+  funext b
+  show Perspectival.WantableGPT.vertex Bool true
+        ((PTrans.complement : PTrans Bool).invFun
+          ((PTrans.complement : PTrans Bool).invFun b))
+     = Perspectival.WantableGPT.vertex Bool true b
+  cases b with
+  | true => rfl
+  | false => rfl
