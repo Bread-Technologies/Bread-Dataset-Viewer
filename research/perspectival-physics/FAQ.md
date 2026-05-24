@@ -100,7 +100,15 @@ would require additional structure (the most plausible: the agency
 postulate + connectedness picking out quantum).
 
 **Verified:** Both `Classical.gpt` and `WantableGPT.gpt` are
-machine-verified `Perspectival.GPT` instances.
+machine-verified `Perspectival.GPT` instances. Moreover, a verified
+**no-go theorem** (`WantableGPT.wantableGPT_is_classical`) establishes
+that the bridge from a *finite* Wantable to a GPT via
+`WantableGPT.gpt` *always produces classical signature* (N = K = |W|),
+ruling out quantum signature for this particular bridge construction.
+Quantum structure must therefore come from one of: (i) additional
+postulates on top of I–IV (continuity / agency, composition rules), or
+(ii) a different bridge construction (e.g., infinite-dimensional
+Wantable, or a complex-vector-space variant of WantableGPT).
 
 ## Q8. Why three generations of fermions?
 
