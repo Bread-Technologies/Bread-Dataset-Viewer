@@ -3267,6 +3267,16 @@ example : (Perspectival.WantableGPT.gpt (Fin 3)).unit
 -- (Unit-functional explicit-sum-equals-binary form deferred — Finset.sum
 -- elaboration on Bool needs different approach.)
 
+/-- The fromPTransHom on Bool sends id PTrans to id LinearMap. -/
+example : Perspectival.WantableGPT.fromPTransHom Bool 1 = LinearMap.id :=
+  (Perspectival.WantableGPT.fromPTransHom Bool).map_one
+
+/-- The complement Transform on Bool's underlying linear map sends vertex true to vertex false. -/
+example : (Perspectival.WantableGPT.complementAction Bool)
+            (Perspectival.WantableGPT.vertex Bool true)
+        = Perspectival.WantableGPT.vertex Bool false :=
+  Perspectival.WantableGPT.complementAction_vertex Bool true
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
