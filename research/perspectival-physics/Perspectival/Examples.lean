@@ -9594,3 +9594,28 @@ noncomputable example : Module.Basis (Bool × Bool) ℝ
 noncomputable example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     Module.Basis W ℝ (Perspectival.WantableGPT.V W) :=
   Perspectival.WantableGPT.vertexBasis W
+
+/-- The complementTransform is a GPT-self-transformation on Bool. -/
+example : Perspectival.GPT.Transform
+            (Perspectival.WantableGPT.gpt Bool)
+            (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.WantableGPT.complementTransform Bool
+
+/-- The complementTransform is a GPT-self-transformation on Fin 4. -/
+example : Perspectival.GPT.Transform
+            (Perspectival.WantableGPT.gpt (Fin 4))
+            (Perspectival.WantableGPT.gpt (Fin 4)) :=
+  Perspectival.WantableGPT.complementTransform (Fin 4)
+
+/-- fromPTrans 1 is a self-Transform of WantableGPT Bool. -/
+example : Perspectival.GPT.Transform
+            (Perspectival.WantableGPT.gpt Bool)
+            (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.WantableGPT.fromPTrans Bool 1
+
+/-- fromPTrans complementPTrans on Fin 4. -/
+example : Perspectival.GPT.Transform
+            (Perspectival.WantableGPT.gpt (Fin 4))
+            (Perspectival.WantableGPT.gpt (Fin 4)) :=
+  Perspectival.WantableGPT.fromPTrans (Fin 4)
+    (Perspectival.WantableGPT.complementPTrans (Fin 4))
