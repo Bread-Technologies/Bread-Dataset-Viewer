@@ -15208,6 +15208,46 @@ example :
     norm_num] at h2
   norm_num at h2
 
+/-! ### Born-rule via deltaIndicator on uniformState -/
+
+/-- For uniformState on (Bool × Bool), every deltaIndicator gives 1/4. -/
+example (p : Bool × Bool) :
+    deltaIndicatorLin p (uniformState (Bool × Bool)) = (1/4 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]
+  show uniformState (Bool × Bool) p = (1/4 : ℝ)
+  show (1 : ℝ) / Fintype.card (Bool × Bool) = 1/4
+  rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+
+/-- For uniformState on Fin 3, every deltaIndicator gives 1/3. -/
+example (j : Fin 3) :
+    deltaIndicatorLin j (uniformState (Fin 3)) = (1/3 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]
+  show uniformState (Fin 3) j = (1/3 : ℝ)
+  show (1 : ℝ) / Fintype.card (Fin 3) = 1/3
+  rw [show (Fintype.card (Fin 3) : ℝ) = 3 from by norm_num]
+
+/-- For uniformBool, every deltaIndicator gives 1/2. -/
+example (b : Bool) :
+    deltaIndicatorLin b uniformBool = (1/2 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]
+  rfl
+
+/-! ### Born rule on uniform: sum = 1 -/
+
+/-- Sum of 4 deltaIndicators on uniformState (Bool × Bool) = 1. -/
+example :
+    deltaIndicatorLin (true, true) (uniformState (Bool × Bool))
+    + deltaIndicatorLin (true, false) (uniformState (Bool × Bool))
+    + deltaIndicatorLin (false, true) (uniformState (Bool × Bool))
+    + deltaIndicatorLin (false, false) (uniformState (Bool × Bool)) = 1 := by
+  rw [deltaIndicatorLin_eq_apply, deltaIndicatorLin_eq_apply,
+      deltaIndicatorLin_eq_apply, deltaIndicatorLin_eq_apply]
+  have h : ∀ p : Bool × Bool, uniformState (Bool × Bool) p = (1/4 : ℝ) := by
+    intro p; show (1 : ℝ) / Fintype.card (Bool × Bool) = 1/4
+    rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+  rw [h (true, true), h (true, false), h (false, true), h (false, false)]
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
