@@ -241,5 +241,23 @@ example : LinearIndependent ℝ
     (fun b : Bool => Perspectival.WantableGPT.vertex Bool b) :=
   Perspectival.WantableGPT.vertex_linear_independent_of_fintype Bool
 
+/-- The identity GPT-transformation on the boolean WantableGPT. -/
+example : Perspectival.GPT.Transform
+    (Perspectival.WantableGPT.gpt Bool)
+    (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.GPT.Transform.id _
+
+/-- Composition of the boolean WantableGPT's complement-Transform with
+itself is the identity (at the Transform level). -/
+example :
+    (Perspectival.WantableGPT.complementTransform Bool *
+     Perspectival.WantableGPT.complementTransform Bool : Perspectival.GPT.Transform _ _).toLin
+    = LinearMap.id := by
+  apply LinearMap.ext
+  intro f
+  funext b
+  show f (Wantable.complement (Wantable.complement b)) = f b
+  rw [Wantable.complement_involutive]
+
 end Examples
 end Perspectival
