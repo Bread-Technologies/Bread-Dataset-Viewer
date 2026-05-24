@@ -674,6 +674,9 @@ example : Nonempty (Existent ℤ) := ⟨⟨42⟩⟩
 example : Nonempty (Existent (Fin 2)) := ⟨⟨0⟩⟩
 example : Nonempty (Existent Unit) := ⟨⟨()⟩⟩
 
+example (b : Bool) : Existent Bool := ⟨b⟩
+example (n : ℤ) : Existent ℤ := ⟨n⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
