@@ -7399,5 +7399,58 @@ theorem diagonalState_in_states :
     show (1/2 : ℝ) + (0 + (0 + 1/2)) = 1
     norm_num
 
+/-- New: the antidiagonal state (1/2 on (true,false) and (false,true)). -/
+noncomputable def antiDiagonalState : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p = (true, false) ∨ p = (false, true) then (1/2 : ℝ) else 0
+
+example : antiDiagonalState (true, false) = (1/2 : ℝ) := by
+  show (if (true, false) = (true, false) ∨ (true, false) = (false, true)
+        then (1/2 : ℝ) else 0) = 1/2
+  simp
+
+example : antiDiagonalState (true, true) = (0 : ℝ) := by
+  show (if (true, true) = (true, false) ∨ (true, true) = (false, true)
+        then (1/2 : ℝ) else 0) = 0
+  simp
+
+/-- antiDiagonalState is in WantableGPT.states. -/
+theorem antiDiagonalState_in_states :
+    antiDiagonalState ∈ Perspectival.WantableGPT.states (Bool × Bool) := by
+  refine ⟨?_, ?_⟩
+  · intro p
+    show 0 ≤ (if p = (true, false) ∨ p = (false, true)
+              then (1/2 : ℝ) else 0)
+    split <;> norm_num
+  · show ∑ p, antiDiagonalState p = 1
+    rw [show (Finset.univ : Finset (Bool × Bool))
+          = {(true, true), (true, false), (false, true), (false, false)} from by
+        decide,
+        Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide),
+        Finset.sum_singleton]
+    show antiDiagonalState (true, true) +
+        (antiDiagonalState (true, false) +
+          (antiDiagonalState (false, true) + antiDiagonalState (false, false))) = 1
+    show (0 : ℝ) + (1/2 + (1/2 + 0)) = 1
+    norm_num
+
+/-- New: complementAction maps diagonalState to itself (the diagonal is
+preserved by componentwise complement). -/
+example : Perspectival.WantableGPT.complementAction (Bool × Bool) diagonalState
+        = diagonalState := by
+  funext p
+  show diagonalState (Wantable.complement p) = diagonalState p
+  rcases p with ⟨a, b⟩
+  cases a <;> cases b <;> rfl
+
+/-- New: complementAction maps antiDiagonalState to itself. -/
+example : Perspectival.WantableGPT.complementAction (Bool × Bool) antiDiagonalState
+        = antiDiagonalState := by
+  funext p
+  show antiDiagonalState (Wantable.complement p) = antiDiagonalState p
+  rcases p with ⟨a, b⟩
+  cases a <;> cases b <;> rfl
+
 end Examples
 end Perspectival
