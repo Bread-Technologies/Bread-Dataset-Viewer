@@ -5265,5 +5265,13 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
      (∀ m, m > n → ¬ ∃ S : Finset V, S.card = m ∧
        Perspectival.Hardy.DistinguishabilitySet G S)) := Iff.rfl
 
+/-- `Hardy.Axiom5_Continuity` is the placeholder predicate `True`
+(continuity needs additional topological structure not in pure GPT). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) :
+    Perspectival.Hardy.Axiom5_Continuity G := by
+  intro ρ₁ ρ₂ _ _ _ _
+  trivial
+
 end Examples
 end Perspectival
