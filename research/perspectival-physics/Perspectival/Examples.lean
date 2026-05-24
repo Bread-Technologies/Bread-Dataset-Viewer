@@ -11490,3 +11490,55 @@ example (φ : PTrans (Fin 3)) (n : ℕ) :
     φ * ((PTrans.complement : PTrans (Fin 3)) ^ n)
       = ((PTrans.complement : PTrans (Fin 3)) ^ n) * φ :=
   (Commute.pow_right (PTrans_complement_central φ).symm n)
+
+/-! ### Bool / Bool×Bool / Fin n marginalization sanity checks -/
+
+/-- Concrete: leftMarginal of productState vertex Bool × Bool. -/
+example (a b : Bool) :
+    leftMarginal (productState (Perspectival.WantableGPT.vertex Bool a)
+                               (Perspectival.WantableGPT.vertex Bool b))
+      = Perspectival.WantableGPT.vertex Bool a := by
+  funext w
+  exact productState_left_marginal_state _ _
+    (Perspectival.WantableGPT.vertex_in_states Bool b) w
+
+/-- Concrete: rightMarginal of productState vertex Bool × Bool. -/
+example (a b : Bool) :
+    rightMarginal (productState (Perspectival.WantableGPT.vertex Bool a)
+                                (Perspectival.WantableGPT.vertex Bool b))
+      = Perspectival.WantableGPT.vertex Bool b := by
+  funext w
+  exact productState_right_marginal_state _ _
+    (Perspectival.WantableGPT.vertex_in_states Bool a) w
+
+/-- leftMarginal of antiDiagonalState gives uniformBool. -/
+example : leftMarginal antiDiagonalState = uniformBool := by
+  funext b
+  show (∑ b₂, antiDiagonalState (b, b₂)) = uniformBool b
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  cases b with
+  | true =>
+    show antiDiagonalState (true, true) + antiDiagonalState (true, false) = uniformBool true
+    show (0 : ℝ) + 1/2 = 1/2
+    norm_num
+  | false =>
+    show antiDiagonalState (false, true) + antiDiagonalState (false, false) = uniformBool false
+    show (1/2 : ℝ) + 0 = 1/2
+    norm_num
+
+/-- rightMarginal of antiDiagonalState gives uniformBool. -/
+example : rightMarginal antiDiagonalState = uniformBool := by
+  funext b
+  show (∑ b₁, antiDiagonalState (b₁, b)) = uniformBool b
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  cases b with
+  | true =>
+    show antiDiagonalState (true, true) + antiDiagonalState (false, true) = uniformBool true
+    show (0 : ℝ) + 1/2 = 1/2
+    norm_num
+  | false =>
+    show antiDiagonalState (true, false) + antiDiagonalState (false, false) = uniformBool false
+    show (1/2 : ℝ) + 0 = 1/2
+    norm_num
