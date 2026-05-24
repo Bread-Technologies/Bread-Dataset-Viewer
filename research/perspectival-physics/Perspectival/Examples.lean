@@ -8079,3 +8079,39 @@ the same. -/
 example : (Perspectival.WantableGPT.fromPTrans Bool 1).toLin uniformBool
         = uniformBool :=
   fromPTrans_uniformBool_invariant 1
+
+/-- New: diagonalIndicatorLin gives 1/2 on uniformState (Bool × Bool). -/
+theorem diagonalIndicatorLin_on_uniformBoolBool :
+    diagonalIndicatorLin (uniformState (Bool × Bool)) = 1/2 := by
+  show ∑ p, diagonalIndicator p * uniformState (Bool × Bool) p = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by
+      decide,
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show diagonalIndicator (true, true) * uniformState (Bool × Bool) (true, true) +
+        (diagonalIndicator (true, false) * uniformState (Bool × Bool) (true, false) +
+          (diagonalIndicator (false, true) * uniformState (Bool × Bool) (false, true) +
+            diagonalIndicator (false, false) * uniformState (Bool × Bool) (false, false))) = 1/2
+  show (1 : ℝ) * (1 / 4) + (0 * (1 / 4) + (0 * (1 / 4) + 1 * (1 / 4))) = 1/2
+  norm_num
+
+/-- New: antiDiagonalIndicatorLin gives 1/2 on uniformState (Bool × Bool). -/
+theorem antiDiagonalIndicatorLin_on_uniformBoolBool :
+    antiDiagonalIndicatorLin (uniformState (Bool × Bool)) = 1/2 := by
+  show ∑ p, antiDiagonalIndicator p * uniformState (Bool × Bool) p = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by
+      decide,
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show antiDiagonalIndicator (true, true) * uniformState (Bool × Bool) (true, true) +
+        (antiDiagonalIndicator (true, false) * uniformState (Bool × Bool) (true, false) +
+          (antiDiagonalIndicator (false, true) * uniformState (Bool × Bool) (false, true) +
+            antiDiagonalIndicator (false, false) * uniformState (Bool × Bool) (false, false))) = 1/2
+  show (0 : ℝ) * (1 / 4) + (1 * (1 / 4) + (1 * (1 / 4) + 0 * (1 / 4))) = 1/2
+  norm_num
