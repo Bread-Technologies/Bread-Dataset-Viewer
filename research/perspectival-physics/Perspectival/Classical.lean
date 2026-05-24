@@ -1750,5 +1750,27 @@ example
   show n3_swap01_detector (γ t) = 1
   linarith
 
+/-! ## NOTE: detector = 1 alone does NOT imply non-injectivity
+
+The n3_swap01_detector at a state-preserving R: V 3 →ₗ V 3 gives
+R(v0)(1) + R(v1)(0) ∈ [0, 2]. Detector = 1 doesn't imply R is
+non-injective in general.
+
+For a full n=3 disconnect theorem (separating even from odd permutations
+of S_3), we need the full 3×3 determinant or the sign-of-permutation
+function from Mathlib (e.g., `Equiv.Perm.sign`). The argument:
+
+For state-preserving bijective R on V 3, R is a doubly-stochastic matrix
+with det ∈ {-1, 0, 1} (... actually no, doubly-stochastic det can range
+beyond {-1, 0, 1}).
+
+The correct framing: the SET of state-preserving bijective linear maps
+on V 3 forms a subset of GL(3, ℝ). It has two connected components by
+sign of determinant: positive and negative. Even permutations (det=1):
+id, (012), (021). Odd permutations (det=-1): (01), (02), (12).
+
+A continuous path through this subset must preserve sign of det. So no
+path connects id to swap01. -/
+
 end Classical
 end Perspectival
