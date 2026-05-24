@@ -2711,6 +2711,11 @@ example : LinearIndependent ℝ
               Perspectival.WantableGPT.vertex (Bool × Bool × Bool) w) :=
   Perspectival.WantableGPT.vertex_linear_independent_of_fintype (Bool × Bool × Bool)
 
+/-- Bool³ vertex map gives a Module.Basis. -/
+noncomputable example : Module.Basis (Bool × Bool × Bool) ℝ
+    (Perspectival.WantableGPT.V (Bool × Bool × Bool)) :=
+  Perspectival.WantableGPT.vertexBasis (Bool × Bool × Bool)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
