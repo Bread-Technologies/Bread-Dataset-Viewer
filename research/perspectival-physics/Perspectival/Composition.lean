@@ -64,6 +64,20 @@ def Meeting.sumInr {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
        = Sum.inr m.side₂
     rw [m.complementary]
 
+/-- `sumInl` commutes with swap. -/
+@[simp] theorem Meeting.sumInl_swap {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (m : Meeting W₁) :
+    (Meeting.sumInl (W₂ := W₂) m).swap = Meeting.sumInl m.swap := by
+  cases m
+  rfl
+
+/-- `sumInr` commutes with swap. -/
+@[simp] theorem Meeting.sumInr_swap {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (m : Meeting W₂) :
+    (Meeting.sumInr (W₁ := W₁) m).swap = Meeting.sumInr m.swap := by
+  cases m
+  rfl
+
 /-- A meeting in the disjoint union never has cross-component sides:
     both sides are in the same summand. This is the structural form of
     no-interaction across independent systems. -/
