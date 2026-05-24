@@ -9784,3 +9784,24 @@ example : Function.Injective
 example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     Function.Injective (Perspectival.WantableGPT.fromPTransHom W) :=
   Perspectival.WantableGPT.fromPTransHom_injective W
+
+/-- WantableGPT classical signature on any finite Wantable. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (h : 2 ≤ Fintype.card W) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) ≠ Fintype.card W * Fintype.card W ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) * 2
+      ≠ Fintype.card W * (Fintype.card W + 1) ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V W)
+      ≠ Fintype.card W * (2 * Fintype.card W - 1) :=
+  Perspectival.WantableGPT.wantableGPT_classical_dichotomy W h
+
+/-- Concrete: classical dichotomy on Bool. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = Fintype.card Bool ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+      ≠ Fintype.card Bool * Fintype.card Bool ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V Bool) * 2
+      ≠ Fintype.card Bool * (Fintype.card Bool + 1) ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+      ≠ Fintype.card Bool * (2 * Fintype.card Bool - 1) :=
+  Perspectival.WantableGPT.wantableGPT_classical_dichotomy Bool (by decide)
