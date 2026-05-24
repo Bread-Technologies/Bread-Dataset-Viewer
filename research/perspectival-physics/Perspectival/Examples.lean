@@ -6241,5 +6241,27 @@ example : Perspectival.WantableGPT.unitFn (Fin 4)
             (Perspectival.WantableGPT.vertex (Fin 4) 2) = 1 :=
   WantableGPT_unit_vertex_eq_one (2 : Fin 4)
 
+/-- New theorem: vertex values are nonneg (vertex coords). -/
+theorem WantableGPT_vertex_nonneg
+    {W : Type u} [Wantable W] [DecidableEq W] (w v : W) :
+    0 ≤ Perspectival.WantableGPT.vertex W w v := by
+  show 0 ≤ (if w = v then (1 : ℝ) else 0)
+  split <;> simp
+
+/-- Concrete: on Bool, vertex true at false is 0 (nonneg). -/
+example : 0 ≤ Perspectival.WantableGPT.vertex Bool true false :=
+  WantableGPT_vertex_nonneg true false
+
+/-- New theorem: vertex values are bounded above by 1. -/
+theorem WantableGPT_vertex_le_one
+    {W : Type u} [Wantable W] [DecidableEq W] (w v : W) :
+    Perspectival.WantableGPT.vertex W w v ≤ 1 := by
+  show (if w = v then (1 : ℝ) else 0) ≤ 1
+  split <;> simp
+
+/-- Concrete: on Bool, vertex true at true ≤ 1. -/
+example : Perspectival.WantableGPT.vertex Bool true true ≤ 1 :=
+  WantableGPT_vertex_le_one true true
+
 end Examples
 end Perspectival
