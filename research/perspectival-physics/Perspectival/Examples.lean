@@ -109,6 +109,11 @@ example : Wantable.complement (1 : Fin 4) = 2 := by decide
 example : Wantable.complement (2 : Fin 4) = 1 := by decide
 example : Wantable.complement (3 : Fin 4) = 0 := by decide
 
+/-- The WantableGPT on `Fin 2` has 2-dimensional carrier vector space. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 2)) = 2 := by
+  show Module.finrank ℝ (Fin 2 → ℝ) = 2
+  simp
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
