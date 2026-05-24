@@ -7676,3 +7676,19 @@ theorem no_cloning_Fin4_vertices
              Perspectival.WantableGPT.vertex (Fin 4) 1 ∈ S) : False :=
   Perspectival.no_cloning_of_linear_independent hC h₁ h₂ h_sum
     (WantableGPT_vertex_pair_independent 0 1 (by decide))
+
+/-- New theorem: in any non-trivial finite Wantable, no linear cloner
+exists on a pair of distinct vertices. -/
+theorem no_cloning_WantableGPT_vertices
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    {C : Perspectival.WantableGPT.V W →ₗ[ℝ]
+         Perspectival.WantableGPT.V W ⊗[ℝ] Perspectival.WantableGPT.V W}
+    {S : Set (Perspectival.WantableGPT.V W)}
+    (hC : Perspectival.IsLinearCloner S C)
+    {w v : W} (hwv : w ≠ v)
+    (h₁ : Perspectival.WantableGPT.vertex W w ∈ S)
+    (h₂ : Perspectival.WantableGPT.vertex W v ∈ S)
+    (h_sum : Perspectival.WantableGPT.vertex W w +
+             Perspectival.WantableGPT.vertex W v ∈ S) : False :=
+  Perspectival.no_cloning_of_linear_independent hC h₁ h₂ h_sum
+    (WantableGPT_vertex_pair_independent w v hwv)
