@@ -3195,6 +3195,18 @@ example :
 
 -- (Reachable-on-trivialAgency example skipped due to direction-of-equality fiddle.)
 
+/-- The `Reachable.refl` theorem on any GPT with trivialAgency. -/
+example (G : Perspectival.GPT (Perspectival.WantableGPT.V Bool))
+    (ρ : Perspectival.WantableGPT.V Bool) :
+    @Perspectival.Continuity.Reachable _ _ _ _ G
+      (Perspectival.Continuity.trivialAgency _) ρ ρ :=
+  @Perspectival.Continuity.Reachable.refl _ _ _ _ G
+    (Perspectival.Continuity.trivialAgency _) ρ
+
+/-- The Wantable structure on `Option Bool`: complement preserves none, swaps within some. -/
+example : Wantable.complement (some true : Option Bool) = some false := rfl
+example : Wantable.complement (none : Option Bool) = none := rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
