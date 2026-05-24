@@ -6263,5 +6263,29 @@ theorem WantableGPT_vertex_le_one
 example : Perspectival.WantableGPT.vertex Bool true true ≤ 1 :=
   WantableGPT_vertex_le_one true true
 
+/-- New theorem: vertex value at w is in [0,1]. -/
+theorem WantableGPT_vertex_mem_unitInterval
+    {W : Type u} [Wantable W] [DecidableEq W] (w v : W) :
+    Perspectival.WantableGPT.vertex W w v ∈ Set.Icc (0 : ℝ) 1 :=
+  ⟨WantableGPT_vertex_nonneg w v, WantableGPT_vertex_le_one w v⟩
+
+/-- New theorem: a vertex (qua function W → ℝ) is itself in `effectVec`. -/
+theorem WantableGPT_vertex_in_effectVec
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.vertex W w ∈ Perspectival.WantableGPT.effectVec W := by
+  intro v
+  exact ⟨WantableGPT_vertex_nonneg w v, WantableGPT_vertex_le_one w v⟩
+
+/-- New theorem: the constant-0 function is a valid effect-vector (zero effect). -/
+theorem WantableGPT_const_zero_in_effectVec
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (fun _ : W => (0 : ℝ)) ∈ Perspectival.WantableGPT.effectVec W := by
+  intro w
+  refine ⟨le_refl 0, zero_le_one⟩
+
+/-- Concrete: on Bool, the constant-0 function is in effectVec. -/
+example : (fun _ : Bool => (0 : ℝ)) ∈ Perspectival.WantableGPT.effectVec Bool :=
+  WantableGPT_const_zero_in_effectVec
+
 end Examples
 end Perspectival
