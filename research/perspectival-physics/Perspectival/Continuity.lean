@@ -389,6 +389,16 @@ def StrictReversible.comp {V : Type u} [AddCommGroup V] [Module ℝ V]
     (R₂ R₁ : StrictReversible G) :
     (StrictReversible.comp R₂ R₁).toLin = R₂.toLin.comp R₁.toLin := rfl
 
+/-! ## Submonoid-Agency: stronger refinement (note)
+
+A natural strengthening would package `HasConnectedAgency` together
+with closure under composition, making the available set a
+submonoid of the Reversible monoid. The existing `ClosedAgency`
+already captures composition closure as a hypothesis (separately
+from the connected-agency structure). Whether this should be
+packaged as a `class` extension involves Lean's namespace
+resolution for `Reversible.comp`; deferred. -/
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
