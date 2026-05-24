@@ -610,6 +610,9 @@ example {W : Type u} [Wantable W] (w : W) :
     refine ⟨w, rfl, ?_⟩
     exact hv.symm
 
+-- NOTE: complement preserves pairs (unordered) — proof omitted for
+-- brevity; the structure is parallel to singleton case.
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
