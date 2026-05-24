@@ -9769,3 +9769,18 @@ example : Function.Injective
 example : Function.Injective
     (Perspectival.WantableGPT.fromPTransHom (Bool ⊕ Bool)) :=
   Perspectival.WantableGPT.fromPTransHom_injective (Bool ⊕ Bool)
+
+/-- fromPTransHom is injective on Bool × Bool × Bool. -/
+example : Function.Injective
+    (Perspectival.WantableGPT.fromPTransHom (Bool × Bool × Bool)) :=
+  Perspectival.WantableGPT.fromPTransHom_injective (Bool × Bool × Bool)
+
+/-- fromPTransHom is injective on Fin 4 × Fin 4. -/
+example : Function.Injective
+    (Perspectival.WantableGPT.fromPTransHom (Fin 4 × Fin 4)) :=
+  Perspectival.WantableGPT.fromPTransHom_injective (Fin 4 × Fin 4)
+
+/-- fromPTransHom is injective for any finite Wantable. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Function.Injective (Perspectival.WantableGPT.fromPTransHom W) :=
+  Perspectival.WantableGPT.fromPTransHom_injective W
