@@ -212,6 +212,11 @@ theorem ne_complement_of_fixedPointFree {W : Type u} [Wantable W]
   intro hw
   exact h w hw.symm
 
+-- NOTE (OPEN): a natural conjecture is that for finite Wantable W with
+-- fixed-point-free complement, |W| is even (complement is a free Z/2
+-- action; orbits all have size 2). The proof can be given via
+-- `Equiv.Perm.cycleType` machinery; left for follow-up.
+
 /-- Collective form of Axiom III: reality is a set (= predicate) of meetings. -/
 abbrev Reality (W : Type u) [Wantable W] := Meeting W → Prop
 
