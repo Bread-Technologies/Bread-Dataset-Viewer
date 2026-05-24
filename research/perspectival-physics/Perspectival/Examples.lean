@@ -8060,3 +8060,22 @@ theorem fromPTrans_uniformState_invariant
   funext w
   show uniformState W (φ.invFun w) = uniformState W w
   rfl
+
+/-- New: fromPTrans on Fin 4 applied to uniformState (Fin 4) returns the same. -/
+example (φ : PTrans (Fin 4)) :
+    (Perspectival.WantableGPT.fromPTrans (Fin 4) φ).toLin
+      (uniformState (Fin 4)) = uniformState (Fin 4) :=
+  fromPTrans_uniformState_invariant φ
+
+/-- New: fromPTrans on the complement PTrans applied to uniformBool returns
+the same (specialized form). -/
+example : (Perspectival.WantableGPT.fromPTrans Bool
+            (Perspectival.WantableGPT.complementPTrans Bool)).toLin
+            uniformBool = uniformBool :=
+  fromPTrans_uniformBool_invariant _
+
+/-- New: fromPTrans on the identity PTrans applied to uniformBool returns
+the same. -/
+example : (Perspectival.WantableGPT.fromPTrans Bool 1).toLin uniformBool
+        = uniformBool :=
+  fromPTrans_uniformBool_invariant 1
