@@ -2736,6 +2736,12 @@ example (f : Perspectival.WantableGPT.V (Bool × Bool × Bool))
     (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool))
     (w : Bool × Bool × Bool) : 0 ≤ f w := hf.1 w
 
+/-- For Bool³ vertex true,true,true: state has coordinate 1 only at that index. -/
+example : (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true))
+            (true, true, true) = 1 := by
+  show (if (true, true, true) = (true, true, true) then (1 : ℝ) else 0) = 1
+  simp
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
