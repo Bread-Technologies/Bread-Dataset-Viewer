@@ -3101,6 +3101,15 @@ example : Function.Injective (Perspectival.WantableGPT.vertex Bool) :=
 example : ((Finset.univ : Finset Bool).image (Perspectival.WantableGPT.vertex Bool)).card = 2 := by
   rw [Perspectival.WantableGPT.vertex_image_card]; decide
 
+/-- The vertex set on Fin 3 has size 3. -/
+example : ((Finset.univ : Finset (Fin 3)).image (Perspectival.WantableGPT.vertex (Fin 3))).card = 3 := by
+  rw [Perspectival.WantableGPT.vertex_image_card]; decide
+
+/-- The vertex set on Bool × Bool has size 4 (= |W| under product composition). -/
+example : ((Finset.univ : Finset (Bool × Bool)).image
+            (Perspectival.WantableGPT.vertex (Bool × Bool))).card = 4 := by
+  rw [Perspectival.WantableGPT.vertex_image_card]; decide
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
