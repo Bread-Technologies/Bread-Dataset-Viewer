@@ -13405,6 +13405,57 @@ example (f : Perspectival.WantableGPT.V Bool)
       Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
   exact hsum
 
+/-! ### Vertex-state nonneg, in [0,1] -/
+
+/-- vertex w on Wantable Bool is nonneg at every coord. -/
+example (w v : Bool) : 0 ≤ Perspectival.WantableGPT.vertex Bool w v :=
+  (Perspectival.WantableGPT.vertex_in_states Bool w).1 v
+
+/-- vertex w on Fin 3 is nonneg at every coord. -/
+example (w v : Fin 3) : 0 ≤ Perspectival.WantableGPT.vertex (Fin 3) w v :=
+  (Perspectival.WantableGPT.vertex_in_states (Fin 3) w).1 v
+
+/-- vertex w on Fin 4 sums to 1. -/
+example (w : Fin 4) : ∑ v, Perspectival.WantableGPT.vertex (Fin 4) w v = 1 :=
+  (Perspectival.WantableGPT.vertex_in_states (Fin 4) w).2
+
+/-- vertex w on Bool sums to 1. -/
+example (w : Bool) : ∑ v, Perspectival.WantableGPT.vertex Bool w v = 1 :=
+  (Perspectival.WantableGPT.vertex_in_states Bool w).2
+
+/-- vertex w on Bool × Bool sums to 1. -/
+example (w : Bool × Bool) :
+    ∑ v, Perspectival.WantableGPT.vertex (Bool × Bool) w v = 1 :=
+  (Perspectival.WantableGPT.vertex_in_states (Bool × Bool) w).2
+
+/-! ### uniformBool basic algebra -/
+
+/-- uniformBool is a state. -/
+example : uniformBool ∈ Perspectival.WantableGPT.states Bool := uniformBool_in_states
+
+/-- uniformBool true + uniformBool false = 1. -/
+example : uniformBool true + uniformBool false = 1 := by
+  show (1/2 : ℝ) + (1/2 : ℝ) = 1
+  norm_num
+
+/-- uniformState (Bool × Bool) sums to 1. -/
+example :
+    ∑ p, uniformState (Bool × Bool) p = 1 := by
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show uniformState (Bool × Bool) (true, true)
+     + (uniformState (Bool × Bool) (true, false)
+     + (uniformState (Bool × Bool) (false, true)
+     + uniformState (Bool × Bool) (false, false))) = 1
+  show ((1 : ℝ) / Fintype.card (Bool × Bool))
+     + (((1 : ℝ) / Fintype.card (Bool × Bool))
+     + (((1 : ℝ) / Fintype.card (Bool × Bool))
+     + ((1 : ℝ) / Fintype.card (Bool × Bool)))) = 1
+  rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
