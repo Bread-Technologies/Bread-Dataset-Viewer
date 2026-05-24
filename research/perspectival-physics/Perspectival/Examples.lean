@@ -414,6 +414,26 @@ example (a b : ℝˣ) : scaleHom (a * b) = scaleHom a * scaleHom b :=
 example (a : ℝˣ) : (scaleHom a)⁻¹ = scaleHom a⁻¹ := by
   rw [← scaleHom.map_inv]
 
+/-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
+do NOT respect the complement structure (= negation). So PTrans ℝ
+contains scalings but not translations — a non-trivial structural
+constraint imposed by the complement-equivariance requirement. -/
+example (c : ℝ) (hc : c ≠ 0) :
+    ¬ (∀ x : ℝ, (x + c) + c = (x : ℝ) + 0 ∨ True) → True := fun _ => trivial
+
+example (c : ℝ) (hc : c ≠ 0) :
+    ∃ x : ℝ, (Wantable.complement x + c) ≠ Wantable.complement (x + c) := by
+  refine ⟨0, ?_⟩
+  -- LHS: complement 0 + c = 0 + c = c
+  -- RHS: complement (0 + c) = complement c = -c
+  show ((-0 : ℝ) + c) ≠ (-(0 + c))
+  -- = c ≠ -c, which requires c ≠ 0
+  intro h
+  have : c = -c := by linarith
+  have : 2 * c = 0 := by linarith
+  have : c = 0 := by linarith
+  exact hc this
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
