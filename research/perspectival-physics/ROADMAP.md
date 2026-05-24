@@ -179,6 +179,27 @@ property in a suitable category.
 This is conceptually novel work; success would constitute a real
 unifying claim across semantic and physical levels.
 
+## Session updates (latest)
+
+### Done this session
+
+- **R6 Birkhoff disconnect for Classical n=2**: `classical_n2_strict_reversible_path_id_swap_empty` formally proves no continuous bijective state-preserving path connects id to swap on Classical Bool. Formally hypothesis-free.
+- **R6 n=2 enumeration**: `classical_n2_det_one_eq_id` and `classical_n2_det_neg_one_eq_swap` — det=±1 state-preserving Rs are exactly id/swap. Plus `classical_n2_state_preserving_determined` parametrizes the Birkhoff polytope at n=2.
+- **R7 algebraic scaffold**: `GroupClosedReversiblePath` / `GroupClosedAgency` in Continuity.lean. `trivialGroupClosedAgency` witness for any GPT.
+- **Tier 1 #2 Hardy A4**: BOTH halves derived for WantableGPT — `Hardy_Axiom4_WantableGPT_dimension` (dimension multiplies) and `Hardy_Axiom4_WantableGPT_state_exists` (state-half existence) — plus `productStateBilin` as the bilinear-map packaging.
+- **Tier 2 #6 baby step**: `scaleHom` continuous-PTrans witnesses on ℝ. Three distinct PTrans ℝ shown.
+- **Tier 3 #11 Lean step**: `MultiSectorWantable n W` construction (sigma-type) plus 11 worked examples and cardinality-distinctness.
+- **Axiom refinement**: `PatternStableWantable` typeclass in Ontology.lean — formulation (a) trivial-stability scaffold + instances for Bool/Fin n/Bool×Bool.
+- **Documentation**: ORIGINAL_PROMPT.md, TIER1_5_HILBERT.md, TIER2_GAUGE_SCOPING.md, TIER3_DARK_MATTER.md, TIER4_DISSOLUTIONS.md, R6_GENERAL_N_SCOPING.md, HARDY_A2_AS_PARSIMONY.md, MULLER_DIVERGENCE.md, PATTERN_STABLE_WANTABLE.md. STATUS.md, FINDINGS.md, CONCLUSIONS.md, PAPER_DRAFT.md refreshed.
+
+### Next critical-path priorities
+
+1. **R6 general-n** — Mathlib infrastructure ready; ~250-400 lines of Matrix.det plumbing. See R6_GENERAL_N_SCOPING.md.
+2. **R7 Lie-group bridge** — needs Mathlib LieGroup wiring. Higher-leverage than R6 general-n.
+3. **PatternStableWantable formulation (b)**: reachable-closure / orbit-cardinality non-trivial stability predicate. Would discriminate Bool (orbit > 1 under complement) from Fin 3 (orbit = 1 under id-complement).
+4. **u(1) toy formalization**: per TIER2_GAUGE_SCOPING.md, the smallest non-trivial Lie-group gauge instance.
+5. **gptTensor**: tensor-product-of-GPTs construction, S1 tomographic locality.
+
 ## Methodology constants
 
 For all of the above:
@@ -195,3 +216,7 @@ For all of the above:
   rejects it. Maintain perspective-first reading throughout.
 - **No compatibilist drift.** Free-will-as-substantial is rejected;
   agency at the instant, identity in the pattern. Don't soften.
+- **Metaphysics-fixed, axioms-adjustable** (per user clarification).
+  When current axioms can't derive a Tier target, refine the formal
+  axiom encoding (preserving the §2 metaphysics). PatternStableWantable
+  is the first such refinement in this session.
