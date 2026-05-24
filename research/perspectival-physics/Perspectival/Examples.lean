@@ -10099,3 +10099,25 @@ example : (Perspectival.WantableGPT.complementTransform (Bool × Bool)) ^ 2
                   (Perspectival.WantableGPT.gpt (Bool × Bool))
                   (Perspectival.WantableGPT.gpt (Bool × Bool))) :=
   WantableGPT_complementTransform_order_two
+
+/-- complementTransform^4 = 1 on Bool. -/
+example : (Perspectival.WantableGPT.complementTransform Bool) ^ 4
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt Bool)
+                  (Perspectival.WantableGPT.gpt Bool)) := by
+  rw [show (4 : ℕ) = 2 * 2 from rfl, pow_mul,
+      WantableGPT_complementTransform_order_two, one_pow]
+
+/-- complementTransform^6 = 1 on Bool. -/
+example : (Perspectival.WantableGPT.complementTransform Bool) ^ 6
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt Bool)
+                  (Perspectival.WantableGPT.gpt Bool)) := by
+  rw [show (6 : ℕ) = 2 * 3 from rfl, pow_mul,
+      WantableGPT_complementTransform_order_two, one_pow]
+
+/-- complementTransform^3 = complementTransform on Bool. -/
+example : (Perspectival.WantableGPT.complementTransform Bool) ^ 3
+        = Perspectival.WantableGPT.complementTransform Bool := by
+  rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add,
+      WantableGPT_complementTransform_order_two, one_mul, pow_one]
