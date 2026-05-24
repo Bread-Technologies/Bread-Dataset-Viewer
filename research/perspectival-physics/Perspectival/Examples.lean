@@ -12908,3 +12908,20 @@ example {W : Type u} [Wantable W] (n : ℤ) :
 example {W : Type u} [Wantable W] :
     (PTrans.complement : PTrans W) ^ (0 : ℤ) = 1 := by
   rw [zpow_zero]
+
+/-! ### R6 bridge: classical swap example in Examples -/
+
+/-- The swap on Bool via PTrans.complement (the Wantable Bool case). -/
+example : (PTrans.complement : PTrans Bool) ≠ 1 := by
+  intro h
+  -- complement * complement = 1 (= 1 * 1 = 1)
+  -- But also h says complement = 1, so complement applied to "true" should give "true"
+  -- whereas in fact complement Bool sends true ↔ false.
+  have h2 : (PTrans.complement : PTrans Bool).toFun true = (1 : PTrans Bool).toFun true := by
+    rw [h]
+  show False
+  -- (1 : PTrans Bool).toFun true = true (since 1 is identity)
+  -- (PTrans.complement : PTrans Bool).toFun true = !true = false
+  -- So false = true → False
+  show False
+  exact Bool.false_ne_true h2
