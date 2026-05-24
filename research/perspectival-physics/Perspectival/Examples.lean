@@ -6430,5 +6430,37 @@ theorem WantableGPT_vertex_Bool_false_eq :
   funext v
   cases v <;> rfl
 
+/-- New theorem: vertex true + vertex false = the constant-1 function
+on Bool. (This is `sum_vertices_eq_one` specialised to Bool, written
+without the sum notation.) -/
+theorem WantableGPT_Bool_vertex_sum :
+    Perspectival.WantableGPT.vertex Bool true
+    + Perspectival.WantableGPT.vertex Bool false
+      = fun _ : Bool => (1 : ℝ) := by
+  funext v
+  show (if true = v then (1 : ℝ) else 0) + (if false = v then (1 : ℝ) else 0) = 1
+  cases v <;> simp
+
+/-- New theorem: any state in WantableGPT Bool is `a • vertex true + b •
+vertex false` with a + b = 1, a, b ≥ 0. The state itself is determined
+by its true-coord and false-coord. -/
+theorem WantableGPT_Bool_state_decomp (f : Perspectival.WantableGPT.V Bool) :
+    f = f true • Perspectival.WantableGPT.vertex Bool true
+      + f false • Perspectival.WantableGPT.vertex Bool false := by
+  funext v
+  cases v with
+  | true =>
+    show f true = f true • Perspectival.WantableGPT.vertex Bool true true
+                + f false • Perspectival.WantableGPT.vertex Bool false true
+    show f true = f true * (if true = true then (1 : ℝ) else 0)
+                + f false * (if false = true then (1 : ℝ) else 0)
+    simp
+  | false =>
+    show f false = f true • Perspectival.WantableGPT.vertex Bool true false
+                 + f false • Perspectival.WantableGPT.vertex Bool false false
+    show f false = f true * (if true = false then (1 : ℝ) else 0)
+                 + f false * (if false = false then (1 : ℝ) else 0)
+    simp
+
 end Examples
 end Perspectival
