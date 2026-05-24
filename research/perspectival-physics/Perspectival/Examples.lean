@@ -2681,6 +2681,15 @@ example : (∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Bool × Bool × Bool),
             = Fintype.card (Bool × Bool × Bool) :=
   Perspectival.WantableGPT.wantableGPT_nontrivial_classical (Bool × Bool × Bool) (by decide)
 
+/-- The vertex map on Bool³ is injective. -/
+example : Function.Injective (Perspectival.WantableGPT.vertex (Bool × Bool × Bool)) :=
+  Perspectival.WantableGPT.vertex_injective (Bool × Bool × Bool)
+
+/-- The Bool³ vertex set has cardinality 8. -/
+example : ((Finset.univ : Finset (Bool × Bool × Bool)).image
+            (Perspectival.WantableGPT.vertex (Bool × Bool × Bool))).card = 8 := by
+  rw [Perspectival.WantableGPT.vertex_image_card]; decide
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
