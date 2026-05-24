@@ -155,13 +155,15 @@ def Axiom4_Composite_States_Multiply
     [AddCommGroup VB] [Module ℝ VB]
     (GA : GPT VA) (GB : GPT VB) (nA nB : ℕ) : Prop :=
   HasDimensionN GA nA → HasDimensionN GB nB →
-  -- There exists a composite GPT with dimension nA * nB.
-  -- We do not yet have the tensor product of GPTs formalized.
-  True  -- placeholder; precise formalization pending tensor product of GPTs
+  -- There exists a composite GPT with dimension nA * nB. The
+  -- WantableGPT bridge concretely satisfies this via
+  -- Hardy_Axiom4_WantableGPT_dimension and
+  -- Hardy_Axiom4_WantableGPT_state_exists in WantableGPT.lean.
+  True  -- placeholder; full GPT-tensor formulation pending
 
-/-- Vacuous proof of the placeholder Axiom 4. Once Axiom 4 is given
-non-trivial content (via tensor product structure), this should be
-replaced with a real derivation or marked AUXILIARY. -/
+/-- Vacuous proof of the placeholder Axiom 4. Concrete content for
+WantableGPT is in `Hardy_Axiom4_WantableGPT_dimension` and
+`Hardy_Axiom4_WantableGPT_state_exists` (WantableGPT.lean). -/
 theorem axiom4_holds_placeholder
     {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
     [AddCommGroup VB] [Module ℝ VB]
