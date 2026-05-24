@@ -12413,11 +12413,38 @@ example : uniformBool = (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool tru
   cases b with
   | true =>
     show uniformBool true = (1/2 : ℝ) * (if true = true then (1 : ℝ) else 0)
-                          + (1/2 : ℝ) * (if true = false then (1 : ℝ) else 0)
+                          + (1/2 : ℝ) * (if false = true then (1 : ℝ) else 0)
     show (1/2 : ℝ) = (1/2 : ℝ) * 1 + (1/2 : ℝ) * 0
     norm_num
   | false =>
-    show uniformBool false = (1/2 : ℝ) * (if false = true then (1 : ℝ) else 0)
+    show uniformBool false = (1/2 : ℝ) * (if true = false then (1 : ℝ) else 0)
                            + (1/2 : ℝ) * (if false = false then (1 : ℝ) else 0)
     show (1/2 : ℝ) = (1/2 : ℝ) * 0 + (1/2 : ℝ) * 1
     norm_num
+
+/-! ### Generic uniform state vertex decomposition -/
+
+/-- uniformState equals the average of all vertex states. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W] :
+    uniformState W
+      = ∑ w, ((1 : ℝ) / Fintype.card W)
+              • Perspectival.WantableGPT.vertex W w := by
+  funext w'
+  rw [Finset.sum_apply]
+  show (1 : ℝ) / Fintype.card W
+     = ∑ w, ((1 : ℝ) / Fintype.card W)
+             * Perspectival.WantableGPT.vertex W w w'
+  rw [Finset.sum_eq_single w']
+  · show (1 : ℝ) / Fintype.card W
+       = ((1 : ℝ) / Fintype.card W)
+         * Perspectival.WantableGPT.vertex W w' w'
+    show (1 : ℝ) / Fintype.card W
+       = ((1 : ℝ) / Fintype.card W) * (if w' = w' then (1 : ℝ) else 0)
+    simp
+  · intro w _ hne
+    show ((1 : ℝ) / Fintype.card W)
+        * Perspectival.WantableGPT.vertex W w w' = 0
+    show ((1 : ℝ) / Fintype.card W) * (if w = w' then (1 : ℝ) else 0) = 0
+    rw [if_neg hne]; ring
+  · intro h
+    exact absurd (Finset.mem_univ w') h
