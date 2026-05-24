@@ -14151,6 +14151,36 @@ example :
     simp
     norm_num
 
+/-! ### Born rule on arbitrary Bool state -/
+
+/-- For a state f on Bool, deltaIndicatorLin b f = f b — Born rule. -/
+example (f : Perspectival.WantableGPT.V Bool) (b : Bool) :
+    deltaIndicatorLin b f = f b := deltaIndicatorLin_eq_apply b f
+
+/-- Two Bool states with same probabilities are equal. -/
+example (f g : Perspectival.WantableGPT.V Bool)
+    (h_true : f true = g true) (h_false : f false = g false) :
+    f = g := by
+  funext b
+  cases b with
+  | true => exact h_true
+  | false => exact h_false
+
+/-- Two Bool states with same value at true and total probability 1 must agree at false. -/
+example (f g : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool)
+    (hg : g ∈ Perspectival.WantableGPT.states Bool)
+    (h_true : f true = g true) :
+    f false = g false := by
+  have hsum_f := hf.2
+  have hsum_g := hg.2
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton] at hsum_f
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton] at hsum_g
+  -- hsum_f : f true + f false = 1, hsum_g : g true + g false = 1
+  linarith
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
