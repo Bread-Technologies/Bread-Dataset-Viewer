@@ -4863,5 +4863,40 @@ example {W : Type u} [Wantable W] :
     (Wantable.complement ∘ Wantable.complement : W → W) = id :=
   Wantable.complement_complement_eq_id
 
+/-- `ext_of_side₁`: meetings agreeing on side₁ are equal. -/
+example {W : Type u} [Wantable W] (m₁ m₂ : Meeting W) (h : m₁.side₁ = m₂.side₁) :
+    m₁ = m₂ :=
+  Meeting.ext_of_side₁ m₁ m₂ h
+
+/-- `SelfComplementary.preserved`: a function commuting with complement
+sends self-complementary wants to self-complementary wants. -/
+example {W : Type u} [Wantable W]
+    (f : W → W) (hf : ∀ w, f (Wantable.complement w) = Wantable.complement (f w))
+    (w : W) (h : SelfComplementary w) : SelfComplementary (f w) :=
+  SelfComplementary.preserved f hf w h
+
+/-- `ne_complement_of_fixedPointFree`: in a fixed-point-free Wantable,
+no want equals its complement. -/
+example {W : Type u} [Wantable W]
+    (h : FixedPointFreeComplement W) (w : W) :
+    w ≠ Wantable.complement w :=
+  ne_complement_of_fixedPointFree h w
+
+/-- `Wantable.exists_complement`: every want has a complement (trivial). -/
+example {W : Type u} [Wantable W] (w : W) :
+    ∃ v : W, Wantable.complement w = v :=
+  Wantable.exists_complement w
+
+/-- `Wantable.complement_surjective`: complement is surjective. -/
+example {W : Type u} [Wantable W] :
+    Function.Surjective (Wantable.complement : W → W) :=
+  Wantable.complement_surjective
+
+/-- `Wantable.complement_eq_iff`: complement is an injective-like
+characterisation. -/
+example {W : Type u} [Wantable W] (a b : W) :
+    Wantable.complement a = b ↔ a = Wantable.complement b :=
+  Wantable.complement_eq_iff a b
+
 end Examples
 end Perspectival
