@@ -7077,5 +7077,21 @@ theorem productState_transform_factor
      = f₁ (φ₁.invFun p.1) * f₂ (φ₂.invFun p.2)
   rfl
 
+/-- New: a perfectWitness on `W₁ × W₂` for product-vertices is
+constructed from the projections. -/
+noncomputable def productPerfectWitness
+    (W₁ W₂ : Type u) [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    Perspectival.Distinguish.PerfectWitness
+      (G := Perspectival.WantableGPT.gpt (W₁ × W₂))
+      (Perspectival.WantableGPT.vertex (W₁ × W₂)) :=
+  Perspectival.WantableGPT.perfectWitness (W₁ × W₂)
+
+/-- New: linear-independence of product-vertices. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    LinearIndependent ℝ (Perspectival.WantableGPT.vertex (W₁ × W₂)) :=
+  Perspectival.WantableGPT.vertex_linear_independent_of_fintype (W₁ × W₂)
+
 end Examples
 end Perspectival
