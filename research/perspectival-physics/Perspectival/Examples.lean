@@ -973,6 +973,12 @@ example : (complementEquiv : Equiv.Perm (Bool × Bool)) ^ 2 = 1 := by
   show Wantable.complement (Wantable.complement p) = p
   exact Wantable.complement_involutive p
 
+example : (complementEquiv : Equiv.Perm (Bool ⊕ Bool)) ^ 2 = 1 := by
+  apply Equiv.ext
+  intro s
+  show Wantable.complement (Wantable.complement s) = s
+  exact Wantable.complement_involutive s
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
