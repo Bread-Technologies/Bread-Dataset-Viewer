@@ -5641,5 +5641,23 @@ example (n : ℕ) (e : Perspectival.Classical.V n →ₗ[ℝ] ℝ)
     0 ≤ e x ∧ e x ≤ 1 :=
   Perspectival.Classical.prob_in_unit_interval n e he x hx
 
+/-- Generic `Meeting.sum_no_cross`: in a sum-Wantable, sides are
+in the same summand (no cross-system meetings). -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m : Meeting (W₁ ⊕ W₂)) :
+    (∃ a b, m.side₁ = .inl a ∧ m.side₂ = .inl b) ∨
+    (∃ a b, m.side₁ = .inr a ∧ m.side₂ = .inr b) :=
+  Meeting.sum_no_cross m
+
+/-- Generic `Meeting.sumInl_swap`: sumInl commutes with swap. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂] (m : Meeting W₁) :
+    (Meeting.sumInl (W₂ := W₂) m).swap = Meeting.sumInl m.swap :=
+  Meeting.sumInl_swap m
+
+/-- Generic `Meeting.sumInr_swap`: sumInr commutes with swap. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂] (m : Meeting W₂) :
+    (Meeting.sumInr (W₁ := W₁) m).swap = Meeting.sumInr m.swap :=
+  Meeting.sumInr_swap m
+
 end Examples
 end Perspectival
