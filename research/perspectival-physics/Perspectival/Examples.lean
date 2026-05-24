@@ -3162,6 +3162,17 @@ example (v : Perspectival.WantableGPT.V Bool) :
           (Perspectival.WantableGPT.gpt Bool)).inv v) = v :=
   Perspectival.Continuity.StrictReversible.comp_inv _ v
 
+/-- Concrete: the path_via_affineLine works on R₁ = R₂ = id. -/
+example : ∃ γ : unitInterval → Perspectival.WantableGPT.V Bool →ₗ[ℝ]
+              Perspectival.WantableGPT.V Bool,
+    Continuous (fun p : unitInterval × Perspectival.WantableGPT.V Bool =>
+      (γ p.1) p.2) ∧
+    γ 0 = (Perspectival.Continuity.Reversible.id
+            (Perspectival.WantableGPT.gpt Bool)).toLin ∧
+    γ 1 = (Perspectival.Continuity.Reversible.id
+            (Perspectival.WantableGPT.gpt Bool)).toLin :=
+  Perspectival.Continuity.path_via_affineLine _ _ _
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
