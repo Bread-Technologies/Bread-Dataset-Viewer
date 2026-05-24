@@ -267,6 +267,66 @@ example : ¬ FixedPointFreeComplement ℤ := by
   intro h
   exact h 0 (by show -(0 : ℤ) = 0; ring)
 
+/-- **Even-cardinality theorem.** For finite Wantable W with a linear
+order and fixed-point-free complement, `|W|` is even. Proof: split W
+into `A = {w | w < complement w}` and `B = {w | complement w < w}`;
+these are disjoint, cover W (since fixed-point-free), and are in
+bijection via complement, so each has size `|W|/2`. -/
+theorem card_even_of_fixedPointFree {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] [LinearOrder W] (h : FixedPointFreeComplement W) :
+    Even (Fintype.card W) := by
+  set A : Finset W := Finset.univ.filter (fun w => w < Wantable.complement w) with hA
+  set B : Finset W := Finset.univ.filter (fun w => Wantable.complement w < w) with hB
+  have hA_mem : ∀ w, w ∈ A ↔ w < Wantable.complement w := by
+    intro w; simp [hA]
+  have hB_mem : ∀ w, w ∈ B ↔ Wantable.complement w < w := by
+    intro w; simp [hB]
+  have hAB_disj : Disjoint A B := by
+    rw [Finset.disjoint_left]
+    intro w hwA hwB
+    rw [hA_mem] at hwA
+    rw [hB_mem] at hwB
+    exact absurd hwA (asymm hwB)
+  have hAB_union : A ∪ B = Finset.univ := by
+    apply Finset.eq_univ_of_forall
+    intro w
+    rw [Finset.mem_union, hA_mem, hB_mem]
+    rcases lt_trichotomy w (Wantable.complement w) with hlt | heq | hgt
+    · exact Or.inl hlt
+    · exact absurd heq (ne_complement_of_fixedPointFree h w)
+    · exact Or.inr hgt
+  have hcard_eq : Fintype.card W = A.card + B.card := by
+    rw [← Finset.card_univ, ← hAB_union, Finset.card_union_of_disjoint hAB_disj]
+  have hAB_card : A.card = B.card := by
+    apply Finset.card_bij (fun w _ => Wantable.complement w)
+    · intro w hw
+      rw [hA_mem] at hw
+      rw [hB_mem]
+      have h2 : Wantable.complement (Wantable.complement w) = w :=
+        Wantable.complement_involutive w
+      rw [h2]; exact hw
+    · intro w₁ _ w₂ _ heq
+      have := congrArg Wantable.complement heq
+      rwa [Wantable.complement_involutive, Wantable.complement_involutive] at this
+    · intro w hw
+      rw [hB_mem] at hw
+      refine ⟨Wantable.complement w, ?_, ?_⟩
+      · rw [hA_mem]
+        have h2 : Wantable.complement (Wantable.complement w) = w :=
+          Wantable.complement_involutive w
+        rw [h2]; exact hw
+      · exact Wantable.complement_involutive w
+  refine ⟨A.card, ?_⟩
+  rw [hcard_eq, hAB_card]
+
+/-- Concrete instance: `|Bool| = 2` is even (consistent with
+fixed-point-free complement on Bool). -/
+example : Even (Fintype.card Bool) := card_even_of_fixedPointFree (W := Bool) (by
+  intro b hb
+  cases b
+  · exact Bool.false_ne_true hb.symm
+  · exact Bool.false_ne_true hb)
+
 /-- The `Option` type lifts a Wantable structure: `none` is its own
 complement, `some w` complements to `some (complement w)`. -/
 instance {W : Type u} [Wantable W] : Wantable (Option W) where

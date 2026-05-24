@@ -217,6 +217,10 @@ theorem ne_complement_of_fixedPointFree {W : Type u} [Wantable W]
 -- action; orbits all have size 2). The proof can be given via
 -- `Equiv.Perm.cycleType` machinery; left for follow-up.
 
+-- The actual proof that fixed-point-free + finite → even cardinality
+-- requires Mathlib (LinearOrder, Fintype, Finset). It is given in
+-- `Perspectival/Examples.lean` as `card_even_of_fixedPointFree`.
+
 /-- Collective form of Axiom III: reality is a set (= predicate) of meetings. -/
 abbrev Reality (W : Type u) [Wantable W] := Meeting W → Prop
 
