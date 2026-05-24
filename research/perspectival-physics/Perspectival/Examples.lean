@@ -7739,3 +7739,37 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] :
   rw [Set.mem_singleton_iff] at hv
   subst hv
   simp
+
+/-- New theorem: vertex states give linearly independent triples. -/
+theorem WantableGPT_vertex_triple_independent
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (w v u : W) (hwv : w ≠ v) (hvu : v ≠ u) (hwu : w ≠ u) :
+    LinearIndependent ℝ ![Perspectival.WantableGPT.vertex W w,
+                           Perspectival.WantableGPT.vertex W v,
+                           Perspectival.WantableGPT.vertex W u] := by
+  set ρ : Fin 3 → Perspectival.WantableGPT.V W :=
+    ![Perspectival.WantableGPT.vertex W w,
+      Perspectival.WantableGPT.vertex W v,
+      Perspectival.WantableGPT.vertex W u] with hρ
+  have hvw : v ≠ w := hwv.symm
+  have huv : u ≠ v := hvu.symm
+  have huw : u ≠ w := hwu.symm
+  have hwit : Perspectival.Distinguish.PerfectWitness
+      (G := Perspectival.WantableGPT.gpt W) ρ := by
+    refine ⟨![Perspectival.WantableGPT.proj W w,
+              Perspectival.WantableGPT.proj W v,
+              Perspectival.WantableGPT.proj W u], ?_⟩
+    intro i j
+    fin_cases i <;> fin_cases j <;>
+      (show Perspectival.WantableGPT.proj W _
+              (Perspectival.WantableGPT.vertex W _) = _) <;>
+      (rw [Perspectival.WantableGPT.proj_vertex]) <;>
+      simp_all
+  exact Perspectival.Distinguish.perfect_distinguishable_imp_linear_independent
+    ρ hwit
+
+/-- Concrete: on Fin 4, vertices 0, 1, 2 are linearly independent. -/
+example : LinearIndependent ℝ ![Perspectival.WantableGPT.vertex (Fin 4) 0,
+                                 Perspectival.WantableGPT.vertex (Fin 4) 1,
+                                 Perspectival.WantableGPT.vertex (Fin 4) 2] :=
+  WantableGPT_vertex_triple_independent 0 1 2 (by decide) (by decide) (by decide)
