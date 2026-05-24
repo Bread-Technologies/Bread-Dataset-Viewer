@@ -10,18 +10,18 @@ against ORIGINAL_PROMPT.md targets — *not* line/commit count chatter.
 | Target | Status | Notes |
 |--------|--------|-------|
 | #1 Axioms I–IV in Lean GPT | ✓ DONE | Wantable, Meeting, etc. |
-| #2 Hardy axioms categorized | ◐ PARTIAL | A1, A3, A5 verified-derivable; A2 auxiliary; A4 placeholder |
+| #2 Hardy axioms categorized | ◑ PARTIAL+ | A1, A3, A5 derivable; A4 BOTH halves derivable (dim + state-existence); A2 auxiliary |
 | #3 Tsirelson 2√2 derived | ✓ DONE | CHSH.lean |
 | #4 No-cloning/broadcast/signaling | ✓ DONE | NoCloning.lean, NoBroadcasting.lean, no-signaling in WantableGPT |
-| #5 Complex Hilbert space (Renou extension) | ✗ NOT STARTED | `TIER1_5_HILBERT.md` sketches path |
+| #5 Complex Hilbert space (Renou extension) | ◐ PARTIAL | productStateBilin (S1 done), R6 disconnect (S2 partial: n=2 done), S3 not started |
 
 **Tier 2 — Standard Model**
 
 | Target | Status | Notes |
 |--------|--------|-------|
-| #6 Gauge group U(1)×SU(2)×SU(3) | ✗ NOT STARTED | `TIER2_GAUGE_SCOPING.md` (this session) |
+| #6 Gauge group U(1)×SU(2)×SU(3) | ◐ PARTIAL | u(1) toy in Lean: gaugeFamily, combinedFamily, rescale. Full SU(2)×SU(3) NOT in scope. |
 | #7 Three fermion generations | ✗ NEGATIVE | `TIER2_ATTEMPT.md` documents failures |
-| #8 Particle representations | ✗ NOT STARTED | Requires Lie-group machinery (R7) first |
+| #8 Particle representations | ✗ NOT STARTED | Requires R7 Lie-group machinery first |
 | #9 Mass hierarchies | ✗ NOT STARTED | |
 
 **Tier 3 — Cosmology / dark matter / fine-tuning**
@@ -29,7 +29,7 @@ against ORIGINAL_PROMPT.md targets — *not* line/commit count chatter.
 | Target | Status |
 |--------|--------|
 | #10 Cosmological constant | ✗ SPECULATIVE only |
-| #11 Dark matter multi-sector | ✗ SPECULATIVE only |
+| #11 Dark matter multi-sector | ◐ PARTIAL | `MultiSectorWantable` formal in Lean; non-uniqueness shown. Quantitative signatures NOT in scope. |
 | #12 Fine-tuning | ✗ NOT STARTED |
 | #13 QM/GR unification | ✗ NOT STARTED |
 
@@ -37,9 +37,16 @@ against ORIGINAL_PROMPT.md targets — *not* line/commit count chatter.
 
 | Target | Status |
 |--------|--------|
-| #14 Hard problem | ◐ ARGUED in `TIER4_ATTEMPT.md` |
-| #15 Why-something | ✗ NOT STARTED |
-| #16 Origin of universe | ✗ NOT STARTED |
+| #14 Hard problem | ✓ ARGUED in `TIER4_DISSOLUTIONS.md` (this session) |
+| #15 Why-something | ✓ ARGUED in `TIER4_DISSOLUTIONS.md` |
+| #16 Origin of universe | ✓ ARGUED in `TIER4_DISSOLUTIONS.md` |
+
+**Axiom-refinement progress** (per user-authorized "metaphysics-fixed, axioms-adjustable"):
+
+- `PatternStableWantable` typeclass in `Ontology.lean` (formulation a: trivial; formulation b: reachable-closure via `Stable_nontrivial`)
+- `PatternStableWantable.ofStableNontrivialWitness` gives non-trivial instance from a Stable_nontrivial witness
+- Bool admits the non-trivial instance; Fin 3 (id-complement) does NOT — first formal discrimination
+- `stable_nontrivial_ptrans_invariant` — pattern stability transforms coherently under PTrans
 
 **Framework-distinctive contributions this session:**
 
