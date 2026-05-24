@@ -5728,5 +5728,17 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     ρ₁ = ρ₂ :=
   Perspectival.Distinguish.linear_dependent_states_eq h₁ h₂ hdep
 
+/-- Generic `perfectWitness_singleton`: a single state has a trivial
+perfect witness (the unit functional). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} (ρ : V) (hρ : ρ ∈ G.states) :
+    Perspectival.Distinguish.PerfectWitness (G := G) (fun _ : Fin 1 => ρ) :=
+  Perspectival.Distinguish.perfectWitness_singleton ρ hρ
+
+/-- Generic `outerForm_apply`: the outer-form evaluates as a product. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (e u : V →ₗ[ℝ] ℝ) (x y : V) :
+    Perspectival.Distinguish.outerForm e u x y = e x * u y := rfl
+
 end Examples
 end Perspectival
