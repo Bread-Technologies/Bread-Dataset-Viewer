@@ -2880,6 +2880,19 @@ example (m : Meeting Bool) (h : m.side₁ = false) : m.side₂ = true := by
   rw [h] at hcomp
   exact hcomp.symm
 
+/-- For Wantable Bool, Meeting Bool has exactly 2 elements (by classification
+of side₁ into true/false, with side₂ uniquely determined). -/
+example (m : Meeting Bool) :
+    (m.side₁ = true ∧ m.side₂ = false) ∨ (m.side₁ = false ∧ m.side₂ = true) := by
+  have hcomp : Wantable.complement m.side₁ = m.side₂ := m.complementary
+  cases h : m.side₁
+  · right
+    refine ⟨rfl, ?_⟩
+    rw [h] at hcomp; exact hcomp.symm
+  · left
+    refine ⟨rfl, ?_⟩
+    rw [h] at hcomp; exact hcomp.symm
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
