@@ -2203,6 +2203,24 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
       ((Finset.univ : Finset W).image (Perspectival.WantableGPT.vertex W)) :=
   Perspectival.WantableGPT.vertex_distinguishability_set W
 
+/-- Concrete: `sumMap` of two identity PTrans equals the identity on
+the disjoint union. -/
+example : PTrans.sumMap (1 : PTrans Bool) (1 : PTrans Bool)
+        = (1 : PTrans (Bool ⊕ Bool)) :=
+  PTrans.sumMap_one_one Bool Bool
+
+/-- Concrete: `prodMap` of two identity PTrans equals the identity on
+the product. -/
+example : PTrans.prodMap (1 : PTrans Bool) (1 : PTrans Bool)
+        = (1 : PTrans (Bool × Bool)) :=
+  PTrans.prodMap_one_one Bool Bool
+
+/-- Concrete: `sumMap` is multiplicative on Bool. -/
+example (g f : PTrans Bool) :
+    PTrans.sumMap (g * f) (g * f) =
+    PTrans.sumMap g g * PTrans.sumMap f f :=
+  PTrans.sumMap_mul g f g f
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
