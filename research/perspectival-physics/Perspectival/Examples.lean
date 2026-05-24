@@ -341,6 +341,52 @@ theorem ptrans_empty_classification (f : PTrans Empty) : f = (1 : PTrans Empty) 
   intro w
   exact w.elim
 
+/-- The "swap" perspectival transformation on `Fin 2`. -/
+def fin2Swap : PTrans (Fin 2) where
+  toFun
+    | 0 => 1
+    | 1 => 0
+  invFun
+    | 0 => 1
+    | 1 => 0
+  left_inv := by intro i; fin_cases i <;> rfl
+  right_inv := by intro i; fin_cases i <;> rfl
+  resp_complement := by intro i; fin_cases i <;> rfl
+
+/-- **Concrete classification of `PTrans (Fin 2)`.** Either the
+identity or `fin2Swap`. -/
+theorem ptrans_fin2_classification (f : PTrans (Fin 2)) :
+    f = (1 : PTrans (Fin 2)) ∨ f = fin2Swap := by
+  -- Case-split on f.toFun 0 ∈ Fin 2 via Fin.cases-style reasoning.
+  have h0_cases : f.toFun 0 = 0 ∨ f.toFun 0 = 1 := by
+    have := f.toFun 0
+    omega
+  -- Use resp_complement to determine f.toFun 1 from f.toFun 0.
+  have hresp := f.resp_complement 0
+  -- hresp : f.toFun (complement 0) = complement (f.toFun 0), i.e., f.toFun 1 = complement (f.toFun 0)
+  have hresp1 : f.toFun 1 = Wantable.complement (f.toFun 0) := by
+    have : f.toFun (Wantable.complement (0 : Fin 2)) = Wantable.complement (f.toFun 0) := hresp
+    have hc : Wantable.complement (0 : Fin 2) = 1 := rfl
+    rw [hc] at this
+    exact this
+  rcases h0_cases with h0 | h0
+  · -- f.toFun 0 = 0; then f.toFun 1 = complement 0 = 1
+    left
+    apply PTrans.ext
+    intro i
+    have hf1 : f.toFun 1 = 1 := by rw [hresp1, h0]; rfl
+    fin_cases i
+    · show f.toFun 0 = 0; exact h0
+    · show f.toFun 1 = 1; exact hf1
+  · -- f.toFun 0 = 1; then f.toFun 1 = complement 1 = 0
+    right
+    apply PTrans.ext
+    intro i
+    have hf1 : f.toFun 1 = 0 := by rw [hresp1, h0]; rfl
+    fin_cases i
+    · show f.toFun 0 = fin2Swap.toFun 0; rw [h0]; rfl
+    · show f.toFun 1 = fin2Swap.toFun 1; rw [hf1]; rfl
+
 /-- The `Option` type lifts a Wantable structure: `none` is its own
 complement, `some w` complements to `some (complement w)`. -/
 instance {W : Type u} [Wantable W] : Wantable (Option W) where
