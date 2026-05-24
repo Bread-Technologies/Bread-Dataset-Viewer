@@ -5033,5 +5033,43 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
     Perspectival.WantableGPT.fromPTransTransformHom W ψ :=
   (Perspectival.WantableGPT.fromPTransTransformHom W).map_mul φ ψ
 
+/-- `toEquivPerm`: applying a PTrans's underlying permutation at `w`
+gives `φ.toFun w`. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (w : W) :
+    PTrans.toEquivPerm φ w = φ.toFun w :=
+  PTrans.toEquivPerm_apply φ w
+
+/-- `toEquivPerm.symm`: the symm of the underlying permutation gives
+`φ.invFun`. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (w : W) :
+    (PTrans.toEquivPerm φ).symm w = φ.invFun w :=
+  PTrans.toEquivPerm_symm_apply φ w
+
+/-- `toEquivPerm_one`: identity PTrans → identity permutation. -/
+example {W : Type u} [Wantable W] :
+    PTrans.toEquivPerm (1 : PTrans W) = 1 := PTrans.toEquivPerm_one
+
+/-- `toEquivPerm_mul`: composition factors through. -/
+example {W : Type u} [Wantable W] (g f : PTrans W) :
+    PTrans.toEquivPerm (g * f) = PTrans.toEquivPerm g * PTrans.toEquivPerm f :=
+  PTrans.toEquivPerm_mul g f
+
+/-- `ofEquivPerm`: a permutation commuting with complement lifts to PTrans. -/
+example {W : Type u} [Wantable W] (σ : Equiv.Perm W)
+    (h : ∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) (w : W) :
+    (PTrans.ofEquivPerm σ h).toFun w = σ w :=
+  PTrans.ofEquivPerm_toFun σ h w
+
+/-- `toEquivPerm_ofEquivPerm`: roundtrip recovers the permutation. -/
+example {W : Type u} [Wantable W] (σ : Equiv.Perm W)
+    (h : ∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) :
+    PTrans.toEquivPerm (PTrans.ofEquivPerm σ h) = σ :=
+  PTrans.toEquivPerm_ofEquivPerm σ h
+
+/-- `ofEquivPerm_toEquivPerm`: roundtrip recovers the PTrans. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    PTrans.ofEquivPerm (PTrans.toEquivPerm φ) φ.resp_complement = φ :=
+  PTrans.ofEquivPerm_toEquivPerm φ
+
 end Examples
 end Perspectival
