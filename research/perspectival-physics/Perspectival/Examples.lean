@@ -15531,6 +15531,44 @@ example :
        + (if (1 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
     simp
 
+/-! ### Wantable complement = involution -/
+
+/-- complement is involutive on Wantable (verified across types). -/
+example (w : Bool) : Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
+example (w : Fin 2) : Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
+example (w : Fin 3) : Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
+example (w : Fin 4) : Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
+example (w : Bool ⊕ Bool) : Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
+example (w : Bool × Bool) : Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
+/-! ### Fin n complement properties (id-complement for n=3) -/
+
+/-- On Fin 3, complement = id, so complement(i) = i for all i. -/
+example (i : Fin 3) : Wantable.complement i = i := rfl
+
+/-- On Fin 3, complement(0) = 0. -/
+example : Wantable.complement (0 : Fin 3) = 0 := rfl
+
+/-- On Fin 3, complement(2) = 2. -/
+example : Wantable.complement (2 : Fin 3) = 2 := rfl
+
+/-- On Bool, complement(true) = false. -/
+example : Wantable.complement true = false := rfl
+
+/-- On Bool, complement(false) = true. -/
+example : Wantable.complement false = true := rfl
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
