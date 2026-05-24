@@ -2637,6 +2637,14 @@ example : Even (Fintype.card (Bool × Bool × Bool)) := by
   rw [show Fintype.card (Bool × Bool × Bool) = 8 from by decide]
   exact ⟨4, rfl⟩
 
+/-- WantableGPT (Bool × Bool × Bool) has finrank 8. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool)) = 8 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
+/-- WantableGPT.gpt (Bool × Bool × Bool) type-checks. -/
+example : Perspectival.GPT (Perspectival.WantableGPT.V (Bool × Bool × Bool)) :=
+  Perspectival.WantableGPT.gpt (Bool × Bool × Bool)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
