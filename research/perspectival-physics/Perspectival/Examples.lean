@@ -11284,3 +11284,21 @@ example : ([(PTrans.complement : PTrans Bool), PTrans.complement].foldr (· * ·
 example : ([(PTrans.complement : PTrans Bool), 1, PTrans.complement].foldr (· * ·) 1) = 1 := by
   show (PTrans.complement : PTrans Bool) * (1 * (PTrans.complement * 1)) = 1
   rw [mul_one, one_mul, PTrans.complement_sq]
+
+/-- Concrete: fold of n complements has period 2 in result. -/
+example : ([(PTrans.complement : PTrans Bool),
+            PTrans.complement,
+            PTrans.complement,
+            PTrans.complement].foldl (· * ·) 1) = 1 := by
+  show 1 * (PTrans.complement : PTrans Bool) * PTrans.complement *
+       PTrans.complement * PTrans.complement = 1
+  rw [one_mul, PTrans.complement_sq, one_mul, PTrans.complement_sq]
+
+/-- Concrete: foldl of [c, c, c] on Bool. -/
+example : ([(PTrans.complement : PTrans Bool),
+            PTrans.complement,
+            PTrans.complement].foldl (· * ·) 1)
+        = PTrans.complement := by
+  show 1 * (PTrans.complement : PTrans Bool) * PTrans.complement *
+       PTrans.complement = PTrans.complement
+  rw [one_mul, PTrans.complement_sq, one_mul]
