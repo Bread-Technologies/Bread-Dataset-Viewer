@@ -31,6 +31,7 @@ operational level but does not show one produces the other.
 -/
 
 import Perspectival.Ontology
+import Perspectival.Transformations
 import Perspectival.GPT
 import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Data.Real.Basic
@@ -158,6 +159,49 @@ def complementTransform : Perspectival.GPT.Transform (gpt W) (gpt W) where
     intro f
     show unitFn W (complementAction W f) = unitFn W f
     exact unitFn_complementAction W f
+
+/-! ## Bridge: every PTrans induces a GPT automorphism -/
+
+/-- The action of a perspectival transformation `φ : PTrans W` on the
+state space `V W`, by pullback: `(φ · f)(w) := f(φ⁻¹ w)`. -/
+def transformAction (φ : PTrans W) : V W →ₗ[ℝ] V W where
+  toFun f := fun w => f (φ.invFun w)
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+
+/-- The transform-action of `φ` preserves the state space (permutes
+outcome probabilities, sum unchanged). -/
+theorem transformAction_preserves_states (φ : PTrans W) (f : V W)
+    (hf : f ∈ states W) : transformAction W φ f ∈ states W := by
+  refine ⟨?_, ?_⟩
+  · intro w
+    show 0 ≤ f (φ.invFun w)
+    exact hf.1 _
+  · show ∑ w, f (φ.invFun w) = 1
+    rw [← hf.2]
+    exact Equiv.sum_comp ⟨φ.invFun, φ.toFun, φ.right_inv, φ.left_inv⟩ f
+
+/-- The transform-action preserves the unit functional. -/
+theorem unitFn_transformAction (φ : PTrans W) (f : V W) :
+    unitFn W (transformAction W φ f) = unitFn W f := by
+  show ∑ w, f (φ.invFun w) = ∑ w, f w
+  exact Equiv.sum_comp ⟨φ.invFun, φ.toFun, φ.right_inv, φ.left_inv⟩ f
+
+/-- **Every `PTrans W` induces a structure-preserving GPT
+automorphism on `gpt W`.**
+
+This is a concrete realization of Axiom IV's "perspectival
+transformations cohere across the structure": the metaphysical group
+of perspectival transformations *is* a group of operational
+GPT-transformations. -/
+def fromPTrans (φ : PTrans W) : Perspectival.GPT.Transform (gpt W) (gpt W) where
+  toLin := transformAction W φ
+  preserves_states := transformAction_preserves_states W φ
+  preserves_unit := by
+    apply LinearMap.ext
+    intro f
+    show unitFn W (transformAction W φ f) = unitFn W f
+    exact unitFn_transformAction W φ f
 
 end WantableGPT
 end Perspectival
