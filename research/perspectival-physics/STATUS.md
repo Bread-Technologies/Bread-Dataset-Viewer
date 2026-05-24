@@ -65,6 +65,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | `Wantable.complement` is injective and surjective | `Ontology.lean :: complement_injective, complement_surjective` | ✓ |
 | `mk_fromSide` constructor for meetings | `Ontology.lean :: mk_fromSide` | ✓ |
 | Meeting W ≃ W via mk_fromSide | `Ontology.lean :: mk_fromSide_side₁_inv` | ✓ |
+| Meeting extensionality via side₁ | `Ontology.lean :: Meeting.ext_of_side₁` | ✓ |
+| `swap (mk_fromSide w) = mk_fromSide (complement w)` (closed gap) | `Ontology.lean :: Meeting.swap_mk_fromSide` | ✓ |
 | Classical n-outcome GPT — full construction | `Classical.lean :: gpt` | ✓ |
 | Classical GPT — convex states (std simplex) | `Classical.lean :: states_convex` | ✓ |
 | Classical GPT — convex effects | `Classical.lean :: effects_convex` | ✓ |
