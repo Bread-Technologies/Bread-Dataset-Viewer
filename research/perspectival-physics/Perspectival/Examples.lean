@@ -14501,6 +14501,48 @@ example :
     norm_num]
   norm_num
 
+/-! ### Maximally-mixed state on Bool × Bool: diagonal/antiDiagonal indicators both 1/2 -/
+
+/-- For productState uniformBool uniformBool, the diagonal-indicator gives 1/2. -/
+example :
+    diagonalIndicatorLin (productState uniformBool uniformBool) = (1/2 : ℝ) := by
+  show (∑ p, diagonalIndicator p * productState uniformBool uniformBool p) = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show diagonalIndicator (true, true) * productState uniformBool uniformBool (true, true)
+     + (diagonalIndicator (true, false) * productState uniformBool uniformBool (true, false)
+     + (diagonalIndicator (false, true) * productState uniformBool uniformBool (false, true)
+     + diagonalIndicator (false, false) * productState uniformBool uniformBool (false, false)))
+     = 1/2
+  show (1 : ℝ) * ((1/2 : ℝ) * (1/2 : ℝ))
+     + (0 * ((1/2 : ℝ) * (1/2 : ℝ))
+     + (0 * ((1/2 : ℝ) * (1/2 : ℝ))
+     + 1 * ((1/2 : ℝ) * (1/2 : ℝ))))
+     = 1/2
+  norm_num
+
+/-- For productState uniformBool uniformBool, anti-diagonal-indicator = 1/2. -/
+example :
+    antiDiagonalIndicatorLin (productState uniformBool uniformBool) = (1/2 : ℝ) := by
+  show (∑ p, antiDiagonalIndicator p * productState uniformBool uniformBool p) = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show antiDiagonalIndicator (true, true) * productState uniformBool uniformBool (true, true)
+     + (antiDiagonalIndicator (true, false) * productState uniformBool uniformBool (true, false)
+     + (antiDiagonalIndicator (false, true) * productState uniformBool uniformBool (false, true)
+     + antiDiagonalIndicator (false, false) * productState uniformBool uniformBool (false, false)))
+     = 1/2
+  show (0 : ℝ) * ((1/2 : ℝ) * (1/2 : ℝ))
+     + (1 * ((1/2 : ℝ) * (1/2 : ℝ))
+     + (1 * ((1/2 : ℝ) * (1/2 : ℝ))
+     + 0 * ((1/2 : ℝ) * (1/2 : ℝ))))
+     = 1/2
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
