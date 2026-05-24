@@ -15311,6 +15311,47 @@ example :
       (Perspectival.WantableGPT.vertex Bool false) :=
   vertices_distinguishable_via_delta true false (by decide)
 
+/-! ### Joint vertex distinguishability on Bool × Bool -/
+
+/-- vertex (a, b) ≠ vertex (a', b') when (a, b) ≠ (a', b'). -/
+example (p q : Bool × Bool) (h : p ≠ q) :
+    Perspectival.WantableGPT.vertex (Bool × Bool) p
+    ≠ Perspectival.WantableGPT.vertex (Bool × Bool) q := by
+  intro heq
+  have hcol := congr_fun heq p
+  rw [show Perspectival.WantableGPT.vertex (Bool × Bool) p p
+        = (if p = p then (1 : ℝ) else 0) from rfl,
+      show Perspectival.WantableGPT.vertex (Bool × Bool) q p
+        = (if q = p then (1 : ℝ) else 0) from rfl] at hcol
+  rw [if_pos rfl, if_neg (Ne.symm h)] at hcol
+  norm_num at hcol
+
+/-- For any two distinct vertices on Bool × Bool, they are distinguishable. -/
+example (p q : Bool × Bool) (h : p ≠ q) :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool) p)
+      (Perspectival.WantableGPT.vertex (Bool × Bool) q) :=
+  vertices_distinguishable_via_delta p q h
+
+/-- Concrete: vertex (true, true) and vertex (false, false) on Bool × Bool
+are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool) (true, true))
+      (Perspectival.WantableGPT.vertex (Bool × Bool) (false, false)) :=
+  vertices_distinguishable_via_delta (true, true) (false, false) (by decide)
+
+/-- Concrete: vertex (true, false) and vertex (false, true) on Bool × Bool
+are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool) (true, false))
+      (Perspectival.WantableGPT.vertex (Bool × Bool) (false, true)) :=
+  vertices_distinguishable_via_delta (true, false) (false, true) (by decide)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
