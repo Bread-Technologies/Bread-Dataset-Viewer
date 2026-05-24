@@ -4763,5 +4763,29 @@ example (n : ℕ) :
       (Perspectival.Classical.gpt n) :=
   Perspectival.Hardy.axiom3_holds _
 
+/-- `Meeting.prodMk_prodFst_prodSnd`: projecting a product meeting and
+re-pairing reconstructs it (functoriality identity). -/
+example (m : Meeting (Bool × Bool)) :
+    Meeting.prodMk m.prodFst m.prodSnd = m :=
+  Meeting.prodMk_prodFst_prodSnd m
+
+/-- `Meeting.prod_swap`: swap on a product meeting equals the prodMk
+of component swaps. -/
+example (m : Meeting (Bool × Bool)) :
+    m.swap = Meeting.prodMk m.prodFst.swap m.prodSnd.swap :=
+  Meeting.prod_swap m
+
+/-- `PTrans.sumMap_mul`: sumMap distributes over composition. -/
+example (g₁ f₁ g₂ f₂ : PTrans Bool) :
+    PTrans.sumMap (g₁ * f₁) (g₂ * f₂) =
+    PTrans.sumMap g₁ g₂ * PTrans.sumMap f₁ f₂ :=
+  PTrans.sumMap_mul g₁ f₁ g₂ f₂
+
+/-- `PTrans.prodMap_mul`: prodMap distributes over composition. -/
+example (g₁ f₁ g₂ f₂ : PTrans Bool) :
+    PTrans.prodMap (g₁ * f₁) (g₂ * f₂) =
+    PTrans.prodMap g₁ g₂ * PTrans.prodMap f₁ f₂ :=
+  PTrans.prodMap_mul g₁ f₁ g₂ f₂
+
 end Examples
 end Perspectival
