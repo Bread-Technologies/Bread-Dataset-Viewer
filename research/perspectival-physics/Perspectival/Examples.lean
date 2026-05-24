@@ -6034,5 +6034,27 @@ example : Wantable.complement (5 : ℤ) = -5
         ↔ 5 = Wantable.complement (-5 : ℤ) :=
   Wantable.complement_eq_iff _ _
 
+/-- Bool × Bool meeting from side (true, false). -/
+example : (Meeting.mk_fromSide (Bool × Bool) (true, false)).side₂
+        = (false, true) := rfl
+
+/-- Bool ⊕ Bool meeting from side inl true. -/
+example : (Meeting.mk_fromSide (Bool ⊕ Bool) (Sum.inl true)).side₂
+        = Sum.inl false := rfl
+
+/-- Meeting on Bool × Bool with both sides equal forces self-complementary
+side (no such pair exists since complement is fixed-point-free). -/
+example (m : Meeting (Bool × Bool)) (h : m.side₁ = m.side₂) :
+    SelfComplementary m.side₁ := by
+  unfold SelfComplementary
+  rw [m.complementary, h]
+
+/-- Fin 2 meeting from side 0. -/
+example : (Meeting.mk_fromSide (Fin 2) 0).side₂ = 1 := rfl
+
+/-- swap on a Bool meeting from true gives meeting from false. -/
+example : (Meeting.mk_fromSide Bool true).swap = Meeting.mk_fromSide Bool false := by
+  rfl
+
 end Examples
 end Perspectival
