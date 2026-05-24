@@ -2339,6 +2339,19 @@ example : (∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Fin 4),
             = Fintype.card (Fin 4) :=
   Perspectival.WantableGPT.wantableGPT_nontrivial_classical (Fin 4) (by decide)
 
+/-- WantableGPT.gpt construction is type-correct on any finite Wantable. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.GPT (Perspectival.WantableGPT.V W) :=
+  Perspectival.WantableGPT.gpt W
+
+/-- Concrete instance: WantableGPT.gpt Bool gives a Perspectival.GPT. -/
+example : Perspectival.GPT (Perspectival.WantableGPT.V Bool) :=
+  Perspectival.WantableGPT.gpt Bool
+
+/-- Concrete instance: WantableGPT.gpt Unit gives a Perspectival.GPT. -/
+example : Perspectival.GPT (Perspectival.WantableGPT.V Unit) :=
+  Perspectival.WantableGPT.gpt Unit
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
