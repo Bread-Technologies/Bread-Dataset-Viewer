@@ -5971,5 +5971,20 @@ example : Perspectival.WantableGPT.complementAction (Fin 4)
   rw [Perspectival.WantableGPT.complementAction_vertex]
   rfl
 
+/-- Bool × Bool: complement on (true, false) is (false, true). -/
+example : Wantable.complement (true, false) = (false, true) := rfl
+
+/-- Bool × Bool: complement on (true, true) is (false, false). -/
+example : Wantable.complement (true, true) = (false, false) := rfl
+
+/-- Bool × Bool: complement on (false, false) is (true, true). -/
+example : Wantable.complement (false, false) = (true, true) := rfl
+
+/-- Bool ⊕ Bool: complement on inl true is inl false. -/
+example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := rfl
+
+/-- Bool ⊕ Bool: complement on inr false is inr true. -/
+example : Wantable.complement (Sum.inr false : Bool ⊕ Bool) = Sum.inr true := rfl
+
 end Examples
 end Perspectival
