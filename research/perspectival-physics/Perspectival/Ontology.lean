@@ -67,6 +67,12 @@ theorem Wantable.complement_complement {W : Type u} [Wantable W] (w : W) :
     Wantable.complement (Wantable.complement w) = w :=
   Wantable.complement_involutive w
 
+/-- For any Wantable, every want has at least one complement (namely
+the standard complement). -/
+theorem Wantable.exists_complement {W : Type u} [Wantable W] (w : W) :
+    ∃ v, Wantable.complement w = v :=
+  ⟨Wantable.complement w, rfl⟩
+
 /-! ## Axiom III: reality is the structure of meetings
 
 A meeting is a pair of complementary wants. Reality is a collection
