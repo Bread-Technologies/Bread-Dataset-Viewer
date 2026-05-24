@@ -267,6 +267,17 @@ theorem complementAction_vertex (w : W) :
       rw [← h', Wantable.complement_involutive]
     simp [h, this]
 
+/-- The coordinate projection at `w`. -/
+def proj (w : W) : V W →ₗ[ℝ] ℝ where
+  toFun f := f w
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
+
+@[simp] theorem proj_vertex (w v : W) :
+    proj W w (vertex W v) = if v = w then (1 : ℝ) else 0 := by
+  show (if v = w then (1 : ℝ) else 0) = if v = w then 1 else 0
+  rfl
+
 /-! ## Bridge back: the complement function as PTrans -/
 
 /-- The complement function on `W`, packaged as a PTrans. -/
