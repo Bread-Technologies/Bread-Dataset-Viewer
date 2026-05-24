@@ -10595,3 +10595,23 @@ example {W : Type u} [Wantable W] :
       (PTrans.complement * PTrans.complement) = 1 := by
   rw [PTrans.complement_sq]
   exact one_mul 1
+
+/-- PTrans.complement * 1 = complement. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * 1 = PTrans.complement := mul_one _
+
+/-- 1 * PTrans.complement = complement. -/
+example {W : Type u} [Wantable W] :
+    (1 : PTrans W) * PTrans.complement = PTrans.complement := one_mul _
+
+/-- A specific identity: complement * complement * complement = complement. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * (PTrans.complement * PTrans.complement) =
+    PTrans.complement := by
+  rw [PTrans.complement_sq, mul_one]
+
+/-- PTrans^0 = 1 for any PTrans. -/
+example {W : Type u} [Wantable W] (f : PTrans W) : f ^ 0 = 1 := pow_zero f
+
+/-- PTrans^1 = f. -/
+example {W : Type u} [Wantable W] (f : PTrans W) : f ^ 1 = f := pow_one f
