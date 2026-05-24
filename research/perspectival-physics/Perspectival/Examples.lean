@@ -7913,3 +7913,19 @@ theorem productState_vertex_uniformBool (w : Bool) (p : Bool × Bool) :
 example : productState (Perspectival.WantableGPT.vertex Bool true)
                        uniformBool (true, true) = (1/2 : ℝ) := by
   rw [productState_vertex_uniformBool]; simp
+
+/-- productState (vertex w) uniformBool is in states (it's a valid
+mixed state on Bool × Bool). -/
+example (w : Bool) :
+    productState (Perspectival.WantableGPT.vertex Bool w) uniformBool
+    ∈ Perspectival.WantableGPT.states (Bool × Bool) :=
+  productState_in_states _ _
+    (Perspectival.WantableGPT.vertex_in_states Bool w)
+    uniformBool_in_states
+
+/-- productState uniformBool (vertex w) is in states. -/
+example (w : Bool) :
+    productState uniformBool (Perspectival.WantableGPT.vertex Bool w)
+    ∈ Perspectival.WantableGPT.states (Bool × Bool) :=
+  productState_in_states _ _ uniformBool_in_states
+    (Perspectival.WantableGPT.vertex_in_states Bool w)
