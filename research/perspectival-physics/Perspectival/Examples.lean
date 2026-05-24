@@ -12141,3 +12141,65 @@ example :
      + (0 * _ + (0 * _ + 0 * _)) = 1/4
   rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
   norm_num
+
+/-! ### Delta-function indicator effect (generic) -/
+
+/-- The indicator function for a single point `w`. -/
+noncomputable def deltaIndicator {W : Type u} [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.V W :=
+  fun w' => if w' = w then (1 : ℝ) else 0
+
+/-- deltaIndicator is in effectVec. -/
+theorem deltaIndicator_in_effectVec {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] (w : W) :
+    deltaIndicator w ∈ Perspectival.WantableGPT.effectVec W := by
+  intro w'
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if w' = w then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if w' = w then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- The linear functional from deltaIndicator. -/
+noncomputable def deltaIndicatorLin {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] (w : W) : Perspectival.WantableGPT.V W →ₗ[ℝ] ℝ :=
+  Perspectival.WantableGPT.innerLin W (deltaIndicator w)
+
+/-- deltaIndicatorLin in effects. -/
+theorem deltaIndicatorLin_in_effects {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] (w : W) :
+    deltaIndicatorLin w ∈ Perspectival.WantableGPT.effects W :=
+  ⟨deltaIndicator w, deltaIndicator_in_effectVec w, rfl⟩
+
+/-- deltaIndicator applied to vertex w gives 1. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    deltaIndicatorLin w (Perspectival.WantableGPT.vertex W w) = 1 := by
+  show ∑ w', deltaIndicator w w' * Perspectival.WantableGPT.vertex W w w' = 1
+  rw [Finset.sum_eq_single w]
+  · show (if w = w then (1 : ℝ) else 0)
+        * Perspectival.WantableGPT.vertex W w w = 1
+    simp [Perspectival.WantableGPT.vertex]
+  · intro w' _ hne
+    show (if w' = w then (1 : ℝ) else 0)
+        * Perspectival.WantableGPT.vertex W w w' = 0
+    rw [if_neg hne]; ring
+  · intro hne
+    exact absurd (Finset.mem_univ w) hne
+
+/-- deltaIndicator applied to vertex v ≠ w gives 0. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w v : W)
+    (h : v ≠ w) :
+    deltaIndicatorLin w (Perspectival.WantableGPT.vertex W v) = 0 := by
+  show ∑ w', deltaIndicator w w' * Perspectival.WantableGPT.vertex W v w' = 0
+  apply Finset.sum_eq_zero
+  intro w' _
+  show (if w' = w then (1 : ℝ) else 0)
+      * Perspectival.WantableGPT.vertex W v w' = 0
+  by_cases hw' : w' = w
+  · rw [if_pos hw']
+    show (1 : ℝ) * Perspectival.WantableGPT.vertex W v w' = 0
+    rw [hw']
+    show (1 : ℝ) * Perspectival.WantableGPT.vertex W v w = 0
+    show (1 : ℝ) * (if v = w then (1 : ℝ) else 0) = 0
+    rw [if_neg h]; ring
+  · rw [if_neg hw']; ring
