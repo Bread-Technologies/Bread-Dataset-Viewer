@@ -3193,6 +3193,16 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
 example : Convex ℝ (Perspectival.WantableGPT.effects Bool) :=
   (Perspectival.WantableGPT.gpt Bool).effects_convex
 
+/-- The unit functional is in the effects set. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.gpt W).unit ∈ (Perspectival.WantableGPT.gpt W).effects :=
+  (Perspectival.WantableGPT.gpt W).unit_is_effect
+
+/-- Concrete: unit functional in Bool WantableGPT effects. -/
+example : (Perspectival.WantableGPT.gpt Bool).unit
+        ∈ (Perspectival.WantableGPT.gpt Bool).effects :=
+  (Perspectival.WantableGPT.gpt Bool).unit_is_effect
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
