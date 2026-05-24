@@ -291,6 +291,29 @@ theorem pairAgency_reaches_self {V : Type u} [AddCommGroup V] [Module ℝ V]
     @Reachable V _ _ _ G (pairAgency G R₀ R₁ hR₀_id) ρ ρ :=
   ⟨R₀, Or.inl rfl, hR₀_id ρ⟩
 
+/-- The avail set in a pairAgency contains both R₀ and R₁. -/
+theorem pairAgency_avail_eq {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : GPT V) (R₀ R₁ : Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) :
+    HasConnectedAgency.avail (G := G) (self := pairAgency G R₀ R₁ hR₀_id)
+    = {R₀, R₁} := rfl
+
+/-- Both R₀ and R₁ are available in a pairAgency. -/
+theorem pairAgency_R₀_avail {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : GPT V) (R₀ R₁ : Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) :
+    R₀ ∈ HasConnectedAgency.avail (G := G) (self := pairAgency G R₀ R₁ hR₀_id) :=
+  Or.inl rfl
+
+theorem pairAgency_R₁_avail {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : GPT V) (R₀ R₁ : Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) :
+    R₁ ∈ HasConnectedAgency.avail (G := G) (self := pairAgency G R₀ R₁ hR₀_id) :=
+  Or.inr rfl
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
