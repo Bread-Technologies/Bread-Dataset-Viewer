@@ -10121,3 +10121,29 @@ example : (Perspectival.WantableGPT.complementTransform Bool) ^ 3
         = Perspectival.WantableGPT.complementTransform Bool := by
   rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add,
       WantableGPT_complementTransform_order_two, one_mul, pow_one]
+
+/-- complementPTrans has order 2 in the PTrans group. -/
+theorem WantableGPT_complementPTrans_order_two
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementPTrans W) ^ 2 = 1 := by
+  rw [pow_two]
+  exact Perspectival.WantableGPT.complementPTrans_sq W
+
+/-- Concrete: complementPTrans Bool has order 2. -/
+example : (Perspectival.WantableGPT.complementPTrans Bool) ^ 2 = 1 :=
+  WantableGPT_complementPTrans_order_two
+
+/-- Concrete: complementPTrans Fin 4 has order 2. -/
+example : (Perspectival.WantableGPT.complementPTrans (Fin 4)) ^ 2 = 1 :=
+  WantableGPT_complementPTrans_order_two
+
+/-- complementPTrans^4 = 1. -/
+example : (Perspectival.WantableGPT.complementPTrans Bool) ^ 4 = 1 := by
+  rw [show (4 : ℕ) = 2 * 2 from rfl, pow_mul,
+      WantableGPT_complementPTrans_order_two, one_pow]
+
+/-- complementPTrans^3 = complementPTrans. -/
+example : (Perspectival.WantableGPT.complementPTrans Bool) ^ 3
+        = Perspectival.WantableGPT.complementPTrans Bool := by
+  rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add,
+      WantableGPT_complementPTrans_order_two, one_mul, pow_one]
