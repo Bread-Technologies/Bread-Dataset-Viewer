@@ -2859,6 +2859,12 @@ example : Fintype.card (Fin 100) = 100 := by decide
 
 -- (Classical.V n finrank deferred — instance issue.)
 
+/-- Bool ⊕ Unit has cardinality 3. -/
+example : Fintype.card (Bool ⊕ Unit) = 3 := by decide
+
+/-- Bool × Unit has cardinality 2. -/
+example : Fintype.card (Bool × Unit) = 2 := by decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
