@@ -2437,6 +2437,19 @@ example : Perspectival.WantableGPT.vertex Bool true ∈
           Perspectival.WantableGPT.states Bool :=
   Perspectival.WantableGPT.vertex_in_states Bool true
 
+/-- For Fin n with n ≥ 1, the WantableGPT has at least the vertex 0 as a state. -/
+example (n : ℕ) (hn : 0 < n) :
+    Perspectival.Classical.vertex n ⟨0, hn⟩ ∈
+    Perspectival.Classical.states n :=
+  Perspectival.Classical.vertex_in_states n ⟨0, hn⟩
+
+/-- The Classical 2-outcome GPT has both vertices as states (heads / tails). -/
+example : Perspectival.Classical.vertex 2 0 ∈ Perspectival.Classical.states 2 :=
+  Perspectival.Classical.vertex_in_states 2 0
+
+example : Perspectival.Classical.vertex 2 1 ∈ Perspectival.Classical.states 2 :=
+  Perspectival.Classical.vertex_in_states 2 1
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
