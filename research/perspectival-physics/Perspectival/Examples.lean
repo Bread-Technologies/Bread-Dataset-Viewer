@@ -2885,6 +2885,12 @@ example : ¬ FixedPointFreeComplement (Unit ⊕ Unit) := by
   intro h
   exact h (Sum.inl ()) rfl
 
+/-- Sum.inl () is self-complementary. -/
+example : SelfComplementary (Sum.inl () : Unit ⊕ Unit) := rfl
+
+/-- Sum.inr () is self-complementary. -/
+example : SelfComplementary (Sum.inr () : Unit ⊕ Unit) := rfl
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
