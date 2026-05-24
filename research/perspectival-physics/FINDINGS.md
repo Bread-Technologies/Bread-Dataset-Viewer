@@ -108,6 +108,44 @@ and `PAPER_DRAFT.md` (writeup form).
   Technical, uses `LinearMap.exists_leftInverse_of_injective`; not
   pursued in this codebase to avoid bookkeeping.
 
+## Clarifications and limitations
+
+### L1. Scope of `no_cloning`
+
+`no_cloning` and `no_cloning_of_distinguishable` require the set `S`
+to contain `v₁`, `v₂`, AND `v₁ + v₂`. For normalized state spaces
+(simplices, density-matrix spaces) this is generically false:
+`v₁ + v₂` has unit-functional value 2, not 1, so it's not a state.
+
+The theorems should therefore be read as facts about **linear-algebra
+cloners on the linear span of states**, not about cloners restricted
+to the normalized state space. The standard quantum no-cloning
+theorem (Wootters–Zurek) uses unitarity + ancilla and is a different
+statement; the framework currently formalizes only the underlying
+linear-algebra impossibility, which is logically weaker.
+
+This is the kind of subtlety honest calibration is for. The Lean
+result is what it is; the framework's *reading* (two-sided wanting
+forbids isolation) is metaphorically apt but the literal theorem is
+the pure-linearity one.
+
+### L2. Tsirelson bound — interpretation vs. derivation
+
+`bound_perspectival` uses `Mathlib.Algebra.Star.CHSH`'s
+`tsirelson_inequality`. The mathematical content is Mathlib's; the
+framework's contribution is the *identification* of which algebraic
+hypothesis is the realist hinge (commutativity ↔ joint ledger). We
+do not derive the *-algebra picture from I–IV; we import it.
+
+### L3. Hardy Axiom 5 derivation — easy direction only
+
+`hardy_axiom5_of_agency` proves: from agency (formalized as path-
+connectedness of the transformation group), Hardy Axiom 5 follows
+by direct construction. The HARD direction — that libertarian
+agency forces path-connectedness, not mere richness — is not in this
+codebase. The agency postulate `HasConnectedAgency` is the input,
+not a theorem.
+
 ## Meta-assessment
 
 **What is technically distinctive about the framework, given the
