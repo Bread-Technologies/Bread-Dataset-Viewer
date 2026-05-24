@@ -6490,5 +6490,21 @@ theorem WantableGPT_Bool_states_iff (f : Perspectival.WantableGPT.V Bool) :
             Finset.sum_insert (by decide), Finset.sum_singleton]]
       exact hsum
 
+/-- The uniform Bool state: 1/2 on each. -/
+noncomputable def uniformBool : Perspectival.WantableGPT.V Bool := fun _ => 1/2
+
+/-- The uniform Bool state is a valid state. -/
+theorem uniformBool_in_states :
+    uniformBool ∈ Perspectival.WantableGPT.states Bool := by
+  rw [WantableGPT_Bool_states_iff]
+  refine ⟨?_, ?_, ?_⟩
+  · show (0 : ℝ) ≤ 1/2; norm_num
+  · show (0 : ℝ) ≤ 1/2; norm_num
+  · show (1/2 : ℝ) + 1/2 = 1; norm_num
+
+/-- The uniform Bool state has unitFn value 1 (= sum of components). -/
+example : Perspectival.WantableGPT.unitFn Bool uniformBool = 1 :=
+  (uniformBool_in_states).2
+
 end Examples
 end Perspectival
