@@ -12666,3 +12666,35 @@ example (α : ℝ) :
   rw [deltaIndicatorLin_vertex_self,
       deltaIndicatorLin_vertex_other false true (by decide)]
   ring
+
+/-! ### deltaIndicator + transformations: PTrans action -/
+
+/-- Applying PTrans.complement to vertex true gives vertex false. -/
+example :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement
+        (Perspectival.WantableGPT.vertex Bool true)
+      = Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  show Perspectival.WantableGPT.vertex Bool true
+        ((PTrans.complement : PTrans Bool).inv b)
+     = Perspectival.WantableGPT.vertex Bool false b
+  show (if true = (PTrans.complement : PTrans Bool).inv b then (1 : ℝ) else 0)
+     = (if false = b then (1 : ℝ) else 0)
+  cases b with
+  | true => simp [PTrans.complement]; rfl
+  | false => simp [PTrans.complement]; rfl
+
+/-- Applying PTrans.complement to vertex false gives vertex true. -/
+example :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement
+        (Perspectival.WantableGPT.vertex Bool false)
+      = Perspectival.WantableGPT.vertex Bool true := by
+  funext b
+  show Perspectival.WantableGPT.vertex Bool false
+        ((PTrans.complement : PTrans Bool).inv b)
+     = Perspectival.WantableGPT.vertex Bool true b
+  show (if false = (PTrans.complement : PTrans Bool).inv b then (1 : ℝ) else 0)
+     = (if true = b then (1 : ℝ) else 0)
+  cases b with
+  | true => simp [PTrans.complement]; rfl
+  | false => simp [PTrans.complement]; rfl
