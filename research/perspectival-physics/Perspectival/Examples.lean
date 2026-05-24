@@ -3021,6 +3021,15 @@ example : (Wantable.complement : Unit → Unit) = id := rfl
 /-- The Wantable structure on `ℝ`: complement is `Neg.neg`. -/
 example : (Wantable.complement : ℝ → ℝ) = Neg.neg := rfl
 
+/-- The Wantable structure on `Fin 3` (the id-complement one): complement = id. -/
+example : (Wantable.complement : Fin 3 → Fin 3) = id := rfl
+
+/-- Composition: complement applied twice is the identity function. -/
+example {W : Type u} [Wantable W] :
+    (Wantable.complement ∘ Wantable.complement : W → W) = id := by
+  funext w
+  exact Wantable.complement_involutive w
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
