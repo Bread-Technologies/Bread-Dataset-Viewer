@@ -305,6 +305,11 @@ example : Perspectival.Distinguish.PerfectWitness
     (Perspectival.WantableGPT.vertex Bool) :=
   Perspectival.WantableGPT.perfectWitness Bool
 
+/-- Linearly independent vertices in WantableGPT(Bool). -/
+example : LinearIndependent ℝ
+    (fun b : Bool => Perspectival.WantableGPT.vertex Bool b) :=
+  Perspectival.WantableGPT.vertex_linear_independent_of_fintype Bool
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
