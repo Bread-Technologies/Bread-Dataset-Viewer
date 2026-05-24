@@ -345,8 +345,16 @@ one of:
 - A different bridge construction (e.g., complex-valued or
   infinite-dimensional Wantable).
 
-This delimitation is itself a research contribution: it tells the
-program *exactly where* the next bet must be placed.
+**Triple no-go (verified).** Three of the four candidate Hardy
+signatures are formally ruled out for `WantableGPT.gpt W` when
+`|W| ≥ 2`:
+- Quantum (K = N²): `wantableGPT_not_quantum`.
+- Real-QM (2K = N(N+1)): `wantableGPT_not_realQM`.
+- Quaternionic-QM (K = N(2N-1)): `wantableGPT_not_quaternionicQM`.
+
+The remaining (and verified-realized) signature is the classical one,
+K = N = |W|. This delimitation is itself a research contribution: it
+tells the program *exactly where* the next bet must be placed.
 
 ### 6.2 Continuous setting (toward Lie-group refinement)
 
