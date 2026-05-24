@@ -8800,3 +8800,16 @@ theorem rightMarginal_complementAction
     (⟨Wantable.complement, Wantable.complement,
       Wantable.complement_involutive, Wantable.complement_involutive⟩ : W₁ ≃ W₁)
     (fun w₁ => f (w₁, Wantable.complement w₂))
+
+/-- Concrete: complementAction of diagonalState has same marginal as
+diagonalState (which is uniformBool, also complement-invariant). -/
+example : leftMarginal
+            (Perspectival.WantableGPT.complementAction (Bool × Bool) diagonalState)
+        = leftMarginal diagonalState := by
+  rw [leftMarginal_complementAction]
+  funext b
+  show leftMarginal diagonalState (Wantable.complement b) = leftMarginal diagonalState b
+  show (∑ b₂, diagonalState (Wantable.complement b, b₂))
+     = (∑ b₂, diagonalState (b, b₂))
+  rw [diagonalState_left_marginal, diagonalState_left_marginal]
+  cases b <;> rfl
