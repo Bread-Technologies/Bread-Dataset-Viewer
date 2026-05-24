@@ -1091,5 +1091,47 @@ example : n2_disc_det (n2_affinePath ⟨1/2, by norm_num⟩) = 0 := by
       (vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
   ring
 
+/-! ## n = 3 cyclic shift and analogous discreteness arguments -/
+
+/-- The cyclic shift on V 3: (a, b, c) ↦ (c, a, b). -/
+def cyclicShiftLin : V 3 →ₗ[ℝ] V 3 where
+  toFun v := fun j => v ((j - 1 : Fin 3))
+  map_add' u v := by
+    funext j
+    show u ((j - 1 : Fin 3)) + v ((j - 1 : Fin 3))
+       = u ((j - 1 : Fin 3)) + v ((j - 1 : Fin 3))
+    rfl
+  map_smul' c v := by
+    funext j
+    show c * v ((j - 1 : Fin 3)) = c * v ((j - 1 : Fin 3))
+    rfl
+
+/-- cyclicShiftLin sends vertex 0 to vertex 1. -/
+example : cyclicShiftLin (vertex 3 0) = vertex 3 1 := by
+  funext j
+  show vertex 3 0 ((j - 1 : Fin 3))
+     = vertex 3 1 j
+  show (if (0 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+     = (if (1 : Fin 3) = j then (1 : ℝ) else 0)
+  fin_cases j <;> simp <;> decide
+
+/-- cyclicShiftLin sends vertex 1 to vertex 2. -/
+example : cyclicShiftLin (vertex 3 1) = vertex 3 2 := by
+  funext j
+  show vertex 3 1 ((j - 1 : Fin 3))
+     = vertex 3 2 j
+  show (if (1 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+     = (if (2 : Fin 3) = j then (1 : ℝ) else 0)
+  fin_cases j <;> simp <;> decide
+
+/-- cyclicShiftLin sends vertex 2 to vertex 0. -/
+example : cyclicShiftLin (vertex 3 2) = vertex 3 0 := by
+  funext j
+  show vertex 3 2 ((j - 1 : Fin 3))
+     = vertex 3 0 j
+  show (if (2 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+     = (if (0 : Fin 3) = j then (1 : ℝ) else 0)
+  fin_cases j <;> simp <;> decide
+
 end Classical
 end Perspectival
