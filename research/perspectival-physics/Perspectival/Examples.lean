@@ -2689,6 +2689,14 @@ example : Fintype.card (Fin 3 ⊕ Fin 4) = 7 := by decide
 /-- The cardinality of `Fin 3 × Fin 4` = 12. -/
 example : Fintype.card (Fin 3 × Fin 4) = 12 := by decide
 
+/-- The state-space dimension of the WantableGPT on `Fin 3 × Fin 4` is 12. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 × Fin 4)) = 12 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
+/-- The state-space dimension of the WantableGPT on `Fin 3 ⊕ Fin 4` is 7. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 ⊕ Fin 4)) = 7 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
