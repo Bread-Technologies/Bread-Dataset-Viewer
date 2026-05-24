@@ -2831,6 +2831,12 @@ example : Wantable.complement (Wantable.complement (1 : Fin 2)) = 1 := rfl
 example : Wantable.complement (Wantable.complement true) = true := rfl
 example : Wantable.complement (Wantable.complement false) = false := rfl
 
+/-- The Wantable structure on Unit is trivial — every element is self-complementary. -/
+example : SelfComplementary () := rfl
+
+/-- Wantable.complement on Empty is vacuously involutive. -/
+example (e : Empty) : Wantable.complement (Wantable.complement e) = e := e.elim
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
