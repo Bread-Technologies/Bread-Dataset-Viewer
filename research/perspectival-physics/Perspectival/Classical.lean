@@ -719,5 +719,38 @@ For n ≥ 3 the same phenomenon holds (permutation matrices form S_N,
 discrete in Birkhoff polytope). So R6 is a NONTRIVIAL constraint:
 classical GPTs cannot support nontrivial StrictConnectedAgency. -/
 
+/-! ## Toward formalizing the disconnectedness theorem -/
+
+/-- The determinant function `R ↦ R(vertex 0) 0 - R(vertex 1) 0`. For
+state-preserving linear R on V 2, this equals a - b where
+R = [[a, b], [1-a, 1-b]]. -/
+noncomputable def n2_disc_det (R : V 2 →ₗ[ℝ] V 2) : ℝ :=
+  R (vertex 2 0) 0 - R (vertex 2 1) 0
+
+/-- For id : V 2 →ₗ V 2, n2_disc_det = 1. -/
+theorem n2_disc_det_id : n2_disc_det LinearMap.id = 1 := by
+  show LinearMap.id (vertex 2 0) 0 - LinearMap.id (vertex 2 1) 0 = 1
+  show vertex 2 0 0 - vertex 2 1 0 = 1
+  rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
+  norm_num
+
+/-- For swap : V 2 →ₗ V 2, n2_disc_det = -1. -/
+theorem n2_disc_det_swap : n2_disc_det swapLin = -1 := by
+  show swapLin (vertex 2 0) 0 - swapLin (vertex 2 1) 0 = -1
+  rw [swapLin_vertex_zero, swapLin_vertex_one]
+  rw [(vertex_n2_one_coords).1, (vertex_n2_zero_coords).1]
+  norm_num
+
+/-- n2_disc_det is invariant under R₁ = R₂ (since both args are R). -/
+theorem n2_disc_det_continuous_in_R
+    (R₁ R₂ : V 2 →ₗ[ℝ] V 2) :
+    n2_disc_det R₁ - n2_disc_det R₂
+      = (R₁ (vertex 2 0) 0 - R₂ (vertex 2 0) 0)
+      - (R₁ (vertex 2 1) 0 - R₂ (vertex 2 1) 0) := by
+  show R₁ (vertex 2 0) 0 - R₁ (vertex 2 1) 0
+     - (R₂ (vertex 2 0) 0 - R₂ (vertex 2 1) 0)
+     = _
+  ring
+
 end Classical
 end Perspectival
