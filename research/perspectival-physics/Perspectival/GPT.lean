@@ -94,6 +94,27 @@ theorem Transform.prob_invariant
   have := congr_arg (fun (φ : V →ₗ[ℝ] ℝ) => φ ρ) h
   simpa using this
 
+/-- The identity transformation on a GPT. -/
+def Transform.id {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : GPT V) : Transform G G where
+  toLin := LinearMap.id
+  preserves_states := fun _ h => h
+  preserves_unit := LinearMap.id_comp _
+
+/-- Composition of GPT transformations. -/
+def Transform.comp {V V' V'' : Type u}
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup V'] [Module ℝ V']
+    [AddCommGroup V''] [Module ℝ V'']
+    {G : GPT V} {G' : GPT V'} {G'' : GPT V''}
+    (T' : Transform G' G'') (T : Transform G G') : Transform G G'' where
+  toLin := T'.toLin.comp T.toLin
+  preserves_states := fun ρ hρ => T'.preserves_states _ (T.preserves_states ρ hρ)
+  preserves_unit := by
+    -- G''.unit ∘ (T'.toLin ∘ T.toLin) = (G''.unit ∘ T'.toLin) ∘ T.toLin
+    --                                 = G'.unit ∘ T.toLin = G.unit.
+    rw [← LinearMap.comp_assoc, T'.preserves_unit, T.preserves_unit]
+
 end GPT
 
 end Perspectival
