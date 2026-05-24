@@ -2605,6 +2605,22 @@ example (φ ψ : PTrans Bool) :
 example : Perspectival.WantableGPT.fromPTransHom Bool 1 = 1 :=
   (Perspectival.WantableGPT.fromPTransHom Bool).map_one
 
+/-- The WantableGPT Bool satisfies Hardy Axiom 1 (Probabilities in [0,1]). -/
+example : Perspectival.Hardy.Axiom1_Probabilities (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Hardy.axiom1_holds _
+
+/-- The WantableGPT Bool satisfies Hardy Axiom 3 (Subspaces). -/
+example : Perspectival.Hardy.Axiom3_Subspaces (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Hardy.axiom3_holds _
+
+/-- The WantableGPT (Fin 4) satisfies Hardy Axiom 1. -/
+example : Perspectival.Hardy.Axiom1_Probabilities (Perspectival.WantableGPT.gpt (Fin 4)) :=
+  Perspectival.Hardy.axiom1_holds _
+
+/-- The WantableGPT (Fin 4) satisfies Hardy Axiom 3. -/
+example : Perspectival.Hardy.Axiom3_Subspaces (Perspectival.WantableGPT.gpt (Fin 4)) :=
+  Perspectival.Hardy.axiom3_holds _
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
