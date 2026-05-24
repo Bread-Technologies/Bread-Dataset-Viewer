@@ -3237,6 +3237,18 @@ example : (Perspectival.WantableGPT.proj Bool false)
   show (if true = false then (1 : ℝ) else 0) = 0
   simp
 
+/-- Concrete: vertex false under proj true = 0. -/
+example : (Perspectival.WantableGPT.proj Bool true)
+            (Perspectival.WantableGPT.vertex Bool false) = 0 := by
+  show (if false = true then (1 : ℝ) else 0) = 0
+  simp
+
+/-- Concrete: vertex false under proj false = 1. -/
+example : (Perspectival.WantableGPT.proj Bool false)
+            (Perspectival.WantableGPT.vertex Bool false) = 1 := by
+  show (if false = false then (1 : ℝ) else 0) = 1
+  simp
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
