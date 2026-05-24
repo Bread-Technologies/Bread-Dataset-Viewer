@@ -1,0 +1,146 @@
+# Module Dependency Map
+
+How the 12 Lean modules in `Perspectival/` depend on each other and
+what each contributes.
+
+## Dependency graph (text)
+
+```
+Ontology.lean       ← foundation (axioms I-IV as types)
+   ↑
+   ├── Transformations.lean    (PTrans as Group, MulAction on Meeting)
+   │       ↑
+   │       └── Composition.lean (disjoint-union Wantable, no-cross-system)
+   │
+   └── (used everywhere)
+
+CHSH.lean           ← Mathlib's CHSH/Tsirelson
+   ↑
+   └── (independent — depends only on Ontology + Mathlib.Algebra.Star.CHSH)
+
+GPT.lean            ← convex state spaces, effects
+   ↑
+   ├── Hardy.lean       (Axioms 1-5 as predicates; axiom1_holds, axiom3_holds)
+   │     ↑
+   │     └── Continuity.lean (Hardy Axiom 5 from libertarian agency)
+   │
+   ├── Distinguish.lean (distinguishability ↔ linear independence)
+   │     ↑
+   │     └── (Hardy, NoCloning, GPT)
+   │
+   └── Classical.lean   (concrete n-outcome instance)
+         ↑
+         ├── Examples.lean        (worked end-to-end demos)
+         └── NoBroadcasting.lean  (classical broadcaster, quantum gap)
+
+NoCloning.lean      ← linear-algebra no-cloning (TensorProduct + linearity)
+   ↑
+   └── Distinguish.lean (chains to no_cloning_of_distinguishable)
+```
+
+## What each module contributes
+
+### Foundation layer
+
+**`Ontology.lean`** (50 LOC)
+Axioms I–IV as Lean types:
+- `Wantable W` — Axiom II: involutive complement.
+- `Existent W`, `Meeting W` — Axioms I, III.
+- `Reality W` — collective form of Axiom III.
+- `Pattern W` — placeholder for Axiom IV (stability requires dynamics).
+- `Meeting.swap`, `swap_swap`, `complementary_symm`.
+
+**`Transformations.lean`** (100 LOC)
+Axiom IV's group-theoretic carrier:
+- `PTrans W` — perspectival transformations (complement-respecting
+  self-bijections).
+- Group laws: `id`, `comp`, `inv`, all unit/assoc/cancel laws.
+- `Group (PTrans W)` instance.
+- `MulAction (PTrans W) (Meeting W)` instance.
+
+**`Composition.lean`** (95 LOC)
+Disjoint-union composition:
+- `instWantableSum` — complement acts component-wise.
+- `Meeting.sum_no_cross` — structural no-signaling.
+- `PTrans.sumMap` — component-wise transformations.
+
+### CHSH/Tsirelson bridge
+
+**`CHSH.lean`** (135 LOC)
+Bridge to Mathlib's CHSH module:
+- `BinaryObservable` — self-adjoint involution in a *-ring.
+- `SpacelikePair` — four binary observables with cross-commutations.
+- `bound_realist` — commutative case ≤ 2.
+- `bound_perspectival` — general case ≤ 2√2 (Tsirelson).
+
+### Generalized Probabilistic Theory
+
+**`GPT.lean`** (75 LOC)
+GPT data structure (states, effects, unit, probabilities).
+
+**`Hardy.lean`** (190 LOC)
+Hardy 2001's five axioms as predicates on GPTs:
+- `Axiom1_Probabilities` — `axiom1_holds` (✓ derived).
+- `Axiom3_Subspaces` — `axiom3_holds` (✓ derived).
+- `Axiom2_Simplicity`, `Axiom4_Composite`, `Axiom5_Continuity` — stated.
+- `Distinguishable`, `DistinguishabilitySet`, `HasDimensionN`.
+
+**`Distinguish.lean`** (175 LOC)
+Distinguishability ↔ linear independence:
+- `distinguishable_ne`, `state_ne_zero`.
+- `linear_dependent_states_eq` (converse).
+- `distinguishable_imp_linear_independent`.
+- `outerForm` (bilinear forms from functionals).
+- `no_cloning_of_distinguishable`.
+- `PerfectWitness`, `perfect_distinguishable_imp_linear_independent`.
+- `operational_dim_le_state_dim` (N ≤ K).
+
+**`Continuity.lean`** (170 LOC)
+Libertarian agency → Hardy Axiom 5:
+- `Reversible`, `HasConnectedAgency`, `Reachable`.
+- `continuous_path_of_reachable`.
+- `hardy_axiom5_of_agency`, `hardy_axiom5_pure_states`,
+  `hardy_axiom5_transitive`.
+- `PureState`.
+
+### Concrete instances and applications
+
+**`Classical.lean`** (175 LOC)
+The n-outcome classical GPT instance:
+- `Classical.V n`, `unitFn`, `states`, `effects`.
+- `states_convex`, `effects_convex`, `prob_in_unit_interval`.
+- `Classical.gpt n` — full GPT instance.
+- `vertex`, `proj`, `vertex_in_states`, `perfectWitness`,
+  `vertex_linear_independent`.
+
+**`NoCloning.lean`** (80 LOC)
+Linear-algebra no-cloning:
+- `IsLinearCloner`, `cross_terms_vanish`, `no_cloning`.
+
+**`NoBroadcasting.lean`** (85 LOC)
+Classical broadcaster + quantum gap:
+- `IsBroadcaster`, `classicalBroadcaster`,
+  `basisFun_eq_vertex`, `classicalBroadcaster_basisFun`.
+
+**`Examples.lean`** (110 LOC)
+End-to-end demonstrations:
+- Boolean Wantable, classical 2-outcome GPT, 3-simplex
+  linear independence, no-cross-system meetings, `boolSwap`.
+
+## Reading order
+
+For a first pass:
+1. `Ontology.lean` — see the axioms.
+2. `CHSH.lean` — see the Tsirelson bridge.
+3. `Continuity.lean` — see the framework's distinctive contribution.
+4. `Classical.lean` — see a concrete instance.
+5. `Examples.lean` — see them combine.
+
+Documentation order:
+1. `README.md` — orientation.
+2. `STATUS.md` — verified-results scoreboard.
+3. `FINDINGS.md` — honest commentary.
+4. `CONCLUSIONS.md` — external-reader summary.
+5. `PREDICTIONS.md` — empirical content.
+6. `LINEAGE.md` — philosophical anchors.
+7. `PAPER_DRAFT.md` — publication-target writeup.
