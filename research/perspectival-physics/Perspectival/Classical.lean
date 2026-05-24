@@ -961,5 +961,74 @@ n=2's *only* StrictConnectedAgency is `trivialStrictAgency` itself
 but those would also have no continuous path to id, by the same
 det-IVT argument). -/
 
+/-! ## Concrete Bool-style tests of R6 n=2 -/
+
+/-- The unique state on Classical n=1 is the vertex 0. -/
+example : ∀ ρ ∈ states 1, ρ = vertex 1 0 := classical_unique_state
+
+/-- Classical n=1 has only id as a state-preserving linear map. -/
+example (R : V 1 →ₗ[ℝ] V 1) (hR : ∀ ρ ∈ states 1, R ρ ∈ states 1) :
+    R = LinearMap.id := classical_n1_state_preserving_eq_id R hR
+
+/-- Classical n=2: 2x2 doubly stochastic matrices form a 1-parameter
+family parametrized by (R(vertex 0) 0, R(vertex 1) 0). -/
+example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    0 ≤ R (vertex 2 0) 0 ∧ R (vertex 2 0) 0 ≤ 1 :=
+  classical_n2_state_preserving_first_coord_bound R hR
+
+/-- For Classical n=2, det of state-preserving R is in [-1, 1]. -/
+example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    n2_disc_det R ≥ -1 ∧ n2_disc_det R ≤ 1 := by
+  have h0 := classical_n2_state_preserving_first_coord_bound R hR
+  have h1 := classical_n2_state_preserving_first_coord_bound_v1 R hR
+  refine ⟨?_, ?_⟩
+  · show R (vertex 2 0) 0 - R (vertex 2 1) 0 ≥ -1
+    linarith
+  · show R (vertex 2 0) 0 - R (vertex 2 1) 0 ≤ 1
+    linarith
+
+/-- det of id on V 2 is 1 (named for clarity). -/
+example : n2_disc_det (LinearMap.id : V 2 →ₗ[ℝ] V 2) = 1 := n2_disc_det_id
+
+/-- det of swap on V 2 is -1. -/
+example : n2_disc_det swapLin = -1 := n2_disc_det_swap
+
+/-- det of swap is NOT equal to det of id. -/
+example : n2_disc_det swapLin ≠ n2_disc_det (LinearMap.id : V 2 →ₗ[ℝ] V 2) := by
+  rw [n2_disc_det_swap, n2_disc_det_id]
+  norm_num
+
+/-- Concrete: a doubly stochastic matrix with off-diagonal 1/2. -/
+noncomputable def n2_uniformMixingLin : V 2 →ₗ[ℝ] V 2 where
+  toFun v := fun j => (1/2 : ℝ) * v 0 + (1/2 : ℝ) * v 1
+  map_add' u v := by
+    funext j
+    show (1/2 : ℝ) * (u 0 + v 0) + (1/2 : ℝ) * (u 1 + v 1)
+       = ((1/2 : ℝ) * u 0 + (1/2 : ℝ) * u 1)
+       + ((1/2 : ℝ) * v 0 + (1/2 : ℝ) * v 1)
+    ring
+  map_smul' c v := by
+    funext j
+    show (1/2 : ℝ) * (c * v 0) + (1/2 : ℝ) * (c * v 1)
+       = c * ((1/2 : ℝ) * v 0 + (1/2 : ℝ) * v 1)
+    ring
+
+/-- n2_uniformMixingLin has det = 0 (both rows are identical). -/
+example : n2_disc_det n2_uniformMixingLin = 0 := by
+  show n2_uniformMixingLin (vertex 2 0) 0 - n2_uniformMixingLin (vertex 2 1) 0 = 0
+  show ((1/2 : ℝ) * vertex 2 0 0 + (1/2 : ℝ) * vertex 2 0 1)
+     - ((1/2 : ℝ) * vertex 2 1 0 + (1/2 : ℝ) * vertex 2 1 1) = 0
+  rw [(vertex_n2_zero_coords).1, (vertex_n2_zero_coords).2,
+      (vertex_n2_one_coords).1, (vertex_n2_one_coords).2]
+  ring
+
+/-- n2_uniformMixingLin maps every state to the midpoint state. -/
+example : n2_uniformMixingLin (vertex 2 0) = n2_midpoint := by
+  funext j
+  show (1/2 : ℝ) * vertex 2 0 0 + (1/2 : ℝ) * vertex 2 0 1 = n2_midpoint j
+  rw [(vertex_n2_zero_coords).1, (vertex_n2_zero_coords).2]
+  show (1/2 : ℝ) * 1 + (1/2 : ℝ) * 0 = (1/2 : ℝ)
+  norm_num
+
 end Classical
 end Perspectival
