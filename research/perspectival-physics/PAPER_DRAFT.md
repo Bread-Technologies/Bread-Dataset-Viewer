@@ -125,6 +125,17 @@ which algebraic hypothesis is the realist hinge.
 
 ---
 
+### 3.1 Group structure on perspectival transformations
+
+(Lean: `Perspectival.Transformations`.)
+
+The set `PTrans W` of perspectival transformations of a `Wantable W`
+— self-bijections commuting with `complement` — is verified as a
+Lean `Group` instance. This is the first concrete carrier of
+Axiom IV's "the mathematical structure of perspectival patterning is
+group-theoretic": the group laws (composition, identity, inverse)
+are formally proven, and the action on `Meeting`s is functorial.
+
 ## 4. Result B — No-cloning
 
 (Lean: `Perspectival.NoCloning`.)
@@ -159,6 +170,33 @@ exists" wrapper is left for follow-up.
 
 ---
 
+### 4.1 Distinguishability ↔ linear independence
+
+(Lean: `Perspectival.Distinguish`.)
+
+A bridge between the *operational* notion of distinguishability (some
+effect gives probability 1 on one state, 0 on another) and the
+*linear-algebraic* notion of linear independence:
+
+  ✓ `distinguishable_imp_linear_independent`: distinguishable states
+    are linearly independent.
+  ✓ `linear_dependent_states_eq`: linearly dependent states are
+    equal. Combining gives: in a GPT, two states are linearly
+    independent iff they are unequal.
+  ✓ `perfect_distinguishable_imp_linear_independent`: a finite family
+    of states with a Kronecker effect family is linearly independent.
+  ✓ `operational_dim_le_state_dim`: in finite-dim GPT, N perfectly
+    distinguishable states ⇒ state space has dimension ≥ N. This is
+    the structural form of Hardy's N ≤ K direction.
+  ✓ `no_cloning_of_distinguishable`: full chain — if two states are
+    distinguishable, no linear cloner exists on a set containing them.
+
+The classical n-simplex's vertices give a concrete example:
+`Classical.vertex_linear_independent` machine-verifies that the n
+vertices of the n-outcome classical GPT are linearly independent
+(via the abstract `perfect_distinguishable_imp_linear_independent`
+applied to the coordinate-projection witness).
+
 ## 5. Hardy's axioms — categorization
 
 (Lean: `Perspectival.Hardy`.)
@@ -182,6 +220,45 @@ of reversible transformations* — is the most promising open angle for
 the framework to do unique technical work.
 
 ---
+
+### 5.1 Result C — Hardy Axiom 5 from libertarian agency
+
+(Lean: `Perspectival.Continuity`.)
+
+This is the framework's *most distinctive* machine-verified
+contribution. We formalize the libertarian-agency commitment as a
+postulate `HasConnectedAgency` — the set of reversible perspectival
+transformations is path-connected and contains the identity — and
+prove:
+
+  ✓ `continuous_path_of_reachable`: from agency + reachability, any
+    two reachable states are connected by a continuous path in `V`.
+  ✓ `hardy_axiom5_of_agency`: more strongly, there is a continuous
+    path of *linear maps* from the identity (at t=0) to a
+    transformation realizing the reachability (at t=1). This is
+    Hardy Axiom 5 in concrete form, modulo the pure-state restriction.
+  ✓ `hardy_axiom5_pure_states`: the pure-state form.
+  ✓ `hardy_axiom5_transitive`: the full Hardy Axiom 5 — given
+    agency + transitivity on pure states, between any two pure states
+    there exists a continuous path of linear maps realizing a
+    transformation between them.
+
+The framework's reading: Hardy treats continuity as a postulate; we
+*derive* it from a more philosophically motivated postulate (agency
+as path-connectedness of the transformation group) plus the standard
+transitivity hypothesis. This is the framework's first technical
+contribution that goes beyond restating standard operational content
+in new vocabulary.
+
+**Honest qualification.** The derivation has three open subproblems:
+
+  1. Whether libertarian agency really forces path-connectedness
+     rather than just richness — philosophical-to-formal step.
+  2. Whether transitivity on pure states is derivable from the
+     framework's axioms (as opposed to being an extra hypothesis,
+     as in Hardy).
+  3. Whether the connected group is necessarily a Lie group; the
+     theorem we proved is purely topological.
 
 ## 6. Classical GPT instance
 
