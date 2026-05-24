@@ -251,6 +251,11 @@ def fromPTransTransformHom :
   map_one' := Perspectival.GPT.Transform.ext (fromPTrans_one_toLin W)
   map_mul' ψ φ := Perspectival.GPT.Transform.ext (fromPTrans_mul_toLin W ψ φ)
 
+/-- Coercion: any perspectival transformation on W is automatically a
+GPT-transformation on the corresponding WantableGPT. -/
+instance : Coe (PTrans W) (Perspectival.GPT.Transform (gpt W) (gpt W)) where
+  coe := fromPTrans W
+
 -- Injectivity is proven below, after `vertex` is defined.
 
 /-! ## Vertices: pure states corresponding to each element of `W` -/
