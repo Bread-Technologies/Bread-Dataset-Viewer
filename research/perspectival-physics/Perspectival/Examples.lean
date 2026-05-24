@@ -3299,6 +3299,21 @@ example (f : Perspectival.WantableGPT.V Bool) :
       (Perspectival.WantableGPT.complementAction Bool f) = f :=
   Perspectival.WantableGPT.complementAction_involutive Bool f
 
+/-- complementAction preserves states. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W)
+    (hf : f ∈ Perspectival.WantableGPT.states W) :
+    Perspectival.WantableGPT.complementAction W f
+      ∈ Perspectival.WantableGPT.states W :=
+  Perspectival.WantableGPT.complementAction_preserves_states W f hf
+
+/-- Concrete: complementAction preserves Bool states. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) :
+    Perspectival.WantableGPT.complementAction Bool f
+      ∈ Perspectival.WantableGPT.states Bool :=
+  Perspectival.WantableGPT.complementAction_preserves_states Bool f hf
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
