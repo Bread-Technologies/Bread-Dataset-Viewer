@@ -489,6 +489,9 @@ example (b : Bool) : Wantable.complement b ≠ b := by
 example (i : Fin 4) : Wantable.complement i ≠ i := by
   fin_cases i <;> decide
 
+/-- Fin 3 (with complement = id) has EVERY element as a fixed point. -/
+example (i : Fin 3) : Wantable.complement i = i := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
