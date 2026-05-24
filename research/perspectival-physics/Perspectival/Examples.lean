@@ -13476,6 +13476,41 @@ example (j : Fin 4) : uniformState (Fin 4) j = (1/4 : ℝ) := by
   show (1 : ℝ) / Fintype.card (Fin 4) = 1/4
   rw [show (Fintype.card (Fin 4) : ℝ) = 4 from by norm_num]
 
+/-! ### Distinguishability via deltaIndicator: vertices are perfectly distinguishable -/
+
+/-- vertex true and vertex false on Bool are distinguishable
+via deltaIndicator true (gives 1 vs 0). -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt Bool)
+      (Perspectival.WantableGPT.vertex Bool true)
+      (Perspectival.WantableGPT.vertex Bool false) :=
+  vertices_distinguishable_via_delta true false (by decide)
+
+/-- vertex 0 and vertex 2 on Fin 3 are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) 0)
+      (Perspectival.WantableGPT.vertex (Fin 3) 2) :=
+  vertices_distinguishable_via_delta 0 2 (by decide)
+
+/-- vertex 0 and vertex 1 on Fin 4 are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 0)
+      (Perspectival.WantableGPT.vertex (Fin 4) 1) :=
+  vertices_distinguishable_via_delta 0 1 (by decide)
+
+/-- vertex 2 and vertex 3 on Fin 4 are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 2)
+      (Perspectival.WantableGPT.vertex (Fin 4) 3) :=
+  vertices_distinguishable_via_delta 2 3 (by decide)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
