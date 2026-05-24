@@ -7601,3 +7601,27 @@ example : Perspectival.WantableGPT.vertex Bool true
     show (if false = true then (1 : ℝ) else 0) = 0; simp
   rw [h1, h2] at this
   exact one_ne_zero this
+
+/-- New theorem: distinct vertices in any Wantable are unequal. -/
+theorem WantableGPT_vertex_ne {W : Type u} [Wantable W] [DecidableEq W]
+    (w v : W) (hwv : w ≠ v) :
+    Perspectival.WantableGPT.vertex W w ≠ Perspectival.WantableGPT.vertex W v := by
+  intro h
+  have h_eq : Perspectival.WantableGPT.vertex W w w
+            = Perspectival.WantableGPT.vertex W v w := by rw [h]
+  have h1 : Perspectival.WantableGPT.vertex W w w = 1 := by
+    show (if w = w then (1 : ℝ) else 0) = 1; simp
+  have h2 : Perspectival.WantableGPT.vertex W v w = 0 := by
+    show (if v = w then (1 : ℝ) else 0) = 0; simp [Ne.symm hwv]
+  rw [h1, h2] at h_eq
+  exact one_ne_zero h_eq
+
+/-- Concrete: vertex 0 ≠ vertex 3 on Fin 4. -/
+example : Perspectival.WantableGPT.vertex (Fin 4) 0
+        ≠ Perspectival.WantableGPT.vertex (Fin 4) 3 :=
+  WantableGPT_vertex_ne 0 3 (by decide)
+
+/-- Concrete: vertex (true, true) ≠ vertex (false, true) on Bool × Bool. -/
+example : Perspectival.WantableGPT.vertex (Bool × Bool) (true, true)
+        ≠ Perspectival.WantableGPT.vertex (Bool × Bool) (false, true) :=
+  WantableGPT_vertex_ne _ _ (by decide)
