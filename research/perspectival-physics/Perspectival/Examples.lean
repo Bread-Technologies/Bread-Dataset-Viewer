@@ -737,6 +737,11 @@ example : Wantable.complement (Wantable.complement (0 : ℤ)) = 0 :=
 example : Wantable.complement (Wantable.complement (1 : Fin 4)) = 1 :=
   Wantable.complement_involutive 1
 
+/-- Two complements undo each other for any specific Wantable. -/
+example {W : Type u} [Wantable W] (w : W) :
+    Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
