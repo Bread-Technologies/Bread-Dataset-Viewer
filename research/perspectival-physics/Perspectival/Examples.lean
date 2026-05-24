@@ -7773,3 +7773,23 @@ example : LinearIndependent ℝ ![Perspectival.WantableGPT.vertex (Fin 4) 0,
                                  Perspectival.WantableGPT.vertex (Fin 4) 1,
                                  Perspectival.WantableGPT.vertex (Fin 4) 2] :=
   WantableGPT_vertex_triple_independent 0 1 2 (by decide) (by decide) (by decide)
+
+/-- Concrete: on Bool × Bool, three out of four vertices are linearly
+independent. -/
+example : LinearIndependent ℝ
+    ![Perspectival.WantableGPT.vertex (Bool × Bool) (true, true),
+      Perspectival.WantableGPT.vertex (Bool × Bool) (true, false),
+      Perspectival.WantableGPT.vertex (Bool × Bool) (false, true)] :=
+  WantableGPT_vertex_triple_independent _ _ _
+    (by decide) (by decide) (by decide)
+
+/-- New: distinct vertices give a chain of pairwise non-equalities. -/
+theorem WantableGPT_three_vertices_ne
+    {W : Type u} [Wantable W] [DecidableEq W]
+    (w v u : W) (hwv : w ≠ v) (hvu : v ≠ u) (hwu : w ≠ u) :
+    Perspectival.WantableGPT.vertex W w ≠ Perspectival.WantableGPT.vertex W v ∧
+    Perspectival.WantableGPT.vertex W v ≠ Perspectival.WantableGPT.vertex W u ∧
+    Perspectival.WantableGPT.vertex W w ≠ Perspectival.WantableGPT.vertex W u :=
+  ⟨WantableGPT_vertex_ne w v hwv,
+   WantableGPT_vertex_ne v u hvu,
+   WantableGPT_vertex_ne w u hwu⟩
