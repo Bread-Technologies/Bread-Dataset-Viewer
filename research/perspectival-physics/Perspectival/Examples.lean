@@ -7123,5 +7123,30 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3))
         + Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) :=
   WantableGPT_finrank_sum
 
+/-- New: a singleton perfect witness on a one-state subset (constructed
+from any state in `gpt W`). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ : Perspectival.WantableGPT.V W)
+    (hρ : ρ ∈ Perspectival.WantableGPT.states W) :
+    Perspectival.Distinguish.PerfectWitness
+      (G := Perspectival.WantableGPT.gpt W) (fun _ : Fin 1 => ρ) :=
+  Perspectival.Distinguish.perfectWitness_singleton ρ hρ
+
+/-- New: vertex true on Bool, as a 1-element family, gives a perfect
+witness. -/
+example : Perspectival.Distinguish.PerfectWitness
+            (G := Perspectival.WantableGPT.gpt Bool)
+            (fun _ : Fin 1 => Perspectival.WantableGPT.vertex Bool true) :=
+  Perspectival.Distinguish.perfectWitness_singleton _
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+
+/-- New: vertex 0 on Fin 4, as a 1-element family, gives a perfect
+witness. -/
+example : Perspectival.Distinguish.PerfectWitness
+            (G := Perspectival.WantableGPT.gpt (Fin 4))
+            (fun _ : Fin 1 => Perspectival.WantableGPT.vertex (Fin 4) 0) :=
+  Perspectival.Distinguish.perfectWitness_singleton _
+    (Perspectival.WantableGPT.vertex_in_states (Fin 4) 0)
+
 end Examples
 end Perspectival
