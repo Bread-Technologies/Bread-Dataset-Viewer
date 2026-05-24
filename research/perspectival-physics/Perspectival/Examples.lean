@@ -14335,6 +14335,38 @@ example : Perspectival.WantableGPT.unitFn (Bool × Bool) diagonalState = 1 :=
 example : Perspectival.WantableGPT.unitFn (Bool × Bool) antiDiagonalState = 1 :=
   antiDiagonalState_in_states.2
 
+/-! ### Effect bounds: 0 ≤ effect on state, ≤ 1 -/
+
+/-- diagonalIndicatorLin on any state ∈ [0, 1]. -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    0 ≤ diagonalIndicatorLin f ∧ diagonalIndicatorLin f ≤ 1 :=
+  (Perspectival.WantableGPT.gpt (Bool × Bool)).prob_in_unit_interval
+    diagonalIndicatorLin diagonalIndicatorLin_in_effects f hf
+
+/-- antiDiagonalIndicatorLin on any state ∈ [0, 1]. -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    0 ≤ antiDiagonalIndicatorLin f ∧ antiDiagonalIndicatorLin f ≤ 1 :=
+  (Perspectival.WantableGPT.gpt (Bool × Bool)).prob_in_unit_interval
+    antiDiagonalIndicatorLin antiDiagonalIndicatorLin_in_effects f hf
+
+/-- leftTrueIndicatorLin on any state ∈ [0, 1]. -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    0 ≤ leftTrueIndicatorLin f ∧ leftTrueIndicatorLin f ≤ 1 :=
+  (Perspectival.WantableGPT.gpt (Bool × Bool)).prob_in_unit_interval
+    leftTrueIndicatorLin leftTrueIndicatorLin_in_effects f hf
+
+/-- pointIndicatorTT (via innerLin) on any state ∈ [0, 1]. -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    0 ≤ Perspectival.WantableGPT.innerLin (Bool × Bool) pointIndicatorTT f
+    ∧ Perspectival.WantableGPT.innerLin (Bool × Bool) pointIndicatorTT f ≤ 1 :=
+  (Perspectival.WantableGPT.gpt (Bool × Bool)).prob_in_unit_interval
+    (Perspectival.WantableGPT.innerLin (Bool × Bool) pointIndicatorTT)
+    ⟨pointIndicatorTT, pointIndicatorTT_in_effectVec, rfl⟩ f hf
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
