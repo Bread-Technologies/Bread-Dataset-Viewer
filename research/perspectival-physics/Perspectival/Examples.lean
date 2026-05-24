@@ -13242,6 +13242,34 @@ example :
     show (if true = false then (1 : ℝ) else 0) + (if false = false then (1 : ℝ) else 0) = 1
     simp
 
+/-! ### productState distinguishes vertices on the joint -/
+
+/-- productState vertex (true) vertex (false) ≠ productState vertex (false) vertex (true).
+The two product-vertex states differ. -/
+example :
+    productState (Perspectival.WantableGPT.vertex Bool true)
+                 (Perspectival.WantableGPT.vertex Bool false)
+    ≠
+    productState (Perspectival.WantableGPT.vertex Bool false)
+                 (Perspectival.WantableGPT.vertex Bool true) := by
+  intro h
+  have hcol := congr_fun h (true, false)
+  -- LHS = vertex true true * vertex false false = 1 * 1 = 1
+  -- RHS = vertex false true * vertex true false = 0 * 0 = 0
+  rw [show productState (Perspectival.WantableGPT.vertex Bool true)
+                        (Perspectival.WantableGPT.vertex Bool false) (true, false)
+        = Perspectival.WantableGPT.vertex Bool true true
+        * Perspectival.WantableGPT.vertex Bool false false from rfl] at hcol
+  rw [show productState (Perspectival.WantableGPT.vertex Bool false)
+                        (Perspectival.WantableGPT.vertex Bool true) (true, false)
+        = Perspectival.WantableGPT.vertex Bool false true
+        * Perspectival.WantableGPT.vertex Bool true false from rfl] at hcol
+  rw [show Perspectival.WantableGPT.vertex Bool true true = (1 : ℝ) from by simp [Perspectival.WantableGPT.vertex],
+      show Perspectival.WantableGPT.vertex Bool false false = (1 : ℝ) from by simp [Perspectival.WantableGPT.vertex],
+      show Perspectival.WantableGPT.vertex Bool false true = (0 : ℝ) from by simp [Perspectival.WantableGPT.vertex],
+      show Perspectival.WantableGPT.vertex Bool true false = (0 : ℝ) from by simp [Perspectival.WantableGPT.vertex]] at hcol
+  norm_num at hcol
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
