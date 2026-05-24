@@ -10808,3 +10808,21 @@ example : Reality (Fin 4) := fun m => m.side₁ ≤ 1
 
 /-- A reality on Bool × Bool. -/
 example : Reality (Bool × Bool) := fun m => m.side₁.1 = m.side₁.2
+
+/-- A Reality determined by a Pattern (membership). -/
+example {W : Type u} [Wantable W] (P : Pattern W) (R : Reality W) : Prop := P R
+
+/-- Pattern.trivial is satisfied by any Reality. -/
+example {W : Type u} [Wantable W] (R : Reality W) : Pattern.trivial W R := trivial
+
+/-- Pattern.empty is not satisfied by any Reality. -/
+example {W : Type u} [Wantable W] (R : Reality W) : ¬ Pattern.empty W R := id
+
+/-- The "everything" Reality satisfies Pattern.trivial. -/
+example : Pattern.trivial Bool (fun _ : Meeting Bool => True) := trivial
+
+/-- The "nothing" Reality does not satisfy Pattern.empty. -/
+example : ¬ Pattern.empty Bool (fun _ : Meeting Bool => False) := id
+
+/-- The "nothing" Reality satisfies Pattern.trivial. -/
+example : Pattern.trivial Bool (fun _ : Meeting Bool => False) := trivial
