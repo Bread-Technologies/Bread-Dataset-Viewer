@@ -16,6 +16,7 @@ import Perspectival.Classical
 import Perspectival.Distinguish
 import Perspectival.NoCloning
 import Perspectival.WantableGPT
+import Perspectival.Hardy
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 
 namespace Perspectival
@@ -181,6 +182,30 @@ example : Perspectival.WantableGPT.complementAction Bool
   rw [this]
   -- need: vertex (complement false) = vertex true, i.e. vertex (not false) = vertex true = vertex true. Trivial.
   rfl
+
+/-! ## Example 10 — Hardy axioms on WantableGPT
+
+Every WantableGPT (over a finite Wantable) satisfies Hardy Axiom 1
+(probabilities in [0,1]) and Axiom 3 (subspaces). These follow from
+the general theorems applied to the WantableGPT instance. -/
+
+example {W : Type*} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.Hardy.Axiom1_Probabilities (Perspectival.WantableGPT.gpt W) :=
+  Perspectival.Hardy.axiom1_holds _
+
+example {W : Type*} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.Hardy.Axiom3_Subspaces (Perspectival.WantableGPT.gpt W) :=
+  Perspectival.Hardy.axiom3_holds _
+
+/-! ## Example 11 — Hardy axioms on Classical -/
+
+example (n : ℕ) :
+    Perspectival.Hardy.Axiom1_Probabilities (Perspectival.Classical.gpt n) :=
+  Perspectival.Hardy.axiom1_holds _
+
+example (n : ℕ) :
+    Perspectival.Hardy.Axiom3_Subspaces (Perspectival.Classical.gpt n) :=
+  Perspectival.Hardy.axiom3_holds _
 
 end Examples
 end Perspectival
