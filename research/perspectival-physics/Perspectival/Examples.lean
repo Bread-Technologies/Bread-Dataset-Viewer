@@ -10474,3 +10474,34 @@ example {W : Type u} [Wantable W] : PTrans W →* Equiv.Perm W :=
 example {W : Type u} [Wantable W] :
     Function.Injective (PTrans.toEquivPermHom : PTrans W →* Equiv.Perm W) :=
   PTrans.toEquivPermHom_injective
+
+/-- toEquivPerm preserves identity, multiplication. -/
+example : PTrans.toEquivPerm (1 : PTrans Bool) = 1 :=
+  PTrans.toEquivPerm_one
+
+example : PTrans.toEquivPerm (1 : PTrans (Fin 4)) = 1 :=
+  PTrans.toEquivPerm_one
+
+/-- mem_range_toEquivPermHom_iff: a permutation lifts to PTrans iff it
+commutes with complement. -/
+example {W : Type u} [Wantable W] (σ : Equiv.Perm W) :
+    (∃ φ : PTrans W, PTrans.toEquivPermHom φ = σ) ↔
+    (∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) :=
+  PTrans.mem_range_toEquivPermHom_iff σ
+
+/-- The identity permutation lifts to PTrans (trivially). -/
+example {W : Type u} [Wantable W] :
+    ∃ φ : PTrans W, PTrans.toEquivPermHom φ = (1 : Equiv.Perm W) :=
+  ⟨1, PTrans.toEquivPerm_one⟩
+
+/-- The complement permutation lifts to PTrans (complement). -/
+example {W : Type u} [Wantable W] :
+    ∃ φ : PTrans W, PTrans.toEquivPermHom φ
+      = ({ toFun := Wantable.complement
+           invFun := Wantable.complement
+           left_inv := Wantable.complement_involutive
+           right_inv := Wantable.complement_involutive } : Equiv.Perm W) := by
+  refine ⟨PTrans.complement, ?_⟩
+  apply Equiv.ext
+  intro w
+  rfl
