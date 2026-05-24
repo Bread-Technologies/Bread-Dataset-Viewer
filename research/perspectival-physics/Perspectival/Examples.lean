@@ -3387,6 +3387,14 @@ example {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
     Perspectival.Hardy.Axiom4_Composite_States_Multiply GA GB nA nB :=
   Perspectival.Hardy.axiom4_holds_placeholder GA GB nA nB
 
+/-- N ≤ K for any GPT with a PerfectWitness. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [Module.Finite ℝ V] {G : Perspectival.GPT V}
+    {n : ℕ} (ρ : Fin n → V)
+    (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) :
+    n ≤ Module.finrank ℝ V :=
+  Perspectival.Distinguish.operational_dim_le_state_dim ρ w
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
