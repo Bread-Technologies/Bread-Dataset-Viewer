@@ -8520,3 +8520,26 @@ theorem productState_right_marginal_state
   have : Perspectival.WantableGPT.unitFn W₁ f₁ = 1 := h₁.2
   rw [this]
   ring
+
+/-- Concrete: left marginal of productState (vertex true) (uniformBool)
+gives vertex true. -/
+example (b : Bool) :
+    (∑ b₂, productState (Perspectival.WantableGPT.vertex Bool true)
+                        uniformBool (b, b₂))
+    = Perspectival.WantableGPT.vertex Bool true b :=
+  productState_left_marginal_state _ _ uniformBool_in_states b
+
+/-- Concrete: right marginal of productState uniformBool (vertex false)
+gives vertex false. -/
+example (b : Bool) :
+    (∑ b₁, productState uniformBool
+                        (Perspectival.WantableGPT.vertex Bool false) (b₁, b))
+    = Perspectival.WantableGPT.vertex Bool false b :=
+  productState_right_marginal_state _ _ uniformBool_in_states b
+
+/-- Concrete: left marginal of productState uniformBool uniformBool
+gives uniformBool. -/
+example (b : Bool) :
+    (∑ b₂, productState uniformBool uniformBool (b, b₂))
+    = uniformBool b :=
+  productState_left_marginal_state _ _ uniformBool_in_states b
