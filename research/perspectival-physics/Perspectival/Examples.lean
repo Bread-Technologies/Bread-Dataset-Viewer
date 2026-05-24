@@ -2906,6 +2906,18 @@ example : trueMeetsFalse ≠ trueMeetsFalse.swap := by
   have : true = false := h1
   exact Bool.false_ne_true this.symm
 
+/-- The PTrans Bool group action on Meeting Bool: the boolSwap PTrans
+sends trueMeetsFalse to its swap. -/
+example : PTrans.actMeeting boolSwap trueMeetsFalse = trueMeetsFalse.swap := by
+  apply Meeting.ext_of_side₁
+  show boolSwap.toFun true = false
+  rfl
+
+/-- The PTrans Bool group action on Meeting Bool: the identity fixes
+trueMeetsFalse. -/
+example : PTrans.actMeeting (1 : PTrans Bool) trueMeetsFalse = trueMeetsFalse :=
+  PTrans.actMeeting_id _
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
