@@ -5,3 +5,4 @@ import Perspectival.Composition
 import Perspectival.CHSH
 import Perspectival.GPT
 import Perspectival.Hardy
+import Perspectival.NoCloning

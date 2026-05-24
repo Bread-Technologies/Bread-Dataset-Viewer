@@ -38,6 +38,11 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Spacelike pair of binary perspectival observables → CHSH tuple | `CHSH.lean :: SpacelikePair, toCHSHTuple` | ✓ |
 | **Realist case** (commutative *-algebra) ⇒ CHSH expression ≤ 2 | `CHSH.lean :: bound_realist` | ✓ via Mathlib |
 | **Perspectival/Tsirelson case** ⇒ CHSH expression ≤ 2√2 | `CHSH.lean :: bound_perspectival` | ✓ via Mathlib |
+| GPT data structure (states, effects, unit, probabilities) | `GPT.lean :: GPT` | ✓ |
+| Hardy Axiom 1 (Probabilities) — DERIVABLE, formally proved | `Hardy.lean :: axiom1_holds` | ✓ |
+| Hardy Axioms 2–5 stated as Lean predicates | `Hardy.lean` | ✓ (statement only; categorization argued) |
+| **No-cloning theorem** — cross-term vanishing from linearity | `NoCloning.lean :: cross_terms_vanish` | ✓ |
+| **No-cloning theorem** — contradiction with distinguishing bilinear form | `NoCloning.lean :: no_cloning` | ✓ |
 
 ## What is NOT YET done — honest open list
 
