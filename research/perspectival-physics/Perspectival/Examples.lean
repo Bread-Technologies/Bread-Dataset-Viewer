@@ -467,6 +467,26 @@ example (f : ℝ →ₗ[ℝ] ℝ) (hf_inj : Function.Injective f) :
     rw [smul_eq_mul, smul_eq_mul, mul_one] at h
     rw [h, mul_comm]
 
+/-- Sum Wantable `Bool ⊕ Bool` has fixed-point-free complement
+(complement swaps within each summand). -/
+example : FixedPointFreeComplement (Bool ⊕ Bool) := by
+  intro x h
+  cases x with
+  | inl b =>
+    cases b
+    · -- complement (inl false) = inl true; SelfComplementary says this = inl false
+      -- So inl true = inl false, so true = false (false)
+      have : (true : Bool) = false := Sum.inl.inj h
+      exact Bool.false_ne_true this.symm
+    · have : (false : Bool) = true := Sum.inl.inj h
+      exact Bool.false_ne_true this
+  | inr b =>
+    cases b
+    · have : (true : Bool) = false := Sum.inr.inj h
+      exact Bool.false_ne_true this.symm
+    · have : (false : Bool) = true := Sum.inr.inj h
+      exact Bool.false_ne_true this
+
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
