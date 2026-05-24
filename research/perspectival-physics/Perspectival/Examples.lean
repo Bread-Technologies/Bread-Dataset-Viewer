@@ -3177,6 +3177,13 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
 /-- Bool's WantableGPT states are convex. -/
 example : Convex ℝ (Perspectival.WantableGPT.states Bool) := convex_stdSimplex ℝ Bool
 
+/-- Fin 4 WantableGPT states are convex. -/
+example : Convex ℝ (Perspectival.WantableGPT.states (Fin 4)) := convex_stdSimplex ℝ (Fin 4)
+
+/-- Bool × Bool WantableGPT states are convex. -/
+example : Convex ℝ (Perspectival.WantableGPT.states (Bool × Bool)) :=
+  convex_stdSimplex ℝ (Bool × Bool)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
