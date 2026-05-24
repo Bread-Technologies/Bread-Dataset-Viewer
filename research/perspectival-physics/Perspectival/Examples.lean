@@ -7929,3 +7929,34 @@ example (w : Bool) :
     ∈ Perspectival.WantableGPT.states (Bool × Bool) :=
   productState_in_states _ _ uniformBool_in_states
     (Perspectival.WantableGPT.vertex_in_states Bool w)
+
+/-- New: a convex combination of two states is a state (general fact). -/
+theorem WantableGPT_convex_combo_in_states
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ₁ ρ₂ : Perspectival.WantableGPT.V W) (a b : ℝ)
+    (h₁ : ρ₁ ∈ Perspectival.WantableGPT.states W)
+    (h₂ : ρ₂ ∈ Perspectival.WantableGPT.states W)
+    (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
+    a • ρ₁ + b • ρ₂ ∈ Perspectival.WantableGPT.states W := by
+  refine ⟨?_, ?_⟩
+  · intro w
+    show 0 ≤ (a • ρ₁ + b • ρ₂) w
+    show 0 ≤ a * ρ₁ w + b * ρ₂ w
+    exact add_nonneg (mul_nonneg ha (h₁.1 w)) (mul_nonneg hb (h₂.1 w))
+  · show ∑ w, (a • ρ₁ + b • ρ₂) w = 1
+    rw [show (a • ρ₁ + b • ρ₂ : Perspectival.WantableGPT.V W)
+          = (fun w => a * ρ₁ w + b * ρ₂ w) from rfl]
+    show ∑ w, (a * ρ₁ w + b * ρ₂ w) = 1
+    rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum, h₁.2, h₂.2]
+    ring_nf
+    exact hab
+
+/-- Concrete: convex combo of two vertex states is a state. -/
+example (w v : Bool) (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1) :
+    a • Perspectival.WantableGPT.vertex Bool w
+    + b • Perspectival.WantableGPT.vertex Bool v
+    ∈ Perspectival.WantableGPT.states Bool :=
+  WantableGPT_convex_combo_in_states _ _ a b
+    (Perspectival.WantableGPT.vertex_in_states Bool w)
+    (Perspectival.WantableGPT.vertex_in_states Bool v)
+    ha hb hab
