@@ -73,6 +73,10 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | `ClosedAgency` class (composition closure refinement of `HasConnectedAgency`) | `Continuity.lean :: ClosedAgency` | ✓ |
 | `Reachable` is transitive under `ClosedAgency` | `Continuity.lean :: Reachable.trans` | ✓ |
 | `Reversible.comp` (composition of reversible transformations) | `Continuity.lean :: Reversible.comp` | ✓ |
+| `ContinuousWantable` class (Wantable on a topological space with continuous complement) | `Examples.lean :: ContinuousWantable` | ✓ |
+| `ContinuousPTrans` structure (PTrans with continuous toFun); id, complement, comp | `Examples.lean :: ContinuousPTrans` | ✓ |
+| Wantable instances on ℝ (Wantable + ContinuousWantable) | `Examples.lean` | ✓ |
+| `WantableEquiv` is a groupoid (refl/symm/trans, identity laws) | `Examples.lean :: WantableEquiv.{refl, symm, trans, refl_trans, trans_refl}` | ✓ |
 | Self-Transforms form a Monoid | `GPT.lean (instance)` | ✓ |
 | Transform composition (`Transform.comp`) | `GPT.lean :: Transform.comp` | ✓ |
 | Reachable is reflexive | `Continuity.lean :: Reachable.refl` | ✓ |
