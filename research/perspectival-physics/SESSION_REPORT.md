@@ -8,7 +8,7 @@ A summary of accomplishments from this development session.
 - **~2,500 lines of Lean** (excluding Mathlib dependencies)
 - **~80 verified theorems** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~50 KB of structured exposition)
-- **~110 commits** to the research branch
+- **230+ commits** to the research branch (extended session)
 
 ## Major technical results
 
