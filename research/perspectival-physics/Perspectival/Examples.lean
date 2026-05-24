@@ -15279,6 +15279,38 @@ example (e₁ e₂ : Perspectival.WantableGPT.V Bool →ₗ[ℝ] ℝ)
      + f false * e₂ (Perspectival.WantableGPT.vertex Bool false)
   rw [h_true, h_false]
 
+/-! ### Distinguishability via Born rule on uniform states -/
+
+/-- vertex true and uniformBool are NOT perfectly distinguishable.
+deltaIndicator true gives 1 vs 1/2, not 0. -/
+example :
+    ¬ (deltaIndicatorLin true (Perspectival.WantableGPT.vertex Bool true) = 1
+       ∧ deltaIndicatorLin true uniformBool = 0) := by
+  intro ⟨_, h2⟩
+  rw [deltaIndicatorLin_eq_apply] at h2
+  -- h2 : uniformBool true = 0
+  -- but uniformBool true = 1/2
+  show False
+  have : uniformBool true = (1/2 : ℝ) := rfl
+  rw [this] at h2
+  norm_num at h2
+
+/-- vertex true and vertex false ARE perfectly distinguishable
+(via deltaIndicator true gives 1 vs 0). -/
+example :
+    deltaIndicatorLin true (Perspectival.WantableGPT.vertex Bool true) = 1
+    ∧ deltaIndicatorLin true (Perspectival.WantableGPT.vertex Bool false) = 0 :=
+  ⟨deltaIndicatorLin_vertex_self true,
+   deltaIndicatorLin_vertex_other true false (by decide)⟩
+
+/-- Concrete: vertex true and vertex false form a perfectly distinguishable pair. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt Bool)
+      (Perspectival.WantableGPT.vertex Bool true)
+      (Perspectival.WantableGPT.vertex Bool false) :=
+  vertices_distinguishable_via_delta true false (by decide)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
