@@ -1805,6 +1805,78 @@ example
   exact (n_vertex_coord_continuous_of_joint (n := 2) γ hcont 0 0).sub
         (n_vertex_coord_continuous_of_joint (n := 2) γ hcont 1 0)
 
+/-! ## n=2 enumeration: every bijective state-preserving R is id or swap
+
+This is the strongest n=2 R6 result: not only that no continuous path
+connects id and swap (the disconnect theorem already proven), but that
+*there are no other bijective state-preserving linear maps V 2 → V 2
+beyond {id, swap}*. So the StrictReversible group on Classical n=2 is
+exactly S_2 = {id, swap}, matching the framework's expected behavior. -/
+
+/-- For state-preserving bijective R on V 2, R(vertex 0) is a state with
+nonzero first coordinate equal to (R v0)(0). The image is determined. -/
+theorem classical_n2_bijection_image_vertex0_form
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    R (vertex 2 0) = (R (vertex 2 0) 0) • vertex 2 0
+                   + (R (vertex 2 0) 1) • vertex 2 1 := by
+  have hRv := hR (vertex 2 0) (vertex_in_states 2 0)
+  exact classical_n2_state_eq_combo (R (vertex 2 0)) hRv
+
+/-- For state-preserving bijective R on V 2, similarly R(vertex 1) is determined. -/
+theorem classical_n2_bijection_image_vertex1_form
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    R (vertex 2 1) = (R (vertex 2 1) 0) • vertex 2 0
+                   + (R (vertex 2 1) 1) • vertex 2 1 := by
+  have hRv := hR (vertex 2 1) (vertex_in_states 2 1)
+  exact classical_n2_state_eq_combo (R (vertex 2 1)) hRv
+
+/-- For state-preserving R on V 2 with det = 1, R must equal id.
+Proof: det = 1 means a - b = 1, with a ∈ [0,1] and b ∈ [0,1]. So a = 1, b = 0.
+Hence R(vertex 0) = vertex 0 (since (R v0)(0) = 1) and similarly R(vertex 1) = vertex 1.
+Then R = id by linearity + vertex-span. -/
+theorem classical_n2_det_one_eq_id
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hdet : n2_disc_det R = 1) :
+    R = LinearMap.id := by
+  -- hdet : R(v0)(0) - R(v1)(0) = 1
+  have h := classical_n2_state_preserving_first_coord_bound R hR
+  have h1 := classical_n2_state_preserving_first_coord_bound_v1 R hR
+  -- R(v0)(0) ∈ [0,1], R(v1)(0) ∈ [0,1], diff = 1 ⇒ R(v0)(0) = 1, R(v1)(0) = 0
+  have ha : R (vertex 2 0) 0 = 1 := by
+    show R (vertex 2 0) 0 = 1
+    have hdet' : R (vertex 2 0) 0 - R (vertex 2 1) 0 = 1 := hdet
+    linarith
+  have hb : R (vertex 2 1) 0 = 0 := by
+    have hdet' : R (vertex 2 0) 0 - R (vertex 2 1) 0 = 1 := hdet
+    linarith
+  -- R(v0) is a state with (R v0)(0) = 1, hence R(v0) = vertex 0
+  have hRv0 : R (vertex 2 0) = vertex 2 0 :=
+    (classical_n2_first_coord_one_iff (R (vertex 2 0))
+      (hR _ (vertex_in_states 2 0))).mpr ha
+  -- R(v1) is a state with (R v1)(0) = 0, hence (R v1)(1) = 1, hence R(v1) = vertex 1
+  have hsum1 := classical_n2_state_sum (R (vertex 2 1)) (hR _ (vertex_in_states 2 1))
+  have hb1 : R (vertex 2 1) 1 = 1 := by linarith
+  have hRv1 : R (vertex 2 1) = vertex 2 1 :=
+    (classical_n2_second_coord_one_iff (R (vertex 2 1))
+      (hR _ (vertex_in_states 2 1))).mpr hb1
+  -- R is determined by R(v0), R(v1). Use linearity to extend.
+  apply LinearMap.ext
+  intro v
+  have hv : v = (v 0) • vertex 2 0 + (v 1) • vertex 2 1 := by
+    funext j
+    fin_cases j
+    · show v 0 = (v 0) * vertex 2 0 0 + (v 1) * vertex 2 1 0
+      rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]; ring
+    · show v 1 = (v 0) * vertex 2 0 1 + (v 1) * vertex 2 1 1
+      rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]; ring
+  rw [hv, map_add, map_smul, map_smul, hRv0, hRv1]
+  show (v 0) • vertex 2 0 + (v 1) • vertex 2 1 = LinearMap.id _
+  rw [← hv]
+  rfl
+
 /-! ## Cleaner alternative form of R6 n=2 disconnect -/
 
 /-- Cleaner: any bijective state-preserving continuous path on V 2
