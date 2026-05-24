@@ -11135,3 +11135,25 @@ example {W : Type u} [Wantable W] :
     (⟨Wantable.complement, Wantable.complement,
       Wantable.complement_involutive, Wantable.complement_involutive⟩
       : Equiv.Perm W) := rfl
+
+/-- The standard simplex (Classical.states) is convex. -/
+example (n : ℕ) : Convex ℝ (Perspectival.Classical.states n) :=
+  Perspectival.Classical.states_convex n
+
+/-- The standard simplex (WantableGPT.states) is convex. -/
+example {W : Type u} [Wantable W] [Fintype W] :
+    Convex ℝ (Perspectival.WantableGPT.states W) :=
+  convex_stdSimplex ℝ W
+
+/-- Classical effects are convex. -/
+example (n : ℕ) : Convex ℝ (Perspectival.Classical.effects n) :=
+  Perspectival.Classical.effects_convex n
+
+/-- Classical unit is in effects. -/
+example (n : ℕ) : Perspectival.Classical.unitFn n ∈ Perspectival.Classical.effects n :=
+  Perspectival.Classical.unit_in_effects n
+
+/-- Classical proj is in effects. -/
+example (n : ℕ) (i : Fin n) :
+    Perspectival.Classical.proj n i ∈ Perspectival.Classical.effects n :=
+  Perspectival.Classical.proj_in_effects n i
