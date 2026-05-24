@@ -248,6 +248,26 @@ instance : MulAction (PTrans W) (Reality W) where
   one_smul := actReality_one
   mul_smul := actReality_mul
 
+/-- The action on Reality respects logical conjunction (intersection). -/
+theorem actReality_and (φ : PTrans W) (R₁ R₂ : Reality W) :
+    actReality φ (fun m => R₁ m ∧ R₂ m) = fun m => actReality φ R₁ m ∧ actReality φ R₂ m :=
+  rfl
+
+/-- The action on Reality respects logical disjunction (union). -/
+theorem actReality_or (φ : PTrans W) (R₁ R₂ : Reality W) :
+    actReality φ (fun m => R₁ m ∨ R₂ m) = fun m => actReality φ R₁ m ∨ actReality φ R₂ m :=
+  rfl
+
+/-- The action on Reality maps the empty reality (false predicate) to itself. -/
+theorem actReality_empty (φ : PTrans W) :
+    actReality φ (fun _ => False) = fun _ => False :=
+  rfl
+
+/-- The action on Reality maps the full reality (true predicate) to itself. -/
+theorem actReality_full (φ : PTrans W) :
+    actReality φ (fun _ => True) = fun _ => True :=
+  rfl
+
 /-- The singleton-meeting reality `{m}` (as a predicate) is sent under
 `φ` to the singleton at `actMeeting φ m`. -/
 theorem actReality_singleton (φ : PTrans W) (m : Meeting W) :
