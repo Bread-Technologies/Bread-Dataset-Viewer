@@ -10026,3 +10026,24 @@ example : MulAction (PTrans (Fin 4)) (Meeting (Fin 4)) := inferInstance
 /-- PTrans acts on Reality (MulAction). -/
 example : MulAction (PTrans Bool) (Reality Bool) := inferInstance
 example : MulAction (PTrans (Fin 4)) (Reality (Fin 4)) := inferInstance
+
+/-- Self-Transforms form a Monoid on any WantableGPT. -/
+example : Monoid (Perspectival.GPT.Transform
+                    (Perspectival.WantableGPT.gpt Bool)
+                    (Perspectival.WantableGPT.gpt Bool)) := inferInstance
+
+example : Monoid (Perspectival.GPT.Transform
+                    (Perspectival.WantableGPT.gpt (Fin 4))
+                    (Perspectival.WantableGPT.gpt (Fin 4))) := inferInstance
+
+example : Monoid (Perspectival.GPT.Transform
+                    (Perspectival.WantableGPT.gpt (Bool × Bool))
+                    (Perspectival.WantableGPT.gpt (Bool × Bool))) := inferInstance
+
+example : Monoid (Perspectival.GPT.Transform
+                    (Perspectival.Classical.gpt 5)
+                    (Perspectival.Classical.gpt 5)) := inferInstance
+
+example : Monoid (Perspectival.GPT.Transform
+                    (Perspectival.Classical.gpt 10)
+                    (Perspectival.Classical.gpt 10)) := inferInstance
