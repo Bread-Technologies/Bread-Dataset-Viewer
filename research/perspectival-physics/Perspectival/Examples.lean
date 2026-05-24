@@ -499,6 +499,11 @@ example : Wantable.complement () = () := rfl
 both a fixed point and not (vacuous truth). -/
 example (e : Empty) : Wantable.complement e = e := e.elim
 
+/-- ℤ's only fixed point of complement (= negation) is 0. -/
+example (n : ℤ) (h : Wantable.complement n = n) : n = 0 := by
+  have : -n = n := h
+  linarith
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
