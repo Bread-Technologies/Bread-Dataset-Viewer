@@ -410,6 +410,10 @@ literal-coercion fiddliness with ℝˣ.) -/
 example (a b : ℝˣ) : scaleHom (a * b) = scaleHom a * scaleHom b :=
   scaleHom.map_mul a b
 
+/-- The inverse-of-scaling is scaling-by-inverse. -/
+example (a : ℝˣ) : (scaleHom a)⁻¹ = scaleHom a⁻¹ := by
+  rw [← scaleHom.map_inv]
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
