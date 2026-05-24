@@ -2827,6 +2827,10 @@ example : Wantable.complement (Wantable.complement (0 : Fin 2)) = 0 := rfl
 /-- Fin 2 complement involution: 1 → 0 → 1. -/
 example : Wantable.complement (Wantable.complement (1 : Fin 2)) = 1 := rfl
 
+/-- Bool complement involution: true → false → true. -/
+example : Wantable.complement (Wantable.complement true) = true := rfl
+example : Wantable.complement (Wantable.complement false) = false := rfl
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
