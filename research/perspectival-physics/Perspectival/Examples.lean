@@ -229,6 +229,25 @@ example : ∀ i : Fin 3, SelfComplementary i := by
 /-- For Wantable Unit, the singleton element is self-complementary. -/
 example : SelfComplementary () := rfl
 
+/-- For a Wantable with identity-complement (every element
+self-complementary), every permutation `σ : Equiv.Perm W` lifts to a
+PTrans (the `resp_complement` condition is vacuous). -/
+def PTrans.ofPermWithIdComplement {W : Type u} [Wantable W]
+    (h_id : ∀ w : W, Wantable.complement w = w)
+    (σ : Equiv.Perm W) : PTrans W :=
+  PTrans.ofEquivPerm σ (by
+    intro w
+    rw [h_id w, h_id (σ w)])
+
+/-- For Wantable Fin 3 (identity complement), every permutation lifts to a PTrans. -/
+example (σ : Equiv.Perm (Fin 3)) : PTrans (Fin 3) :=
+  PTrans.ofPermWithIdComplement (fun _ => rfl) σ
+
+/-- For Wantable Unit, the underlying permutation group is trivial. -/
+example (σ : Equiv.Perm Unit) : σ = 1 := by
+  apply Equiv.ext
+  intro u; cases u; rfl
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
