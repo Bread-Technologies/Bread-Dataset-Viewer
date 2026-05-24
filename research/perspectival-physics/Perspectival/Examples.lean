@@ -4926,5 +4926,29 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
       = Perspectival.GPT.Transform.id G :=
   Perspectival.GPT.Transform.id_sq G
 
+/-- `Classical.vertex_decomposition`: every classical state is its
+coordinate-wise vertex combination. -/
+example (n : ℕ) (f : Perspectival.Classical.V n) :
+    f = ∑ i, f i • Perspectival.Classical.vertex n i :=
+  Perspectival.Classical.vertex_decomposition n f
+
+/-- `Classical.vertices_span`: classical vertices span `V n`. -/
+example (n : ℕ) :
+    Submodule.span ℝ (Set.range (Perspectival.Classical.vertex n)) = ⊤ :=
+  Perspectival.Classical.vertices_span n
+
+/-- `Classical.vertex_linear_independent`: classical vertices are
+linearly independent. -/
+example (n : ℕ) : LinearIndependent ℝ (Perspectival.Classical.vertex n) :=
+  Perspectival.Classical.vertex_linear_independent n
+
+/-- `Classical.vertices_distinguishable`: distinct vertices are
+distinguishable in the classical GPT. -/
+example (n : ℕ) (i j : Fin n) (hij : i ≠ j) :
+    Perspectival.Hardy.Distinguishable (Perspectival.Classical.gpt n)
+      (Perspectival.Classical.vertex n i)
+      (Perspectival.Classical.vertex n j) :=
+  Perspectival.Classical.vertices_distinguishable n i j hij
+
 end Examples
 end Perspectival
