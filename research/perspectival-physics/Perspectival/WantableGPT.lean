@@ -659,6 +659,18 @@ theorem wantableGPT_dim_sum {W₁ W₂ : Type u}
 -- (Bool-specialised dim theorems live in Examples.lean since Wantable Bool
 -- is defined there.)
 
+/-- For any Wantable W with `Inhabited`, WantableGPT has a state (the
+default vertex). -/
+theorem wantableGPT_state_inhabited [Fintype W] [Inhabited W] :
+    ∃ ρ : V W, ρ ∈ states W :=
+  ⟨vertex W default, vertex_in_states W default⟩
+
+/-- For any Wantable W with `Inhabited`, WantableGPT has an effect (the
+default projection). -/
+theorem wantableGPT_effect_inhabited [Fintype W] [Inhabited W] :
+    ∃ e : V W →ₗ[ℝ] ℝ, e ∈ effects W :=
+  ⟨proj W default, proj_in_effects W default⟩
+
 /-- **Hardy-signature dichotomy.** For finite Wantable W with `|W| ≥ 2`,
 the WantableGPT satisfies the classical signature `K = N = |W|` and
 *does not* satisfy any of the standard non-classical signatures
