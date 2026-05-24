@@ -10751,3 +10751,33 @@ example : (PTrans.complement : PTrans Bool) ^ 200 = 1 :=
 /-- Concrete: PTrans.complement^999 = complement on Bool. -/
 example : (PTrans.complement : PTrans Bool) ^ 999 = PTrans.complement :=
   PTrans_complement_pow_two_n_succ 499
+
+/-- Pattern combination: P.and Q.and R = P.and (Q.and R) elementwise. -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.and (Pattern.and P Q) R r ↔ Pattern.and P (Pattern.and Q R) r :=
+  and_assoc
+
+/-- Pattern.and is commutative elementwise. -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (r : Reality W) :
+    Pattern.and P Q r ↔ Pattern.and Q P r :=
+  And.comm
+
+/-- Generic Pattern algebra forms a lattice (logical). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.and P (Pattern.or Q R) r ↔
+    Pattern.or (Pattern.and P Q) (Pattern.and P R) r :=
+  and_or_left
+
+/-- Generic Pattern.and with empty pattern is empty. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
+    Pattern.and P (Pattern.empty W) r ↔ Pattern.empty W r := by
+  constructor
+  · intro ⟨_, h⟩; exact h
+  · intro h; exact h.elim
+
+/-- Generic Pattern.or with trivial pattern is trivial. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
+    Pattern.or P (Pattern.trivial W) r ↔ Pattern.trivial W r := by
+  constructor
+  · intro _; trivial
+  · intro _; exact Or.inr trivial
