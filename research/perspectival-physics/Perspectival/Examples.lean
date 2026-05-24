@@ -4836,5 +4836,32 @@ example {W : Type u} [Wantable W] (φ : PTrans W) :
 /-- `Reality` admits a `MulAction` instance from PTrans. -/
 example {W : Type u} [Wantable W] : MulAction (PTrans W) (Reality W) := inferInstance
 
+/-- `complementary_symm`: side₁ and side₂ of a meeting are mutual
+complements. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    Wantable.complement m.side₁ = m.side₂ ∧
+    Wantable.complement m.side₂ = m.side₁ :=
+  ⟨m.complementary, Meeting.complementary_symm m⟩
+
+/-- `side₂_eq_complement_side₁`: side₂ is the complement of side₁. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    m.side₂ = Wantable.complement m.side₁ :=
+  Meeting.side₂_eq_complement_side₁ m
+
+/-- `swap_swap`: swap is involutive on meetings. -/
+example {W : Type u} [Wantable W] (m : Meeting W) : m.swap.swap = m :=
+  Meeting.swap_swap m
+
+/-- `swap_mk_fromSide`: swap of a meeting built from side `w` gives
+the meeting built from the complement. -/
+example {W : Type u} [Wantable W] (w : W) :
+    (Meeting.mk_fromSide W w).swap = Meeting.mk_fromSide W (Wantable.complement w) :=
+  Meeting.swap_mk_fromSide w
+
+/-- `Wantable.complement_complement_eq_id`: complement squared is `id`. -/
+example {W : Type u} [Wantable W] :
+    (Wantable.complement ∘ Wantable.complement : W → W) = id :=
+  Wantable.complement_complement_eq_id
+
 end Examples
 end Perspectival
