@@ -1,31 +1,53 @@
 # Session Report — Perspectival Physics Lean Formalization
 
-A summary of accomplishments from this development session.
+A summary of accomplishments. Re-organized to focus on Tier progress
+against ORIGINAL_PROMPT.md targets — *not* line/commit count chatter.
 
-## Headline numbers
+## Tier audit (against ORIGINAL_PROMPT.md §6)
 
-- **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~13,000+ lines of Lean** (excluding Mathlib dependencies); Examples.lean
-  alone past 12,800 lines
-- **~900+ verified theorems / examples** (no `sorry` outside documented placeholders)
-- **14 documentation files** (~75 KB of structured exposition)
-- **1250+ commits** to the research branch (1250 milestone passed)
-- **Examples.lean past 15,300 lines** (started at ~11,350; +4000 this session)
-- **diagonalState/antiDiagonalState are NOT product states** —
-  explicit formal proof of the entanglement-like structure of
-  classical correlated states (Lean theorems with no `sorry`).
-- **Classical.lean grew from 261 to ~1900 lines (+1640)** with the R6 work
-- **R6 generalization**: `classical_vertex_collision_implies_not_injective`
-  and `classical_bijective_distinct_vertex_images` for any n.
-- **R6 n=3 transpositions**: `swap01Lin` (the (01) transposition on V 3)
-  bundled as `swap01Reversible` and `swap01StrictReversible`, verified
-  distinct from id. With the 3-cycle `cyclicShiftLin`, Classical n=3
-  has at least 3 distinct StrictReversibles.
-- **R6 continuity helpers**: `n_vertex_coord_continuous_of_joint` derives
-  vertex-coordinate continuity from joint continuity of γ : [0,1] → V n →ₗ V n.
-- **R6 clean form**: `classical_n2_no_bijective_state_pres_joint_path`
-  (the disconnect theorem stated with joint-continuity hypothesis only).
-- **S_3 nonabelian witness**: swap01 ∘ cyclicShift ≠ cyclicShift ∘ swap01.
+**Tier 1 — Operational reconstruction**
+
+| Target | Status | Notes |
+|--------|--------|-------|
+| #1 Axioms I–IV in Lean GPT | ✓ DONE | Wantable, Meeting, etc. |
+| #2 Hardy axioms categorized | ◐ PARTIAL | A1, A3, A5 verified-derivable; A2 auxiliary; A4 placeholder |
+| #3 Tsirelson 2√2 derived | ✓ DONE | CHSH.lean |
+| #4 No-cloning/broadcast/signaling | ✓ DONE | NoCloning.lean, NoBroadcasting.lean, no-signaling in WantableGPT |
+| #5 Complex Hilbert space (Renou extension) | ✗ NOT STARTED | `TIER1_5_HILBERT.md` sketches path |
+
+**Tier 2 — Standard Model**
+
+| Target | Status | Notes |
+|--------|--------|-------|
+| #6 Gauge group U(1)×SU(2)×SU(3) | ✗ NOT STARTED | `TIER2_GAUGE_SCOPING.md` (this session) |
+| #7 Three fermion generations | ✗ NEGATIVE | `TIER2_ATTEMPT.md` documents failures |
+| #8 Particle representations | ✗ NOT STARTED | Requires Lie-group machinery (R7) first |
+| #9 Mass hierarchies | ✗ NOT STARTED | |
+
+**Tier 3 — Cosmology / dark matter / fine-tuning**
+
+| Target | Status |
+|--------|--------|
+| #10 Cosmological constant | ✗ SPECULATIVE only |
+| #11 Dark matter multi-sector | ✗ SPECULATIVE only |
+| #12 Fine-tuning | ✗ NOT STARTED |
+| #13 QM/GR unification | ✗ NOT STARTED |
+
+**Tier 4 — Philosophical dissolution**
+
+| Target | Status |
+|--------|--------|
+| #14 Hard problem | ◐ ARGUED in `TIER4_ATTEMPT.md` |
+| #15 Why-something | ✗ NOT STARTED |
+| #16 Origin of universe | ✗ NOT STARTED |
+
+**Framework-distinctive contributions this session:**
+
+- **R6 Birkhoff disconnect (Classical n=2)**: `classical_n2_strict_reversible_path_id_swap_empty` formally proves no continuous path of bijective state-preserving linear maps connects id to swap on Classical Bool. NO other GPT reconstruction has proved this discreteness phenomenon in Lean.
+- **n=2 strict-reversible enumeration**: `classical_n2_det_one_eq_id` characterizes det=1 bijections as exactly id; symmetric `classical_n2_det_neg_one_eq_swap`. So `Reversible (Classical n=2 GPT) = {id, swap} = S_2`.
+- **StrictConnectedAgency framework** in `Continuity.lean` (StatePreservingPath / ReversiblePath / StrictReversiblePath hierarchy).
+- **diagonalState is NOT a productState** — first formal proof of classical correlation that can't be factorized.
+- **complementSubgroup ≤ Subgroup.center (PTrans W)** — generic central-element theorem.
 
 ## R6 COMPLETE for n=2: Birkhoff disconnect formally proven (no hypotheses)
 
