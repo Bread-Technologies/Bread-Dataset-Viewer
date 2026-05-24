@@ -85,6 +85,13 @@ if some `R ∈ avail` sends `ρ₁` to `ρ₂`. -/
 def Reachable [HasConnectedAgency G] (ρ₁ ρ₂ : V) : Prop :=
   ∃ R ∈ HasConnectedAgency.avail (G := G), R.toLin ρ₁ = ρ₂
 
+/-- Every state is reachable from itself (via the identity, which is
+available by `id_avail`). -/
+theorem Reachable.refl [HasConnectedAgency G] (ρ : V) :
+    Reachable (G := G) ρ ρ := by
+  obtain ⟨R_id, hR_id_avail, hR_id_eq⟩ := HasConnectedAgency.id_avail (G := G)
+  exact ⟨R_id, hR_id_avail, hR_id_eq ρ⟩
+
 /-- **The main bridge.** From the connected-agency postulate plus
 reachability, any two reachable states are connected by a continuous
 path in V.
