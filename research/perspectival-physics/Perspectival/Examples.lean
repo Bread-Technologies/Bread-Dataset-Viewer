@@ -2970,6 +2970,13 @@ example : ∀ b : Bool, (Equiv.mk Bool.not Bool.not (fun b => by cases b <;> rfl
                                                   (fun b => by cases b <;> rfl)) b) :=
   fun b => by cases b <;> rfl
 
+/-- By the centralizer characterization, the "not" Equiv lifts to a PTrans. -/
+example : ∃ φ : PTrans Bool, PTrans.toEquivPermHom φ
+    = Equiv.mk Bool.not Bool.not (fun b => by cases b <;> rfl)
+                                 (fun b => by cases b <;> rfl) := by
+  apply (PTrans.mem_range_toEquivPermHom_iff _).mpr
+  intro b; cases b <;> rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
