@@ -9492,3 +9492,24 @@ example : Perspectival.Hardy.Distinguishable (Perspectival.Classical.gpt 10)
             (Perspectival.Classical.vertex 10 5)
             (Perspectival.Classical.vertex 10 9) :=
   Perspectival.Classical.vertices_distinguishable 10 5 9 (by decide)
+
+/-- Concrete: classical proj 3 on Fin 10 is in effects. -/
+example : Perspectival.Classical.proj 10 3 ∈ Perspectival.Classical.effects 10 :=
+  Perspectival.Classical.proj_in_effects 10 3
+
+/-- Concrete: classical proj_vertex on Fin 10. -/
+example : Perspectival.Classical.proj 10 3 (Perspectival.Classical.vertex 10 3) = 1 := by
+  rw [Perspectival.Classical.proj_vertex]
+  simp
+
+example : Perspectival.Classical.proj 10 3 (Perspectival.Classical.vertex 10 7) = 0 := by
+  rw [Perspectival.Classical.proj_vertex]
+  simp
+
+/-- Concrete: vertex_linear_independent on Fin 10. -/
+example : LinearIndependent ℝ (Perspectival.Classical.vertex 10) :=
+  Perspectival.Classical.vertex_linear_independent 10
+
+/-- Concrete: vertex_linear_independent on Fin 100. -/
+example : LinearIndependent ℝ (Perspectival.Classical.vertex 100) :=
+  Perspectival.Classical.vertex_linear_independent 100
