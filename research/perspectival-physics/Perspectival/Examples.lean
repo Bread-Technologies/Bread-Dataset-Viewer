@@ -12271,3 +12271,55 @@ example :
       (Perspectival.WantableGPT.vertex (Fin 4) 1)
       (Perspectival.WantableGPT.vertex (Fin 4) 3) :=
   vertices_distinguishable_via_delta 1 3 (by decide)
+
+/-! ### Sum of delta indicators = unit -/
+
+/-- Sum over all w of (deltaIndicator w) equals constant 1. -/
+theorem sum_deltaIndicator {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (∑ w, deltaIndicator (W := W) w) = (fun _ => (1 : ℝ)) := by
+  funext w'
+  rw [Finset.sum_apply]
+  show ∑ w, (if w' = w then (1 : ℝ) else 0) = 1
+  rw [Finset.sum_eq_single w']
+  · simp
+  · intro w _ hne
+    rw [if_neg (Ne.symm hne)]
+  · intro h
+    exact absurd (Finset.mem_univ w') h
+
+/-- Sum of all deltaIndicatorLin equals unitFn (pointwise on f). -/
+theorem sum_deltaIndicatorLin {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] (f : Perspectival.WantableGPT.V W) :
+    (∑ w, deltaIndicatorLin w f) = Perspectival.WantableGPT.unitFn W f := by
+  show (∑ w, ∑ w', deltaIndicator w w' * f w')
+     = ∑ w', f w'
+  rw [Finset.sum_comm]
+  apply Finset.sum_congr rfl
+  intro w' _
+  show (∑ w, deltaIndicator w w' * f w') = f w'
+  show (∑ w, (if w' = w then (1 : ℝ) else 0) * f w') = f w'
+  rw [Finset.sum_eq_single w']
+  · simp
+  · intro w _ hne
+    rw [if_neg (Ne.symm hne)]; ring
+  · intro h
+    exact absurd (Finset.mem_univ w') h
+
+/-- Concrete: ∑ b, deltaIndicatorLin b f = unitFn Bool f. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    deltaIndicatorLin true f + deltaIndicatorLin false f
+      = Perspectival.WantableGPT.unitFn Bool f := by
+  have := sum_deltaIndicatorLin f
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton] at this
+  exact this
+
+/-- Concrete: ∑ i, deltaIndicatorLin i f = unitFn (Fin 3) f. -/
+example (f : Perspectival.WantableGPT.V (Fin 3)) :
+    deltaIndicatorLin (0 : Fin 3) f + deltaIndicatorLin 1 f + deltaIndicatorLin 2 f
+      = Perspectival.WantableGPT.unitFn (Fin 3) f := by
+  have := sum_deltaIndicatorLin f
+  rw [show (Finset.univ : Finset (Fin 3)) = {0, 1, 2} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton] at this
+  linarith [this]
