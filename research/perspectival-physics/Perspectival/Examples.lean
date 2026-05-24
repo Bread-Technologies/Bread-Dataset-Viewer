@@ -127,5 +127,23 @@ example (n : ℕ) (i j : Fin n) (hij : i ≠ j)
     (Classical.vertex_in_states n j)
     (Classical.vertices_distinguishable n i j hij)
 
+/-! ## Example 7 — Same no-cloning result via the lin-indep route
+
+The lin-indep formulation of no-cloning, applied to classical
+vertices, gives the same conclusion through different machinery. -/
+
+example (n : ℕ) (i j : Fin n) (hij : i ≠ j)
+    {S : Set (Classical.V n)}
+    (h_vi : Classical.vertex n i ∈ S) (h_vj : Classical.vertex n j ∈ S)
+    (h_sum : Classical.vertex n i + Classical.vertex n j ∈ S)
+    {C : Classical.V n →ₗ[ℝ] Classical.V n ⊗[ℝ] Classical.V n}
+    (hC : Perspectival.IsLinearCloner S C) : False :=
+  Perspectival.no_cloning_of_linear_independent
+    hC h_vi h_vj h_sum
+    (Perspectival.Distinguish.distinguishable_imp_linear_independent
+      (Classical.vertex_in_states n i)
+      (Classical.vertex_in_states n j)
+      (Classical.vertices_distinguishable n i j hij))
+
 end Examples
 end Perspectival
