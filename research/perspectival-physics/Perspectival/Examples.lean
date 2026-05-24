@@ -5659,5 +5659,29 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂] (m : Meeting W₂) 
     (Meeting.sumInr (W₁ := W₁) m).swap = Meeting.sumInr m.swap :=
   Meeting.sumInr_swap m
 
+/-- Generic `Meeting.prodFst_prodMk`: prodMk-then-project recovers
+the first component. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m₁ : Meeting W₁) (m₂ : Meeting W₂) :
+    (Meeting.prodMk m₁ m₂).prodFst = m₁ :=
+  Meeting.prodFst_prodMk m₁ m₂
+
+/-- Generic `Meeting.prodSnd_prodMk`: prodMk-then-project recovers
+the second component. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m₁ : Meeting W₁) (m₂ : Meeting W₂) :
+    (Meeting.prodMk m₁ m₂).prodSnd = m₂ :=
+  Meeting.prodSnd_prodMk m₁ m₂
+
+/-- Generic `PTrans.prodMap_one_one`: prodMap of identities. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂] :
+    PTrans.prodMap (1 : PTrans W₁) (1 : PTrans W₂) = 1 :=
+  PTrans.prodMap_one_one W₁ W₂
+
+/-- Generic `PTrans.sumMap_one_one`: sumMap of identities. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂] :
+    PTrans.sumMap (1 : PTrans W₁) (1 : PTrans W₂) = 1 :=
+  PTrans.sumMap_one_one W₁ W₂
+
 end Examples
 end Perspectival
