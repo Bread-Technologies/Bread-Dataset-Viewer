@@ -10313,3 +10313,28 @@ example : Wantable.complement (fun _ : Bool => false) = (fun _ => true) := by
 example (f : Bool → Bool) :
     Wantable.complement (Wantable.complement f) = f :=
   Wantable.complement_involutive f
+
+/-- complement involution on List Bool. -/
+example (l : List Bool) :
+    Wantable.complement (Wantable.complement l) = l :=
+  Wantable.complement_involutive l
+
+/-- complement involution on Option Bool. -/
+example (o : Option Bool) :
+    Wantable.complement (Wantable.complement o) = o :=
+  Wantable.complement_involutive o
+
+/-- complement involution generic. -/
+example {W : Type u} [Wantable W] (w : W) :
+    Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
+/-- complement is involutive across all types — Bool×Bool. -/
+example (p : Bool × Bool) :
+    Wantable.complement (Wantable.complement p) = p :=
+  Wantable.complement_involutive p
+
+/-- complement is involutive across all types — Fin 4. -/
+example (i : Fin 4) :
+    Wantable.complement (Wantable.complement i) = i :=
+  Wantable.complement_involutive i
