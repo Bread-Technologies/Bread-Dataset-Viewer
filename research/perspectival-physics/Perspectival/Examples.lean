@@ -299,6 +299,12 @@ noncomputable example (n : ℕ) : Perspectival.Classical.V n →ₗ[ℝ]
           Perspectival.Classical.V n ⊗[ℝ] Perspectival.Classical.V n :=
   Perspectival.NoBroadcasting.classicalBroadcaster n
 
+/-- WantableGPT(Bool) admits a perfect-witness via projections. -/
+example : Perspectival.Distinguish.PerfectWitness
+    (G := Perspectival.WantableGPT.gpt Bool)
+    (Perspectival.WantableGPT.vertex Bool) :=
+  Perspectival.WantableGPT.perfectWitness Bool
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
