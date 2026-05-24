@@ -381,6 +381,19 @@ noncomputable def scaleHom : ℝˣ →* PTrans ℝ where
     show ((a : ℝ) * (b : ℝ)) * x = (a : ℝ) * ((b : ℝ) * x)
     ring
 
+/-- The scaleHom is injective: different scalings give different PTrans. -/
+theorem scaleHom_injective : Function.Injective scaleHom := by
+  intro a b hab
+  -- Evaluate at x = 1: (scaleHom a).toFun 1 = a, similarly for b.
+  have h1 : (scaleHom a).toFun (1 : ℝ) = (scaleHom b).toFun 1 := by
+    rw [hab]
+  have ha : (scaleHom a).toFun (1 : ℝ) = (a : ℝ) := by
+    show (a : ℝ) * 1 = (a : ℝ); ring
+  have hb : (scaleHom b).toFun (1 : ℝ) = (b : ℝ) := by
+    show (b : ℝ) * 1 = (b : ℝ); ring
+  rw [ha, hb] at h1
+  exact Units.ext h1
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
