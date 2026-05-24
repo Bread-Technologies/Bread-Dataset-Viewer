@@ -2146,6 +2146,15 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) = 4 := 
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
 
+/-- The zero effect-vector on Bool: probability 0 for every state. -/
+example : (0 : Perspectival.WantableGPT.V Bool) ∈
+          Perspectival.WantableGPT.effectVec Bool :=
+  Perspectival.WantableGPT.zero_in_effectVec Bool
+
+/-- The "sure" effect-vector on Bool: probability 1 for every state. -/
+example : (fun _ : Bool => (1 : ℝ)) ∈ Perspectival.WantableGPT.effectVec Bool :=
+  Perspectival.WantableGPT.one_in_effectVec Bool
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
