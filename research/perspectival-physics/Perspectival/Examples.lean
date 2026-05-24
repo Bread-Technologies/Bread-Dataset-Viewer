@@ -3429,6 +3429,19 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     LinearIndependent ℝ ρ :=
   Perspectival.Distinguish.perfect_distinguishable_imp_linear_independent ρ w
 
+/-- PerfectWitness.diag general: e i (ρ i) = 1. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ι : Type*} [DecidableEq ι] {ρ : ι → V}
+    (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) (i : ι) :
+    w.e i (ρ i) = 1 := w.diag i
+
+/-- PerfectWitness.offdiag general: e i (ρ j) = 0 for i ≠ j. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ι : Type*} [DecidableEq ι] {ρ : ι → V}
+    (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) {i j : ι}
+    (hij : i ≠ j) :
+    w.e i (ρ j) = 0 := w.offdiag hij
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
