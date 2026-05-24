@@ -875,5 +875,36 @@ class StrictConnectedAgency (G : GPT V) where
     ∀ R₁ R₂ : StrictReversible G, R₁ ∈ avail → R₂ ∈ avail →
       Nonempty (StrictReversiblePath G R₁ R₂)
 
+/-! ### R6 trivial agency (singleton {id}) -/
+
+/-- The trivial StrictConnectedAgency: only the identity is available. -/
+def trivialStrictAgency (G : GPT V) : StrictConnectedAgency G where
+  avail := { StrictReversible.id G }
+  id_avail := rfl
+  strict_paths R₁ R₂ h₁ h₂ := by
+    have e₁ : R₁ = StrictReversible.id G := h₁
+    have e₂ : R₂ = StrictReversible.id G := h₂
+    subst e₁; subst e₂
+    exact ⟨StrictReversiblePath.id G⟩
+
+/-- In the trivial strict agency, every Reachable pair is equal. -/
+theorem trivialStrictAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
+    (∃ R ∈ (trivialStrictAgency G).avail, R.toLin ρ₁ = ρ₂) ↔ ρ₁ = ρ₂ := by
+  refine ⟨?_, ?_⟩
+  · rintro ⟨R, hR, hRρ⟩
+    have eR : R = StrictReversible.id G := hR
+    subst eR
+    show ρ₁ = ρ₂
+    rw [← hRρ]
+    rfl
+  · rintro rfl
+    refine ⟨StrictReversible.id G, rfl, ?_⟩
+    show LinearMap.id ρ₁ = ρ₁
+    rfl
+
+/-- Trivial agency on Bool / Fin n / etc. is a valid StrictConnectedAgency. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) : StrictConnectedAgency G := trivialStrictAgency G
+
 end Continuity
 end Perspectival
