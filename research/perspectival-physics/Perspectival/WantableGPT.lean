@@ -506,6 +506,13 @@ theorem one_in_effectVec [Fintype W] : (fun _ : W => (1 : ℝ)) ∈ effectVec W 
   · show (0 : ℝ) ≤ 1; norm_num
   · show (1 : ℝ) ≤ 1; norm_num
 
+/-- Effect vectors are componentwise in [0, 1] — the effect-vector set
+is literally the unit hypercube `[0,1]^W` in `V W`. -/
+theorem effectVec_eq_hypercube :
+    effectVec W = { g : V W | ∀ w, g w ∈ Set.Icc (0 : ℝ) 1 } := by
+  ext g
+  exact Iff.rfl
+
 /-- For a non-trivial Wantable (cardinality ≥ 2), the WantableGPT has
 at least two perfectly distinguishable states. -/
 theorem exists_two_distinguishable [Fintype W]
