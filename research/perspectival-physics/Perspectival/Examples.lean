@@ -14181,6 +14181,59 @@ example (f g : Perspectival.WantableGPT.V Bool)
   -- hsum_f : f true + f false = 1, hsum_g : g true + g false = 1
   linarith
 
+/-! ### Identifying special states by their probabilities -/
+
+/-- uniformBool is the unique Bool state with f true = 1/2. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool)
+    (h_true : f true = 1/2) :
+    f = uniformBool := by
+  funext b
+  cases b with
+  | true => show f true = (1/2 : ℝ); exact h_true
+  | false =>
+    show f false = (1/2 : ℝ)
+    have hsum := hf.2
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
+    linarith
+
+/-- vertex true is the unique Bool state with f true = 1. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool)
+    (h_true : f true = 1) :
+    f = Perspectival.WantableGPT.vertex Bool true := by
+  funext b
+  cases b with
+  | true =>
+    show f true = (if true = true then (1 : ℝ) else 0)
+    simp; exact h_true
+  | false =>
+    show f false = (if true = false then (1 : ℝ) else 0)
+    simp
+    have hsum := hf.2
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
+    linarith
+
+/-- vertex false is the unique Bool state with f false = 1. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool)
+    (h_false : f false = 1) :
+    f = Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  cases b with
+  | true =>
+    show f true = (if false = true then (1 : ℝ) else 0)
+    simp
+    have hsum := hf.2
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton] at hsum
+    linarith
+  | false =>
+    show f false = (if false = false then (1 : ℝ) else 0)
+    simp; exact h_false
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
