@@ -3475,6 +3475,8 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     (hd : Perspectival.Hardy.Distinguishable G ρ₁ ρ₂) : False :=
   Perspectival.Distinguish.no_cloning_of_distinguishable hC h₁ h₂ h_sum hρ₁ hρ₂ hd
 
+-- (Tsirelson bound examples require importing CHSH module — Examples doesn't import it.)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
