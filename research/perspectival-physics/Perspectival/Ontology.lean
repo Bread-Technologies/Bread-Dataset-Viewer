@@ -111,6 +111,19 @@ def mk_fromSide (W : Type u) [Wantable W] (w : W) : Meeting W where
 @[simp] theorem mk_fromSide_side₂ {W : Type u} [Wantable W] (w : W) :
     (mk_fromSide W w).side₂ = Wantable.complement w := rfl
 
+/-- `mk_fromSide` and `side₁` exhibit a bijection `W ≃ Meeting W`.
+This formalizes the observation that meetings are no more (and no less)
+than wants — every want induces a unique meeting (with its complement),
+and every meeting is determined by either side. -/
+theorem mk_fromSide_side₁_inv (W : Type u) [Wantable W] (m : Meeting W) :
+    mk_fromSide W m.side₁ = m := by
+  rcases m with ⟨s₁, s₂, h⟩
+  show Meeting.mk s₁ (Wantable.complement s₁) rfl = ⟨s₁, s₂, h⟩
+  -- s₂ = complement s₁ by h.symm
+  have : s₂ = Wantable.complement s₁ := h.symm
+  subst this
+  rfl
+
 end Meeting
 
 /-- Collective form of Axiom III: reality is a set (= predicate) of meetings. -/
