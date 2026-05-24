@@ -43,6 +43,15 @@ example : (Wantable.complement (3 : ℤ)) = -3 := rfl
 example : Wantable.complement (Wantable.complement (5 : ℤ)) = 5 := by
   exact neg_neg 5
 
+/-- `Fin 2` as a Wantable: complement is the swap 0 ↔ 1. -/
+instance : Wantable (Fin 2) where
+  complement
+    | 0 => 1
+    | 1 => 0
+  complement_involutive
+    | 0 => rfl
+    | 1 => rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
