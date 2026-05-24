@@ -3466,6 +3466,15 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     v₁ ⊗ₜ[ℝ] v₂ + v₂ ⊗ₜ[ℝ] v₁ = 0 :=
   Perspectival.cross_terms_vanish hC h₁ h₂ h_sum
 
+/-- No-cloning from distinguishability (full chain). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {S : Set V} {C : V →ₗ[ℝ] V ⊗[ℝ] V}
+    (hC : Perspectival.IsLinearCloner S C)
+    {ρ₁ ρ₂ : V} (h₁ : ρ₁ ∈ S) (h₂ : ρ₂ ∈ S) (h_sum : ρ₁ + ρ₂ ∈ S)
+    (hρ₁ : ρ₁ ∈ G.states) (hρ₂ : ρ₂ ∈ G.states)
+    (hd : Perspectival.Hardy.Distinguishable G ρ₁ ρ₂) : False :=
+  Perspectival.Distinguish.no_cloning_of_distinguishable hC h₁ h₂ h_sum hρ₁ hρ₂ hd
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
