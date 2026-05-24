@@ -405,6 +405,11 @@ example : scaleHom (-1 : ℝˣ) = (PTrans.complement : PTrans ℝ) := by
 /-- The scaling PTrans for `1` is the identity PTrans on ℝ. -/
 example : scaleHom (1 : ℝˣ) = (1 : PTrans ℝ) := scaleHom.map_one
 
+/-- Composition is multiplication in ℝˣ. (Abstract form to avoid
+literal-coercion fiddliness with ℝˣ.) -/
+example (a b : ℝˣ) : scaleHom (a * b) = scaleHom a * scaleHom b :=
+  scaleHom.map_mul a b
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
