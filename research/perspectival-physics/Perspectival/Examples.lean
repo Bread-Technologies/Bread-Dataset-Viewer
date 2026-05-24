@@ -943,6 +943,12 @@ example {W : Type u} [Wantable W] (n : ℕ) :
     exact Wantable.complement_involutive w
   rw [h]; simp
 
+/-- complementEquiv squared on Bool: a concrete instance. -/
+example : (complementEquiv : Equiv.Perm Bool) ^ 2 = 1 := by
+  apply Equiv.ext
+  intro b
+  cases b <;> rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
