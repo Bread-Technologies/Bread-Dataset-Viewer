@@ -4687,5 +4687,32 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
       Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₃) :=
   Perspectival.Continuity.Reachable.preorder
 
+/-- `Reachable` is reflexive under any `HasConnectedAgency`
+(generic restatement). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.HasConnectedAgency G]
+    (ρ : V) : Perspectival.Continuity.Reachable (G := G) ρ ρ :=
+  Perspectival.Continuity.Reachable.refl ρ
+
+/-- `Reachable.trans` under `ClosedAgency` (generic restatement). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.ClosedAgency G]
+    {ρ₁ ρ₂ ρ₃ : V}
+    (h₁ : Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂)
+    (h₂ : Perspectival.Continuity.Reachable (G := G) ρ₂ ρ₃) :
+    Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₃ :=
+  Perspectival.Continuity.Reachable.trans h₁ h₂
+
+/-- `Reachable.apply_available`: if `ρ₁ ~> ρ₂` and `R` is available,
+then `ρ₁ ~> R.toLin ρ₂`. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.ClosedAgency G]
+    {ρ₁ ρ₂ : V}
+    (h : Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂)
+    (R : Perspectival.Continuity.Reversible G)
+    (hR : R ∈ Perspectival.Continuity.HasConnectedAgency.avail (G := G)) :
+    Perspectival.Continuity.Reachable (G := G) ρ₁ (R.toLin ρ₂) :=
+  Perspectival.Continuity.Reachable.apply_available h R hR
+
 end Examples
 end Perspectival
