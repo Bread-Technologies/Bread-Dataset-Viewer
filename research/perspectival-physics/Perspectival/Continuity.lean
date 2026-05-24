@@ -367,6 +367,22 @@ theorem StrictReversible.comp_inv {V : Type u} [AddCommGroup V] [Module ℝ V]
         ((LinearEquiv.ofBijective R.toLin R.isEquiv).symm v) = v
   exact (LinearEquiv.ofBijective R.toLin R.isEquiv).apply_symm_apply v
 
+/-- Composition of two StrictReversibles is a StrictReversible. -/
+def StrictReversible.comp {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] {G : GPT V}
+    (R₂ R₁ : StrictReversible G) : StrictReversible G where
+  toLin := R₂.toLin.comp R₁.toLin
+  continuous_toLin := R₂.continuous_toLin.comp R₁.continuous_toLin
+  preserves_states := fun ρ hρ => R₂.preserves_states _ (R₁.preserves_states _ hρ)
+  preserves_unit := by
+    have h₁ := R₁.preserves_unit
+    have h₂ := R₂.preserves_unit
+    calc G.unit.comp (R₂.toLin.comp R₁.toLin)
+        = (G.unit.comp R₂.toLin).comp R₁.toLin := by rfl
+      _ = G.unit.comp R₁.toLin := by rw [h₂]
+      _ = G.unit := h₁
+  isEquiv := R₂.isEquiv.comp R₁.isEquiv
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
