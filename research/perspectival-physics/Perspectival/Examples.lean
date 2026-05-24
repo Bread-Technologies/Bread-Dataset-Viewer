@@ -15127,6 +15127,47 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
     (f : Perspectival.WantableGPT.V W) (hf : f ∈ Perspectival.WantableGPT.states W) :
     Perspectival.WantableGPT.unitFn W f = 1 := hf.2
 
+/-! ### Effect ordering by Born rule on uniformBool -/
+
+/-- For uniformBool, both delta indicators give 1/2 (symmetric). -/
+example :
+    deltaIndicatorLin true uniformBool = deltaIndicatorLin false uniformBool := by
+  rw [deltaIndicatorLin_eq_apply, deltaIndicatorLin_eq_apply]
+  show uniformBool true = uniformBool false
+  rfl
+
+/-- For vertex true, the deltaIndicator true gives 1 (max). -/
+example :
+    deltaIndicatorLin true (Perspectival.WantableGPT.vertex Bool true) = 1 :=
+  deltaIndicatorLin_vertex_self true
+
+/-- For vertex false, the deltaIndicator true gives 0 (min). -/
+example :
+    deltaIndicatorLin true (Perspectival.WantableGPT.vertex Bool false) = 0 :=
+  deltaIndicatorLin_vertex_other true false (by decide)
+
+/-- For any α ∈ [0, 1], the convex-combo Bool state has deltaIndicator true = α. -/
+example (α : ℝ) :
+    deltaIndicatorLin true (α • Perspectival.WantableGPT.vertex Bool true
+                          + (1 - α) • Perspectival.WantableGPT.vertex Bool false)
+    = α := by
+  rw [map_add, map_smul, map_smul,
+      deltaIndicatorLin_vertex_self,
+      deltaIndicatorLin_vertex_other true false (by decide)]
+  show α * 1 + (1 - α) * 0 = α
+  ring
+
+/-- For any α ∈ [0, 1], the convex-combo Bool state has deltaIndicator false = 1 - α. -/
+example (α : ℝ) :
+    deltaIndicatorLin false (α • Perspectival.WantableGPT.vertex Bool true
+                           + (1 - α) • Perspectival.WantableGPT.vertex Bool false)
+    = 1 - α := by
+  rw [map_add, map_smul, map_smul,
+      deltaIndicatorLin_vertex_other false true (by decide),
+      deltaIndicatorLin_vertex_self]
+  show α * 0 + (1 - α) * 1 = 1 - α
+  ring
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
