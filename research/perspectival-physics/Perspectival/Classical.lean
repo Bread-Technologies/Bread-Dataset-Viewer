@@ -1447,5 +1447,34 @@ example
     ¬ Function.Injective R :=
   classical_vertex_collision_implies_not_injective (n := 4) R 1 3 (by decide) hcoll
 
+/-! ## Bijective ⇒ distinct vertex images (any n) -/
+
+/-- Bijective state-preserving R on V n sends distinct vertices
+to DISTINCT states. -/
+theorem classical_bijective_distinct_vertex_images
+    (R : V n →ₗ[ℝ] V n) (hinj : Function.Injective R)
+    (i j : Fin n) (h : i ≠ j) :
+    R (vertex n i) ≠ R (vertex n j) := by
+  intro hcoll
+  exact classical_vertex_collision_implies_not_injective (n := n) R i j h hcoll hinj
+
+/-- For n=2, bijective state-preserving R sends vertex 0 ≠ vertex 1 to
+distinct images. -/
+example
+    (R : V 2 →ₗ[ℝ] V 2) (hinj : Function.Injective R) :
+    R (vertex 2 0) ≠ R (vertex 2 1) :=
+  classical_bijective_distinct_vertex_images (n := 2) R hinj 0 1 (by decide)
+
+/-- For n=3, three pairwise distinct vertex images. -/
+example
+    (R : V 3 →ₗ[ℝ] V 3) (hinj : Function.Injective R) :
+    R (vertex 3 0) ≠ R (vertex 3 1)
+    ∧ R (vertex 3 0) ≠ R (vertex 3 2)
+    ∧ R (vertex 3 1) ≠ R (vertex 3 2) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact classical_bijective_distinct_vertex_images (n := 3) R hinj 0 1 (by decide)
+  · exact classical_bijective_distinct_vertex_images (n := 3) R hinj 0 2 (by decide)
+  · exact classical_bijective_distinct_vertex_images (n := 3) R hinj 1 2 (by decide)
+
 end Classical
 end Perspectival
