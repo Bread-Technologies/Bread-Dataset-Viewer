@@ -4787,5 +4787,24 @@ example (g₁ f₁ g₂ f₂ : PTrans Bool) :
     PTrans.prodMap g₁ g₂ * PTrans.prodMap f₁ f₂ :=
   PTrans.prodMap_mul g₁ f₁ g₂ f₂
 
+/-- `PTrans.complement_inv`: complement is its own inverse in PTrans. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W)⁻¹ = PTrans.complement :=
+  PTrans.complement_inv
+
+/-- `actMeeting_complement_sq`: applying complement twice via actMeeting
+returns the original meeting (involutive action on meetings). -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    PTrans.actMeeting (PTrans.complement : PTrans W)
+      (PTrans.actMeeting PTrans.complement m) = m :=
+  PTrans.actMeeting_complement_sq m
+
+/-- `actMeeting_comp`: action of composition factors through individual
+actions. -/
+example {W : Type u} [Wantable W] (g f : PTrans W) (m : Meeting W) :
+    PTrans.actMeeting (g * f) m =
+      PTrans.actMeeting g (PTrans.actMeeting f m) :=
+  PTrans.actMeeting_comp g f m
+
 end Examples
 end Perspectival
