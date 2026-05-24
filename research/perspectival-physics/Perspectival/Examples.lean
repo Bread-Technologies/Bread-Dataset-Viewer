@@ -2649,6 +2649,20 @@ example : Perspectival.Hardy.Distinguishable
     (Perspectival.Classical.vertex 3 1) :=
   Perspectival.Classical.vertices_distinguishable 3 0 1 (by decide)
 
+/-- Distinct vertex pairs in Classical 4 are distinguishable. -/
+example : Perspectival.Hardy.Distinguishable
+    (Perspectival.Classical.gpt 4)
+    (Perspectival.Classical.vertex 4 1)
+    (Perspectival.Classical.vertex 4 3) :=
+  Perspectival.Classical.vertices_distinguishable 4 1 3 (by decide)
+
+/-- The classical broadcaster sends a vertex to its diagonal tensor. -/
+example (i : Fin 3) :
+    Perspectival.NoBroadcasting.classicalBroadcaster 3
+      (Perspectival.Classical.vertex 3 i)
+    = Perspectival.Classical.vertex 3 i ⊗ₜ[ℝ] Perspectival.Classical.vertex 3 i :=
+  Perspectival.NoBroadcasting.classicalBroadcaster_vertex 3 i
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
