@@ -33,6 +33,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | invFun uniqueness from toFun | `Transformations.lean :: invFun_unique` | ✓ |
 | PTrans extensionality | `Transformations.lean :: ext` | ✓ |
 | Action of PTrans on Meeting is functorial | `Transformations.lean :: actMeeting_id, actMeeting_comp` | ✓ |
+| `actMeeting PTrans.complement = Meeting.swap` (PTrans/swap identification) | `Transformations.lean :: actMeeting_complement` | ✓ |
+| PTrans action on Meeting is faithful | `Transformations.lean :: actMeeting_faithful` | ✓ |
 | Disjoint-union Wantable structure (no cross-system meetings) | `Composition.lean :: instWantableSum, Meeting.sum_no_cross` | ✓ |
 | Componentwise PTrans on disjoint unions | `Composition.lean :: PTrans.sumMap` | ✓ |
 | Spacelike pair of binary perspectival observables → CHSH tuple | `CHSH.lean :: SpacelikePair, toCHSHTuple` | ✓ |
