@@ -5503,5 +5503,27 @@ example {W : Type u} [Wantable W] [Fintype W]
       = Perspectival.WantableGPT.unitFn W f :=
   Perspectival.WantableGPT.unitFn_complementAction W f
 
+/-- Generic: WantableGPT effects are inner-product functionals with
+[0,1]-valued coefficient vectors. -/
+example {W : Type u} [Wantable W] [Fintype W] :
+    Perspectival.WantableGPT.effects W
+      = Perspectival.WantableGPT.innerLin W ''
+          Perspectival.WantableGPT.effectVec W := rfl
+
+/-- Generic: the WantableGPT's unit is exactly `unitFn`. -/
+example {W : Type u} [Wantable W] [Fintype W] :
+    (Perspectival.WantableGPT.gpt W).unit = Perspectival.WantableGPT.unitFn W :=
+  rfl
+
+/-- Generic: the WantableGPT's states are exactly the simplex. -/
+example {W : Type u} [Wantable W] [Fintype W] :
+    (Perspectival.WantableGPT.gpt W).states
+      = Perspectival.WantableGPT.states W := rfl
+
+/-- Generic: the WantableGPT's effects equal `effects`. -/
+example {W : Type u} [Wantable W] [Fintype W] :
+    (Perspectival.WantableGPT.gpt W).effects
+      = Perspectival.WantableGPT.effects W := rfl
+
 end Examples
 end Perspectival
