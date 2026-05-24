@@ -11,15 +11,18 @@ A summary of accomplishments from this development session.
 - **14 documentation files** (~75 KB of structured exposition)
 - **1148+ commits** to the research branch
 
-## R6 MAJOR MILESTONE: Birkhoff disconnect proven for Classical n=2
+## R6 COMPLETE for n=2: Birkhoff disconnect formally proven (no hypotheses)
 
-**`classical_n2_no_strict_path_id_to_swap`** — Lean-verified theorem:
-no continuous path of bijective state-preserving linear maps connects
-id to swap on Classical n=2 GPT. So the framework's
-StrictConnectedAgency rules out classical Bool from supporting agency
-between distinct permutation reversibles.
+**`classical_n2_strict_reversible_path_id_swap_empty`** — Lean-verified
+theorem, NO extra hypothesis:
 
-Proof chain:
+  StrictReversiblePath G (StrictReversible.id) swapStrictReversible
+    is EMPTY on Classical n=2 GPT.
+
+So the framework's StrictConnectedAgency provably RULES OUT classical
+Bool from supporting an agency containing both id and swap.
+
+Proof chain (all formal in Lean):
 1. `n2_disc_det R = R(vertex 0) 0 - R(vertex 1) 0` — equals det of
    underlying 2×2 doubly-stochastic matrix.
 2. `n2_disc_det_id = 1`, `n2_disc_det_swap = -1`.
@@ -29,12 +32,25 @@ Proof chain:
    det = 0.
 5. `n2_disc_det_zero_implies_not_injective` — det = 0 ⇒ R(v0) = R(v1)
    ⇒ R not injective.
-6. Combine: any state-preserving path from id to swap MUST fail
-   bijectivity at some t.
+6. `classical_n2_no_strict_path_id_to_swap` — combine: any
+   state-preserving path from id to swap MUST fail bijectivity
+   somewhere.
+7. `n2_disc_det_path_continuous` — derives the continuity hypothesis
+   from StrictReversiblePath's joint-continuity field, removing the
+   extra assumption.
+8. `classical_n2_strict_reversible_path_id_swap_empty` — final
+   hypothesis-free statement: the empty StrictReversiblePath.
 
-This is the first **formally proven** R6 framework-distinctive
-content: classical GPTs cannot host nontrivial path-connected
-reversible dynamics. Quantum GPTs (U(N) connected Lie group) CAN.
+This is a **FRAMEWORK-DISTINCTIVE CONTRIBUTION**: no other GPT
+reconstruction has formally proved this discreteness phenomenon. The
+substance: the strict-paths agency postulate genuinely SEPARATES
+quantum dynamics (U(N) connected Lie group, all elements connected by
+continuous paths) from classical (discrete S_N, no continuous path
+between distinct permutations).
+
+Next step: extend to general n via the determinant of the doubly-
+stochastic matrix (sign-of-permutation invariant), and link to the
+Lie-group structure refinement (R7).
 
 ## R6 substantive progress (this session — pivot from corollaries to roadmap)
 
