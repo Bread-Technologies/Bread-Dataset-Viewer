@@ -8447,3 +8447,27 @@ example (f : Perspectival.WantableGPT.V (Fin 4 × Fin 4)) :
         • productState (Perspectival.WantableGPT.vertex (Fin 4) p.1)
                        (Perspectival.WantableGPT.vertex (Fin 4) p.2) :=
   WantableGPT_classical_separability f
+
+/-- Born-rule for productState: proj(w₁, w₂) of productState f₁ f₂
+gives f₁ w₁ * f₂ w₂. -/
+theorem proj_productState
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w₁ : W₁) (w₂ : W₂) (f₁ : Perspectival.WantableGPT.V W₁)
+    (f₂ : Perspectival.WantableGPT.V W₂) :
+    Perspectival.WantableGPT.proj (W₁ × W₂) (w₁, w₂)
+      (productState f₁ f₂) = f₁ w₁ * f₂ w₂ := rfl
+
+/-- Concrete: proj (true, false) of productState f₁ f₂ on Bool×Bool. -/
+example (f₁ f₂ : Perspectival.WantableGPT.V Bool) :
+    Perspectival.WantableGPT.proj (Bool × Bool) (true, false)
+      (productState f₁ f₂) = f₁ true * f₂ false :=
+  proj_productState true false f₁ f₂
+
+/-- Concrete: proj (true, true) of productState (vertex true) (vertex true) = 1. -/
+example : Perspectival.WantableGPT.proj (Bool × Bool) (true, true)
+            (productState (Perspectival.WantableGPT.vertex Bool true)
+                          (Perspectival.WantableGPT.vertex Bool true)) = 1 := by
+  rw [proj_productState]
+  show (if true = true then (1 : ℝ) else 0) * (if true = true then 1 else 0) = 1
+  simp
