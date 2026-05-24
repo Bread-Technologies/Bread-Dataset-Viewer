@@ -236,6 +236,19 @@ instance {A : Type u} {W : Type u} [Wantable W] : Wantable (A → W) where
     funext a
     exact Wantable.complement_involutive (f a)
 
+/-- Lists over a Wantable: `List W` lifts the complement pointwise via
+`List.map`. -/
+instance {W : Type u} [Wantable W] : Wantable (List W) where
+  complement := List.map Wantable.complement
+  complement_involutive l := by
+    induction l with
+    | nil => rfl
+    | cons a as ih =>
+      show List.map Wantable.complement (List.map Wantable.complement (a :: as)) = a :: as
+      simp [List.map, Wantable.complement_involutive, ih]
+
+example : Wantable.complement ([true, false, true] : List Bool) = [false, true, false] := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
