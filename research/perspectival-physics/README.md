@@ -12,11 +12,39 @@ push target.
 
 ## Layout
 
-- `Perspectival/Ontology.lean` — axioms I–IV encoded as Lean 4 types.
-- `Perspectival/Transformations.lean` — perspectival transformations,
-  their group laws, and action on meetings.
-- `STATUS.md` — calibrated catalog of verified / partial / argued /
-  stuck / open. **Read this before reading anything else here.**
+**Lean code** (`Perspectival/`):
+- `Ontology.lean` — axioms I–IV encoded as Lean 4 types.
+- `Transformations.lean` — PTrans as a Group, MulAction on meetings.
+- `Composition.lean` — disjoint-union, no-cross-system meetings.
+- `CHSH.lean` — Tsirelson 2√2 via Mathlib's CHSH module.
+- `GPT.lean` — generalized probabilistic theory data + Monoid on
+  self-Transforms.
+- `Hardy.lean` — Hardy's 5 axioms as predicates (3/5 derivable).
+- `NoCloning.lean` — linear-algebra no-cloning theorem.
+- `NoBroadcasting.lean` — classical broadcaster (quantum case open).
+- `Classical.lean` — concrete n-outcome classical GPT instance.
+- `Continuity.lean` — libertarian agency → Hardy Axiom 5.
+- `Distinguish.lean` — distinguishability ↔ linear independence.
+- `WantableGPT.lean` — bridge: Wantable → GPT, with injective MonoidHom.
+- `Examples.lean` — worked end-to-end demonstrations.
+
+**Documentation**:
+- `STATUS.md` — calibrated per-theorem catalog. **Read first.**
+- `FINDINGS.md` — honest commentary, limitations, open targets.
+- `CONCLUSIONS.md` — external-reader summary.
+- `FAQ.md` — concrete physics questions answered.
+- `GLOSSARY.md` — terminology with Lean cross-references.
+- `DEPS.md` — module dependency map.
+- `PREDICTIONS.md` — empirical claims with calibration.
+- `LINEAGE.md` — philosophical references.
+- `PAPER_DRAFT.md` — publication-target writeup.
+- `ROADMAP.md` — future research steps.
+- `TIER2_ATTEMPT.md` — negative result on three generations.
+- `TIER3_ATTEMPT.md` — negative result on cosmological constant.
+- `TIER4_ATTEMPT.md` — discussion of consciousness dissolution.
+- `build.sh` — reproducibility script.
+
+**Project config**:
 - `lakefile.toml` — Lake project; depends on Mathlib (git, v4.29.1).
 - `lean-toolchain` — Lean 4.29.1.
 
