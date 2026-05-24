@@ -422,6 +422,9 @@ theorem Reachable.symm_of_inv_avail [HasConnectedAgency G]
   rw [← hRρ]
   exact hSinv ρ₁
 
+-- Reachable.refl_symm_trans is defined later in the file, after ClosedAgency
+-- (forward reference issue resolved by relocation).
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
@@ -478,6 +481,20 @@ theorem Reachable.trans [ClosedAgency G] {ρ₁ ρ₂ ρ₃ : V}
   refine ⟨Reversible.comp R₂ R₁, ClosedAgency.comp_avail R₁ R₂ hR₁_avail hR₂_avail, ?_⟩
   show R₂.toLin (R₁.toLin ρ₁) = ρ₃
   rw [hR₁eq, hR₂eq]
+
+/-- Under both `ClosedAgency` and the per-element inverse-availability
+hypothesis, `Reachable` is an equivalence relation (refl + symm + trans). -/
+theorem Reachable.refl_symm_trans [ClosedAgency G]
+    (h_inv : ∀ R : Reversible G, R ∈ HasConnectedAgency.avail (G := G) →
+      ∃ S : Reversible G, S ∈ HasConnectedAgency.avail (G := G) ∧
+        ∀ v : V, S.toLin (R.toLin v) = v) :
+    (∀ ρ : V, Reachable (G := G) ρ ρ) ∧
+    (∀ ρ₁ ρ₂ : V, Reachable (G := G) ρ₁ ρ₂ → Reachable (G := G) ρ₂ ρ₁) ∧
+    (∀ ρ₁ ρ₂ ρ₃ : V, Reachable (G := G) ρ₁ ρ₂ → Reachable (G := G) ρ₂ ρ₃ →
+      Reachable (G := G) ρ₁ ρ₃) :=
+  ⟨Reachable.refl,
+   fun _ _ h => Reachable.symm_of_inv_avail h_inv h,
+   fun _ _ _ h₁ h₂ => Reachable.trans h₁ h₂⟩
 
 /-- `Reachable` under `ClosedAgency` is preserved under all available
 transformations: if `ρ₁ ~> ρ₂` and `R` is available, then
