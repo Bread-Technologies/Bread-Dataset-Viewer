@@ -66,6 +66,19 @@ instance : Wantable Empty where
   complement := fun e => e.elim
   complement_involutive := fun e => e.elim
 
+/-! ## Examples of the product-Wantable structure -/
+
+/-- On `Bool × Bool`, complement is componentwise `not`. -/
+example : (Wantable.complement ((true, true) : Bool × Bool)) = (false, false) := rfl
+example : (Wantable.complement ((true, false) : Bool × Bool)) = (false, true) := rfl
+
+/-- A meeting on `Bool × Bool`: the pair (true, false) meets its complement
+(false, true). -/
+def boolBoolMeeting : Meeting (Bool × Bool) where
+  side₁ := (true, false)
+  side₂ := (false, true)
+  complementary := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
