@@ -172,6 +172,9 @@ instance : MulAction (PTrans W) (Meeting W) where
   one_smul := actMeeting_id
   mul_smul := actMeeting_comp
 
+/-- `PTrans W` is inhabited by the identity. -/
+instance : Inhabited (PTrans W) := ⟨1⟩
+
 end PTrans
 
 end Perspectival
