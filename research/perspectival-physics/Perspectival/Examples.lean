@@ -7201,5 +7201,33 @@ example : uniformState Bool = uniformBool := by
   have : (Fintype.card Bool : ℝ) = 2 := by norm_cast
   rw [this]
 
+/-- New theorem: the uniform state is invariant under any PTrans action
+(every PTrans permutes coords; the uniform state has the same value on
+every coord). -/
+theorem uniformState_transformAction_invariant
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W]
+    (φ : PTrans W) :
+    Perspectival.WantableGPT.transformAction W φ (uniformState W)
+      = uniformState W := by
+  funext w
+  show uniformState W (φ.invFun w) = uniformState W w
+  rfl
+
+/-- Concrete: uniformState on Bool is invariant under complementPTrans. -/
+example : Perspectival.WantableGPT.transformAction Bool
+            (Perspectival.WantableGPT.complementPTrans Bool)
+            (uniformState Bool)
+        = uniformState Bool :=
+  uniformState_transformAction_invariant _
+
+/-- New theorem: the uniform state is invariant under complementAction. -/
+theorem uniformState_complement_invariant
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W] :
+    Perspectival.WantableGPT.complementAction W (uniformState W)
+      = uniformState W := by
+  funext w
+  show uniformState W (Wantable.complement w) = uniformState W w
+  rfl
+
 end Examples
 end Perspectival
