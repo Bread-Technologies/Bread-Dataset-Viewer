@@ -77,6 +77,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | `ContinuousPTrans` structure (PTrans with continuous toFun); id, complement, comp | `Examples.lean :: ContinuousPTrans` | ✓ |
 | Wantable instances on ℝ (Wantable + ContinuousWantable) | `Examples.lean` | ✓ |
 | `WantableEquiv` is a groupoid (refl/symm/trans, identity laws) | `Examples.lean :: WantableEquiv.{refl, symm, trans, refl_trans, trans_refl}` | ✓ |
+| `scaleByPTrans` — scalings on ℝ as PTrans (commute with negation) | `Examples.lean :: scaleByPTrans` | ✓ |
+| **Lie-group embedding** `ℝˣ ↪ PTrans ℝ` as MonoidHom (injective) | `Examples.lean :: scaleHom, scaleHom_injective` | ✓ |
 | Self-Transforms form a Monoid | `GPT.lean (instance)` | ✓ |
 | Transform composition (`Transform.comp`) | `GPT.lean :: Transform.comp` | ✓ |
 | Reachable is reflexive | `Continuity.lean :: Reachable.refl` | ✓ |
