@@ -5358,5 +5358,26 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
       (Perspectival.WantableGPT.vertex W)).card = Fintype.card W :=
   Perspectival.WantableGPT.vertex_image_card W
 
+/-- Generic `vertex_distinguishability_set`: vertex set is a Hardy
+distinguishability set. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.Hardy.DistinguishabilitySet
+      (Perspectival.WantableGPT.gpt W)
+      ((Finset.univ : Finset W).image (Perspectival.WantableGPT.vertex W)) :=
+  Perspectival.WantableGPT.vertex_distinguishability_set W
+
+/-- Generic `state_is_convex_combination_of_vertices`: every state
+decomposes into a vertex combination. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W)
+    (hf : f ∈ Perspectival.WantableGPT.states W) :
+    f = ∑ w, f w • Perspectival.WantableGPT.vertex W w :=
+  Perspectival.WantableGPT.state_is_convex_combination_of_vertices W f hf
+
+/-- Generic `proj_in_effects`: each projection is a valid effect. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.proj W w ∈ Perspectival.WantableGPT.effects W :=
+  Perspectival.WantableGPT.proj_in_effects W w
+
 end Examples
 end Perspectival
