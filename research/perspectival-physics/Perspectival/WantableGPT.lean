@@ -418,6 +418,19 @@ def complementPTrans : PTrans W where
   right_inv := Wantable.complement_involutive
   resp_complement := fun _ => rfl
 
+/-- `complementPTrans` is an involution in the Group `PTrans W`. -/
+theorem complementPTrans_sq :
+    (complementPTrans W) * (complementPTrans W) = (1 : PTrans W) := by
+  apply PTrans.ext
+  intro w
+  show Wantable.complement (Wantable.complement w) = w
+  exact Wantable.complement_involutive w
+
+/-- `complementPTrans` is its own inverse in the group. -/
+theorem complementPTrans_inv :
+    (complementPTrans W)⁻¹ = complementPTrans W :=
+  inv_eq_of_mul_eq_one_right (complementPTrans_sq W)
+
 /-- The complement-action GPT-transformation is the image of the
 complement-as-PTrans under `fromPTrans` (at the level of underlying
 linear maps). The two routes to "Wantable complement acts on the GPT"
