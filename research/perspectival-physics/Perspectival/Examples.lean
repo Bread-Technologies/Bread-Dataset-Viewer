@@ -9385,3 +9385,18 @@ example : Perspectival.WantableGPT.vertex (Fin 2) 1
             (1 : Fin 2) = 1 := by
   show (if (1 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
   simp
+
+/-- The Bool vertex states form a 2-element basis for V Bool. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = 2 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- The Fin 3 vertex states form a 3-element basis. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) = 3 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- The Fin 4 vertex states form a 4-element basis. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) = 4 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
