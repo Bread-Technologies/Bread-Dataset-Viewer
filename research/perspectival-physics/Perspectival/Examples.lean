@@ -8115,3 +8115,22 @@ theorem antiDiagonalIndicatorLin_on_uniformBoolBool :
             antiDiagonalIndicator (false, false) * uniformState (Bool × Bool) (false, false))) = 1/2
   show (0 : ℝ) * (1 / 4) + (1 * (1 / 4) + (1 * (1 / 4) + 0 * (1 / 4))) = 1/2
   norm_num
+
+/-- New: diagonalIndicatorLin + antiDiagonalIndicatorLin = unitFn. -/
+theorem diagonalIndicatorLin_add_antiDiagonalIndicatorLin :
+    diagonalIndicatorLin + antiDiagonalIndicatorLin
+      = Perspectival.WantableGPT.unitFn (Bool × Bool) := by
+  apply LinearMap.ext
+  intro f
+  show diagonalIndicatorLin f + antiDiagonalIndicatorLin f
+     = Perspectival.WantableGPT.unitFn (Bool × Bool) f
+  show ∑ p, diagonalIndicator p * f p + ∑ p, antiDiagonalIndicator p * f p
+     = ∑ p, f p
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro p _
+  show diagonalIndicator p * f p + antiDiagonalIndicator p * f p = f p
+  have h : diagonalIndicator p + antiDiagonalIndicator p = 1 := by
+    have := congr_fun diagonalIndicator_add_antiDiagonalIndicator p
+    simpa using this
+  rw [← add_mul, h, one_mul]
