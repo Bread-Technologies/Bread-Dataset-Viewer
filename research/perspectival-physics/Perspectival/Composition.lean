@@ -191,6 +191,8 @@ def PTrans.prodMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   cases p
   rfl
 
+-- sumMap_one_one moved below the sumMap definition
+
 /-- Swap on a product meeting equals the prodMk of the component swaps. -/
 theorem Meeting.prod_swap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (m : Meeting (W₁ × W₂)) :
@@ -225,5 +227,13 @@ def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     intro w; cases w with
     | inl w => simp [Wantable.complement, f₁.resp_complement]
     | inr w => simp [Wantable.complement, f₂.resp_complement]
+
+/-- `sumMap` of identities is the identity. -/
+@[simp] theorem PTrans.sumMap_one_one (W₁ W₂ : Type u)
+    [Wantable W₁] [Wantable W₂] :
+    PTrans.sumMap (1 : PTrans W₁) (1 : PTrans W₂) = 1 := by
+  apply PTrans.ext
+  intro w
+  cases w <;> rfl
 
 end Perspectival
