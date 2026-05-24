@@ -1260,5 +1260,30 @@ strict reversibles ARE path-connected. This is the framework-
 distinctive content: R6 (StrictConnectedAgency) is impossible on
 classical GPTs but natural on quantum-like GPTs. -/
 
+/-! ## n=3: harder discreteness, requires full 3×3 determinant
+
+For n=3, a simple first-coordinate difference does NOT distinguish
+id (det=1) from cyclicShift (det=1, both are even permutations).
+Distinguishing requires the full 3×3 determinant, which is the
+sign-of-permutation invariant: even permutations have det = 1, odd
+have det = -1.
+
+For Classical n=3 GPT:
+- id is even (det=1)
+- (01) swap is odd (det=-1)
+- (012) cyclic = (01)(12) is even (det=1)
+- (021) cyclic = (02)(12) is even (det=1)
+- (12) swap is odd (det=-1)
+- (02) swap is odd (det=-1)
+
+So the 3! = 6 permutation matrices split into 3 even + 3 odd by det.
+The even and odd cosets are SEPARATE connected components in the
+bijective doubly-stochastic Birkhoff polytope.
+
+A full Lean formalization would use `Matrix.det` of a 3×3 matrix.
+For now, recording the structural prediction without a separate
+Lean theorem (since the n=2 case already established the
+framework's R6 framework-distinctive content). -/
+
 end Classical
 end Perspectival
