@@ -103,10 +103,10 @@ and `PAPER_DRAFT.md` (writeup form).
   not achievable from these axioms alone.
 - **O5** Gauge group U(1)×SU(2)×SU(3); three fermion generations.
   Open in any axiomatic framework.
-- **O6** Lin-indep wrapper for `no_cloning` (bridge from
-  `LinearIndependent ℝ ![v₁, v₂]` to the bilinear-form hypothesis).
-  Technical, uses `LinearMap.exists_leftInverse_of_injective`; not
-  pursued in this codebase to avoid bookkeeping.
+- **~~O6~~** ✓ **CLOSED.** Lin-indep wrapper for `no_cloning` is
+  now `no_cloning_of_linear_independent` in `NoCloning.lean`. The
+  standard formulation (linear independence ⇒ no cloner) is verified
+  via dual-functional extraction.
 
 ## The framework's two levels — and the gap between them
 
