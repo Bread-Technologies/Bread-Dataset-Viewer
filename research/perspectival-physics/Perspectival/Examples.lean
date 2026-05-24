@@ -4611,5 +4611,23 @@ example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Bool × Bool),
       (Perspectival.WantableGPT.gpt (Bool × Bool)) ρ₁ ρ₂ :=
   Perspectival.WantableGPT.exists_two_distinguishable (Bool × Bool) (by decide)
 
+/-- Monoid identity law `1 * T = T` for Transform on WantableGPT Bool. -/
+example (T : Perspectival.GPT.Transform
+              (Perspectival.WantableGPT.gpt Bool)
+              (Perspectival.WantableGPT.gpt Bool)) :
+    1 * T = T := one_mul T
+
+/-- Monoid identity law `T * 1 = T` for Transform on WantableGPT Bool. -/
+example (T : Perspectival.GPT.Transform
+              (Perspectival.WantableGPT.gpt Bool)
+              (Perspectival.WantableGPT.gpt Bool)) :
+    T * 1 = T := mul_one T
+
+/-- Monoid associativity for Transform on WantableGPT Bool. -/
+example (T₁ T₂ T₃ : Perspectival.GPT.Transform
+                     (Perspectival.WantableGPT.gpt Bool)
+                     (Perspectival.WantableGPT.gpt Bool)) :
+    (T₁ * T₂) * T₃ = T₁ * (T₂ * T₃) := mul_assoc T₁ T₂ T₃
+
 end Examples
 end Perspectival
