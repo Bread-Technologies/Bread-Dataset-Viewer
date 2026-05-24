@@ -997,5 +997,26 @@ instance (priority := 100) StrictConnectedAgency.ofGroupClosedAgency
     obtain ⟨p⟩ := GCA.group_closed_paths R₁ R₂ h₁ h₂
     exact ⟨p.toStrictReversiblePath⟩
 
+/-- The trivial GroupClosedAgency with avail = {StrictReversible.id G}. -/
+def trivialGroupClosedAgency {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] (G : GPT V) : GroupClosedAgency G where
+  avail := { StrictReversible.id G }
+  id_avail := rfl
+  group_closed_paths R₁ R₂ h₁ h₂ := by
+    have e₁ : R₁ = StrictReversible.id G := h₁
+    have e₂ : R₂ = StrictReversible.id G := h₂
+    subst e₁; subst e₂
+    refine ⟨{
+      toStrictReversiblePath := StrictReversiblePath.id G
+      composition_in_strict := ⟨StrictReversible.id G, by
+        apply LinearMap.ext
+        intro v
+        rfl⟩
+    }⟩
+
+/-- The trivial GroupClosedAgency exists for ANY GPT. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) : GroupClosedAgency G := trivialGroupClosedAgency G
+
 end Continuity
 end Perspectival
