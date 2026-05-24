@@ -215,6 +215,30 @@ example : (PTrans.complement : PTrans (Fin 3)) = 1 := by
   intro i
   rfl
 
+/-- In `Wantable (Fin 3)` (with complement := id), every element is
+self-complementary. -/
+example (i : Fin 3) : SelfComplementary i := rfl
+
+/-- In `Wantable Bool` (with complement := not), no element is
+self-complementary. -/
+example : ¬ SelfComplementary (true : Bool) := by
+  intro h
+  exact Bool.false_ne_true h
+example : ¬ SelfComplementary (false : Bool) := by
+  intro h
+  exact Bool.false_ne_true h.symm
+
+/-- In `Wantable ℤ` (with complement := neg), zero is the unique
+self-complementary element. -/
+example : SelfComplementary (0 : ℤ) := by show -(0 : ℤ) = 0; ring
+example : ¬ SelfComplementary (5 : ℤ) := by
+  intro h
+  have : (-(5 : ℤ)) = 5 := h
+  norm_num at this
+example (n : ℤ) (h : SelfComplementary n) : n = 0 := by
+  have : -n = n := h
+  linarith
+
 /-- The `Option` type lifts a Wantable structure: `none` is its own
 complement, `some w` complements to `some (complement w)`. -/
 instance {W : Type u} [Wantable W] : Wantable (Option W) where
