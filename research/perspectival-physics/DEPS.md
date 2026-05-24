@@ -140,11 +140,16 @@ deepened:
   Centralizer of complement), `actMeeting_complement = swap`,
   `actMeeting_faithful`, `actReality` (PTrans action on Reality with full
   lattice-operation preservation).
-- `WantableGPT.lean` adds the **no-go theorem**
-  `wantableGPT_is_classical` (`N = K = |W|`), `vertexBasis`,
+- `WantableGPT.lean` adds the **triple no-go theorem**
+  (`wantableGPT_is_classical`, `wantableGPT_not_quantum`,
+  `wantableGPT_not_realQM`, `wantableGPT_not_quaternionicQM`, bundled
+  as `wantableGPT_classical_dichotomy`); `vertexBasis`,
   `finrank_V_eq_card`, composition-dimension theorems
-  `finrank_V_prod_eq_mul` and `finrank_V_sum_eq_add`,
-  `exists_two_distinguishable`.
+  `finrank_V_prod_eq_mul` and `finrank_V_sum_eq_add`;
+  `exists_two_distinguishable`, `wantableGPT_classical_signature`,
+  `vertex_perfectly_distinguishable`, `vertex_injective`,
+  `vertex_image_card`, `zero_in_effectVec`, `one_in_effectVec`,
+  `effectVec_eq_hypercube`.
 - `Continuity.lean` adds `Reversible.comp`, `ClosedAgency` (closure
   refinement), `Reachable.trans`, `Reachable.apply_available`,
   `path_via_affineLine`, `singletonAgency`/`pairAgency`,
