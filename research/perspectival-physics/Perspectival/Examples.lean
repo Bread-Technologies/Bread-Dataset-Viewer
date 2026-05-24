@@ -383,6 +383,10 @@ example : PTrans.prodMap (PTrans.complement : PTrans Bool) (1 : PTrans Bool) ≠
   have : false = true := (Prod.mk.injEq _ _ _ _).mp heq |>.1
   exact Bool.false_ne_true this
 
+/-- PTrans.complement on Bool × Bool acts on both components. -/
+example : (PTrans.complement : PTrans (Bool × Bool)).toFun (true, true) = (false, false) :=
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
