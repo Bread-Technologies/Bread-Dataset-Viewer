@@ -267,6 +267,21 @@ class ContinuousWantable (W : Type u) [Wantable W] [TopologicalSpace W] : Prop w
 instance : ContinuousWantable ℤ where
   complement_continuous := continuous_neg
 
+/-- `ℝ` with `complement := Neg.neg` is a Wantable. -/
+instance : Wantable ℝ where
+  complement := Neg.neg
+  complement_involutive := neg_neg
+
+/-- `ℝ` with its standard topology is a continuous Wantable. The
+"continuous Wantable" structure on `ℝ` gives the framework an
+infinite-dimensional setting potentially suitable for non-classical
+extension. -/
+instance : ContinuousWantable ℝ where
+  complement_continuous := continuous_neg
+
+example : (Wantable.complement (3.14 : ℝ)) = -3.14 := rfl
+example (x : ℝ) : Wantable.complement (Wantable.complement x) = x := neg_neg x
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
