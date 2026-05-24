@@ -839,6 +839,16 @@ example : (complementEquiv : Equiv.Perm ℤ) ≠ 1 := by
   have : (-1 : ℤ) = 1 := hap
   linarith
 
+/-- complementEquiv always has order dividing 2. -/
+example {W : Type u} [Wantable W] :
+    (complementEquiv : Equiv.Perm W) ^ 2 = 1 := by
+  show (complementEquiv : Equiv.Perm W) * complementEquiv * 1 = 1
+  rw [mul_one]
+  apply Equiv.ext
+  intro w
+  show Wantable.complement (Wantable.complement w) = w
+  exact Wantable.complement_involutive w
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
