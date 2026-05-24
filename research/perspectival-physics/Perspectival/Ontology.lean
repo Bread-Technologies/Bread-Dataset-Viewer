@@ -233,4 +233,18 @@ dynamical/categorical notion is itself open work. -/
 
 def Pattern (W : Type u) [Wantable W] : Type _ := Reality W → Prop
 
+/-- The trivially-true Pattern: every Reality satisfies it. -/
+def Pattern.trivial (W : Type u) [Wantable W] : Pattern W := fun _ => True
+
+/-- The trivially-false Pattern: no Reality satisfies it. -/
+def Pattern.empty (W : Type u) [Wantable W] : Pattern W := fun _ => False
+
+/-- Patterns close under conjunction (intersection of satisfied Realities). -/
+def Pattern.and {W : Type u} [Wantable W] (P Q : Pattern W) : Pattern W :=
+  fun R => P R ∧ Q R
+
+/-- Patterns close under disjunction. -/
+def Pattern.or {W : Type u} [Wantable W] (P Q : Pattern W) : Pattern W :=
+  fun R => P R ∨ Q R
+
 end Perspectival
