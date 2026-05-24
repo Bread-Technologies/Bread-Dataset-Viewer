@@ -2752,6 +2752,13 @@ example : (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, t
 example : Wantable.complement (7 : ℤ) - Wantable.complement (-3) = -10 := by
   show -7 - 3 = -10; ring
 
+/-- ℤ-Wantable: complement(2) * complement(5) = 10 (sign cancellation). -/
+example : Wantable.complement (2 : ℤ) * Wantable.complement (5 : ℤ) = 10 := by
+  show -2 * -5 = 10; ring
+
+/-- ℝ-Wantable: complement(π/2) = -π/2. (Just symbolic; concrete value not needed.) -/
+example (x : ℝ) : Wantable.complement x = -x := rfl
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
