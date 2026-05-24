@@ -647,6 +647,8 @@ example {W : Type u} [Wantable W] : True := by trivial
 
 example {W : Type u} [Wantable W] : Nonempty (PTrans W) := ⟨1⟩
 
+example {W : Type u} [Wantable W] : Nonempty (PTrans W) := ⟨PTrans.complement⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
