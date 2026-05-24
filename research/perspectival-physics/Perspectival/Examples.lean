@@ -16693,3 +16693,24 @@ example : ¬ ∃ (w : Fin 3), PatternStableWantable.Stable_nontrivial w := by
   rw [PatternStableWantable.stable_nontrivial_iff] at hw
   apply hw
   rfl
+
+/-! ## Stable_nontrivial respects the Wantable Sum structure -/
+
+/-- Stable_nontrivial preserved under Sum.inl injection. -/
+example (w : Bool) (h : PatternStableWantable.Stable_nontrivial w) :
+    PatternStableWantable.Stable_nontrivial (Sum.inl w : Bool ⊕ Bool) := by
+  rw [PatternStableWantable.stable_nontrivial_iff] at h ⊢
+  intro hbad
+  apply h
+  have : (Sum.inl w : Bool ⊕ Bool) = Sum.inl (Wantable.complement w) := hbad
+  exact Sum.inl.inj this
+
+/-- Stable_nontrivial is preserved under Sum.inl. -/
+example (w : Bool) (h : PatternStableWantable.Stable_nontrivial w) :
+    PatternStableWantable.Stable_nontrivial (Sum.inl w : Bool ⊕ Bool) := by
+  rw [PatternStableWantable.stable_nontrivial_iff] at h ⊢
+  intro hbad
+  apply h
+  show w = Wantable.complement w
+  have : (Sum.inl w : Bool ⊕ Bool) = Sum.inl (Wantable.complement w) := hbad
+  exact Sum.inl.inj this
