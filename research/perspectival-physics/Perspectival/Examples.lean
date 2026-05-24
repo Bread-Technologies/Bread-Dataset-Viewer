@@ -2526,6 +2526,22 @@ example : (Perspectival.WantableGPT.perfectWitness (Fin 2)).e 0
   have := (Perspectival.WantableGPT.perfectWitness (Fin 2)).kronecker 0 1
   simpa using this
 
+/-- The complement operation on Bool is self-inverse (Wantable axiom). -/
+example : ∀ b : Bool, Wantable.complement (Wantable.complement b) = b :=
+  Wantable.complement_involutive
+
+/-- The complement operation on Fin 2 (with swap-complement) is self-inverse. -/
+example : ∀ i : Fin 2, Wantable.complement (Wantable.complement i) = i :=
+  Wantable.complement_involutive
+
+/-- The complement operation on Fin 3 (with id-complement) is trivially self-inverse. -/
+example : ∀ i : Fin 3, Wantable.complement (Wantable.complement i) = i :=
+  Wantable.complement_involutive
+
+/-- The complement operation on ℤ (with neg-complement) is self-inverse. -/
+example : ∀ n : ℤ, Wantable.complement (Wantable.complement n) = n :=
+  Wantable.complement_involutive
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
