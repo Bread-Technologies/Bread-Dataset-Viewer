@@ -5,10 +5,23 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~6,100 lines of Lean** (excluding Mathlib dependencies)
-- **~140+ verified theorems / examples** (no `sorry` outside documented placeholders)
-- **14 documentation files** (~70 KB of structured exposition)
-- **530+ commits** to the research branch (extended session — exceeded 500 milestone)
+- **~6,600 lines of Lean** (excluding Mathlib dependencies)
+- **~150+ verified theorems / examples** (no `sorry` outside documented placeholders)
+- **14 documentation files** (~75 KB of structured exposition)
+- **580+ commits** to the research branch
+
+## Major new content (latest batch)
+
+- **Triple no-go theorem** (`wantableGPT_classical_dichotomy`): quantum,
+  real-QM, and quaternionic-QM Hardy signatures are *each* formally
+  ruled out for `WantableGPT` with `|W| ≥ 2`.
+- **Agency builders** (`singletonAgency`, `pairAgency`,
+  `path_via_affineLine`): generic constructors making it easy to
+  build `HasConnectedAgency` instances; reveal that path-connectedness
+  is "cheap" — the substantive R6 content is the *availability set*.
+- **StrictReversible**: refinement of `Reversible` with bijectivity,
+  yielding well-defined inverse (`.inv`), composition (`.comp`),
+  identity (`.id`), and the inverse laws (`inv_comp`, `comp_inv`).
 
 ## Major technical results
 
