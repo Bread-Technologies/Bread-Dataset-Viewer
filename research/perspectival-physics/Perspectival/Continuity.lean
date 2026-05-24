@@ -697,5 +697,42 @@ def StatePreservingPath.reverse {G : GPT V} {R₁ R₂ : V →ₗ[ℝ] V}
     rw [unitInterval.symm_one, p.start]
   preserves_states_along := fun t ρ hρ => p.preserves_states_along _ ρ hρ
 
+/-- The state-preserving condition is closed under taking sums of paths
+weighted by [0,1]. (Convex combination at a fixed time t.) Currently
+unused but useful as scaffolding. -/
+theorem StatePreservingPath.value_in_states
+    {G : GPT V} {R₁ R₂ : V →ₗ[ℝ] V}
+    (p : StatePreservingPath G R₁ R₂) (t : unitInterval) (ρ : V)
+    (hρ : ρ ∈ G.states) : p.γ t ρ ∈ G.states :=
+  p.preserves_states_along t ρ hρ
+
+/-- Endpoint preservation: γ 0 = R₁ preserves states. -/
+theorem StatePreservingPath.start_preserves_states
+    {G : GPT V} {R₁ R₂ : V →ₗ[ℝ] V}
+    (p : StatePreservingPath G R₁ R₂) (ρ : V) (hρ : ρ ∈ G.states) :
+    R₁ ρ ∈ G.states := by
+  rw [← p.start]
+  exact p.preserves_states_along 0 ρ hρ
+
+/-- Endpoint preservation: γ 1 = R₂ preserves states. -/
+theorem StatePreservingPath.finish_preserves_states
+    {G : GPT V} {R₁ R₂ : V →ₗ[ℝ] V}
+    (p : StatePreservingPath G R₁ R₂) (ρ : V) (hρ : ρ ∈ G.states) :
+    R₂ ρ ∈ G.states := by
+  rw [← p.finish]
+  exact p.preserves_states_along 1 ρ hρ
+
+/-- Trivial: if R is a Reversible, the constant path R, R is a
+StatePreservingPath. (No actual movement.) -/
+def StatePreservingPath.const {G : GPT V} (R : Reversible G) :
+    StatePreservingPath G R.toLin R.toLin where
+  γ := fun _ => R.toLin
+  continuous := by
+    show Continuous (fun p : unitInterval × V => R.toLin p.2)
+    exact R.continuous_toLin.comp continuous_snd
+  start := rfl
+  finish := rfl
+  preserves_states_along := fun _ ρ hρ => R.preserves_states ρ hρ
+
 end Continuity
 end Perspectival
