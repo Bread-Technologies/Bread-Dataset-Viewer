@@ -7895,3 +7895,21 @@ theorem antiDiagonalState_distinguishable_diagonalState :
   ⟨antiDiagonalIndicatorLin, antiDiagonalIndicatorLin_in_effects,
    antiDiagonalIndicatorLin_on_antiDiagonalState,
    antiDiagonalIndicatorLin_on_diagonalState⟩
+
+/-- New: productState (vertex w) uniformBool gives a "1 ⊗ 1/2" mixed
+state on the product. -/
+theorem productState_vertex_uniformBool (w : Bool) (p : Bool × Bool) :
+    productState (Perspectival.WantableGPT.vertex Bool w) uniformBool p
+      = (if w = p.1 then (1/2 : ℝ) else 0) := by
+  show Perspectival.WantableGPT.vertex Bool w p.1 * uniformBool p.2
+      = if w = p.1 then (1/2 : ℝ) else 0
+  show (if w = p.1 then (1 : ℝ) else 0) * (1/2 : ℝ)
+      = if w = p.1 then (1/2 : ℝ) else 0
+  by_cases h : w = p.1
+  · simp [h]
+  · simp [h]
+
+/-- Concrete: productState (vertex true) uniformBool at (true, true) = 1/2. -/
+example : productState (Perspectival.WantableGPT.vertex Bool true)
+                       uniformBool (true, true) = (1/2 : ℝ) := by
+  rw [productState_vertex_uniformBool]; simp
