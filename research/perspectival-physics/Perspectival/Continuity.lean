@@ -273,6 +273,16 @@ def pairAgency {V : Type u} [AddCommGroup V] [Module ℝ V]
   id_avail := ⟨R₀, Set.mem_insert _ _, hR₀_id⟩
   path_connected S₁ S₂ _ _ := path_via_affineLine G S₁ S₂
 
+/-- In a `pairAgency` with R₀ = id and R₁ being some richer
+transformation, the second transformation R₁ is also reachable from
+the identity state. -/
+theorem pairAgency_reaches_R₁ {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : GPT V) (R₀ R₁ : Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) (ρ : V) :
+    @Reachable V _ _ _ G (pairAgency G R₀ R₁ hR₀_id) ρ (R₁.toLin ρ) :=
+  ⟨R₁, Or.inr rfl, rfl⟩
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
