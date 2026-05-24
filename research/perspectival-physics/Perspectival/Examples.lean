@@ -11095,3 +11095,20 @@ example (R : Reality (Fin 4)) :
 example (R : Reality (Bool × Bool)) :
     PTrans.actReality (1 : PTrans (Bool × Bool)) R = R :=
   PTrans.actReality_one R
+
+/-- complementPTrans squared on Reality: cancels. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (R : Reality W) :
+    PTrans.actReality
+      ((Perspectival.WantableGPT.complementPTrans W) *
+       (Perspectival.WantableGPT.complementPTrans W)) R = R := by
+  rw [Perspectival.WantableGPT.complementPTrans_sq, PTrans.actReality_one]
+
+example {W : Type u} [Wantable W] (R : Reality W) :
+    PTrans.actReality ((PTrans.complement : PTrans W) * PTrans.complement) R = R := by
+  rw [PTrans.complement_sq, PTrans.actReality_one]
+
+/-- 4-fold complement on Reality is identity. -/
+example {W : Type u} [Wantable W] (R : Reality W) :
+    PTrans.actReality (((PTrans.complement : PTrans W) * PTrans.complement) *
+                       ((PTrans.complement : PTrans W) * PTrans.complement)) R = R := by
+  rw [PTrans.complement_sq, one_mul, PTrans.actReality_one]
