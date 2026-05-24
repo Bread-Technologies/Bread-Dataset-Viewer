@@ -2799,6 +2799,14 @@ example : SelfComplementary (0 : ℤ) := by show -(0 : ℤ) = 0; ring
 /-- SelfComplementary 0 on ℝ. -/
 example : SelfComplementary (0 : ℝ) := by show -(0 : ℝ) = 0; ring
 
+/-- ℤ is not fixed-point-free (0 is fixed). -/
+example : ¬ FixedPointFreeComplement ℤ := by
+  intro h; exact h 0 (by show -(0 : ℤ) = 0; ring)
+
+/-- ℝ is not fixed-point-free (0 is fixed). -/
+example : ¬ FixedPointFreeComplement ℝ := by
+  intro h; exact h 0 (by show -(0 : ℝ) = 0; ring)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
