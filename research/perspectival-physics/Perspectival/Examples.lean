@@ -4977,5 +4977,34 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
       (Perspectival.WantableGPT.vertex W v) :=
   Perspectival.WantableGPT.vertices_distinguishable W w v hwv
 
+/-- `complementPTrans_sq`: complementPTrans squared is the identity. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementPTrans W) *
+    (Perspectival.WantableGPT.complementPTrans W) = (1 : PTrans W) :=
+  Perspectival.WantableGPT.complementPTrans_sq W
+
+/-- `complementPTrans_inv`: complementPTrans is its own inverse. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementPTrans W)⁻¹
+      = Perspectival.WantableGPT.complementPTrans W :=
+  Perspectival.WantableGPT.complementPTrans_inv W
+
+/-- `complementTransform_eq_fromPTrans_full`: the bridge identifies
+complementTransform with fromPTrans of complementPTrans. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.WantableGPT.complementTransform W
+      = Perspectival.WantableGPT.fromPTrans W
+          (Perspectival.WantableGPT.complementPTrans W) :=
+  Perspectival.WantableGPT.complementTransform_eq_fromPTrans_full W
+
+/-- `complementTransform_sq`: complementTransform squared = identity. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.WantableGPT.complementTransform W *
+    Perspectival.WantableGPT.complementTransform W
+      = (1 : Perspectival.GPT.Transform
+              (Perspectival.WantableGPT.gpt W)
+              (Perspectival.WantableGPT.gpt W)) :=
+  Perspectival.WantableGPT.complementTransform_sq W
+
 end Examples
 end Perspectival
