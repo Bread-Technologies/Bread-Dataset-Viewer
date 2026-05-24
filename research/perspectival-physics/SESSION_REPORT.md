@@ -5,11 +5,26 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~12,800 lines of Lean** (excluding Mathlib dependencies); Examples.lean
-  alone past 11,350 lines
-- **~830+ verified theorems / examples** (no `sorry` outside documented placeholders)
+- **~13,000+ lines of Lean** (excluding Mathlib dependencies); Examples.lean
+  alone past 12,500 lines
+- **~870+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1083+ commits** to the research branch
+- **1100+ commits** to the research branch
+- **Generic deltaIndicator / Born rule**: For any finite Wantable W and
+  any w : W, `deltaIndicatorLin w` is a verified effect with the
+  Born-rule property `deltaIndicatorLin w f = f w`, plus the
+  completeness `∑ w, deltaIndicatorLin w f = unitFn W f`.
+- **vertices_distinguishable_via_delta**: any two distinct vertex
+  states are perfectly distinguishable in the Hardy sense.
+- **Generic uniform-decomp**: `uniformState W = ∑ w, (1/|W|) • vertex w`.
+- **complementSubgroup ≤ Subgroup.center (PTrans W)**: the cyclic
+  subgroup ⟨complement⟩ is central in PTrans.
+- **mixedCorrelatedState**: `(1/2) diagonal + (1/2) antiDiagonal =
+  uniformState (Bool × Bool)`, with marginals = uniformBool.
+- **Per-coordinate Bool × Bool effects**:
+  `left{True,False}Indicator{,Lin}`/`right{True,False}Indicator{,Lin}`,
+  the four `pointIndicator{TT,TF,FT,FF}` single-point indicators,
+  with completeness for each measurement basis.
 - **Marginalization theory**: `leftMarginal` and `rightMarginal` as
   LinearMaps on the product state space, with marginal-recovery
   theorems for productState and concrete computations for the
