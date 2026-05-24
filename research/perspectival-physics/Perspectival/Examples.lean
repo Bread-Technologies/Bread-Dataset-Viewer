@@ -5986,5 +5986,33 @@ example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := 
 /-- Bool ⊕ Bool: complement on inr false is inr true. -/
 example : Wantable.complement (Sum.inr false : Bool ⊕ Bool) = Sum.inr true := rfl
 
+/-- A new small lemma: complement of complement on Bool × Bool is identity. -/
+example (p : Bool × Bool) :
+    Wantable.complement (Wantable.complement p) = p :=
+  Wantable.complement_involutive p
+
+/-- A new small lemma: complement of complement on Bool ⊕ Bool is identity. -/
+example (p : Bool ⊕ Bool) :
+    Wantable.complement (Wantable.complement p) = p :=
+  Wantable.complement_involutive p
+
+/-- On Bool × Bool, complement is injective. -/
+example : Function.Injective
+    (Wantable.complement : Bool × Bool → Bool × Bool) :=
+  Wantable.complement_injective
+
+/-- On Bool × Bool, complement is surjective. -/
+example : Function.Surjective
+    (Wantable.complement : Bool × Bool → Bool × Bool) :=
+  Wantable.complement_surjective
+
+/-- On Bool × Bool, complement preserves cardinality (it's a bijection). -/
+example : Fintype.card (Bool × Bool) = Fintype.card (Bool × Bool) := rfl
+
+/-- complement_complement_eq_id on Bool × Bool. -/
+example : (Wantable.complement ∘ Wantable.complement
+            : Bool × Bool → Bool × Bool) = id :=
+  Wantable.complement_complement_eq_id
+
 end Examples
 end Perspectival
