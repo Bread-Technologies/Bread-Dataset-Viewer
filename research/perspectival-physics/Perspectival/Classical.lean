@@ -854,5 +854,38 @@ theorem classical_n2_no_strict_reversible_path
     rw [p.finish]
     rfl
 
+/-- Auto-continuity: n2_disc_det ∘ p.γ is continuous, derived from
+the joint continuity of p.γ. -/
+theorem n2_disc_det_path_continuous
+    (γ : unitInterval → V 2 →ₗ[ℝ] V 2)
+    (hcont : Continuous (fun pair : unitInterval × V 2 => γ pair.1 pair.2)) :
+    Continuous (fun t => n2_disc_det (γ t)) := by
+  -- n2_disc_det (γ t) = (γ t) (vertex 2 0) 0 - (γ t) (vertex 2 1) 0
+  -- Each (γ t) (vertex i) is continuous in t (specializing v = vertex i in hcont).
+  -- Then applying coordinate 0 is continuous_apply 0.
+  have h0pair : Continuous (fun t : unitInterval => (t, vertex 2 0)) :=
+    Continuous.prodMk continuous_id continuous_const
+  have h1pair : Continuous (fun t : unitInterval => (t, vertex 2 1)) :=
+    Continuous.prodMk continuous_id continuous_const
+  have h0 : Continuous (fun t : unitInterval => γ t (vertex 2 0)) :=
+    hcont.comp h0pair
+  have h1 : Continuous (fun t : unitInterval => γ t (vertex 2 1)) :=
+    hcont.comp h1pair
+  have h0c : Continuous (fun t : unitInterval => γ t (vertex 2 0) 0) :=
+    (continuous_apply 0).comp h0
+  have h1c : Continuous (fun t : unitInterval => γ t (vertex 2 1) 0) :=
+    (continuous_apply 0).comp h1
+  exact h0c.sub h1c
+
+/-- **R6 FINAL** (no continuity hypothesis needed): No StrictReversiblePath
+from id to swap exists on Classical n=2. -/
+theorem classical_n2_strict_reversible_path_id_swap_empty
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt 2)
+              (Perspectival.Continuity.StrictReversible.id (gpt 2))
+              swapStrictReversible) :
+    False :=
+  classical_n2_no_strict_reversible_path p
+    (n2_disc_det_path_continuous p.γ p.continuous)
+
 end Classical
 end Perspectival
