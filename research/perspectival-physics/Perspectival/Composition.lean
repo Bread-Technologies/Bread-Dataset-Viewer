@@ -107,6 +107,17 @@ def Meeting.prodSnd {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     have h1 : (Wantable.complement m.side₁).2 = m.side₂.2 := by rw [h]
     exact h1
 
+/-- Inverse direction: a pair of meetings, one in each component,
+combines into a meeting in the product Wantable. -/
+def Meeting.prodMk {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m₁ : Meeting W₁) (m₂ : Meeting W₂) : Meeting (W₁ × W₂) where
+  side₁ := (m₁.side₁, m₂.side₁)
+  side₂ := (m₁.side₂, m₂.side₂)
+  complementary := by
+    show (Wantable.complement m₁.side₁, Wantable.complement m₂.side₁)
+       = (m₁.side₂, m₂.side₂)
+    rw [m₁.complementary, m₂.complementary]
+
 def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ ⊕ W₂) where
   toFun := fun
