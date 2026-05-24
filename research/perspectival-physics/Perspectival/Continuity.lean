@@ -906,5 +906,31 @@ theorem trivialStrictAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
 example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
     (G : GPT V) : StrictConnectedAgency G := trivialStrictAgency G
 
+/-! ### R6 discreteness target
+
+The substantive R6 theorem we ultimately want: for the classical GPT on
+Fin n, the only continuous path of state-preserving bijections is the
+constant path. Concretely:
+
+  Classical Reversibles = doubly-stochastic matrices.
+  Classical StrictReversibles ⊆ permutation matrices (bijection = invertible
+    + state preserving means: maps simplex to simplex bijectively, so
+    permutes the n vertices).
+  Permutation matrices form a finite discrete set in the topology
+    of ℝ^(n×n).
+  Therefore any continuous γ : [0,1] → permutation matrices is constant.
+
+Proving this requires:
+1. A theorem characterizing StrictReversible Classical as permutations.
+2. Discreteness of the permutation matrix set in matrix space.
+3. Constant-valued of continuous map [0,1] → discrete.
+
+(1) is purely linear algebra; (2) is the topology of finite sets; (3)
+is `IsPreconnected.subsingleton` type result. All three are tractable;
+together they form the R6 substantive payoff.
+
+This file lays the categorical groundwork. Concrete classical-side
+proofs go in `Classical.lean`. -/
+
 end Continuity
 end Perspectival
