@@ -111,6 +111,30 @@ theorem continuous_path_of_reachable [HasConnectedAgency G]
     show γ 1 ρ₁ = ρ₂
     rw [hγ_1, hRρ]
 
+/-- **Hardy Axiom 5 in concrete form (modulo pure-state restriction).**
+
+Given the libertarian-agency postulate (`HasConnectedAgency`), for any
+two reachable states there is a continuous *path of linear maps* γ
+from the identity (at `t = 0`) to a transformation that sends `ρ₁` to
+`ρ₂` (at `t = 1`). This is Hardy Axiom 5 stripped of the requirement
+that `ρ₁, ρ₂` be extreme points; that restriction is separable. -/
+theorem hardy_axiom5_of_agency [HasConnectedAgency G]
+    (ρ₁ ρ₂ : V) (h : Reachable (G := G) ρ₁ ρ₂) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      (∀ v, γ 0 v = v) ∧
+      γ 1 ρ₁ = ρ₂ := by
+  obtain ⟨R, hR, hRρ⟩ := h
+  obtain ⟨R_id, hR_id_avail, hR_id_eq⟩ := HasConnectedAgency.id_avail (G := G)
+  obtain ⟨γ, hγ_cont, hγ_0, hγ_1⟩ :=
+    HasConnectedAgency.path_connected R_id R hR_id_avail hR
+  refine ⟨γ, hγ_cont, ?_, ?_⟩
+  · intro v
+    rw [hγ_0]
+    exact hR_id_eq v
+  · rw [hγ_1]
+    exact hRρ
+
 /-! ## Honest framing
 
 What `continuous_path_of_reachable` shows: if the agency postulate is
