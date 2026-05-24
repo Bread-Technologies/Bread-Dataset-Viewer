@@ -7163,5 +7163,43 @@ example : Even (Fintype.card (Fin 4)) := by decide
 /-- New: |Bool ⊕ Fin 4| = 6 is even. -/
 example : Even (Fintype.card (Bool ⊕ Fin 4)) := by decide
 
+/-- New theorem: the uniform state `(1/|W|, ..., 1/|W|)` on `WantableGPT W`
+is a valid state (when |W| > 0). -/
+noncomputable def uniformState (W : Type u) [Wantable W] [Fintype W] [DecidableEq W]
+    [Nonempty W] : Perspectival.WantableGPT.V W :=
+  fun _ => 1 / (Fintype.card W : ℝ)
+
+/-- The uniform state's coordinates are nonneg. -/
+theorem uniformState_nonneg {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    [Nonempty W] (w : W) : 0 ≤ uniformState W w := by
+  show 0 ≤ 1 / (Fintype.card W : ℝ)
+  have : 0 < (Fintype.card W : ℝ) := by
+    exact_mod_cast Fintype.card_pos
+  positivity
+
+/-- The uniform state's coords sum to 1. -/
+theorem uniformState_sum {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    [Nonempty W] :
+    ∑ w : W, uniformState W w = 1 := by
+  show ∑ _ : W, 1 / (Fintype.card W : ℝ) = 1
+  rw [Finset.sum_const, Finset.card_univ]
+  have hcard : (Fintype.card W : ℝ) ≠ 0 := by
+    have : 0 < (Fintype.card W : ℝ) := by exact_mod_cast Fintype.card_pos
+    linarith
+  rw [nsmul_eq_mul]
+  field_simp
+
+/-- New: the uniform state is in `states`. -/
+theorem uniformState_in_states {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    [Nonempty W] : uniformState W ∈ Perspectival.WantableGPT.states W :=
+  ⟨uniformState_nonneg, uniformState_sum⟩
+
+/-- Concrete: the uniform state on Bool is the uniformBool. -/
+example : uniformState Bool = uniformBool := by
+  funext b
+  show 1 / (Fintype.card Bool : ℝ) = (1/2 : ℝ)
+  have : (Fintype.card Bool : ℝ) = 2 := by norm_cast
+  rw [this]
+
 end Examples
 end Perspectival
