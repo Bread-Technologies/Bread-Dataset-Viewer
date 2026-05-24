@@ -198,18 +198,33 @@ def Axiom5_Continuity (G : GPT V) : Prop :=
                                    `axiom1_holds` proves it formally).
   Axiom 2 (Simplicity / K min)   — AUXILIARY (cross-theory selection
                                    principle; not entailed by I–IV).
-  Axiom 3 (Subspaces)            — DERIVABLE (argued; formal proof OPEN).
-  Axiom 4 (Composite systems)    — AUXILIARY (multiplicative rule beyond
-                                   the disjoint-union we have; possibly
-                                   derivable with refined composition).
-  Axiom 5 (Continuity)           — DERIVABLE (argued; the framework's
-                                   libertarian commitment FAVORS but does
-                                   not force the continuous case;
-                                   formal proof OPEN).
+  Axiom 3 (Subspaces)            — DERIVABLE — FORMALLY PROVEN as
+                                   `axiom3_holds` above.
+  Axiom 4 (Composite systems)    — PARTIALLY DERIVABLE: the dimension
+                                   half (K_AB = K_A · K_B) is formally
+                                   proven for WantableGPT as
+                                   `Hardy_Axiom4_WantableGPT_dimension`
+                                   in WantableGPT.lean. The tensor-state
+                                   factorization half requires the
+                                   `productState` construction in
+                                   Examples.lean, not auto-derived from
+                                   I–IV alone.
+  Axiom 5 (Continuity)           — DERIVABLE — formally proven as
+                                   `hardy_axiom5_of_agency` in
+                                   Continuity.lean, conditional on the
+                                   `HasConnectedAgency` postulate
+                                   (the framework's libertarian-agency
+                                   refinement of Axiom IV).
 
-The genuine research bottleneck: turning the ARGUED entries into
-formally proven ones, OR honestly downgrading them to AUXILIARY if
-that turns out to be the case. This is the next stage of Tier 1.
+The Hardy axioms 1, 3, 5 are formally derivable in the framework
+(with A5 conditional on the agency strengthening). Axiom 4 is
+partially derivable. Axiom 2 is auxiliary.
+
+Next stage of Tier 1: the R6/R7 strengthening of HasConnectedAgency
+(in Continuity.lean) toward forcing Lie-group reversible dynamics,
+which would carry Axiom 5 from "derivable under agency" toward
+"forces quantum-like Lie-group dynamics". See TIER1_5_HILBERT.md and
+TIER2_GAUGE_SCOPING.md for scoping.
 -/
 
 end Hardy
