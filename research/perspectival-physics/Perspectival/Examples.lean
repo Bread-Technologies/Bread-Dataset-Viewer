@@ -6551,5 +6551,25 @@ example (b : Bool) : (existentEquiv Bool).symm b = ⟨b⟩ := rfl
 /-- Concrete: existentEquiv Bool inverse. -/
 example (e : Existent Bool) : (existentEquiv Bool) e = e.want := rfl
 
+/-- New theorem: WantableGPT.unitFn equals innerLin of constant-1. -/
+theorem WantableGPT_unitFn_eq_innerLin_one
+    {W : Type u} [Wantable W] [Fintype W] :
+    Perspectival.WantableGPT.unitFn W
+      = Perspectival.WantableGPT.innerLin W (fun _ => 1) := by
+  apply LinearMap.ext
+  intro f
+  show ∑ w, f w = ∑ w, 1 * f w
+  simp
+
+/-- Concrete: on Bool, unitFn = innerLin (fun _ => 1). -/
+example : Perspectival.WantableGPT.unitFn Bool
+        = Perspectival.WantableGPT.innerLin Bool (fun _ : Bool => 1) :=
+  WantableGPT_unitFn_eq_innerLin_one
+
+/-- Concrete: on Fin 4, unitFn = innerLin (fun _ => 1). -/
+example : Perspectival.WantableGPT.unitFn (Fin 4)
+        = Perspectival.WantableGPT.innerLin (Fin 4) (fun _ : Fin 4 => 1) :=
+  WantableGPT_unitFn_eq_innerLin_one
+
 end Examples
 end Perspectival
