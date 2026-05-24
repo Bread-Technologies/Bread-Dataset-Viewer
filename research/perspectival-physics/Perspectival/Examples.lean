@@ -11157,3 +11157,25 @@ example (n : ℕ) : Perspectival.Classical.unitFn n ∈ Perspectival.Classical.e
 example (n : ℕ) (i : Fin n) :
     Perspectival.Classical.proj n i ∈ Perspectival.Classical.effects n :=
   Perspectival.Classical.proj_in_effects n i
+
+/-- WantableGPT unit equals unitFn (definitionally). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.gpt W).unit = Perspectival.WantableGPT.unitFn W := rfl
+
+example : (Perspectival.WantableGPT.gpt Bool).unit
+        = Perspectival.WantableGPT.unitFn Bool := rfl
+
+example : (Perspectival.WantableGPT.gpt (Fin 4)).unit
+        = Perspectival.WantableGPT.unitFn (Fin 4) := rfl
+
+example : (Perspectival.WantableGPT.gpt (Bool × Bool)).unit
+        = Perspectival.WantableGPT.unitFn (Bool × Bool) := rfl
+
+/-- Classical unit equals unitFn (definitionally). -/
+example (n : ℕ) :
+    (Perspectival.Classical.gpt n).unit = Perspectival.Classical.unitFn n := rfl
+
+example : (Perspectival.Classical.gpt 5).unit = Perspectival.Classical.unitFn 5 := rfl
+
+example : (Perspectival.Classical.gpt 10).unit
+        = Perspectival.Classical.unitFn 10 := rfl
