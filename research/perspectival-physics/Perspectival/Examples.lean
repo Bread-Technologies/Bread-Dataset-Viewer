@@ -6056,5 +6056,30 @@ example : (Meeting.mk_fromSide (Fin 2) 0).side₂ = 1 := rfl
 example : (Meeting.mk_fromSide Bool true).swap = Meeting.mk_fromSide Bool false := by
   rfl
 
+/-- Bool's WantableGPT satisfies Hardy Axiom 1 (probabilities). -/
+example : Perspectival.Hardy.Axiom1_Probabilities
+            (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Hardy.axiom1_holds _
+
+/-- Fin 4's WantableGPT satisfies Hardy Axiom 1. -/
+example : Perspectival.Hardy.Axiom1_Probabilities
+            (Perspectival.WantableGPT.gpt (Fin 4)) :=
+  Perspectival.Hardy.axiom1_holds _
+
+/-- Bool's WantableGPT satisfies Hardy Axiom 3 (subspaces). -/
+example : Perspectival.Hardy.Axiom3_Subspaces
+            (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Hardy.axiom3_holds _
+
+/-- Fin 4's WantableGPT satisfies Hardy Axiom 3. -/
+example : Perspectival.Hardy.Axiom3_Subspaces
+            (Perspectival.WantableGPT.gpt (Fin 4)) :=
+  Perspectival.Hardy.axiom3_holds _
+
+/-- Bool's WantableGPT satisfies Hardy Axiom 5 (placeholder). -/
+example : Perspectival.Hardy.Axiom5_Continuity
+            (Perspectival.WantableGPT.gpt Bool) := by
+  intro _ _ _ _ _ _; trivial
+
 end Examples
 end Perspectival
