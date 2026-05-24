@@ -353,6 +353,43 @@ def fin2Swap : PTrans (Fin 2) where
   right_inv := by intro i; fin_cases i <;> rfl
   resp_complement := by intro i; fin_cases i <;> rfl
 
+/-- An isomorphism of Wantable structures: an `Equiv` that respects
+complement. This is the morphism in the category of Wantables. -/
+structure WantableEquiv (W₁ W₂ : Type u) [Wantable W₁] [Wantable W₂] where
+  toEquiv : W₁ ≃ W₂
+  resp_complement : ∀ w, toEquiv (Wantable.complement w) = Wantable.complement (toEquiv w)
+
+/-- Identity Wantable-isomorphism. -/
+def WantableEquiv.refl (W : Type u) [Wantable W] : WantableEquiv W W where
+  toEquiv := Equiv.refl W
+  resp_complement := fun _ => rfl
+
+/-- Inverse of a Wantable-isomorphism. -/
+def WantableEquiv.symm {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) : WantableEquiv W₂ W₁ where
+  toEquiv := e.toEquiv.symm
+  resp_complement w := by
+    have h := e.resp_complement (e.toEquiv.symm w)
+    apply e.toEquiv.injective
+    rw [e.toEquiv.apply_symm_apply, e.resp_complement]
+    rw [e.toEquiv.apply_symm_apply]
+
+/-- A `Bool ≃ Fin 2` equivalence that respects the swap-complement structures. -/
+def boolEquivFin2 : WantableEquiv Bool (Fin 2) where
+  toEquiv :=
+    { toFun
+        | false => 0
+        | true => 1
+      invFun
+        | 0 => false
+        | 1 => true
+      left_inv := by intro b; cases b <;> rfl
+      right_inv := by intro i; fin_cases i <;> rfl }
+  resp_complement := by intro b; cases b <;> rfl
+
+example : boolEquivFin2.toEquiv true = 1 := rfl
+example : boolEquivFin2.toEquiv false = 0 := rfl
+
 /-- **Concrete classification of `PTrans (Fin 2)`.** Either the
 identity or `fin2Swap`. -/
 theorem ptrans_fin2_classification (f : PTrans (Fin 2)) :
