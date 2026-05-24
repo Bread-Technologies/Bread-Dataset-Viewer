@@ -12874,3 +12874,37 @@ example {W : Type u} [Wantable W] :
 example {W : Type u} [Wantable W] :
     (PTrans.complement : PTrans W)⁻¹ * (PTrans.complement : PTrans W) = 1 :=
   inv_mul_cancel _
+
+/-! ### zpow / integer powers of complement -/
+
+/-- complement^(-1) = complement (integer power). -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) ^ (-1 : ℤ) = PTrans.complement := by
+  rw [zpow_neg_one]
+  rw [inv_eq_iff_mul_eq_one]
+  exact PTrans.complement_sq
+
+/-- complement^(-2) = 1 (integer power). -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) ^ (-2 : ℤ) = 1 := by
+  rw [show (-2 : ℤ) = -(2 : ℤ) from rfl, zpow_neg]
+  rw [show ((PTrans.complement : PTrans W) ^ (2 : ℤ)) = 1 from by
+    rw [show (2 : ℤ) = ((2 : ℕ) : ℤ) from rfl, zpow_natCast]
+    rw [sq]
+    exact PTrans.complement_sq]
+  exact inv_one
+
+/-- complement^(2n) for ℤ n is 1. -/
+example {W : Type u} [Wantable W] (n : ℤ) :
+    (PTrans.complement : PTrans W) ^ (2 * n) = 1 := by
+  rw [zpow_mul]
+  rw [show ((PTrans.complement : PTrans W) ^ (2 : ℤ)) = 1 from by
+    rw [show (2 : ℤ) = ((2 : ℕ) : ℤ) from rfl, zpow_natCast]
+    rw [sq]
+    exact PTrans.complement_sq]
+  exact one_zpow n
+
+/-- complement^0 = 1 (integer power). -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) ^ (0 : ℤ) = 1 := by
+  rw [zpow_zero]
