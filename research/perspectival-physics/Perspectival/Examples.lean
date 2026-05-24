@@ -362,6 +362,25 @@ example : (scaleByPTrans (-1) (by norm_num)).toFun
         = (PTrans.complement : PTrans ℝ).toFun := by
   funext x; show (-1 : ℝ) * x = -x; ring
 
+/-- The scaling map `ℝˣ → PTrans ℝ` sending each nonzero real to the
+corresponding scaling PTrans is a MonoidHom. (Provides a concrete
+group embedding `ℝˣ ↪ PTrans ℝ` and confirms the Lie-group-like
+structure on PTrans ℝ.) -/
+noncomputable def scaleHom : ℝˣ →* PTrans ℝ where
+  toFun a := scaleByPTrans (a : ℝ) (a.isUnit.ne_zero)
+  map_one' := by
+    apply PTrans.ext
+    intro x
+    show (1 : ℝˣ).val * x = x
+    show (1 : ℝ) * x = x
+    ring
+  map_mul' a b := by
+    apply PTrans.ext
+    intro x
+    show (a * b).val * x = (a : ℝ) * ((b : ℝ) * x)
+    show ((a : ℝ) * (b : ℝ)) * x = (a : ℝ) * ((b : ℝ) * x)
+    ring
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
