@@ -3004,6 +3004,14 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V Unit) = 1 :=
 example : Module.finrank ℝ (Perspectival.WantableGPT.V Empty) = 0 :=
   Perspectival.WantableGPT.wantableGPT_empty_dim Empty (by decide)
 
+/-- WantableGPT Bool has positive dim. -/
+example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V Bool) :=
+  Perspectival.WantableGPT.wantableGPT_dim_pos Bool
+
+/-- WantableGPT (Fin 3) has positive dim. -/
+example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) :=
+  Perspectival.WantableGPT.wantableGPT_dim_pos (Fin 3)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
