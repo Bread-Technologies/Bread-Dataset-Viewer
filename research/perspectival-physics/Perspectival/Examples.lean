@@ -2940,6 +2940,17 @@ example (f g : PTrans Bool)
     f = g :=
   PTrans.actMeeting_faithful f g h
 
+/-- The PTrans → Equiv.Perm forgetful MonoidHom is injective. -/
+example {W : Type u} [Wantable W] :
+    Function.Injective (PTrans.toEquivPermHom : PTrans W →* Equiv.Perm W) :=
+  PTrans.toEquivPermHom_injective
+
+/-- The image-characterization theorem: PTrans is exactly the centralizer. -/
+example {W : Type u} [Wantable W] (σ : Equiv.Perm W) :
+    (∃ φ : PTrans W, PTrans.toEquivPermHom φ = σ) ↔
+    (∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) :=
+  PTrans.mem_range_toEquivPermHom_iff σ
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
