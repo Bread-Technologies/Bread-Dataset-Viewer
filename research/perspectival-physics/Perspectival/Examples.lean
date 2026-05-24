@@ -6816,5 +6816,39 @@ example (f : Perspectival.WantableGPT.V (Bool × Bool)) :
       = ∑ b₁ : Bool, ∑ b₂ : Bool, f (b₁, b₂) :=
   WantableGPT_unitFn_prod f
 
+/-- New: a state on W₁ × W₂ that is a product of states on W₁ and W₂
+(product state). -/
+noncomputable def productState
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂) :
+    Perspectival.WantableGPT.V (W₁ × W₂) :=
+  fun p => f₁ p.1 * f₂ p.2
+
+/-- New theorem: the productState's unitFn factors. -/
+theorem productState_unitFn
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂) :
+    Perspectival.WantableGPT.unitFn (W₁ × W₂) (productState f₁ f₂)
+      = Perspectival.WantableGPT.unitFn W₁ f₁
+      * Perspectival.WantableGPT.unitFn W₂ f₂ := by
+  rw [WantableGPT_unitFn_prod]
+  show ∑ w₁ : W₁, ∑ w₂ : W₂, productState f₁ f₂ (w₁, w₂)
+      = (∑ w₁, f₁ w₁) * (∑ w₂, f₂ w₂)
+  rw [Finset.sum_mul_sum]
+  apply Finset.sum_congr rfl
+  intro w₁ _
+  apply Finset.sum_congr rfl
+  intro w₂ _
+  rfl
+
+/-- Concrete: productState of two normalized Bool states is normalized. -/
+example (f₁ f₂ : Perspectival.WantableGPT.V Bool)
+    (h₁ : Perspectival.WantableGPT.unitFn Bool f₁ = 1)
+    (h₂ : Perspectival.WantableGPT.unitFn Bool f₂ = 1) :
+    Perspectival.WantableGPT.unitFn (Bool × Bool) (productState f₁ f₂) = 1 := by
+  rw [productState_unitFn, h₁, h₂]; ring
+
 end Examples
 end Perspectival
