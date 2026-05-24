@@ -221,6 +221,27 @@ theorem actMeeting_faithful (f g : PTrans W)
        = (actMeeting g (Meeting.mk_fromSide W w)).side₁ := by rw [hm]
   exact this
 
+/-- Pullback action of `PTrans` on `Reality` (= sets/predicates of
+meetings): a perspectival transformation `φ` acts on a reality `R` by
+declaring `m ∈ φ·R` iff `actMeeting φ⁻¹ m ∈ R`. -/
+def actReality (φ : PTrans W) (R : Reality W) : Reality W :=
+  fun m => R (actMeeting φ⁻¹ m)
+
+@[simp] theorem actReality_one (R : Reality W) :
+    actReality (1 : PTrans W) R = R := by
+  funext m
+  show R (actMeeting (1 : PTrans W)⁻¹ m) = R m
+  rw [inv_one]
+  have : actMeeting (1 : PTrans W) m = m := actMeeting_id m
+  rw [this]
+
+theorem actReality_mul (ψ φ : PTrans W) (R : Reality W) :
+    actReality (ψ * φ) R = actReality ψ (actReality φ R) := by
+  funext m
+  show R (actMeeting (ψ * φ)⁻¹ m) = R (actMeeting φ⁻¹ (actMeeting ψ⁻¹ m))
+  rw [mul_inv_rev]
+  exact congrArg R (actMeeting_comp φ⁻¹ ψ⁻¹ m)
+
 /-! ## The forgetful bridge: PTrans → Equiv.Perm
 
 A perspectival transformation forgets its `resp_complement` law and
