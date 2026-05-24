@@ -7467,3 +7467,58 @@ theorem diagonalIndicator_in_effectVec :
   · show (if p = (true, true) ∨ p = (false, false)
           then (1 : ℝ) else 0) ≤ 1
     split <;> norm_num
+
+/-- The diagonal-indicator inner-product linear functional. -/
+noncomputable def diagonalIndicatorLin :
+    Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ] ℝ :=
+  Perspectival.WantableGPT.innerLin (Bool × Bool) diagonalIndicator
+
+/-- diagonalIndicatorLin is in WantableGPT.effects. -/
+theorem diagonalIndicatorLin_in_effects :
+    diagonalIndicatorLin ∈ Perspectival.WantableGPT.effects (Bool × Bool) :=
+  ⟨diagonalIndicator, diagonalIndicator_in_effectVec, rfl⟩
+
+/-- diagonalIndicatorLin gives 1 on diagonalState. -/
+theorem diagonalIndicatorLin_on_diagonalState :
+    diagonalIndicatorLin diagonalState = 1 := by
+  show ∑ p, diagonalIndicator p * diagonalState p = 1
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by
+      decide,
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show diagonalIndicator (true, true) * diagonalState (true, true) +
+        (diagonalIndicator (true, false) * diagonalState (true, false) +
+          (diagonalIndicator (false, true) * diagonalState (false, true) +
+            diagonalIndicator (false, false) * diagonalState (false, false))) = 1
+  show (1 : ℝ) * (1/2 : ℝ) + (0 * 0 + (0 * 0 + 1 * (1/2 : ℝ))) = 1
+  norm_num
+
+/-- diagonalIndicatorLin gives 0 on antiDiagonalState. -/
+theorem diagonalIndicatorLin_on_antiDiagonalState :
+    diagonalIndicatorLin antiDiagonalState = 0 := by
+  show ∑ p, diagonalIndicator p * antiDiagonalState p = 0
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by
+      decide,
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show diagonalIndicator (true, true) * antiDiagonalState (true, true) +
+        (diagonalIndicator (true, false) * antiDiagonalState (true, false) +
+          (diagonalIndicator (false, true) * antiDiagonalState (false, true) +
+            diagonalIndicator (false, false) * antiDiagonalState (false, false))) = 0
+  show (1 : ℝ) * 0 + (0 * (1/2 : ℝ) + (0 * (1/2 : ℝ) + 1 * 0)) = 0
+  norm_num
+
+/-- diagonalState and antiDiagonalState are perfectly distinguishable. -/
+theorem diagonalState_distinguishable_antiDiagonalState :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool))
+      diagonalState antiDiagonalState :=
+  ⟨diagonalIndicatorLin, diagonalIndicatorLin_in_effects,
+   diagonalIndicatorLin_on_diagonalState,
+   diagonalIndicatorLin_on_antiDiagonalState⟩
