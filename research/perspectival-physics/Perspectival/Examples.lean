@@ -2928,6 +2928,18 @@ example : PTrans.actMeeting (PTrans.complement : PTrans Bool) trueMeetsFalse
         = trueMeetsFalse.swap :=
   PTrans.actMeeting_complement trueMeetsFalse
 
+/-- The PTrans action on Meeting is faithful. -/
+example {W : Type u} [Wantable W] (f g : PTrans W)
+    (h : ∀ m : Meeting W, PTrans.actMeeting f m = PTrans.actMeeting g m) :
+    f = g :=
+  PTrans.actMeeting_faithful f g h
+
+/-- Concrete faithfulness on Bool: equal-on-all-meetings PTrans are equal. -/
+example (f g : PTrans Bool)
+    (h : ∀ m : Meeting Bool, PTrans.actMeeting f m = PTrans.actMeeting g m) :
+    f = g :=
+  PTrans.actMeeting_faithful f g h
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
