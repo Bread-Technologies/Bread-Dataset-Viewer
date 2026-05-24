@@ -11350,3 +11350,24 @@ example {W : Type u} [Wantable W] :
     (PTrans.complement : PTrans W) * PTrans.complement * PTrans.complement⁻¹
       = PTrans.complement :=
   PTrans_complement_conj _
+
+/-- complement squared via inv: complement * complement⁻¹ = 1. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * PTrans.complement⁻¹ = 1 := by
+  rw [PTrans.complement_inv]
+  exact PTrans.complement_sq
+
+/-- complement⁻¹ * complement = 1. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W)⁻¹ * PTrans.complement = 1 := by
+  rw [PTrans.complement_inv]
+  exact PTrans.complement_sq
+
+/-- complement⁻¹ = complement (specific statement). -/
+example : (PTrans.complement : PTrans Bool)⁻¹ = PTrans.complement :=
+  PTrans.complement_inv
+
+/-- The orbit of complement under self-conjugation is trivial (just complement). -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    φ * (PTrans.complement : PTrans W) * φ⁻¹ = PTrans.complement :=
+  PTrans_complement_conj φ
