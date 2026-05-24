@@ -746,6 +746,13 @@ example {W : Type u} [Wantable W] (w : W) :
 -- Mathlib's Function.invFun requires Nonempty W, which we don't
 -- want to constrain at this level. Omitted.
 
+/-- The complement is a permutation of W. -/
+example {W : Type u} [Wantable W] : Equiv.Perm W where
+  toFun := Wantable.complement
+  invFun := Wantable.complement
+  left_inv := Wantable.complement_involutive
+  right_inv := Wantable.complement_involutive
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
