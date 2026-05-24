@@ -62,6 +62,9 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Product Meeting bijection lemmas (`prodFst_prodMk`, `prodSnd_prodMk`) | `Composition.lean` | ✓ |
 | Wantable instances on Bool, ℤ, Fin 2, Unit, Empty | `Examples.lean` | ✓ |
 | complementTransform squared = id (Transform level) | `WantableGPT.lean :: complementTransform_sq` | ✓ |
+| `Wantable.complement` is injective and surjective | `Ontology.lean :: complement_injective, complement_surjective` | ✓ |
+| `mk_fromSide` constructor for meetings | `Ontology.lean :: mk_fromSide` | ✓ |
+| Meeting W ≃ W via mk_fromSide | `Ontology.lean :: mk_fromSide_side₁_inv` | ✓ |
 | Classical n-outcome GPT — full construction | `Classical.lean :: gpt` | ✓ |
 | Classical GPT — convex states (std simplex) | `Classical.lean :: states_convex` | ✓ |
 | Classical GPT — convex effects | `Classical.lean :: effects_convex` | ✓ |
