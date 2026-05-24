@@ -5,10 +5,10 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~7,100 lines of Lean** (excluding Mathlib dependencies) — 7000-line milestone passed
-- **~180+ verified theorems / examples** (no `sorry` outside documented placeholders)
+- **~8,650 lines of Lean** (excluding Mathlib dependencies) — 8000-line milestone passed
+- **~250+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **750+ commits** to the research branch (extended session — 750 milestone reached)
+- **800+ commits** to the research branch (extended session — 800 milestone reached)
 
 ## Major new content (latest batch)
 
