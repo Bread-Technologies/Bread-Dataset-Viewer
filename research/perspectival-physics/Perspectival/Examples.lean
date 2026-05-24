@@ -2227,6 +2227,16 @@ example (g f : PTrans Bool) :
     PTrans.prodMap g g * PTrans.prodMap f f :=
   PTrans.prodMap_mul g f g f
 
+/-- The `boolEquivFin2` Wantable iso maps `complement` correctly:
+on Bool, `not true = false`; under the equiv, `1 ↦ 0` and indeed
+`complement (boolEquivFin2 true) = boolEquivFin2 (complement true)`. -/
+example : boolEquivFin2.toEquiv (Wantable.complement true)
+        = Wantable.complement (boolEquivFin2.toEquiv true) :=
+  boolEquivFin2.resp_complement true
+
+/-- The Wantable iso `boolEquivFin2` has `(refl Bool).trans boolEquivFin2 = boolEquivFin2`. -/
+example : (WantableEquiv.refl Bool).trans boolEquivFin2 = boolEquivFin2 := rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
