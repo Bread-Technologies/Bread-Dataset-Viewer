@@ -10572,3 +10572,26 @@ example {W : Type u} [Wantable W] (h g f : PTrans W) :
 example {W : Type u} [Wantable W] (f : PTrans W) : f⁻¹ * f = 1 := inv_mul_cancel f
 
 example {W : Type u} [Wantable W] (f : PTrans W) : f * f⁻¹ = 1 := mul_inv_cancel f
+
+/-- PTrans inv applied twice gives back the same. -/
+example {W : Type u} [Wantable W] (f : PTrans W) : (f⁻¹)⁻¹ = f := inv_inv f
+
+/-- PTrans inv distributes over composition (with reversal). -/
+example {W : Type u} [Wantable W] (g f : PTrans W) :
+    (g * f)⁻¹ = f⁻¹ * g⁻¹ := mul_inv_rev g f
+
+/-- PTrans identity has inverse identity. -/
+example {W : Type u} [Wantable W] : (1 : PTrans W)⁻¹ = 1 := inv_one
+
+/-- complement * complement * complement = complement. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * PTrans.complement * PTrans.complement
+    = PTrans.complement := by
+  rw [PTrans.complement_sq, one_mul]
+
+/-- complement^4 = 1. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * PTrans.complement *
+      (PTrans.complement * PTrans.complement) = 1 := by
+  rw [PTrans.complement_sq]
+  exact one_mul 1
