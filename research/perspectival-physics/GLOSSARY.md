@@ -143,6 +143,19 @@ Meeting.sum_no_cross`. (Structural form of no-signaling.)
 *-algebra case (rejection of observer-independent ledger). Lean:
 `CHSH.lean :: bound_perspectival` via Mathlib.
 
+**No-go: WantableGPT is always classical** — For any finite Wantable
+`W`, the bridge `WantableGPT.gpt W` produces a GPT with N = K = |W|,
+i.e., the *classical signature*. Quantum structure cannot be derived
+from the bare Wantable axioms; it requires additional postulates.
+Lean: `WantableGPT.lean :: wantableGPT_is_classical`.
+
+**Structural deflation: PTrans is the complement-centralizer** —
+For any Wantable `W`, `PTrans W` is in bijection (and group-iso) with
+the centralizer of `Wantable.complement` (viewed as a permutation) in
+`Equiv.Perm W`. The framework's "perspectival transformations" are
+exactly the Z/2-equivariant permutations of the outcome set. Lean:
+`Transformations.lean :: mem_range_toEquivPermHom_iff`.
+
 ## Cross-references
 
 - For per-theorem status see `STATUS.md`.
