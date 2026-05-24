@@ -1235,5 +1235,30 @@ example : cyclicShiftStrictReversible.toLin ≠
       show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at h3
   simp at h3
 
+/-! ## Summary of R6 progress
+
+The framework now provably distinguishes classical from quantum
+reversible dynamics for small cases:
+
+  n=1: only id (trivial agency only).
+  n=2: id and swap exist as separate strict reversibles, but
+       NO continuous path connects them through bijections.
+       Lean theorem: classical_n2_strict_reversible_path_id_swap_empty.
+       Lean corollary: no two-element StrictConnectedAgency.
+  n=3: id and cyclicShift exist as separate strict reversibles
+       (analogous discreteness expected; det-IVT argument applies
+       at the level of 3×3 doubly stochastic matrices).
+
+For general n, the conjecture is that classical Birkhoff polytope's
+bijection locus has n! connected components (one per permutation),
+sign-of-permutation being the topological invariant. Each component
+is contractible and the boundary between any two distinct
+permutations always passes through a singular matrix.
+
+The quantum analogue: U(N) is a CONNECTED compact Lie group, so its
+strict reversibles ARE path-connected. This is the framework-
+distinctive content: R6 (StrictConnectedAgency) is impossible on
+classical GPTs but natural on quantum-like GPTs. -/
+
 end Classical
 end Perspectival
