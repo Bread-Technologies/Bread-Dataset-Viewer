@@ -2752,6 +2752,22 @@ example : (Wantable.complement (Wantable.complement
           (true, false, true) :=
   Wantable.complement_involutive _
 
+/-- The trivial Pattern is satisfied by every Reality. -/
+example {W : Type u} [Wantable W] (R : Reality W) : (Pattern.trivial W) R := trivial
+
+/-- The empty Pattern is satisfied by no Reality. -/
+example {W : Type u} [Wantable W] (R : Reality W) : ¬ (Pattern.empty W) R := id
+
+/-- Pattern.and is commutative (up to logical equivalence). -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
+    Pattern.and P Q R ↔ Pattern.and Q P R :=
+  ⟨And.symm, And.symm⟩
+
+/-- Pattern.or is commutative (up to logical equivalence). -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
+    Pattern.or P Q R ↔ Pattern.or Q P R :=
+  ⟨Or.symm, Or.symm⟩
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
