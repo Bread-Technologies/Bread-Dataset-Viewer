@@ -3228,6 +3228,13 @@ example : SelfComplementary ([] : List Bool) := rfl
 /-- Single-element list complement applied to [true] gives [false]. -/
 example : Wantable.complement ([true] : List Bool) = [false] := rfl
 
+/-- Lists [true, true] is NOT self-complementary. -/
+example : ¬ SelfComplementary ([true, true] : List Bool) := by
+  intro h
+  have : ([false, false] : List Bool) = [true, true] := h
+  injection this with h1 _
+  exact Bool.false_ne_true h1
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
