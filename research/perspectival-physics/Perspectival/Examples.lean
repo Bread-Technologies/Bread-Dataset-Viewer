@@ -2876,6 +2876,15 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Unit)) = 2 := 
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Unit × Unit)) = 1 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
 
+/-- WantableGPT on Unit ⊕ Unit has finrank 2. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Unit ⊕ Unit)) = 2 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
+/-- Unit ⊕ Unit is not fixed-point-free (each side has self-complementary). -/
+example : ¬ FixedPointFreeComplement (Unit ⊕ Unit) := by
+  intro h
+  exact h (Sum.inl ()) rfl
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
