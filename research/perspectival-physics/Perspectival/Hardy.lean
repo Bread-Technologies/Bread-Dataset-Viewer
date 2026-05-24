@@ -119,8 +119,26 @@ def Axiom3_Subspaces (G : GPT V) : Prop :=
   -- whose normalized state space is that sub-state-space.
   ∀ S : Set V, S ⊆ G.states → Convex ℝ S → S.Nonempty →
     ∃ G' : GPT V, G'.states = S
--- The statement is correct in form; we have NOT proven this for our
--- GPT class. It is an OPEN derivation target.
+
+/-- **Hardy Axiom 3 is DERIVABLE** — any GPT satisfies it.
+
+Construction: given any nonempty convex `S ⊆ G.states`, take the
+sub-GPT with the same unit, the same effects, and `states := S`.
+The normalization and probability conditions transfer since
+`S ⊆ G.states`. -/
+theorem axiom3_holds (G : GPT V) : Axiom3_Subspaces G := by
+  intro S hSsub hSconv _hSnonempty
+  refine ⟨{
+    unit := G.unit
+    states := S
+    effects := G.effects
+    states_convex := hSconv
+    effects_convex := G.effects_convex
+    states_normalized := fun ρ hρ => G.states_normalized ρ (hSsub hρ)
+    prob_in_unit_interval := fun e he ρ hρ =>
+      G.prob_in_unit_interval e he ρ (hSsub hρ)
+    unit_is_effect := G.unit_is_effect
+  }, rfl⟩
 
 /-- **Axiom 4 — Composite systems.**
 A composite system consisting of subsystems A and B satisfies
