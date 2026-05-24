@@ -281,6 +281,16 @@ theorem Reachable.apply_available [ClosedAgency G] {ρ₁ ρ₂ : V}
     Reachable (G := G) ρ₁ (R.toLin ρ₂) := by
   exact Reachable.trans h ⟨R, hR, rfl⟩
 
+/-- Under `ClosedAgency`, `Reachable` is reflexive and transitive — a
+preorder. (Symmetry would require closure under inverse, which
+requires `Reversible` to support inversion. That refinement is
+deferred to `InverseClosedAgency`, not yet formalized.) -/
+theorem Reachable.preorder [ClosedAgency G] :
+    (∀ ρ : V, Reachable (G := G) ρ ρ) ∧
+    (∀ ρ₁ ρ₂ ρ₃ : V, Reachable (G := G) ρ₁ ρ₂ → Reachable (G := G) ρ₂ ρ₃ →
+      Reachable (G := G) ρ₁ ρ₃) :=
+  ⟨Reachable.refl, fun _ _ _ h₁ h₂ => Reachable.trans h₁ h₂⟩
+
 /-! ## Honest framing
 
 What `continuous_path_of_reachable` shows: if the agency postulate is
