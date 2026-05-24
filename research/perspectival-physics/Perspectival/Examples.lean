@@ -8993,3 +8993,28 @@ example : rightMarginal (uniformState (Bool × Bool))
              | (show ((1 : ℝ) / 4) = (1/2 : ℝ) * 0 + (1/2 : ℝ) * (1/2 : ℝ); norm_num))
   rw [hcom]
   rw [LinearMap.map_add, LinearMap.map_smul, LinearMap.map_smul]
+
+/-- New: the WantableGPT product Wantable structure is consistent with
+componentwise complement. -/
+example (p : Bool × Bool) : Wantable.complement p
+        = (Wantable.complement p.1, Wantable.complement p.2) := rfl
+
+/-- New: the WantableGPT sum Wantable structure on (Bool ⊕ Bool). -/
+example (b : Bool) : Wantable.complement (Sum.inl b : Bool ⊕ Bool)
+        = Sum.inl (Wantable.complement b) := rfl
+
+example (b : Bool) : Wantable.complement (Sum.inr b : Bool ⊕ Bool)
+        = Sum.inr (Wantable.complement b) := rfl
+
+/-- Triple-Wantable complement on Bool × Bool × Bool. -/
+example (p : Bool × Bool × Bool) : Wantable.complement p
+        = (Wantable.complement p.1, Wantable.complement p.2.1,
+           Wantable.complement p.2.2) := rfl
+
+/-- Concrete: complement (true, false, true) = (false, true, false). -/
+example : Wantable.complement ((true, false, true) : Bool × Bool × Bool)
+        = (false, true, false) := rfl
+
+/-- Complement is involutive on Bool × Bool × Bool. -/
+example (p : Bool × Bool × Bool) : Wantable.complement (Wantable.complement p) = p :=
+  Wantable.complement_involutive p
