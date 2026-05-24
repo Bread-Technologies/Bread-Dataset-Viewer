@@ -84,6 +84,29 @@ instance instWantableProd (W₁ W₂ : Type u) [Wantable W₁] [Wantable W₂] :
           Wantable.complement (Wantable.complement p.2)) = p
     rw [Wantable.complement_involutive, Wantable.complement_involutive]
 
+/-- A meeting in the product Wantable projects to a meeting in the
+first component. -/
+def Meeting.prodFst {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m : Meeting (W₁ × W₂)) : Meeting W₁ where
+  side₁ := m.side₁.1
+  side₂ := m.side₂.1
+  complementary := by
+    have h : Wantable.complement m.side₁ = m.side₂ := m.complementary
+    have h1 : (Wantable.complement m.side₁).1 = m.side₂.1 := by rw [h]
+    -- (complement m.side₁).1 = complement m.side₁.1 by the instance definition
+    exact h1
+
+/-- A meeting in the product Wantable projects to a meeting in the
+second component. -/
+def Meeting.prodSnd {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m : Meeting (W₁ × W₂)) : Meeting W₂ where
+  side₁ := m.side₁.2
+  side₂ := m.side₂.2
+  complementary := by
+    have h : Wantable.complement m.side₁ = m.side₂ := m.complementary
+    have h1 : (Wantable.complement m.side₁).2 = m.side₂.2 := by rw [h]
+    exact h1
+
 def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ ⊕ W₂) where
   toFun := fun
