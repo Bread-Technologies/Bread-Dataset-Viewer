@@ -8842,10 +8842,6 @@ example : diagonalState ≠ productState (leftMarginal diagonalState)
   have h_right : rightMarginal diagonalState = uniformBool := by
     funext b; exact diagonalState_right_marginal b
   rw [h_left, h_right] at h
-  -- diagonalState = productState uniformBool uniformBool means classical
-  -- separability into uniformBool × uniformBool, but diagonalState has
-  -- 1/2 on diagonal and 0 off-diagonal, while productState uniformBool
-  -- uniformBool has 1/4 on each (uniform).
   have h_val : diagonalState (true, false)
              = productState uniformBool uniformBool (true, false) := by rw [h]
   have h_LHS : diagonalState (true, false) = 0 := by
@@ -8855,6 +8851,33 @@ example : diagonalState ≠ productState (leftMarginal diagonalState)
   have h_RHS : productState uniformBool uniformBool (true, false) = 1/4 := by
     show uniformBool true * uniformBool false = 1/4
     show (1/2 : ℝ) * (1/2 : ℝ) = 1/4
+    norm_num
+  rw [h_LHS, h_RHS] at h_val
+  norm_num at h_val
+
+/-- Concrete: antiDiagonalState ≠ productState of its marginals. -/
+example : antiDiagonalState ≠ productState (leftMarginal antiDiagonalState)
+                                            (rightMarginal antiDiagonalState) := by
+  intro h
+  have h_val : antiDiagonalState (true, true)
+             = productState (leftMarginal antiDiagonalState)
+                            (rightMarginal antiDiagonalState) (true, true) :=
+    congr_fun h _
+  have h_LHS : antiDiagonalState (true, true) = 0 := by
+    show (if (true, true) = (true, false) ∨ (true, true) = (false, true)
+          then (1/2 : ℝ) else 0) = 0
+    simp
+  have h_RHS : productState (leftMarginal antiDiagonalState)
+                           (rightMarginal antiDiagonalState) (true, true) = 1/4 := by
+    show leftMarginal antiDiagonalState true * rightMarginal antiDiagonalState true = 1/4
+    show (∑ b₂, antiDiagonalState (true, b₂)) * (∑ b₁, antiDiagonalState (b₁, true)) = 1/4
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    show (antiDiagonalState (true, true) + antiDiagonalState (true, false))
+       * (antiDiagonalState (true, true) + antiDiagonalState (false, true))
+       = 1/4
+    show ((0 : ℝ) + 1/2) * (0 + 1/2) = 1/4
     norm_num
   rw [h_LHS, h_RHS] at h_val
   norm_num at h_val
