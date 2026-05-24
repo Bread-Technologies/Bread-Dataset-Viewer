@@ -242,6 +242,12 @@ theorem actReality_mul (ψ φ : PTrans W) (R : Reality W) :
   rw [mul_inv_rev]
   exact congrArg R (actMeeting_comp φ⁻¹ ψ⁻¹ m)
 
+/-- The PTrans-action on Reality is a Mathlib `MulAction`. -/
+instance : MulAction (PTrans W) (Reality W) where
+  smul := actReality
+  one_smul := actReality_one
+  mul_smul := actReality_mul
+
 /-! ## The forgetful bridge: PTrans → Equiv.Perm
 
 A perspectival transformation forgets its `resp_complement` law and
