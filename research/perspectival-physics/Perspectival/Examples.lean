@@ -2697,8 +2697,15 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 × Fin 4)) = 12 
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 ⊕ Fin 4)) = 7 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
 
--- Note: PerfectWitness.diag/offdiag from Distinguish.lean need explicit ρ
--- in the signature; skipping here. The direct kronecker approach works fine.
+/-- PerfectWitness.diag on WantableGPT Bool. -/
+example : (Perspectival.WantableGPT.perfectWitness Bool).e true
+            (Perspectival.WantableGPT.vertex Bool true) = 1 :=
+  (Perspectival.WantableGPT.perfectWitness Bool).diag true
+
+/-- PerfectWitness.offdiag on WantableGPT Bool. -/
+example : (Perspectival.WantableGPT.perfectWitness Bool).e true
+            (Perspectival.WantableGPT.vertex Bool false) = 0 :=
+  (Perspectival.WantableGPT.perfectWitness Bool).offdiag (by decide)
 
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
