@@ -435,6 +435,11 @@ example (n : ℤ) (h : 0 < n) : Wantable.complement n ≠ n := by
 example : (Wantable.complement (1 : ℤ) = -1) ∧ (Wantable.complement (-1 : ℤ) = 1) :=
   ⟨rfl, by show -(-1 : ℤ) = 1; ring⟩
 
+/-- Meetings on ℤ are pairs of opposite integers. -/
+example : Meeting ℤ := Perspectival.Meeting.mk_fromSide ℤ 5
+
+example : (Perspectival.Meeting.mk_fromSide ℤ 5).side₂ = -5 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
