@@ -2587,6 +2587,15 @@ example : boolEquivFin2.mapPTransMulEquiv.symm fin2Swap = boolSwap := by
   intro b
   cases b <;> rfl
 
+/-- The image of mapPTransMulEquiv on PTrans Bool — only {1, fin2Swap}. -/
+example (φ : PTrans Bool) :
+    boolEquivFin2.mapPTransMulEquiv φ = 1 ∨
+    boolEquivFin2.mapPTransMulEquiv φ = fin2Swap := by
+  rcases ptrans_bool_classification φ with h | h
+  · left; rw [h]; exact boolEquivFin2.mapPTransMulEquiv.map_one
+  · right; rw [h]
+    apply PTrans.ext; intro i; fin_cases i <;> rfl
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
