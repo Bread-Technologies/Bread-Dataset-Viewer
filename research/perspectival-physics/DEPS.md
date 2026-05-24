@@ -127,6 +127,36 @@ End-to-end demonstrations:
 - Boolean Wantable, classical 2-outcome GPT, 3-simplex
   linear independence, no-cross-system meetings, `boolSwap`.
 
+## Recent additions (post-bridge)
+
+Since the initial bridge (WantableGPT.lean), several modules have been
+deepened:
+
+- `Ontology.lean` now contains `SelfComplementary`,
+  `FixedPointFreeComplement` predicates, `Meeting.ext_of_side₁` (closing
+  a documented gap), `Meeting.swap_mk_fromSide`.
+- `Transformations.lean` adds `toEquivPermHom` (`PTrans W →* Equiv.Perm W`),
+  `mem_range_toEquivPermHom_iff` (the *characterization*: PTrans =
+  Centralizer of complement), `actMeeting_complement = swap`,
+  `actMeeting_faithful`, `actReality` (PTrans action on Reality with full
+  lattice-operation preservation).
+- `WantableGPT.lean` adds the **no-go theorem**
+  `wantableGPT_is_classical` (`N = K = |W|`), `vertexBasis`,
+  `finrank_V_eq_card`, composition-dimension theorems
+  `finrank_V_prod_eq_mul` and `finrank_V_sum_eq_add`,
+  `exists_two_distinguishable`.
+- `Continuity.lean` adds `Reversible.comp`, `ClosedAgency` (closure
+  refinement), `Reachable.trans`, `Reachable.apply_available`.
+- `Classical.lean` adds `vertex_decomposition`, `vertices_span`.
+- `Examples.lean` adds `WantableEquiv` (Wantable iso, with refl/symm/trans
+  groupoid structure), `mapPTransMulEquiv` (PTrans iso induced from
+  WantableEquiv), concrete classifications
+  `ptrans_bool_classification`, `ptrans_fin2_classification`,
+  `ptrans_unit_classification`, `ptrans_empty_classification`,
+  `card_even_of_fixedPointFree` (even-cardinality theorem),
+  `ContinuousWantable`/`ContinuousPTrans` (topological refinement, with
+  ℝ instance).
+
 ## Reading order
 
 For a first pass:
