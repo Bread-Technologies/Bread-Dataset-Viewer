@@ -10712,3 +10712,24 @@ example : (Perspectival.WantableGPT.complementTransform Bool) ^ 200
 example : (Perspectival.WantableGPT.complementTransform Bool) ^ 999
         = Perspectival.WantableGPT.complementTransform Bool :=
   complementTransform_pow_two_n_succ 499
+
+/-- Generic complementPTrans power theorems. -/
+theorem complementPTrans_pow_two_n
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (n : ℕ) :
+    (Perspectival.WantableGPT.complementPTrans W) ^ (2 * n) = 1 := by
+  rw [pow_mul, WantableGPT_complementPTrans_order_two, one_pow]
+
+theorem complementPTrans_pow_two_n_succ
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (n : ℕ) :
+    (Perspectival.WantableGPT.complementPTrans W) ^ (2 * n + 1)
+      = Perspectival.WantableGPT.complementPTrans W := by
+  rw [pow_add, complementPTrans_pow_two_n, one_mul, pow_one]
+
+/-- Concrete: complementPTrans^200 = 1 on Bool. -/
+example : (Perspectival.WantableGPT.complementPTrans Bool) ^ 200 = 1 :=
+  complementPTrans_pow_two_n 100
+
+/-- Concrete: complementPTrans^999 = complementPTrans on Bool. -/
+example : (Perspectival.WantableGPT.complementPTrans Bool) ^ 999
+        = Perspectival.WantableGPT.complementPTrans Bool :=
+  complementPTrans_pow_two_n_succ 499
