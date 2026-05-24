@@ -628,6 +628,11 @@ theorem wantableGPT_empty_dim [Fintype W] (h : Fintype.card W = 0) :
     Module.finrank ℝ (V W) = 0 := by
   rw [finrank_V_eq_card, h]
 
+/-- The complete cardinality-keyed dimension formula. -/
+theorem wantableGPT_dim_eq_card [Fintype W] :
+    Module.finrank ℝ (V W) = Fintype.card W :=
+  finrank_V_eq_card W
+
 /-- **Hardy-signature dichotomy.** For finite Wantable W with `|W| ≥ 2`,
 the WantableGPT satisfies the classical signature `K = N = |W|` and
 *does not* satisfy any of the standard non-classical signatures
