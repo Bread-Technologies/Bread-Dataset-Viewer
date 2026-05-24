@@ -41,7 +41,27 @@ A Lean 4 codebase formalizing the perspectival-physics research program:
    simplex, coordinate-projection effects, [0,1]-valued probabilities.
 
 6. **Group action structure** — `PTrans W` is a proper Lean `Group`
-   acting on `Meeting W` via Mathlib's `MulAction` interface.
+   acting on `Meeting W` via Mathlib's `MulAction` interface. The
+   action extends to `Reality W` (predicates on meetings) and, via
+   the `WantableGPT` bridge, to the GPT state space.
+
+7. **Structural characterization** — `PTrans W` is *exactly* the
+   centralizer of `Wantable.complement` (as a permutation) inside
+   `Equiv.Perm W` (`Transformations.lean :: mem_range_toEquivPermHom_iff`).
+   Forgetting the resp_complement law gives an injective MonoidHom
+   into the symmetric group, with image the Z/2-equivariant
+   permutations. *The framework's vocabulary picks out a standard
+   algebraic object* (Quinean ontological deflation).
+
+8. **No-go theorem for the bare ontology** — for any finite Wantable
+   `W`, the `WantableGPT.gpt W` construction always yields the
+   *classical* GPT signature `N = K = |W|`
+   (`WantableGPT.lean :: wantableGPT_is_classical`). Combined with
+   composition theorems `K(W₁ × W₂) = |W₁| · |W₂|` and
+   `K(W₁ ⊕ W₂) = |W₁| + |W₂|`, this delimits exactly what the bare
+   axioms can derive: classical structure only. Quantum derivation
+   requires additional postulates (agency / composition / non-finite
+   structure) beyond I–IV.
 
 ## The framework's distinctive contribution
 
