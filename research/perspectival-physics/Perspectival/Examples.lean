@@ -13544,6 +13544,46 @@ example :
     simp] at hcol
   norm_num at hcol
 
+/-! ### Direct Born rule application -/
+
+/-- Born rule on vertex true at outcome true: P = 1. -/
+example : deltaIndicatorLin true (Perspectival.WantableGPT.vertex Bool true) = 1 :=
+  deltaIndicatorLin_vertex_self true
+
+/-- Born rule on vertex true at outcome false: P = 0. -/
+example : deltaIndicatorLin false (Perspectival.WantableGPT.vertex Bool true) = 0 :=
+  deltaIndicatorLin_vertex_other false true (by decide)
+
+/-- Born rule on uniformBool at outcome true: P = 1/2. -/
+example : deltaIndicatorLin true uniformBool = (1/2 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]
+  rfl
+
+/-- Born rule on uniformBool at outcome false: P = 1/2. -/
+example : deltaIndicatorLin false uniformBool = (1/2 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]
+  rfl
+
+/-- Born rule on diagonalState at (true, true): P = 1/2. -/
+example : deltaIndicatorLin (true, true) diagonalState = (1/2 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]
+  rfl
+
+/-- Born rule on diagonalState at (true, false): P = 0. -/
+example : deltaIndicatorLin (true, false) diagonalState = 0 := by
+  rw [deltaIndicatorLin_eq_apply]
+  rfl
+
+/-- Born rule on antiDiagonalState at (true, true): P = 0. -/
+example : deltaIndicatorLin (true, true) antiDiagonalState = 0 := by
+  rw [deltaIndicatorLin_eq_apply]
+  rfl
+
+/-- Born rule on antiDiagonalState at (true, false): P = 1/2. -/
+example : deltaIndicatorLin (true, false) antiDiagonalState = (1/2 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]
+  rfl
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
