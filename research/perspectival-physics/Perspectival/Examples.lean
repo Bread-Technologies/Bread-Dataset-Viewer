@@ -2852,6 +2852,11 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V Unit) = 1 := by
 example : Module.finrank ℝ (Perspectival.WantableGPT.V Empty) = 0 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
 
+/-- Concrete Fintype.card on Fin n. -/
+example : Fintype.card (Fin 5) = 5 := by decide
+example : Fintype.card (Fin 10) = 10 := by decide
+example : Fintype.card (Fin 100) = 100 := by decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
