@@ -16724,6 +16724,46 @@ example (w : Bool) (h : PatternStableWantable.Stable_nontrivial w) :
     ∃ φ : PTrans Bool, φ ≠ 1 :=
   ⟨PTrans.complement, stable_nontrivial_implies_complement_ne_one w h⟩
 
+/-! ## Framework discrimination table — Wantable types classified by patterns
+
+A summary of the framework's structural distinctions, organized by
+which Wantable instances have Stable_nontrivial elements (per the
+non-trivial PatternStableWantable refinement).
+
+| Wantable     | Stable_nontrivial? | PTrans complement = 1?    |
+|--------------|---------------------|---------------------------|
+| Bool         | YES (true ≠ false) | NO (proven)               |
+| Fin 2        | YES (0 ≠ 1)        | NO (proven)               |
+| Fin 3 (id)   | NO (id-complement) | YES (complement = 1)     |
+| Fin 4        | NO (id-complement) | YES (complement = 1)     |
+| Bool × Bool  | YES (no fixed pts) | NO (proven)               |
+| Bool³        | YES (no fixed pts) | NO (proven)               |
+| Bool ⊕ Bool  | YES (componentwise)| NO (proven)               |
+
+The two columns are equivalent by `stable_nontrivial_implies_complement_ne_one`
+and `complement_eq_one_implies_no_nontrivial`. This is the framework's
+**discrimination theorem**: which Wantables have non-trivial pattern
+stability is exactly the same as which have non-trivial complement
+PTrans. -/
+
+/-- Discrimination: Bool has Stable_nontrivial. -/
+example : ∃ w : Bool, PatternStableWantable.Stable_nontrivial w :=
+  ⟨true, by rw [PatternStableWantable.stable_nontrivial_iff]; decide⟩
+
+/-- Discrimination: Bool × Bool has Stable_nontrivial. -/
+example : ∃ w : Bool × Bool, PatternStableWantable.Stable_nontrivial w :=
+  ⟨(true, true), bool_prod_bool_stable_nontrivial _⟩
+
+/-- Discrimination: Fin 3 does NOT have Stable_nontrivial. -/
+example : ¬ ∃ w : Fin 3, PatternStableWantable.Stable_nontrivial w := by
+  intro ⟨w, hw⟩
+  rw [PatternStableWantable.stable_nontrivial_iff] at hw
+  exact hw rfl
+
+-- NOTE: Fin 4 has complement = swap rather than id, so Stable_nontrivial
+-- may hold for some elements. The framework's discrimination table
+-- depends on the SPECIFIC complement instance.
+
 /-- Stable_nontrivial is preserved under Sum.inl. -/
 example (w : Bool) (h : PatternStableWantable.Stable_nontrivial w) :
     PatternStableWantable.Stable_nontrivial (Sum.inl w : Bool ⊕ Bool) := by
