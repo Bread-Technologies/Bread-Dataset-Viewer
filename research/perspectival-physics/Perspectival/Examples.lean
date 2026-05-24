@@ -474,9 +474,7 @@ example : FixedPointFreeComplement (Bool ⊕ Bool) := by
   cases x with
   | inl b =>
     cases b
-    · -- complement (inl false) = inl true; SelfComplementary says this = inl false
-      -- So inl true = inl false, so true = false (false)
-      have : (true : Bool) = false := Sum.inl.inj h
+    · have : (true : Bool) = false := Sum.inl.inj h
       exact Bool.false_ne_true this.symm
     · have : (false : Bool) = true := Sum.inl.inj h
       exact Bool.false_ne_true this
@@ -486,6 +484,15 @@ example : FixedPointFreeComplement (Bool ⊕ Bool) := by
       exact Bool.false_ne_true this.symm
     · have : (false : Bool) = true := Sum.inr.inj h
       exact Bool.false_ne_true this
+
+/-- Product Wantable `Bool × Bool` has fixed-point-free complement
+(complement = componentwise negation; never fixes a pair). -/
+example : FixedPointFreeComplement (Bool × Bool) := by
+  intro ⟨b₁, b₂⟩ h
+  have h1 : Wantable.complement b₁ = b₁ := (Prod.mk.injEq _ _ _ _).mp h |>.1
+  cases b₁
+  · exact Bool.false_ne_true h1.symm
+  · exact Bool.false_ne_true h1
 
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
