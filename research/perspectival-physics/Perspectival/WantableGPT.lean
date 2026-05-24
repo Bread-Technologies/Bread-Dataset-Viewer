@@ -231,6 +231,44 @@ theorem fromPTrans_mul_toLin (ψ φ : PTrans W) :
   -- (ψ * φ).invFun w = φ.invFun (ψ.invFun w) by definition of comp
   rfl
 
+/-! ## Vertices: pure states corresponding to each element of `W` -/
+
+variable [DecidableEq W]
+
+/-- The "vertex" state at `w` ∈ W: probability mass 1 at `w`, 0
+elsewhere. -/
+def vertex (w : W) : V W := fun v => if w = v then 1 else 0
+
+/-- The vertex at `w` is a valid state. -/
+theorem vertex_in_states (w : W) : vertex W w ∈ states W := by
+  refine ⟨?_, ?_⟩
+  · intro v
+    show 0 ≤ (if w = v then (1 : ℝ) else 0)
+    split <;> simp
+  · show ∑ v, (if w = v then (1 : ℝ) else 0) = 1
+    rw [Finset.sum_eq_single w (fun v _ hvw => by simp [if_neg hvw.symm])
+        (by intro h; exact absurd (Finset.mem_univ w) h)]
+    simp
+
+/-- The Wantable-complement action sends `vertex w` to `vertex (complement w)`. -/
+theorem complementAction_vertex (w : W) :
+    complementAction W (vertex W w) = vertex W (Wantable.complement w) := by
+  funext v
+  show vertex W w (Wantable.complement v) = vertex W (Wantable.complement w) v
+  show (if w = Wantable.complement v then (1 : ℝ) else 0)
+       = (if Wantable.complement w = v then (1 : ℝ) else 0)
+  by_cases h : w = Wantable.complement v
+  · have : Wantable.complement w = v := by
+      rw [h, Wantable.complement_involutive]
+    simp [h, this]
+  · have : Wantable.complement w ≠ v := by
+      intro h'
+      apply h
+      rw [← h', Wantable.complement_involutive]
+    simp [h, this]
+
+/-! ## Bridge back: the complement function as PTrans -/
+
 /-- The complement function on `W`, packaged as a PTrans. -/
 def complementPTrans : PTrans W where
   toFun := Wantable.complement
