@@ -1002,6 +1002,10 @@ example : (complementEquiv : Equiv.Perm Bool).toFun (complementEquiv.toFun false
   show Wantable.complement (Wantable.complement false) = false
   rfl
 
+example : (complementEquiv : Equiv.Perm ℤ).toFun (complementEquiv.toFun 7) = 7 := by
+  show Wantable.complement (Wantable.complement (7 : ℤ)) = 7
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
