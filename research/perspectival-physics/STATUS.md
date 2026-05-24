@@ -60,7 +60,7 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Product Wantable structure | `Composition.lean :: instWantableProd` | ✓ |
 | Meeting.prodFst / prodSnd / prodMk for product Wantable | `Composition.lean` | ✓ |
 | Product Meeting bijection lemmas (`prodFst_prodMk`, `prodSnd_prodMk`) | `Composition.lean` | ✓ |
-| Wantable instances on Bool, ℤ, Fin 2, Unit, Empty | `Examples.lean` | ✓ |
+| Wantable instances on Bool, ℤ, Fin 2, Unit, Empty, Fin 3, Fin 4, products, sums, Option, List, function spaces | `Examples.lean` | ✓ |
 | complementTransform squared = id (Transform level) | `WantableGPT.lean :: complementTransform_sq` | ✓ |
 | `Wantable.complement` is injective and surjective | `Ontology.lean :: complement_injective, complement_surjective` | ✓ |
 | `mk_fromSide` constructor for meetings | `Ontology.lean :: mk_fromSide` | ✓ |
