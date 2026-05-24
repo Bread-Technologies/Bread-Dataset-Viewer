@@ -194,6 +194,21 @@ def complement : PTrans W where
 theorem complement_inv : (complement : PTrans W)⁻¹ = complement :=
   inv_eq_of_mul_eq_one_right complement_sq
 
+/-- The complement PTrans, acting on a meeting, exchanges its two sides.
+That is, `actMeeting complement = Meeting.swap`. This is the key
+identification between the PTrans-level complement and the
+meeting-level swap. -/
+@[simp] theorem actMeeting_complement (m : Meeting W) :
+    actMeeting (complement : PTrans W) m = m.swap := by
+  apply Meeting.ext_of_side₁
+  show Wantable.complement m.side₁ = m.side₂
+  exact m.complementary
+
+/-- Acting by `complement` twice is the identity action. -/
+theorem actMeeting_complement_sq (m : Meeting W) :
+    actMeeting (complement : PTrans W) (actMeeting complement m) = m := by
+  rw [actMeeting_complement, actMeeting_complement, Meeting.swap_swap]
+
 end PTrans
 
 end Perspectival
