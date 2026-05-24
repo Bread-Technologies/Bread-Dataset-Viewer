@@ -11332,3 +11332,21 @@ example (φ : PTrans (Fin 4)) :
 example (φ : PTrans (Bool × Bool)) :
     (PTrans.complement : PTrans (Bool × Bool)) * φ = φ * PTrans.complement :=
   PTrans_complement_central φ
+
+/-- The center of PTrans includes complement. -/
+example {W : Type u} [Wantable W] :
+    ∀ φ : PTrans W, Commute (PTrans.complement : PTrans W) φ := by
+  intro φ
+  exact PTrans_complement_central φ
+
+/-- complement conjugated by φ is complement. -/
+theorem PTrans_complement_conj
+    {W : Type u} [Wantable W] (φ : PTrans W) :
+    φ * (PTrans.complement : PTrans W) * φ⁻¹ = PTrans.complement := by
+  rw [← PTrans_complement_central φ, mul_assoc, mul_inv_cancel, mul_one]
+
+/-- Concrete: complement conjugated by complement = complement. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * PTrans.complement * PTrans.complement⁻¹
+      = PTrans.complement :=
+  PTrans_complement_conj _
