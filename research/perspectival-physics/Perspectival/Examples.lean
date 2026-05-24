@@ -741,6 +741,19 @@ def WantableEquiv.trans {W₁ W₂ W₃ : Type u}
     [Wantable W₁] [Wantable W₂] (e : WantableEquiv W₁ W₂) :
     e.trans (WantableEquiv.refl W₂) = e := rfl
 
+/-- `trans` is associative. -/
+theorem WantableEquiv.trans_assoc {W₁ W₂ W₃ W₄ : Type u}
+    [Wantable W₁] [Wantable W₂] [Wantable W₃] [Wantable W₄]
+    (e₁ : WantableEquiv W₁ W₂) (e₂ : WantableEquiv W₂ W₃)
+    (e₃ : WantableEquiv W₃ W₄) :
+    (e₁.trans e₂).trans e₃ = e₁.trans (e₂.trans e₃) := rfl
+
+/-- `symm` is involutive: (e.symm).symm = e. -/
+@[simp] theorem WantableEquiv.symm_symm {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (e : WantableEquiv W₁ W₂) :
+    e.symm.symm = e := by
+  rfl
+
 /-- A `Bool ≃ Fin 2` equivalence that respects the swap-complement structures. -/
 def boolEquivFin2 : WantableEquiv Bool (Fin 2) where
   toEquiv :=
