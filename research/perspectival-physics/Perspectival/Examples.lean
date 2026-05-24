@@ -9513,3 +9513,23 @@ example : LinearIndependent ℝ (Perspectival.Classical.vertex 10) :=
 /-- Concrete: vertex_linear_independent on Fin 100. -/
 example : LinearIndependent ℝ (Perspectival.Classical.vertex 100) :=
   Perspectival.Classical.vertex_linear_independent 100
+
+/-- Classical Fin 100 GPT has dim 100. -/
+example : Module.finrank ℝ (Perspectival.Classical.V 100) = 100 := by
+  show Module.finrank ℝ (Fin 100 → ℝ) = 100
+  simp
+
+/-- Classical Fin 100 has vertices_span. -/
+example : Submodule.span ℝ (Set.range (Perspectival.Classical.vertex 100)) = ⊤ :=
+  Perspectival.Classical.vertices_span 100
+
+/-- Classical Fin 100 perfect witness exists. -/
+example : Perspectival.Distinguish.PerfectWitness
+            (G := Perspectival.Classical.gpt 100)
+            (Perspectival.Classical.vertex 100) :=
+  Perspectival.Classical.perfectWitness 100
+
+/-- Classical Fin 100 has the operational dim bound 100 ≤ 100. -/
+example : (100 : ℕ) ≤ Module.finrank ℝ (Perspectival.Classical.V 100) :=
+  Perspectival.Distinguish.operational_dim_le_state_dim
+    (Perspectival.Classical.vertex 100) (Perspectival.Classical.perfectWitness 100)
