@@ -136,6 +136,47 @@ Axiom IV's "the mathematical structure of perspectival patterning is
 group-theoretic": the group laws (composition, identity, inverse)
 are formally proven, and the action on `Meeting`s is functorial.
 
+**Structural identification (`mem_range_toEquivPermHom_iff`).** A
+verified theorem now establishes that `PTrans W` is *exactly* the
+centralizer of the `complement` permutation inside the full
+permutation group `Equiv.Perm W`. That is: for any permutation
+`σ : Equiv.Perm W`,
+
+> `σ ∈ image(PTrans → Perm)  ⟺  σ ∘ complement = complement ∘ σ`.
+
+This is an unexciting but clarifying result: perspectival
+transformations are *not* a novel structure beyond Mathlib's
+permutation group — they are the Z/2-equivariant permutations. The
+ontology's mathematical content lives in the *compatibility* with
+complement, not in the perspective vocabulary itself. Per Quine's
+ontological deflation, this is precisely what we should expect:
+"perspective" is a way of speaking about an algebraic invariant
+already in the analytic toolkit. The research question is whether
+adding *further* postulates on top of I–IV picks out specifically
+quantum mathematics; the bare ontology, as the theorem makes
+explicit, does not.
+
+**Concrete classification (`ptrans_bool_classification`,
+Examples).** For `W = Bool` (the smallest non-trivial Wantable),
+`PTrans Bool = {1, boolSwap}` — exactly the two-element centralizer.
+This is the smallest non-trivial verified instance of the general
+structural fact.
+
+**Vertex action (`transformAction_vertex`).** Under the bridge
+`fromPTrans : PTrans W → Transform(gpt W)`, the induced action on the
+state space permutes the vertices according to the underlying
+permutation: `transformAction φ (vertex w) = vertex (φ.toFun w)`. The
+PTrans group acts on the *operational* state space (the `|W|`-simplex)
+the same way it acts on the *abstract* outcome set `W`.
+
+**Vertex decomposition (`vertex_decomposition`).** Every state of
+the WantableGPT decomposes as `f = ∑ w, f(w) • vertex w` — i.e.,
+the WantableGPT-from-finite-Wantable construction *is* the classical
+simplex on `W`, no more, no less. Combined with the structural
+identification above, this completes a deflation: the ontology
+of finite Wantables, when bridged via `WantableGPT`, picks out
+classical simplices with Z/2-equivariant automorphism subgroup.
+
 ## 4. Result B — No-cloning
 
 (Lean: `Perspectival.NoCloning`.)
