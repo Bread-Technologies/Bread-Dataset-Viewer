@@ -2697,6 +2697,9 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 × Fin 4)) = 12 
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 ⊕ Fin 4)) = 7 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
 
+-- Note: PerfectWitness.diag/offdiag from Distinguish.lean need explicit ρ
+-- in the signature; skipping here. The direct kronecker approach works fine.
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
