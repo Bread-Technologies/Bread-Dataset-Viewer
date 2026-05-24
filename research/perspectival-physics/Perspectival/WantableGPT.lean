@@ -242,6 +242,8 @@ def fromPTransHom : PTrans W →* (V W →ₗ[ℝ] V W) where
   map_one' := fromPTrans_one_toLin W
   map_mul' := fromPTrans_mul_toLin W
 
+-- Injectivity is proven below, after `vertex` is defined.
+
 /-! ## Vertices: pure states corresponding to each element of `W` -/
 
 variable [DecidableEq W]
@@ -316,6 +318,43 @@ theorem vertices_distinguishable (w v : W) (hwv : w ≠ v) :
   · show proj W w (vertex W v) = 0
     rw [proj_vertex]
     simp [Ne.symm hwv]
+
+/-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
+give distinct linear maps on the state space.
+
+Proof sketch: from `(fromPTrans φ).toLin = (fromPTrans ψ).toLin`,
+evaluate at each `vertex w₀` and at each `w'` to deduce
+`φ.invFun w' = ψ.invFun w'`. Since `toFun` is determined by `invFun`
+(as its two-sided inverse), `φ = ψ`. -/
+theorem fromPTransHom_injective :
+    Function.Injective (fromPTransHom W) := by
+  intro φ ψ h
+  apply PTrans.ext
+  intro w
+  have h_inv : ∀ w', φ.invFun w' = ψ.invFun w' := by
+    intro w'
+    have hap := LinearMap.congr_fun h (vertex W (φ.invFun w'))
+    have heq : (vertex W (φ.invFun w')) (φ.invFun w') =
+               (vertex W (φ.invFun w')) (ψ.invFun w') := by
+      have := congr_fun hap w'
+      exact this
+    rw [show (vertex W (φ.invFun w')) (φ.invFun w') = 1 from by
+        show (if φ.invFun w' = φ.invFun w' then (1 : ℝ) else 0) = 1
+        simp] at heq
+    by_contra hne
+    rw [show (vertex W (φ.invFun w')) (ψ.invFun w') = 0 from by
+        show (if φ.invFun w' = ψ.invFun w' then (1 : ℝ) else 0) = 0
+        simp [hne]] at heq
+    exact one_ne_zero heq
+  -- Use h_inv: φ.toFun w = x means φ.invFun x = w. Apply h_inv: ψ.invFun x = w. Hence ψ.toFun w = x.
+  set x := φ.toFun w with hx
+  have hφ : φ.invFun x = w := by rw [hx]; exact φ.left_inv w
+  have hψ : ψ.invFun x = w := by rw [← h_inv x]; exact hφ
+  have hψtoFun : ψ.toFun w = x := by
+    have hr : ψ.toFun (ψ.invFun x) = x := ψ.right_inv x
+    rw [hψ] at hr
+    exact hr
+  rw [hψtoFun]
 
 /-! ## Bridge back: the complement function as PTrans -/
 
