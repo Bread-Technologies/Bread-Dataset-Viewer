@@ -785,5 +785,53 @@ theorem n2_no_continuous_path_id_to_swap_through_bijections
     rw [h1]
     exact n2_disc_det_swap
 
+/-! ## Linking det = 0 to non-bijectivity for state-preserving R -/
+
+/-- For a state-preserving linear R : V 2 →ₗ V 2 with n2_disc_det R = 0,
+the map R sends vertex 0 and vertex 1 to states with the SAME first
+coordinate. Combined with state-sum = 1, this forces R(vertex 0) =
+R(vertex 1). Hence R is NOT injective. -/
+theorem n2_disc_det_zero_implies_not_injective
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hdet : n2_disc_det R = 0) :
+    ¬ Function.Injective R := by
+  intro hinj
+  -- hdet : R(v0) 0 - R(v1) 0 = 0
+  have hdet' : R (vertex 2 0) 0 - R (vertex 2 1) 0 = 0 := hdet
+  have hd : R (vertex 2 0) 0 = R (vertex 2 1) 0 := by linarith
+  -- Both R(v0) and R(v1) are states, so their first coord + second coord = 1
+  have hRv0 := hR (vertex 2 0) (vertex_in_states 2 0)
+  have hRv1 := hR (vertex 2 1) (vertex_in_states 2 1)
+  have hs0 := classical_n2_state_sum (R (vertex 2 0)) hRv0
+  have hs1 := classical_n2_state_sum (R (vertex 2 1)) hRv1
+  -- So R(v0) 1 = R(v1) 1 too
+  have hd1 : R (vertex 2 0) 1 = R (vertex 2 1) 1 := by linarith
+  -- Hence R(v0) = R(v1) (function extensionality over Fin 2)
+  have hRv : R (vertex 2 0) = R (vertex 2 1) := by
+    funext j
+    fin_cases j
+    · exact hd
+    · exact hd1
+  -- But v0 ≠ v1 (by checking first coord), contradicting injectivity
+  apply classical_n2_injective_distinct_images R hinj
+  exact hRv
+
+/-- Combining: if γ : [0,1] → (V 2 →ₗ V 2) is a state-preserving
+continuous path from id to swap, and γ(t) is bijective for all t,
+we get a contradiction. -/
+theorem classical_n2_no_strict_path_id_to_swap
+    (γ : unitInterval → V 2 →ₗ[ℝ] V 2)
+    (hcont : Continuous (fun t => n2_disc_det (γ t)))
+    (hpreserve : ∀ t, ∀ ρ ∈ states 2, (γ t) ρ ∈ states 2)
+    (hbij : ∀ t, Function.Bijective (γ t))
+    (h0 : γ 0 = LinearMap.id)
+    (h1 : γ 1 = swapLin) :
+    False := by
+  obtain ⟨t, ht⟩ := n2_no_continuous_path_id_to_swap_through_bijections
+                      γ hcont h0 h1
+  have hinj : Function.Injective (γ t) := (hbij t).1
+  exact n2_disc_det_zero_implies_not_injective (γ t) (hpreserve t) ht hinj
+
 end Classical
 end Perspectival
