@@ -449,5 +449,12 @@ theorem complementTransform_eq_fromPTrans_full :
     complementTransform W = fromPTrans W (complementPTrans W) :=
   Perspectival.GPT.Transform.ext (complementTransform_eq_fromPTrans W)
 
+/-- The monoid hom `fromPTransHom` sends `complementPTrans` to
+exactly `complementAction`. The bridge respects the specific
+complement structure. -/
+theorem fromPTransHom_complementPTrans :
+    fromPTransHom W (complementPTrans W) = complementAction W :=
+  (complementTransform_eq_fromPTrans W).symm
+
 end WantableGPT
 end Perspectival
