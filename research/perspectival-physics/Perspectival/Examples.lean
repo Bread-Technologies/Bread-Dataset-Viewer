@@ -3363,6 +3363,13 @@ example (φ ψ : ContinuousPTrans ℝ) : ContinuousPTrans ℝ := φ.comp ψ
 example : ((ContinuousPTrans.complement ℝ).comp (ContinuousPTrans.complement ℝ)).toPTrans
         = 1 := PTrans.complement_sq
 
+/-- scaleByPTrans on ℝ extends to a ContinuousPTrans (scaling is continuous). -/
+noncomputable example (a : ℝ) (ha : a ≠ 0) : ContinuousPTrans ℝ where
+  toPTrans := scaleByPTrans a ha
+  toFun_continuous := continuous_const.mul continuous_id
+
+-- (scaleHom ℝˣ-literal example deferred — Unit ℝˣ literal needs explicit construction.)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
