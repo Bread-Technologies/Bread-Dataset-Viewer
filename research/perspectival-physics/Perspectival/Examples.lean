@@ -2187,6 +2187,14 @@ example (f : Perspectival.WantableGPT.V Bool) :
       (Perspectival.WantableGPT.complementAction Bool f) = f :=
   Perspectival.WantableGPT.complementAction_involutive Bool f
 
+/-- For any finite Wantable W (with DecidableEq + Fintype), the
+WantableGPT bridge bookkeeping: state-space `V W = W → ℝ` has
+dimension `|W|`, and the vertex family is a basis. (Convenient
+restatement collecting the structural results.) -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
+  Perspectival.WantableGPT.finrank_V_eq_card W
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
