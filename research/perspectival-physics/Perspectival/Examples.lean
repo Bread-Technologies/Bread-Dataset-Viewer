@@ -5218,5 +5218,27 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     w.e i (ρ j) = 0 :=
   Perspectival.Distinguish.PerfectWitness.offdiag w hij
 
+/-- `GPT.prob_def`: probability is just effect-application. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) (e : V →ₗ[ℝ] ℝ) (ρ : V) :
+    G.prob e ρ = e ρ := Perspectival.GPT.prob_def G e ρ
+
+/-- States are normalized: `unit ρ = 1` for `ρ ∈ states`. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) (ρ : V) (hρ : ρ ∈ G.states) :
+    G.unit ρ = 1 := G.states_normalized ρ hρ
+
+/-- The unit is itself an effect. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) : G.unit ∈ G.effects := G.unit_is_effect
+
+/-- The states set is convex. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) : Convex ℝ G.states := G.states_convex
+
+/-- The effects set is convex. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) : Convex ℝ G.effects := G.effects_convex
+
 end Examples
 end Perspectival
