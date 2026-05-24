@@ -3442,6 +3442,22 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     (hij : i ≠ j) :
     w.e i (ρ j) = 0 := w.offdiag hij
 
+/-- The no-cloning bilinear-form theorem applies to any linear cloner. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {S : Set V} {C : V →ₗ[ℝ] V ⊗[ℝ] V}
+    (hC : Perspectival.IsLinearCloner S C)
+    {v₁ v₂ : V} (h₁ : v₁ ∈ S) (h₂ : v₂ ∈ S) (h_sum : v₁ + v₂ ∈ S)
+    {B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ} (hB : B v₁ v₂ + B v₂ v₁ ≠ 0) : False :=
+  Perspectival.no_cloning hC h₁ h₂ h_sum hB
+
+/-- No-cloning from linear independence. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {S : Set V} {C : V →ₗ[ℝ] V ⊗[ℝ] V}
+    (hC : Perspectival.IsLinearCloner S C)
+    {v₁ v₂ : V} (h₁ : v₁ ∈ S) (h₂ : v₂ ∈ S) (h_sum : v₁ + v₂ ∈ S)
+    (hLI : LinearIndependent ℝ ![v₁, v₂]) : False :=
+  Perspectival.no_cloning_of_linear_independent hC h₁ h₂ h_sum hLI
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
