@@ -2548,6 +2548,18 @@ example {W : Type u} [Wantable W] (φ : PTrans W) :
     (WantableEquiv.refl W).mapPTransMulEquiv.symm φ = φ := by
   apply PTrans.ext; intro w; rfl
 
+/-- The "id" PTrans goes to "id" PTrans through any mapPTransMulEquiv. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) :
+    e.mapPTransMulEquiv 1 = (1 : PTrans W₂) :=
+  e.mapPTransMulEquiv.map_one
+
+/-- mapPTransMulEquiv preserves multiplication. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) (φ ψ : PTrans W₁) :
+    e.mapPTransMulEquiv (φ * ψ) = e.mapPTransMulEquiv φ * e.mapPTransMulEquiv ψ :=
+  e.mapPTransMulEquiv.map_mul φ ψ
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
