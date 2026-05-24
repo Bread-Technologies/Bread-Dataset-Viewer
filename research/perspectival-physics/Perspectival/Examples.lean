@@ -1084,6 +1084,8 @@ example : Wantable.complement (-(10^9 : ℤ)) = 10^9 := by show -(-(10^9 : ℤ))
 
 example : Wantable.complement ((1 : ℤ) + 1) = -2 := by show -((1 : ℤ) + 1) = -2; ring
 
+example : Wantable.complement ((2 : ℤ) * 3) = -6 := by show -((2 : ℤ) * 3) = -6; ring
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
