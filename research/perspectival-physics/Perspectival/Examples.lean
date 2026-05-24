@@ -2624,6 +2624,19 @@ example : ¬ SelfComplementary ((true, true, true) : Bool × Bool × Bool) := by
   injection hh with h1 _
   exact Bool.false_ne_true h1
 
+/-- Bool³ has fixed-point-free complement. -/
+example : FixedPointFreeComplement (Bool × Bool × Bool) := by
+  intro ⟨b₁, b₂, b₃⟩ h
+  have h1 : Wantable.complement b₁ = b₁ := (Prod.mk.injEq _ _ _ _).mp h |>.1
+  cases b₁
+  · exact Bool.false_ne_true h1.symm
+  · exact Bool.false_ne_true h1
+
+/-- |Bool × Bool × Bool| = 8 is even. -/
+example : Even (Fintype.card (Bool × Bool × Bool)) := by
+  rw [show Fintype.card (Bool × Bool × Bool) = 8 from by decide]
+  exact ⟨4, rfl⟩
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
