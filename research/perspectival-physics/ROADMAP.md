@@ -73,15 +73,24 @@ Estimated effort: 300–400 lines.
 
 ### R6. Forcing path-connectedness from agency
 
-The framework's central open question. State a refinement of the
-agency postulate that, given the broader perspective-wanting structure,
-*forces* path-connectedness of reversible transformations rather than
-admitting it as a hypothesis.
+The framework's central open question — **and now made more urgent by
+the no-go theorem `wantableGPT_is_classical`**, which establishes that
+the bare WantableGPT bridge cannot deliver non-classical structure.
+Any quantum derivation must come from the agency refinement.
+
+State a refinement of the agency postulate that, given the broader
+perspective-wanting structure, *forces* path-connectedness of
+reversible transformations rather than admitting it as a hypothesis.
 
 One candidate: "at every instant there are infinitely many available
 transformations, with no smallest non-trivial choice." Formalize as
 a density condition + closure under composition. Show this implies
 connectedness in a natural topology.
+
+Partial step now complete: `ClosedAgency` extends `HasConnectedAgency`
+with closure under composition, and yields transitivity of the
+`Reachable` relation (`Reachable.trans`). This is the first piece of
+the strengthening. R6 proper requires moving from closure to density.
 
 Estimated effort: extended research. Likely interleaves with the
 philosophical work in `LINEAGE.md`.
