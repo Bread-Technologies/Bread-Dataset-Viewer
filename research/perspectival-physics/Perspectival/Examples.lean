@@ -2864,6 +2864,22 @@ example {W : Type u} [Wantable W] (m : Meeting W) :
     Meeting.mk_fromSide W m.side₁ = m :=
   Meeting.mk_fromSide_side₁_inv W m
 
+/-- Meetings in Bool: there are at most 2 (true-false or false-true). -/
+example (m : Meeting Bool) : m.side₁ = true ∨ m.side₁ = false := by
+  cases m.side₁ <;> simp
+
+/-- Meetings in Bool with side₁ = true must have side₂ = false. -/
+example (m : Meeting Bool) (h : m.side₁ = true) : m.side₂ = false := by
+  have hcomp : Wantable.complement m.side₁ = m.side₂ := m.complementary
+  rw [h] at hcomp
+  exact hcomp.symm
+
+/-- Meetings in Bool with side₁ = false must have side₂ = true. -/
+example (m : Meeting Bool) (h : m.side₁ = false) : m.side₂ = true := by
+  have hcomp : Wantable.complement m.side₁ = m.side₂ := m.complementary
+  rw [h] at hcomp
+  exact hcomp.symm
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
