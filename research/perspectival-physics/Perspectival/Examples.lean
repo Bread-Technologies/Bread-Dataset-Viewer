@@ -14939,6 +14939,61 @@ example :
     have : (0 : ℝ) = (1/2 : ℝ) * (1/2 : ℝ) := hcol
     norm_num at this
 
+/-! ### antiDiagonalState has same marginals as productState uniformBool uniformBool -/
+
+/-- antiDiagonalState differs from productState uniformBool uniformBool but
+has the same marginals (uniformBool both). -/
+example :
+    leftMarginal antiDiagonalState = leftMarginal (productState uniformBool uniformBool)
+    ∧ rightMarginal antiDiagonalState = rightMarginal (productState uniformBool uniformBool)
+    ∧ antiDiagonalState ≠ productState uniformBool uniformBool := by
+  refine ⟨?_, ?_, ?_⟩
+  · funext b
+    show (∑ b₂, antiDiagonalState (b, b₂)) = (∑ b₂, productState uniformBool uniformBool (b, b₂))
+    -- Both = uniformBool b = 1/2.
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    cases b with
+    | true =>
+      show antiDiagonalState (true, true) + antiDiagonalState (true, false)
+         = productState uniformBool uniformBool (true, true)
+         + productState uniformBool uniformBool (true, false)
+      show (0 : ℝ) + 1/2 = (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * (1/2 : ℝ)
+      norm_num
+    | false =>
+      show antiDiagonalState (false, true) + antiDiagonalState (false, false)
+         = productState uniformBool uniformBool (false, true)
+         + productState uniformBool uniformBool (false, false)
+      show (1/2 : ℝ) + 0 = (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * (1/2 : ℝ)
+      norm_num
+  · funext b
+    show (∑ b₁, antiDiagonalState (b₁, b)) = (∑ b₁, productState uniformBool uniformBool (b₁, b))
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    cases b with
+    | true =>
+      show antiDiagonalState (true, true) + antiDiagonalState (false, true)
+         = productState uniformBool uniformBool (true, true)
+         + productState uniformBool uniformBool (false, true)
+      show (0 : ℝ) + 1/2 = (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * (1/2 : ℝ)
+      norm_num
+    | false =>
+      show antiDiagonalState (true, false) + antiDiagonalState (false, false)
+         = productState uniformBool uniformBool (true, false)
+         + productState uniformBool uniformBool (false, false)
+      show (1/2 : ℝ) + 0 = (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * (1/2 : ℝ)
+      norm_num
+  · intro h
+    have hcol := congr_fun h (true, true)
+    rw [show antiDiagonalState (true, true) = 0 from rfl] at hcol
+    rw [show productState uniformBool uniformBool (true, true)
+          = uniformBool true * uniformBool true from rfl] at hcol
+    show False
+    have : (0 : ℝ) = (1/2 : ℝ) * (1/2 : ℝ) := hcol
+    norm_num at this
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
