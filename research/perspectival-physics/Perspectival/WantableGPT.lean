@@ -243,6 +243,14 @@ def fromPTransHom : PTrans W →* (V W →ₗ[ℝ] V W) where
   map_one' := fromPTrans_one_toLin W
   map_mul' := fromPTrans_mul_toLin W
 
+/-- The full Transform-valued monoid homomorphism: `PTrans W` maps
+into the Monoid of GPT-self-transformations of `gpt W`. -/
+def fromPTransTransformHom :
+    PTrans W →* Perspectival.GPT.Transform (gpt W) (gpt W) where
+  toFun := fromPTrans W
+  map_one' := Perspectival.GPT.Transform.ext (fromPTrans_one_toLin W)
+  map_mul' ψ φ := Perspectival.GPT.Transform.ext (fromPTrans_mul_toLin W ψ φ)
+
 -- Injectivity is proven below, after `vertex` is defined.
 
 /-! ## Vertices: pure states corresponding to each element of `W` -/
