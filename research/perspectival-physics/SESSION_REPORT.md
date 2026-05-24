@@ -9,7 +9,7 @@ A summary of accomplishments from this development session.
   alone past 12,800 lines
 - **~900+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1148+ commits** to the research branch
+- **1153+ commits** to the research branch
 
 ## R6 COMPLETE for n=2: Birkhoff disconnect formally proven (no hypotheses)
 
