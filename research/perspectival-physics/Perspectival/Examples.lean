@@ -5912,5 +5912,22 @@ example : (Perspectival.WantableGPT.perfectWitness (Bool × Bool)).e (true, true
     (true, true) (true, true)
   simpa using this
 
+/-- The Wantable instance on Fin 2 swaps 0 ↔ 1. -/
+example : (Wantable.complement (0 : Fin 2)) = 1 := rfl
+example : (Wantable.complement (1 : Fin 2)) = 0 := rfl
+
+/-- The Wantable instance on ℤ uses negation. -/
+example : (Wantable.complement (5 : ℤ)) = -5 := rfl
+example : (Wantable.complement (-3 : ℤ)) = 3 := neg_neg 3
+
+/-- The Wantable instance on ℝ uses negation. -/
+example : (Wantable.complement (1.5 : ℝ)) = -1.5 := rfl
+
+/-- Unit's Wantable instance is trivial (complement = self). -/
+example : (Wantable.complement (() : Unit)) = () := rfl
+
+/-- Empty has a vacuous Wantable instance. -/
+example : Wantable Empty := inferInstance
+
 end Examples
 end Perspectival
