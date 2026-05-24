@@ -414,6 +414,12 @@ example : Wantable.complement ([] : List Bool) = [] := rfl
 /-- A singleton list complements its single element. -/
 example : Wantable.complement ([true] : List Bool) = [false] := rfl
 
+/-- The complement of an Option is none-preserving. -/
+example : Wantable.complement (none : Option (Fin 2)) = none := rfl
+
+/-- The complement of `some 0 : Option (Fin 2)` is `some 1`. -/
+example : Wantable.complement (some 0 : Option (Fin 2)) = some 1 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
