@@ -6973,5 +6973,38 @@ example : productEffectVec (Perspectival.WantableGPT.vertex Bool true)
     (WantableGPT_vertex_in_effectVec true)
     (WantableGPT_vertex_in_effectVec false)
 
+/-- New: the complementAction on a productState factors as the product
+of complementActions on each factor. -/
+theorem productState_complement_factor
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂) :
+    Perspectival.WantableGPT.complementAction (W₁ × W₂)
+        (productState f₁ f₂)
+      = productState
+          (Perspectival.WantableGPT.complementAction W₁ f₁)
+          (Perspectival.WantableGPT.complementAction W₂ f₂) := by
+  funext p
+  show productState f₁ f₂ (Wantable.complement p)
+     = (Perspectival.WantableGPT.complementAction W₁ f₁) p.1
+     * (Perspectival.WantableGPT.complementAction W₂ f₂) p.2
+  show f₁ (Wantable.complement p).1 * f₂ (Wantable.complement p).2
+     = f₁ (Wantable.complement p.1) * f₂ (Wantable.complement p.2)
+  rfl
+
+/-- Concrete: on Bool × Bool, complement of productState (vertex true,
+vertex false) = productState (vertex false, vertex true). -/
+example :
+    Perspectival.WantableGPT.complementAction (Bool × Bool)
+      (productState (Perspectival.WantableGPT.vertex Bool true)
+                    (Perspectival.WantableGPT.vertex Bool false))
+    = productState
+        (Perspectival.WantableGPT.vertex Bool false)
+        (Perspectival.WantableGPT.vertex Bool true) := by
+  rw [productState_complement_factor]
+  rw [Perspectival.WantableGPT.complementAction_vertex,
+      Perspectival.WantableGPT.complementAction_vertex]
+  rfl
+
 end Examples
 end Perspectival
