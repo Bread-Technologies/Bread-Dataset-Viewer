@@ -6462,5 +6462,33 @@ theorem WantableGPT_Bool_state_decomp (f : Perspectival.WantableGPT.V Bool) :
                  + f false * (if false = false then (1 : ℝ) else 0)
     simp
 
+/-- New theorem: unitFn on Bool's V = f true + f false. -/
+theorem WantableGPT_Bool_unit (f : Perspectival.WantableGPT.V Bool) :
+    Perspectival.WantableGPT.unitFn Bool f = f true + f false := by
+  show ∑ b, f b = f true + f false
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+
+/-- New theorem: A function f : Bool → ℝ is in WantableGPT.states iff
+both f true, f false ≥ 0 and f true + f false = 1. -/
+theorem WantableGPT_Bool_states_iff (f : Perspectival.WantableGPT.V Bool) :
+    f ∈ Perspectival.WantableGPT.states Bool ↔
+    (0 ≤ f true ∧ 0 ≤ f false ∧ f true + f false = 1) := by
+  constructor
+  · intro ⟨hpos, hsum⟩
+    refine ⟨hpos true, hpos false, ?_⟩
+    have := WantableGPT_Bool_unit f
+    rw [← this]; exact hsum
+  · intro ⟨ht, hf, hsum⟩
+    refine ⟨?_, ?_⟩
+    · intro b; cases b
+      · exact hf
+      · exact ht
+    · show ∑ b, f b = 1
+      rw [show ∑ b, f b = f true + f false from by
+        rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+            Finset.sum_insert (by decide), Finset.sum_singleton]]
+      exact hsum
+
 end Examples
 end Perspectival
