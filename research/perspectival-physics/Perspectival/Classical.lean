@@ -183,6 +183,36 @@ theorem vertex_linear_independent :
   Perspectival.Distinguish.perfect_distinguishable_imp_linear_independent
     (vertex n) (perfectWitness n)
 
+/-- The coordinate projection `proj i` is in the effects set, witnessed by the
+vertex coefficient vector. -/
+theorem proj_in_effects (i : Fin n) : proj n i ∈ effects n := by
+  refine ⟨vertex n i, ?_, ?_⟩
+  · intro j
+    show 0 ≤ (if i = j then (1 : ℝ) else 0) ∧ (if i = j then (1 : ℝ) else 0) ≤ 1
+    split <;> simp
+  · apply LinearMap.ext
+    intro x
+    show (innerLin n (vertex n i)) x = (proj n i) x
+    show ∑ j, vertex n i j * x j = x i
+    rw [Finset.sum_eq_single i (fun j _ hji => by
+        show vertex n i j * x j = 0
+        rw [show vertex n i j = 0 from if_neg hji.symm]; ring)
+        (by intro h; exact absurd (Finset.mem_univ i) h)]
+    show vertex n i i * x i = x i
+    rw [show vertex n i i = 1 from if_pos rfl]
+    ring
+
+/-- **Vertices are pairwise distinguishable**: for `i ≠ j`, the projection
+`proj n i` separates `vertex n i` and `vertex n j`. -/
+theorem vertices_distinguishable (i j : Fin n) (hij : i ≠ j) :
+    Perspectival.Hardy.Distinguishable (gpt n) (vertex n i) (vertex n j) := by
+  refine ⟨proj n i, proj_in_effects n i, ?_, ?_⟩
+  · show proj n i (vertex n i) = 1
+    simp [proj_vertex]
+  · show proj n i (vertex n j) = 0
+    rw [proj_vertex]
+    simp [Ne.symm hij]
+
 -- NOTE: A natural follow-up theorem `vertex_is_extreme i : IsExtreme ℝ
 -- (states n) {vertex n i}` (vertices are pure states) would tie this
 -- module to `Continuity.PureState`. The proof requires coordinate-wise
