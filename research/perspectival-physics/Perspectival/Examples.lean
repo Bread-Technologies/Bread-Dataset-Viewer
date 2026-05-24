@@ -328,6 +328,23 @@ example : ((ContinuousPTrans.complement ℝ).comp
         = (ContinuousPTrans.id ℝ).toPTrans :=
   PTrans.complement_sq
 
+/-- A scaling map `x ↦ a*x` on ℝ is a continuous PTrans iff it commutes
+with negation. Since `a * (-x) = -(a * x) = (-a) * x` ... actually
+`a * (-x) = -(a * x)` always, so the scaling commutes with negation
+trivially. The bijectivity requires `a ≠ 0`. -/
+noncomputable def scaleByPTrans (a : ℝ) (ha : a ≠ 0) : PTrans ℝ where
+  toFun x := a * x
+  invFun x := x / a
+  left_inv x := by field_simp
+  right_inv x := by field_simp
+  resp_complement x := by show a * -x = -(a * x); ring
+
+example : (scaleByPTrans 2 (by norm_num)).toFun 5 = 10 := by
+  show (2 : ℝ) * 5 = 10; ring
+
+example : (scaleByPTrans 2 (by norm_num)).invFun 10 = 5 := by
+  show (10 : ℝ) / 2 = 5; ring
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
