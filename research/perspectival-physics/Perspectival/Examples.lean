@@ -7812,3 +7812,40 @@ example (a b : ℝ)
        + b • Perspectival.WantableGPT.vertex Bool false = 0) :
     a = 0 ∧ b = 0 :=
   WantableGPT_vertex_pair_smul_independent true false (by decide) a b h
+
+/-- The "anti-diagonal-indicator" coefficient vector. -/
+noncomputable def antiDiagonalIndicator : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p = (true, false) ∨ p = (false, true) then (1 : ℝ) else 0
+
+/-- antiDiagonalIndicator is in effectVec. -/
+theorem antiDiagonalIndicator_in_effectVec :
+    antiDiagonalIndicator ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p = (true, false) ∨ p = (false, true)
+              then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p = (true, false) ∨ p = (false, true)
+          then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- The anti-diagonal-indicator linear functional. -/
+noncomputable def antiDiagonalIndicatorLin :
+    Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ] ℝ :=
+  Perspectival.WantableGPT.innerLin (Bool × Bool) antiDiagonalIndicator
+
+/-- antiDiagonalIndicatorLin is in WantableGPT.effects. -/
+theorem antiDiagonalIndicatorLin_in_effects :
+    antiDiagonalIndicatorLin ∈ Perspectival.WantableGPT.effects (Bool × Bool) :=
+  ⟨antiDiagonalIndicator, antiDiagonalIndicator_in_effectVec, rfl⟩
+
+/-- diagonalIndicator + antiDiagonalIndicator = constant 1 (unit). -/
+theorem diagonalIndicator_add_antiDiagonalIndicator :
+    diagonalIndicator + antiDiagonalIndicator
+      = (fun _ : Bool × Bool => (1 : ℝ)) := by
+  funext p
+  show diagonalIndicator p + antiDiagonalIndicator p = 1
+  rcases p with ⟨a, b⟩
+  cases a <;> cases b <;> (
+    show (if _ ∨ _ then (1 : ℝ) else 0) + (if _ ∨ _ then (1 : ℝ) else 0) = 1
+    simp)
