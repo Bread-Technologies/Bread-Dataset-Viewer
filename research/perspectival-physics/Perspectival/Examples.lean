@@ -8570,3 +8570,39 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     leftMarginal (productState f₁ f₂) = f₁ := by
   funext w₁
   exact productState_left_marginal_state f₁ f₂ h₂ w₁
+
+/-- Right marginalization as a LinearMap. -/
+noncomputable def rightMarginal
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    Perspectival.WantableGPT.V (W₁ × W₂) →ₗ[ℝ] Perspectival.WantableGPT.V W₂ where
+  toFun f := fun w₂ => ∑ w₁, f (w₁, w₂)
+  map_add' f g := by
+    funext w₂
+    show ∑ w₁, (f (w₁, w₂) + g (w₁, w₂))
+       = (∑ w₁, f (w₁, w₂)) + (∑ w₁, g (w₁, w₂))
+    rw [Finset.sum_add_distrib]
+  map_smul' c f := by
+    funext w₂
+    show ∑ w₁, c * f (w₁, w₂)
+       = c * ∑ w₁, f (w₁, w₂)
+    rw [← Finset.mul_sum]
+
+/-- rightMarginal applied to productState gives f₂ (when f₁ is a state). -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (h₁ : f₁ ∈ Perspectival.WantableGPT.states W₁) :
+    rightMarginal (productState f₁ f₂) = f₂ := by
+  funext w₂
+  exact productState_right_marginal_state f₁ f₂ h₁ w₂
+
+/-- Concrete: leftMarginal of diagonalState is uniformBool. -/
+example : leftMarginal diagonalState = uniformBool := by
+  funext b
+  exact diagonalState_left_marginal b
+
+/-- Concrete: rightMarginal of diagonalState is uniformBool. -/
+example : rightMarginal diagonalState = uniformBool := by
+  funext b
+  exact diagonalState_right_marginal b
