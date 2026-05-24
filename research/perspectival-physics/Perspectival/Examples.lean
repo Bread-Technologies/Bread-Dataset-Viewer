@@ -2366,6 +2366,8 @@ def WantableEquiv.prodMap {W₁ W₂ W₃ W₄ : Type u}
        = (Wantable.complement (e₁.toEquiv w₁), Wantable.complement (e₂.toEquiv w₂))
     rw [e₁.resp_complement, e₂.resp_complement]
 
+-- (Reachable reflexivity demo skipped — needs careful instance synthesis.)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
