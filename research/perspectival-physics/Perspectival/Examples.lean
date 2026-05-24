@@ -5240,5 +5240,30 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
 example {V : Type u} [AddCommGroup V] [Module ℝ V]
     (G : Perspectival.GPT V) : Convex ℝ G.effects := G.effects_convex
 
+/-- `Hardy.Distinguishable` unfolds: there exists an effect with
+`e ρ₁ = 1` and `e ρ₂ = 0`. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) (ρ₁ ρ₂ : V) :
+    Perspectival.Hardy.Distinguishable G ρ₁ ρ₂ ↔
+    ∃ e ∈ G.effects, e ρ₁ = 1 ∧ e ρ₂ = 0 := Iff.rfl
+
+/-- `Hardy.DistinguishabilitySet` unfolds: a finite set of mutually
+distinguishable states. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) (S : Finset V) :
+    Perspectival.Hardy.DistinguishabilitySet G S ↔
+    ((∀ ρ ∈ S, ρ ∈ G.states) ∧
+     ∀ ρ₁ ∈ S, ∀ ρ₂ ∈ S, ρ₁ ≠ ρ₂ →
+       Perspectival.Hardy.Distinguishable G ρ₁ ρ₂) := Iff.rfl
+
+/-- `Hardy.HasDimensionN` unfolds: existence of a max-size
+distinguishability set. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : Perspectival.GPT V) (n : ℕ) :
+    Perspectival.Hardy.HasDimensionN G n ↔
+    ((∃ S : Finset V, S.card = n ∧ Perspectival.Hardy.DistinguishabilitySet G S) ∧
+     (∀ m, m > n → ¬ ∃ S : Finset V, S.card = m ∧
+       Perspectival.Hardy.DistinguishabilitySet G S)) := Iff.rfl
+
 end Examples
 end Perspectival
