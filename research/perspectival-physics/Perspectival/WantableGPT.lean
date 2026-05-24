@@ -639,6 +639,23 @@ theorem wantableGPT_dim_pos [Fintype W] [Nonempty W] :
   rw [finrank_V_eq_card]
   exact Fintype.card_pos
 
+/-- The dimension of the WantableGPT product is multiplicative: a key
+piece for any Hardy-Axiom-4-style composition theorem. -/
+theorem wantableGPT_dim_prod {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (V (W₁ × W₂))
+    = Module.finrank ℝ (V W₁) * Module.finrank ℝ (V W₂) := by
+  rw [finrank_V_eq_card, finrank_V_eq_card, finrank_V_eq_card, Fintype.card_prod]
+
+/-- The dimension of the WantableGPT sum is additive. -/
+theorem wantableGPT_dim_sum {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (V (W₁ ⊕ W₂))
+    = Module.finrank ℝ (V W₁) + Module.finrank ℝ (V W₂) := by
+  rw [finrank_V_eq_card, finrank_V_eq_card, finrank_V_eq_card, Fintype.card_sum]
+
 /-- **Hardy-signature dichotomy.** For finite Wantable W with `|W| ≥ 2`,
 the WantableGPT satisfies the classical signature `K = N = |W|` and
 *does not* satisfy any of the standard non-classical signatures
