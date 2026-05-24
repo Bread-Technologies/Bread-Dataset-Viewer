@@ -6596,5 +6596,29 @@ example : (Perspectival.WantableGPT.complementTransform Bool).toLin
         = Perspectival.WantableGPT.vertex Bool false :=
   WantableGPT_complementTransform_vertex true
 
+/-- New theorem: fromPTrans of the complementPTrans on Bool, applied
+to vertex true, gives vertex false. -/
+theorem WantableGPT_fromPTrans_complementPTrans_vertex_true :
+    (Perspectival.WantableGPT.fromPTrans Bool
+      (Perspectival.WantableGPT.complementPTrans Bool)).toLin
+        (Perspectival.WantableGPT.vertex Bool true)
+      = Perspectival.WantableGPT.vertex Bool false := by
+  rw [← Perspectival.WantableGPT.complementTransform_eq_fromPTrans]
+  exact WantableGPT_complementTransform_vertex true
+
+/-- New theorem: fromPTrans of identity PTrans is identity on V W. -/
+theorem WantableGPT_fromPTrans_one_apply
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) :
+    (Perspectival.WantableGPT.fromPTrans W (1 : PTrans W)).toLin f = f := by
+  rw [Perspectival.WantableGPT.fromPTrans_one_toLin]
+  rfl
+
+/-- Concrete: fromPTrans 1 acts as identity on Bool vertex true. -/
+example : (Perspectival.WantableGPT.fromPTrans Bool 1).toLin
+            (Perspectival.WantableGPT.vertex Bool true)
+        = Perspectival.WantableGPT.vertex Bool true :=
+  WantableGPT_fromPTrans_one_apply _
+
 end Examples
 end Perspectival
