@@ -2248,6 +2248,14 @@ example : (boolEquivFin2.mapPTrans boolSwap).toFun = fin2Swap.toFun := by
 example : boolEquivFin2.mapPTransMulEquiv boolSwap = boolEquivFin2.mapPTrans boolSwap :=
   rfl
 
+/-- The MulEquiv version sends 1 to 1. -/
+example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
+  exact boolEquivFin2.mapPTransMulEquiv.map_one
+
+/-- The MulEquiv version sends complement to complement (via the iso). -/
+example : boolEquivFin2.mapPTransMulEquiv (PTrans.complement : PTrans Bool)
+        = boolEquivFin2.mapPTrans PTrans.complement := rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
