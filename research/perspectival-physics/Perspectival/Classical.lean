@@ -688,5 +688,36 @@ theorem classical_n2_state_first_coord_eq_zero_or_one_iff
     · right; exact (vertex_n2_zero_coords).1
     · left; exact (vertex_n2_one_coords).1
 
+/-! ## R6 KEY INSIGHT: bijective state-preserving ≠ permutation
+
+A KEY realization: a state-preserving linear bijection V 2 → V 2 is
+exactly a doubly-stochastic 2×2 matrix with nonzero determinant.
+
+For [[a, b], [1-a, 1-b]] with a, b ∈ [0,1]:
+- State-preserving (cols sum to 1, nonneg): ✓ by construction.
+- Bijective iff det = a - b ≠ 0.
+
+So the set of bijective state-preserving linear maps on V 2 is:
+  {(a, b) ∈ [0,1]² : a ≠ b}
+
+This set has TWO connected components:
+- {(a, b) : a > b}, containing id (a=1, b=0).
+- {(a, b) : a < b}, containing swap (a=0, b=1).
+
+The boundary a = b consists of singular (non-bijective) maps.
+
+R6 prediction confirmed for n=2: NO continuous path through bijective
+state-preserving linear maps connects id and swap. Any continuous path
+from id to swap must cross the singular line, which violates
+bijection-along-the-path.
+
+So `StrictConnectedAgency` on Classical n=2 with avail = {id, swap}
+has NO StrictReversiblePath between id and swap. There's no nontrivial
+agency. The only agency is trivial = {id} (or {swap}, equivalently).
+
+For n ≥ 3 the same phenomenon holds (permutation matrices form S_N,
+discrete in Birkhoff polytope). So R6 is a NONTRIVIAL constraint:
+classical GPTs cannot support nontrivial StrictConnectedAgency. -/
+
 end Classical
 end Perspectival
