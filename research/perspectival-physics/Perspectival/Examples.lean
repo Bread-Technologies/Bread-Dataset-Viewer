@@ -14466,6 +14466,41 @@ example :
     (Perspectival.WantableGPT.vertex_in_states (Fin 3) 1)
     (by norm_num) (by norm_num) (by norm_num)
 
+/-! ### `mixedCorrelatedState` Born-rule outcomes -/
+
+/-- For mixedCorrelatedState, the diagonal-indicator gives 1/2. -/
+example : diagonalIndicatorLin mixedCorrelatedState = (1/2 : ℝ) := by
+  show diagonalIndicatorLin ((1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState) = 1/2
+  rw [map_add, map_smul, map_smul,
+      diagonalIndicatorLin_on_diagonalState,
+      diagonalIndicatorLin_on_antiDiagonalState]
+  norm_num
+
+/-- For mixedCorrelatedState, the anti-diagonal-indicator gives 1/2. -/
+example : antiDiagonalIndicatorLin mixedCorrelatedState = (1/2 : ℝ) := by
+  show antiDiagonalIndicatorLin ((1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState) = 1/2
+  rw [map_add, map_smul, map_smul,
+      antiDiagonalIndicatorLin_on_diagonalState,
+      antiDiagonalIndicatorLin_on_antiDiagonalState]
+  norm_num
+
+/-- The complete measurement {diagonal, antiDiagonal} sums to unit on mixedCorrelatedState. -/
+example :
+    diagonalIndicatorLin mixedCorrelatedState + antiDiagonalIndicatorLin mixedCorrelatedState = 1 := by
+  rw [show diagonalIndicatorLin mixedCorrelatedState = (1/2 : ℝ) from by
+    show diagonalIndicatorLin ((1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState) = 1/2
+    rw [map_add, map_smul, map_smul,
+        diagonalIndicatorLin_on_diagonalState,
+        diagonalIndicatorLin_on_antiDiagonalState]
+    norm_num,
+      show antiDiagonalIndicatorLin mixedCorrelatedState = (1/2 : ℝ) from by
+    show antiDiagonalIndicatorLin ((1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState) = 1/2
+    rw [map_add, map_smul, map_smul,
+        antiDiagonalIndicatorLin_on_diagonalState,
+        antiDiagonalIndicatorLin_on_antiDiagonalState]
+    norm_num]
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
