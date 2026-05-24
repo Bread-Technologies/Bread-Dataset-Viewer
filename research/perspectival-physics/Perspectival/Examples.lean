@@ -294,6 +294,11 @@ noncomputable example : Perspectival.Classical.V 2 →ₗ[ℝ]
           Perspectival.Classical.V 2 ⊗[ℝ] Perspectival.Classical.V 2 :=
   Perspectival.NoBroadcasting.classicalBroadcaster 2
 
+/-- The classical broadcaster exists for any n-outcome classical GPT. -/
+noncomputable example (n : ℕ) : Perspectival.Classical.V n →ₗ[ℝ]
+          Perspectival.Classical.V n ⊗[ℝ] Perspectival.Classical.V n :=
+  Perspectival.NoBroadcasting.classicalBroadcaster n
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
