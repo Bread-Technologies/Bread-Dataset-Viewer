@@ -248,6 +248,27 @@ instance : MulAction (PTrans W) (Reality W) where
   one_smul := actReality_one
   mul_smul := actReality_mul
 
+/-- The singleton-meeting reality `{m}` (as a predicate) is sent under
+`φ` to the singleton at `actMeeting φ m`. -/
+theorem actReality_singleton (φ : PTrans W) (m : Meeting W) :
+    actReality φ (fun m' => m' = m) = (fun m' => m' = actMeeting φ m) := by
+  funext m'
+  show (actMeeting φ⁻¹ m' = m) = (m' = actMeeting φ m)
+  apply propext
+  constructor
+  · intro h
+    -- m' = actMeeting φ (actMeeting φ⁻¹ m') by applying actMeeting φ to both sides of mul_smul
+    have h1 : actMeeting φ (actMeeting φ⁻¹ m') = m' := by
+      change (φ • (φ⁻¹ • m' : Meeting W)) = m'
+      rw [← mul_smul, mul_inv_cancel, one_smul]
+    have : actMeeting φ m = m' := by rw [← h]; exact h1
+    exact this.symm
+  · intro h
+    -- actMeeting φ⁻¹ (actMeeting φ m) = m
+    rw [h]
+    change (φ⁻¹ • (φ • m : Meeting W)) = m
+    rw [← mul_smul, inv_mul_cancel, one_smul]
+
 /-! ## The forgetful bridge: PTrans → Equiv.Perm
 
 A perspectival transformation forgets its `resp_complement` law and
