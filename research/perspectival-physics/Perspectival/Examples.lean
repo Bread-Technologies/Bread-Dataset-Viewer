@@ -3458,6 +3458,14 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     (hLI : LinearIndependent ℝ ![v₁, v₂]) : False :=
   Perspectival.no_cloning_of_linear_independent hC h₁ h₂ h_sum hLI
 
+/-- Cross-term cancellation: linear cloner forces cross terms to zero. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {S : Set V} {C : V →ₗ[ℝ] V ⊗[ℝ] V}
+    (hC : Perspectival.IsLinearCloner S C)
+    {v₁ v₂ : V} (h₁ : v₁ ∈ S) (h₂ : v₂ ∈ S) (h_sum : v₁ + v₂ ∈ S) :
+    v₁ ⊗ₜ[ℝ] v₂ + v₂ ⊗ₜ[ℝ] v₁ = 0 :=
+  Perspectival.cross_terms_vanish hC h₁ h₂ h_sum
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
