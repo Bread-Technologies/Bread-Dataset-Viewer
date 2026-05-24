@@ -10929,3 +10929,25 @@ theorem complement_pow_two_n_smul_reality
 example (R : Reality Bool) :
     ((PTrans.complement : PTrans Bool) ^ 200) • R = R :=
   complement_pow_two_n_smul_reality R 100
+
+/-- Same for Meeting: complement applied 2k times = identity. -/
+theorem complement_pow_two_n_smul_meeting
+    {W : Type u} [Wantable W] (m : Meeting W) (n : ℕ) :
+    ((PTrans.complement : PTrans W) ^ (2 * n)) • m = m := by
+  rw [PTrans_complement_pow_two_n, one_smul]
+
+example (m : Meeting Bool) :
+    ((PTrans.complement : PTrans Bool) ^ 200) • m = m :=
+  complement_pow_two_n_smul_meeting m 100
+
+/-- (2n+1)-fold complement on Meeting = swap. -/
+theorem complement_pow_two_n_succ_smul_meeting
+    {W : Type u} [Wantable W] (m : Meeting W) (n : ℕ) :
+    ((PTrans.complement : PTrans W) ^ (2 * n + 1)) • m = m.swap := by
+  rw [PTrans_complement_pow_two_n_succ]
+  show PTrans.actMeeting PTrans.complement m = m.swap
+  exact PTrans.actMeeting_complement m
+
+example (m : Meeting Bool) :
+    ((PTrans.complement : PTrans Bool) ^ 999) • m = m.swap :=
+  complement_pow_two_n_succ_smul_meeting m 499
