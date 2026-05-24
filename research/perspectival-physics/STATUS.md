@@ -88,6 +88,9 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Wantable instances on ℝ (Wantable + ContinuousWantable) | `Examples.lean` | ✓ |
 | `WantableEquiv` is a groupoid (refl/symm/trans, identity laws) | `Examples.lean :: WantableEquiv.{refl, symm, trans, refl_trans, trans_refl}` | ✓ |
 | `WantableEquiv` preserves `Fintype.card` and WantableGPT finrank | `Examples.lean :: WantableEquiv.preserves_card, preserves_finrank` | ✓ |
+| `WantableEquiv` preserves classical dichotomy (full triple-no-go bundle) | `Examples.lean :: WantableEquiv.preserves_classical_dichotomy_full` | ✓ |
+| `WantableEquiv` preserves `not_quantum`/`not_realQM`/`not_quaternionicQM` | `Examples.lean :: WantableEquiv.preserves_not_quantum`, etc. | ✓ |
+| `WantableEquiv.sumMap` / `WantableEquiv.prodMap` | `Examples.lean` | ✓ |
 | `scaleByPTrans` — scalings on ℝ as PTrans (commute with negation) | `Examples.lean :: scaleByPTrans` | ✓ |
 | **Lie-group embedding** `ℝˣ ↪ PTrans ℝ` as MonoidHom (injective) | `Examples.lean :: scaleHom, scaleHom_injective` | ✓ |
 | Linear ℝ → ℝ classification: every injective linear map is `x ↦ a*x` | `Examples.lean` | ✓ |
