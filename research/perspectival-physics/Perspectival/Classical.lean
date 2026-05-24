@@ -1329,5 +1329,44 @@ example :
     rw [(vertex_n2_one_coords).2, (vertex_n2_zero_coords).2]
     norm_num
 
+/-- n2_perturbedIdLin (1/2) is NOT injective (sends both vertices to midpoint). -/
+theorem n2_perturbedIdLin_half_not_injective :
+    ¬ Function.Injective (n2_perturbedIdLin (1/2 : ℝ)) := by
+  intro hinj
+  have h0 : n2_perturbedIdLin (1/2 : ℝ) (vertex 2 0) = n2_midpoint := by
+    funext j
+    show ((1 - 1/2 : ℝ) • LinearMap.id (vertex 2 0)
+         + (1/2 : ℝ) • swapLin (vertex 2 0)) j
+       = n2_midpoint j
+    show (1 - 1/2 : ℝ) * vertex 2 0 j + (1/2 : ℝ) * swapLin (vertex 2 0) j
+       = (1/2 : ℝ)
+    rw [swapLin_vertex_zero]
+    fin_cases j
+    · show (1 - 1/2 : ℝ) * vertex 2 0 0 + (1/2 : ℝ) * vertex 2 1 0 = 1/2
+      rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
+      norm_num
+    · show (1 - 1/2 : ℝ) * vertex 2 0 1 + (1/2 : ℝ) * vertex 2 1 1 = 1/2
+      rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]
+      norm_num
+  have h1 : n2_perturbedIdLin (1/2 : ℝ) (vertex 2 1) = n2_midpoint := by
+    funext j
+    show ((1 - 1/2 : ℝ) • LinearMap.id (vertex 2 1)
+         + (1/2 : ℝ) • swapLin (vertex 2 1)) j
+       = n2_midpoint j
+    show (1 - 1/2 : ℝ) * vertex 2 1 j + (1/2 : ℝ) * swapLin (vertex 2 1) j
+       = (1/2 : ℝ)
+    rw [swapLin_vertex_one]
+    fin_cases j
+    · show (1 - 1/2 : ℝ) * vertex 2 1 0 + (1/2 : ℝ) * vertex 2 0 0 = 1/2
+      rw [(vertex_n2_one_coords).1, (vertex_n2_zero_coords).1]
+      norm_num
+    · show (1 - 1/2 : ℝ) * vertex 2 1 1 + (1/2 : ℝ) * vertex 2 0 1 = 1/2
+      rw [(vertex_n2_one_coords).2, (vertex_n2_zero_coords).2]
+      norm_num
+  have hvertex_eq : vertex 2 0 = vertex 2 1 := hinj (h0.trans h1.symm)
+  have hc := congr_fun hvertex_eq 0
+  rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1] at hc
+  norm_num at hc
+
 end Classical
 end Perspectival
