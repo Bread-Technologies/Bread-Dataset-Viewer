@@ -5469,5 +5469,39 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
           ∀ w, g w ∈ Set.Icc (0 : ℝ) 1 } :=
   Perspectival.WantableGPT.effectVec_eq_hypercube W
 
+/-- Generic `transformAction_preserves_states`: PTrans action keeps
+states inside the state space. -/
+example {W : Type u} [Wantable W] [Fintype W] (φ : PTrans W)
+    (f : Perspectival.WantableGPT.V W)
+    (hf : f ∈ Perspectival.WantableGPT.states W) :
+    Perspectival.WantableGPT.transformAction W φ f
+      ∈ Perspectival.WantableGPT.states W :=
+  Perspectival.WantableGPT.transformAction_preserves_states W φ f hf
+
+/-- Generic `unitFn_transformAction`: PTrans action preserves the unit. -/
+example {W : Type u} [Wantable W] [Fintype W] (φ : PTrans W)
+    (f : Perspectival.WantableGPT.V W) :
+    Perspectival.WantableGPT.unitFn W
+        (Perspectival.WantableGPT.transformAction W φ f)
+      = Perspectival.WantableGPT.unitFn W f :=
+  Perspectival.WantableGPT.unitFn_transformAction W φ f
+
+/-- Generic `complementAction_preserves_states`: complement action
+preserves the state space. -/
+example {W : Type u} [Wantable W] [Fintype W]
+    (f : Perspectival.WantableGPT.V W)
+    (hf : f ∈ Perspectival.WantableGPT.states W) :
+    Perspectival.WantableGPT.complementAction W f
+      ∈ Perspectival.WantableGPT.states W :=
+  Perspectival.WantableGPT.complementAction_preserves_states W f hf
+
+/-- Generic `unitFn_complementAction`: complement action preserves the unit. -/
+example {W : Type u} [Wantable W] [Fintype W]
+    (f : Perspectival.WantableGPT.V W) :
+    Perspectival.WantableGPT.unitFn W
+        (Perspectival.WantableGPT.complementAction W f)
+      = Perspectival.WantableGPT.unitFn W f :=
+  Perspectival.WantableGPT.unitFn_complementAction W f
+
 end Examples
 end Perspectival
