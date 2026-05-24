@@ -1822,5 +1822,19 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) = 4 := 
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
 
+/-- Concrete instance of `exists_two_distinguishable` for Bool. -/
+example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
+    ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
+    ρ₂ ∈ Perspectival.WantableGPT.states Bool ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt Bool) ρ₁ ρ₂ :=
+  Perspectival.WantableGPT.exists_two_distinguishable Bool (by decide)
+
+/-- Concrete instance of `exists_two_distinguishable` for Fin 4. -/
+example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Fin 4),
+    ρ₁ ∈ Perspectival.WantableGPT.states (Fin 4) ∧
+    ρ₂ ∈ Perspectival.WantableGPT.states (Fin 4) ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 4)) ρ₁ ρ₂ :=
+  Perspectival.WantableGPT.exists_two_distinguishable (Fin 4) (by decide)
+
 end Examples
 end Perspectival
