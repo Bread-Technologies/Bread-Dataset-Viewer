@@ -3146,6 +3146,22 @@ example : Function.Bijective
       (Perspectival.WantableGPT.gpt Bool)).toLin :=
   (Perspectival.Continuity.StrictReversible.id _).isEquiv
 
+/-- StrictReversible.inv_comp on Bool: applying inv after forward is identity. -/
+example (v : Perspectival.WantableGPT.V Bool) :
+    (Perspectival.Continuity.StrictReversible.id
+      (Perspectival.WantableGPT.gpt Bool)).inv
+        ((Perspectival.Continuity.StrictReversible.id
+          (Perspectival.WantableGPT.gpt Bool)).toLin v) = v :=
+  Perspectival.Continuity.StrictReversible.inv_comp _ v
+
+/-- StrictReversible.comp_inv on Bool: applying forward after inv is identity. -/
+example (v : Perspectival.WantableGPT.V Bool) :
+    (Perspectival.Continuity.StrictReversible.id
+      (Perspectival.WantableGPT.gpt Bool)).toLin
+        ((Perspectival.Continuity.StrictReversible.id
+          (Perspectival.WantableGPT.gpt Bool)).inv v) = v :=
+  Perspectival.Continuity.StrictReversible.comp_inv _ v
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
