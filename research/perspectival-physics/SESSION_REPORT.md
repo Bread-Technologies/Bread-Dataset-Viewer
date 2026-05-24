@@ -6,10 +6,58 @@ A summary of accomplishments from this development session.
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
 - **~13,000+ lines of Lean** (excluding Mathlib dependencies); Examples.lean
-  alone past 12,500 lines
-- **~870+ verified theorems / examples** (no `sorry` outside documented placeholders)
+  alone past 12,800 lines
+- **~900+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1100+ commits** to the research branch
+- **1136+ commits** to the research branch
+
+## R6 substantive progress (this session — pivot from corollaries to roadmap)
+
+After many small commits filling out WantableGPT corollaries, pivoted
+to direct R6 work in `Continuity.lean` and `Classical.lean`:
+
+**Continuity.lean (~250 new lines):**
+- `StatePreservingPath G R₁ R₂`: continuous path of state-preserving
+  linear maps with state preservation at EVERY t (not just endpoints).
+- `StatePreservingAgency G`: every pair of avail Reversibles connected
+  by a StatePreservingPath.
+- `HasConnectedAgency.ofStatePreservingAgency`: SPA ⇒ HCA.
+- `continuous_state_preserving_path`: the path of states stays inside
+  the state space (key R6 improvement).
+- `StatePreservingPath.id/.reverse/.const`: basic constructors.
+- **KEY INSIGHT**: state-preservation alone is too weak — convex state
+  space makes affine interpolation automatically state-preserving.
+- `ReversiblePath` (R6-bis): path where each γ(t) is a Reversible
+  (continuous, state-preserving, unit-preserving).
+- `StrongConnectedAgency`: pairs connected by ReversiblePaths.
+- `StrictReversiblePath` (R6-tris): each γ(t) is a *bijection*.
+- `StrictConnectedAgency`: substantive R6 condition.
+- `trivialStrictAgency`: avail = {id} is the smallest valid agency.
+
+**Classical.lean (~280 new lines):**
+- `classical_unique_state`: the only state on V 1 is vertex 0.
+- `classical_n1_state_preserving_eq_id`: every state-preserving
+  R : V 1 →ₗ V 1 equals LinearMap.id. So trivialStrictAgency is the
+  ONLY agency on n=1.
+- `classical_n1_reversible_toLin_eq_id` and StrictReversible variant.
+- `classical_n2_state_sum/nonneg`, `vertex_n2_zero/one_coords`,
+  `classical_n2_first/second_coord_one_iff`.
+- `n2_midpoint`, `n2_midpoint_in_states`, `n2_midpoint_decomp`,
+  not-vertex theorems.
+- `swapLin : V 2 →ₗ V 2`: the SWAP linear map with all properties
+  (vertex maps, involutive, preserves states, preserves unit, bijective,
+  continuous).
+- `swapReversible` and `swapStrictReversible`: SWAP as a Reversible
+  and StrictReversible.
+- `swapReversible_ne_id`: SWAP ≠ id (Classical n=2 has at least 2
+  distinct StrictReversibles).
+- `classical_n2_state_preserving_first_coord_bound`: state-preserving
+  linear R has R(vertex 0) 0 ∈ [0, 1].
+
+This is substantive R6 progress: the framework for the discreteness
+theorem (classical strict reversibles = S_N, no continuous path
+between them) is now in place. Next: prove the n=2 enumeration
+theorem (every state-preserving bijection V 2 → V 2 is id or swap).
 - **Generic deltaIndicator / Born rule**: For any finite Wantable W and
   any w : W, `deltaIndicatorLin w` is a verified effect with the
   Born-rule property `deltaIndicatorLin w f = f w`, plus the
