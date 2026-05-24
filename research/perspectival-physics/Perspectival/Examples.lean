@@ -11542,3 +11542,56 @@ example : rightMarginal antiDiagonalState = uniformBool := by
     show antiDiagonalState (true, false) + antiDiagonalState (false, false) = uniformBool false
     show (1/2 : ℝ) + 0 = 1/2
     norm_num
+
+/-! ### Mixed correlated states: 1/2 diagonal + 1/2 antiDiagonal -/
+
+/-- The classical maximally-mixed correlated state on Bool × Bool. -/
+noncomputable def mixedCorrelatedState :
+    Perspectival.WantableGPT.V (Bool × Bool) :=
+  (1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState
+
+/-- mixedCorrelatedState equals uniformState. -/
+example : mixedCorrelatedState = uniformState (Bool × Bool) := by
+  funext p
+  show ((1/2 : ℝ) * diagonalState p) + ((1/2 : ℝ) * antiDiagonalState p)
+     = uniformState (Bool × Bool) p
+  show ((1/2 : ℝ) * diagonalState p) + ((1/2 : ℝ) * antiDiagonalState p)
+     = (1 : ℝ) / (Fintype.card (Bool × Bool))
+  rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+  obtain ⟨b₁, b₂⟩ := p
+  cases b₁ <;> cases b₂ <;>
+    (show ((1/2 : ℝ) * _) + ((1/2 : ℝ) * _) = 1/4) <;>
+    simp [diagonalState, antiDiagonalState] <;>
+    norm_num
+
+/-- leftMarginal of mixedCorrelatedState is uniformBool. -/
+example : leftMarginal mixedCorrelatedState = uniformBool := by
+  show leftMarginal ((1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState)
+     = uniformBool
+  rw [map_add, map_smul, map_smul]
+  show ((1/2 : ℝ) • leftMarginal diagonalState)
+     + ((1/2 : ℝ) • leftMarginal antiDiagonalState)
+     = uniformBool
+  funext b
+  show (1/2 : ℝ) * leftMarginal diagonalState b
+     + (1/2 : ℝ) * leftMarginal antiDiagonalState b
+     = uniformBool b
+  have hd : leftMarginal diagonalState b = uniformBool b :=
+    diagonalState_left_marginal b
+  have hax : leftMarginal antiDiagonalState = uniformBool := by
+    funext c
+    show (∑ b₂, antiDiagonalState (c, b₂)) = uniformBool c
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    cases c with
+    | true =>
+      show antiDiagonalState (true, true) + antiDiagonalState (true, false) = uniformBool true
+      show (0 : ℝ) + 1/2 = 1/2
+      norm_num
+    | false =>
+      show antiDiagonalState (false, true) + antiDiagonalState (false, false) = uniformBool false
+      show (1/2 : ℝ) + 0 = 1/2
+      norm_num
+  rw [hd, show leftMarginal antiDiagonalState b = uniformBool b from
+        congr_fun hax b]
+  ring
