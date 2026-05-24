@@ -81,6 +81,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | `path_via_affineLine` — generic affine interpolation path | `Continuity.lean :: path_via_affineLine` | ✓ |
 | `singletonAgency` / `pairAgency` — generic builders for `HasConnectedAgency` | `Continuity.lean` | ✓ |
 | `StrictReversible` (Reversible + bijective toLin) with `.inv`, `.comp`, identity | `Continuity.lean :: StrictReversible.{id, inv, comp}` | ✓ |
+| `Reachable.symm_of_inv_avail` — symmetric Reachable from per-element inverse availability | `Continuity.lean` | ✓ |
+| `Reachable.equivalence` — `Reachable` is an `Equivalence` under ClosedAgency + inverse availability | `Continuity.lean` | ✓ |
 | `ContinuousWantable` class (Wantable on a topological space with continuous complement) | `Examples.lean :: ContinuousWantable` | ✓ |
 | `ContinuousPTrans` structure (PTrans with continuous toFun); id, complement, comp | `Examples.lean :: ContinuousPTrans` | ✓ |
 | Wantable instances on ℝ (Wantable + ContinuousWantable) | `Examples.lean` | ✓ |
