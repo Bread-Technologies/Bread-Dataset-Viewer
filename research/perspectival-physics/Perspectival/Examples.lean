@@ -753,6 +753,14 @@ example {W : Type u} [Wantable W] : Equiv.Perm W where
   left_inv := Wantable.complement_involutive
   right_inv := Wantable.complement_involutive
 
+/-- Named permutation: complementEquiv. -/
+def complementEquiv {W : Type u} [Wantable W] : Equiv.Perm W :=
+  ⟨Wantable.complement, Wantable.complement,
+   Wantable.complement_involutive, Wantable.complement_involutive⟩
+
+example : (complementEquiv : Equiv.Perm Bool).toFun true = false := rfl
+example : (complementEquiv : Equiv.Perm Bool).toFun false = true := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
