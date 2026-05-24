@@ -2425,6 +2425,17 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
         = Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 2)) :=
   boolEquivFin2.preserves_finrank
 
+/-- The classical dichotomy is preserved under WantableEquiv: if W₁ ≃ W₂ and
+both are non-trivial (≥ 2 elements), they have the same classical signature. -/
+theorem WantableEquiv.preserves_classical_dichotomy {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂]
+    (e : WantableEquiv W₁ W₂) (h : 2 ≤ Fintype.card W₁) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W₁) =
+      Module.finrank ℝ (Perspectival.WantableGPT.V W₂) ∧
+    2 ≤ Fintype.card W₂ :=
+  ⟨e.preserves_finrank, e.preserves_card ▸ h⟩
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
