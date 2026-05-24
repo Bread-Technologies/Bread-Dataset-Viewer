@@ -11042,3 +11042,28 @@ example {W : Type u} [Wantable W] (φ : PTrans W) (m : Meeting W) :
     PTrans.actReality φ (fun m' => m' = m)
       = (fun m' => m' = PTrans.actMeeting φ m) :=
   PTrans.actReality_singleton φ m
+
+/-- complement action on singleton Reality. -/
+example (m : Meeting Bool) :
+    PTrans.actReality (PTrans.complement : PTrans Bool) (fun m' => m' = m)
+      = (fun m' => m' = m.swap) := by
+  rw [PTrans.actReality_singleton, PTrans.actMeeting_complement]
+
+/-- complement action on the empty Reality (false predicate). -/
+example : PTrans.actReality (PTrans.complement : PTrans Bool)
+            (fun _ : Meeting Bool => False) = fun _ => False :=
+  PTrans.actReality_empty _
+
+/-- complement action on the full Reality (true predicate). -/
+example : PTrans.actReality (PTrans.complement : PTrans Bool)
+            (fun _ : Meeting Bool => True) = fun _ => True :=
+  PTrans.actReality_full _
+
+/-- Identity PTrans on Reality is the identity. -/
+example (R : Reality Bool) : PTrans.actReality (1 : PTrans Bool) R = R :=
+  PTrans.actReality_one R
+
+/-- complement * complement = id on Reality (Bool case). -/
+example (R : Reality Bool) :
+    PTrans.actReality ((PTrans.complement : PTrans Bool) * PTrans.complement) R = R := by
+  rw [PTrans.complement_sq, PTrans.actReality_one]
