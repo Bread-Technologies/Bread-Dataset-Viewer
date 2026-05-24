@@ -14302,6 +14302,39 @@ example (f : Perspectival.WantableGPT.V Bool)
   have h_false := hf.1 false
   linarith
 
+/-! ### unit functional always gives 1 on states -/
+
+/-- The unit functional on any Bool state = 1. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) :
+    Perspectival.WantableGPT.unitFn Bool f = 1 := hf.2
+
+/-- The unit functional on any Fin n state = 1. -/
+example (n : ℕ) [Wantable (Fin n)] [Fintype (Fin n)]
+    (f : Perspectival.WantableGPT.V (Fin n))
+    (hf : f ∈ Perspectival.WantableGPT.states (Fin n)) :
+    Perspectival.WantableGPT.unitFn (Fin n) f = 1 := hf.2
+
+/-- The unit functional applied to vertex w = 1. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.unitFn W (Perspectival.WantableGPT.vertex W w) = 1 :=
+  (Perspectival.WantableGPT.vertex_in_states W w).2
+
+/-- The unit functional applied to uniformBool = 1. -/
+example : Perspectival.WantableGPT.unitFn Bool uniformBool = 1 := uniformBool_in_states.2
+
+/-- The unit functional applied to uniformState (Bool × Bool) = 1. -/
+example : Perspectival.WantableGPT.unitFn (Bool × Bool) (uniformState (Bool × Bool)) = 1 :=
+  (uniformState_in_states (W := Bool × Bool)).2
+
+/-- The unit functional applied to diagonalState = 1. -/
+example : Perspectival.WantableGPT.unitFn (Bool × Bool) diagonalState = 1 :=
+  diagonalState_in_states.2
+
+/-- The unit functional applied to antiDiagonalState = 1. -/
+example : Perspectival.WantableGPT.unitFn (Bool × Bool) antiDiagonalState = 1 :=
+  antiDiagonalState_in_states.2
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
