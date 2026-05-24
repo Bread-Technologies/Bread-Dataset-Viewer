@@ -12956,3 +12956,39 @@ example : (1 : PTrans Bool).toFun true ≠ (PTrans.complement : PTrans Bool).toF
 /-- complement and identity differ at the Bool element `false`. -/
 example : (1 : PTrans Bool).toFun false ≠ (PTrans.complement : PTrans Bool).toFun false := by
   decide
+
+/-! ### deltaIndicator computations on Fin 3 -/
+
+/-- For Fin 3, the delta-indicator at i = 0 of vertex 0 is 1. -/
+example : deltaIndicatorLin (W := Fin 3) 0 (Perspectival.WantableGPT.vertex (Fin 3) 0) = 1 :=
+  deltaIndicatorLin_vertex_self 0
+
+/-- For Fin 3, the delta-indicator at i = 0 of vertex 1 is 0. -/
+example : deltaIndicatorLin (W := Fin 3) 0 (Perspectival.WantableGPT.vertex (Fin 3) 1) = 0 :=
+  deltaIndicatorLin_vertex_other 0 1 (by decide)
+
+/-- For Fin 3, the delta-indicator at i = 0 of vertex 2 is 0. -/
+example : deltaIndicatorLin (W := Fin 3) 0 (Perspectival.WantableGPT.vertex (Fin 3) 2) = 0 :=
+  deltaIndicatorLin_vertex_other 0 2 (by decide)
+
+/-- For Fin 3, sum of all 3 delta indicators on any state gives the unit. -/
+example (f : Perspectival.WantableGPT.V (Fin 3)) :
+    deltaIndicatorLin (0 : Fin 3) f
+    + deltaIndicatorLin (1 : Fin 3) f
+    + deltaIndicatorLin (2 : Fin 3) f
+      = Perspectival.WantableGPT.unitFn (Fin 3) f := by
+  have hsum := sum_deltaIndicatorLin f
+  rw [show (Finset.univ : Finset (Fin 3)) = {0, 1, 2} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton] at hsum
+  linarith [hsum]
+
+/-- For Fin 3, a state f has sum of pointwise probabilities = 1. -/
+example (f : Perspectival.WantableGPT.V (Fin 3))
+    (hf : f ∈ Perspectival.WantableGPT.states (Fin 3)) :
+    f 0 + f 1 + f 2 = 1 := by
+  have hsum := hf.2
+  rw [show (Finset.univ : Finset (Fin 3)) = {0, 1, 2} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton] at hsum
+  linarith
