@@ -1161,6 +1161,28 @@ def intComplementEquiv : ℤ ≃+ ℤ where
 example : intComplementEquiv (5 : ℤ) = -5 := rfl
 example : intComplementEquiv.symm (5 : ℤ) = -5 := rfl
 
+/-! ## Meeting extensionality
+
+A meeting is determined by either side — both because of the
+complementary law and because `complementary` is a Prop (so any two
+proofs are equal). This gives a clean equality lemma. -/
+
+theorem meeting_ext_of_side₁ {W : Type u} [Wantable W] (m₁ m₂ : Meeting W)
+    (h : m₁.side₁ = m₂.side₁) : m₁ = m₂ := by
+  rcases m₁ with ⟨s₁, s₂, h₁⟩
+  rcases m₂ with ⟨t₁, t₂, h₂⟩
+  cases h
+  have hs : s₂ = t₂ := h₁.symm.trans h₂
+  cases hs
+  rfl
+
+/-- The Ontology follow-up: `swap` of `mk_fromSide w` is exactly
+`mk_fromSide (complement w)`. -/
+theorem swap_mk_fromSide {W : Type u} [Wantable W] (w : W) :
+    (Meeting.mk_fromSide W w).swap = Meeting.mk_fromSide W (Wantable.complement w) := by
+  apply meeting_ext_of_side₁
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
