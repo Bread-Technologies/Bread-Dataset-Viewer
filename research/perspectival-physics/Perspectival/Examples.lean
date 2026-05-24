@@ -494,6 +494,12 @@ example : FixedPointFreeComplement (Bool × Bool) := by
   · exact Bool.false_ne_true h1.symm
   · exact Bool.false_ne_true h1
 
+/-- Concrete instance: `card (Bool × Bool) = 4` is even (consequence
+of fixed-point-free complement + the general theorem). -/
+example : Even (Fintype.card (Bool × Bool)) := by
+  rw [Fintype.card_prod]
+  exact ⟨2, rfl⟩
+
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
