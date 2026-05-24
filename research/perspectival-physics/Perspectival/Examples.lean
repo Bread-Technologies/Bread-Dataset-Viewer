@@ -7329,5 +7329,27 @@ example : diagonalState (false, false) = (1/2 : ℝ) := by
         then (1/2 : ℝ) else 0) = 1/2
   simp
 
+/-- The diagonal state is in WantableGPT.states. -/
+theorem diagonalState_in_states :
+    diagonalState ∈ Perspectival.WantableGPT.states (Bool × Bool) := by
+  refine ⟨?_, ?_⟩
+  · intro p
+    show 0 ≤ (if p = (true, true) ∨ p = (false, false)
+              then (1/2 : ℝ) else 0)
+    split <;> norm_num
+  · show ∑ p, diagonalState p = 1
+    rw [show (Finset.univ : Finset (Bool × Bool))
+          = {(true, true), (true, false), (false, true), (false, false)} from by
+        decide,
+        Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide),
+        Finset.sum_singleton]
+    show diagonalState (true, true) +
+        (diagonalState (true, false) +
+          (diagonalState (false, true) + diagonalState (false, false))) = 1
+    show (1/2 : ℝ) + (0 + (0 + 1/2)) = 1
+    norm_num
+
 end Examples
 end Perspectival
