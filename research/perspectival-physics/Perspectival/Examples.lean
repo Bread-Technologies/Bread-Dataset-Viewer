@@ -710,6 +710,14 @@ example {W : Type u} [Wantable W] (e : Existent W) :
 example {W : Type u} [Wantable W] (e : Existent W) :
     (Perspectival.Meeting.mk_fromSide W e.want).side₂ = Wantable.complement e.want := rfl
 
+/-- Stage-theoretic reading (cf. Sider, *Four-Dimensionalism*, 2001):
+each `Existent W` is a stage in the framework's perdurance picture.
+The complement-meeting between an Existent and its complement-Existent
+realizes the persistence-as-relation reading. -/
+example {W : Type u} [Wantable W] (e₁ e₂ : Existent W)
+    (h : e₂.want = Wantable.complement e₁.want) :
+    Meeting W := ⟨e₁.want, e₂.want, h.symm⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
