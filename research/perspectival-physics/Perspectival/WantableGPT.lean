@@ -37,6 +37,8 @@ import Perspectival.Hardy
 import Perspectival.Distinguish
 import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Data.Real.Basic
+import Mathlib.LinearAlgebra.Basis.Basic
+import Mathlib.LinearAlgebra.Dimension.Finrank
 
 namespace Perspectival
 namespace WantableGPT
@@ -425,6 +427,16 @@ theorem vertices_span : Submodule.span ℝ (Set.range (vertex W)) = ⊤ := by
   rw [vertex_decomposition W f]
   exact Submodule.sum_mem _ (fun w _ =>
     Submodule.smul_mem _ (f w) (Submodule.subset_span ⟨w, rfl⟩))
+
+/-- **The vertex family is a basis of `V W = W → ℝ`.** -/
+noncomputable def vertexBasis [Fintype W] : Module.Basis W ℝ (V W) :=
+  Module.Basis.mk (vertex_linear_independent_of_fintype W) (ge_of_eq (vertices_span W))
+
+/-- The finite-dimensionality of the WantableGPT state space, from the
+vertex basis. -/
+theorem finrank_V_eq_card [Fintype W] :
+    Module.finrank ℝ (V W) = Fintype.card W :=
+  Module.finrank_eq_card_basis (vertexBasis W)
 
 /-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
 give distinct linear maps on the state space.
