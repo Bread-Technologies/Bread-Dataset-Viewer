@@ -339,6 +339,19 @@ def perfectWitness : Perspectival.Distinguish.PerfectWitness (G := gpt W) (verte
     · simp [h]
     · simp [h, Ne.symm h]
 
+/-- The vertex set forms a Hardy-style distinguishability set. -/
+theorem vertex_distinguishability_set :
+    Perspectival.Hardy.DistinguishabilitySet (gpt W)
+      ((Finset.univ : Finset W).image (vertex W)) := by
+  constructor
+  · intro ρ hρ
+    obtain ⟨w, _, rfl⟩ := Finset.mem_image.mp hρ
+    exact vertex_in_states W w
+  · intro ρ₁ hρ₁ ρ₂ hρ₂ hne
+    obtain ⟨w, _, rfl⟩ := Finset.mem_image.mp hρ₁
+    obtain ⟨v, _, rfl⟩ := Finset.mem_image.mp hρ₂
+    exact vertices_distinguishable W w v (fun h => hne (by rw [h]))
+
 /-- **Vertices of the WantableGPT are linearly independent**, derived
 from the perfect-distinguishability witness. -/
 theorem vertex_linear_independent_of_fintype [Fintype W] :
