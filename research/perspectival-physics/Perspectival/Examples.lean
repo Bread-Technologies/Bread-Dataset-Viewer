@@ -355,6 +355,20 @@ example : (PTrans.complement : PTrans (Fin 2)) ≠ (1 : PTrans (Fin 2)) :=
     intro i h
     fin_cases i <;> (simp [SelfComplementary, Wantable.complement] at h))
 
+/-! ## Example 14 — actReality on Bool -/
+
+/-- The "true is part of reality" predicate on Bool meetings. -/
+example : PTrans.actReality (1 : PTrans Bool) (fun _ : Meeting Bool => True)
+        = fun _ => True := by
+  rfl
+
+/-- Swap-reality of singleton trueMeetsFalse meeting. -/
+example :
+    PTrans.actReality (PTrans.complement : PTrans Bool)
+      (fun m : Meeting Bool => m = trueMeetsFalse)
+    = (fun m : Meeting Bool => m = PTrans.actMeeting PTrans.complement trueMeetsFalse) :=
+  PTrans.actReality_singleton _ _
+
 /-- **Concrete classification of `PTrans Unit`.** Since `Unit` has
 only one element, only the identity transformation exists. -/
 theorem ptrans_unit_classification (f : PTrans Unit) : f = (1 : PTrans Unit) := by
