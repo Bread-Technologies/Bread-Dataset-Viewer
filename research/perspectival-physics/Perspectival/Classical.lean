@@ -1640,5 +1640,51 @@ theorem swap01Lin_continuous : Continuous swap01Lin := by
   · exact continuous_apply 0
   · exact continuous_apply 2
 
+/-- swap01Lin as a Reversible on Classical n=3 GPT. -/
+def swap01Reversible : Perspectival.Continuity.Reversible (gpt 3) where
+  toLin := swap01Lin
+  continuous_toLin := swap01Lin_continuous
+  preserves_states := swap01Lin_preserves_states
+  preserves_unit := swap01Lin_preserves_unit
+
+/-- swap01Lin as a StrictReversible. -/
+def swap01StrictReversible :
+    Perspectival.Continuity.StrictReversible (gpt 3) where
+  toReversible := swap01Reversible
+  isEquiv := swap01Lin_bijective
+
+/-- swap01StrictReversible is distinct from id. -/
+example : swap01StrictReversible.toLin ≠
+          (Perspectival.Continuity.StrictReversible.id (gpt 3)).toLin := by
+  intro h
+  have h2 : swap01StrictReversible.toLin (vertex 3 0)
+          = (Perspectival.Continuity.StrictReversible.id (gpt 3)).toLin (vertex 3 0) := by
+    rw [h]
+  show False
+  rw [show swap01StrictReversible.toLin (vertex 3 0) = swap01Lin (vertex 3 0) from rfl] at h2
+  -- swap01Lin (vertex 3 0) = vertex 3 1
+  rw [show swap01Lin (vertex 3 0) = vertex 3 1 from by
+    funext j
+    fin_cases j
+    · show vertex 3 0 1 = vertex 3 1 0
+      show (if (0 : Fin 3) = 1 then (1 : ℝ) else 0)
+         = (if (1 : Fin 3) = 0 then (1 : ℝ) else 0)
+      simp
+    · show vertex 3 0 0 = vertex 3 1 1
+      show (if (0 : Fin 3) = 0 then (1 : ℝ) else 0)
+         = (if (1 : Fin 3) = 1 then (1 : ℝ) else 0)
+      simp
+    · show vertex 3 0 2 = vertex 3 1 2
+      show (if (0 : Fin 3) = 2 then (1 : ℝ) else 0)
+         = (if (1 : Fin 3) = 2 then (1 : ℝ) else 0)
+      rw [if_neg (by decide), if_neg (by decide)]] at h2
+  rw [show (Perspectival.Continuity.StrictReversible.id (gpt 3)).toLin (vertex 3 0)
+        = vertex 3 0 from rfl] at h2
+  -- h2 : vertex 3 1 = vertex 3 0
+  have h3 := congr_fun h2 0
+  rw [show vertex 3 1 0 = (if (1 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl,
+      show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at h3
+  simp at h3
+
 end Classical
 end Perspectival
