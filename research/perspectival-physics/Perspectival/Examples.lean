@@ -11629,3 +11629,52 @@ example : mixedCorrelatedState (false, false) = (1/4 : ℝ) := by
      + ((1/2 : ℝ) * antiDiagonalState (false, false)) = 1/4
   simp [diagonalState, antiDiagonalState]
   norm_num
+
+/-! ### Product of uniformBool with itself equals uniformState (Bool × Bool) -/
+
+/-- productState uniformBool uniformBool ≠ diagonalState (correlation
+witnesses non-product-ness in the other direction). -/
+example : productState uniformBool uniformBool ≠ diagonalState := by
+  intro h
+  have hval := congr_fun h (true, false)
+  show False
+  rw [show productState uniformBool uniformBool (true, false)
+        = uniformBool true * uniformBool false from rfl] at hval
+  rw [show diagonalState (true, false) = 0 from rfl] at hval
+  show False
+  have : ((1/2 : ℝ) * (1/2 : ℝ)) = 0 := hval
+  norm_num at this
+
+/-- productState uniformBool uniformBool ≠ antiDiagonalState. -/
+example : productState uniformBool uniformBool ≠ antiDiagonalState := by
+  intro h
+  have hval := congr_fun h (true, true)
+  rw [show productState uniformBool uniformBool (true, true)
+        = uniformBool true * uniformBool true from rfl] at hval
+  rw [show antiDiagonalState (true, true) = 0 from rfl] at hval
+  have : ((1/2 : ℝ) * (1/2 : ℝ)) = 0 := hval
+  norm_num at this
+
+/-- mixedCorrelatedState is NOT diagonalState (despite having same marginals). -/
+example : mixedCorrelatedState ≠ diagonalState := by
+  intro h
+  have hval := congr_fun h (true, false)
+  rw [show mixedCorrelatedState (true, false)
+        = (1/2 : ℝ) * diagonalState (true, false)
+        + (1/2 : ℝ) * antiDiagonalState (true, false) from rfl] at hval
+  rw [show diagonalState (true, false) = 0 from rfl] at hval
+  rw [show antiDiagonalState (true, false) = 1/2 from rfl] at hval
+  have : (1/2 : ℝ) * 0 + (1/2 : ℝ) * (1/2 : ℝ) = 0 := hval
+  norm_num at this
+
+/-- mixedCorrelatedState is NOT antiDiagonalState. -/
+example : mixedCorrelatedState ≠ antiDiagonalState := by
+  intro h
+  have hval := congr_fun h (true, true)
+  rw [show mixedCorrelatedState (true, true)
+        = (1/2 : ℝ) * diagonalState (true, true)
+        + (1/2 : ℝ) * antiDiagonalState (true, true) from rfl] at hval
+  rw [show diagonalState (true, true) = 1/2 from rfl] at hval
+  rw [show antiDiagonalState (true, true) = 0 from rfl] at hval
+  have : (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * 0 = 0 := hval
+  norm_num at this
