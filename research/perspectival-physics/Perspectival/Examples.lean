@@ -525,6 +525,10 @@ example : (PTrans.complement : PTrans ℤ).toFun 42 = -42 := rfl
 example : (PTrans.complement : PTrans ℤ).invFun (-42) = 42 := by
   show -(-42 : ℤ) = 42; ring
 
+/-- The complement-PTrans on ℤ has order 2 in its group. -/
+example : (PTrans.complement : PTrans ℤ) * PTrans.complement = 1 :=
+  PTrans.complement_sq
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
