@@ -1686,5 +1686,69 @@ example : swap01StrictReversible.toLin ≠
       show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at h3
   simp at h3
 
+/-! ## n=3 disconnect: swap01 vs id via "swap-detector" sum invariant -/
+
+/-- For state-preserving R on V n, the "swap-detector" sums R(v0)(1) + R(v1)(0)
+which equals R's "off-diagonal" coordinates summed in the (0,1)-position.
+For id: 0 + 0 = 0. For swap01: 1 + 1 = 2. -/
+noncomputable def n3_swap01_detector (R : V 3 →ₗ[ℝ] V 3) : ℝ :=
+  R (vertex 3 0) 1 + R (vertex 3 1) 0
+
+/-- For id on V 3, swap01-detector = 0. -/
+example : n3_swap01_detector (LinearMap.id : V 3 →ₗ[ℝ] V 3) = 0 := by
+  show LinearMap.id (vertex 3 0) 1 + LinearMap.id (vertex 3 1) 0 = 0
+  show vertex 3 0 1 + vertex 3 1 0 = 0
+  show (if (0 : Fin 3) = 1 then (1 : ℝ) else 0)
+     + (if (1 : Fin 3) = 0 then (1 : ℝ) else 0)
+     = 0
+  simp
+
+/-- For swap01Lin on V 3, swap01-detector = 2. -/
+example : n3_swap01_detector swap01Lin = 2 := by
+  show swap01Lin (vertex 3 0) 1 + swap01Lin (vertex 3 1) 0 = 2
+  -- swap01Lin v 1 = v 0; swap01Lin v 0 = v 1
+  show vertex 3 0 0 + vertex 3 1 1 = 2
+  show (if (0 : Fin 3) = 0 then (1 : ℝ) else 0)
+     + (if (1 : Fin 3) = 1 then (1 : ℝ) else 0)
+     = 2
+  simp
+  norm_num
+
+/-- IVT/path: a continuous path γ : [0,1] → V 3 →ₗ V 3 with γ(0) = id
+and γ(1) = swap01 must pass through n3_swap01_detector = 1 somewhere
+(by IVT: 0 → 2 implies passing through 1). -/
+example
+    (γ : unitInterval → V 3 →ₗ[ℝ] V 3)
+    (hcont : Continuous (fun t => n3_swap01_detector (γ t)))
+    (h0 : γ 0 = LinearMap.id)
+    (h1 : γ 1 = swap01Lin) :
+    ∃ t : unitInterval, n3_swap01_detector (γ t) = 1 := by
+  have hcont' : Continuous (fun t => n3_swap01_detector (γ t) - 1) :=
+    hcont.sub continuous_const
+  have hcont'' : Continuous (fun t => -(n3_swap01_detector (γ t) - 1)) :=
+    (continuous_neg).comp hcont'
+  have hh0 : (fun t => -(n3_swap01_detector (γ t) - 1)) 0 = 1 := by
+    show -(n3_swap01_detector (γ 0) - 1) = 1
+    rw [h0]
+    show -(LinearMap.id (vertex 3 0) 1 + LinearMap.id (vertex 3 1) 0 - 1) = 1
+    show -(vertex 3 0 1 + vertex 3 1 0 - 1) = 1
+    show -((if (0 : Fin 3) = 1 then (1 : ℝ) else 0)
+         + (if (1 : Fin 3) = 0 then (1 : ℝ) else 0) - 1)
+        = 1
+    simp
+  have hh1 : (fun t => -(n3_swap01_detector (γ t) - 1)) 1 = -1 := by
+    show -(n3_swap01_detector (γ 1) - 1) = -1
+    rw [h1]
+    show -(swap01Lin (vertex 3 0) 1 + swap01Lin (vertex 3 1) 0 - 1) = -1
+    show -(vertex 3 0 0 + vertex 3 1 1 - 1) = -1
+    show -((if (0 : Fin 3) = 0 then (1 : ℝ) else 0)
+         + (if (1 : Fin 3) = 1 then (1 : ℝ) else 0) - 1)
+        = -1
+    simp
+  obtain ⟨t, ht⟩ := ivt_path_one_to_neg_one _ hcont'' hh0 hh1
+  refine ⟨t, ?_⟩
+  show n3_swap01_detector (γ t) = 1
+  linarith
+
 end Classical
 end Perspectival
