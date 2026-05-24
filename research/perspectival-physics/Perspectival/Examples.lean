@@ -2309,6 +2309,17 @@ example : (boolEquivFin2.symm.mapPTrans fin2Swap).toFun = boolSwap.toFun := by
 example : boolEquivFin2.symm.mapPTrans (1 : PTrans (Fin 2)) = (1 : PTrans Bool) :=
   boolEquivFin2.symm.mapPTrans_one
 
+/-- The mapPTrans of symm composed with mapPTrans of original is identity on PTrans Bool. -/
+example (φ : PTrans Bool) :
+    boolEquivFin2.symm.mapPTrans (boolEquivFin2.mapPTrans φ) = φ := by
+  apply PTrans.ext
+  intro b
+  show (boolEquivFin2.toEquiv).symm
+        ((boolEquivFin2.toEquiv) (φ.toFun
+          ((boolEquivFin2.toEquiv).symm ((boolEquivFin2.toEquiv) b)))) = φ.toFun b
+  rw [(boolEquivFin2.toEquiv).symm_apply_apply]
+  rw [(boolEquivFin2.toEquiv).symm_apply_apply]
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
