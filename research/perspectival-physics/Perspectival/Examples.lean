@@ -5413,5 +5413,26 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
     Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
   Perspectival.WantableGPT.wantableGPT_nontrivial_classical W h
 
+/-- Generic `wantableGPT_not_quantum`: K ≠ N² for |W| ≥ 2. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (h : 2 ≤ Fintype.card W) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W)
+      ≠ Fintype.card W * Fintype.card W :=
+  Perspectival.WantableGPT.wantableGPT_not_quantum W h
+
+/-- Generic `wantableGPT_not_realQM`: 2K ≠ N(N+1) for |W| ≥ 2. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (h : 2 ≤ Fintype.card W) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) * 2
+      ≠ Fintype.card W * (Fintype.card W + 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_realQM W h
+
+/-- Generic `wantableGPT_not_quaternionicQM`: K ≠ N(2N-1) for |W| ≥ 2. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (h : 2 ≤ Fintype.card W) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W)
+      ≠ Fintype.card W * (2 * Fintype.card W - 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_quaternionicQM W h
+
 end Examples
 end Perspectival
