@@ -707,6 +707,9 @@ example {W : Type u} [Wantable W] (e : Existent W) :
 example {W : Type u} [Wantable W] (e : Existent W) :
     (Perspectival.Meeting.mk_fromSide W e.want).side₁ = e.want := rfl
 
+example {W : Type u} [Wantable W] (e : Existent W) :
+    (Perspectival.Meeting.mk_fromSide W e.want).side₂ = Wantable.complement e.want := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
