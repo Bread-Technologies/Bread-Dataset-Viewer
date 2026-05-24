@@ -480,6 +480,11 @@ example (m : Meeting Unit) : m.side₁ = m.side₂ := by
   have := m.complementary
   exact this.symm  -- complement m.side₁ = m.side₂, i.e. m.side₁ = m.side₂ since complement = id
 
+/-- The Bool Wantable has no fixed-point-free... wait, Bool's complement
+IS fixed-point-free (not has no fixed point). -/
+example (b : Bool) : Wantable.complement b ≠ b := by
+  cases b <;> simp [Wantable.complement]
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
