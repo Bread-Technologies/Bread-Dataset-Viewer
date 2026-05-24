@@ -3108,6 +3108,15 @@ theorem WantableGPT_classical_K_eq_N {W : Type u}
 example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = Fintype.card Bool :=
   WantableGPT_classical_K_eq_N
 
+/-- Verification: K = N concretely on Fin 3 gives 3 = 3. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) = Fintype.card (Fin 3) :=
+  WantableGPT_classical_K_eq_N
+
+/-- Verification: K = N concretely on Bool × Bool gives 4 = 4. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool))
+        = Fintype.card (Bool × Bool) :=
+  WantableGPT_classical_K_eq_N
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
