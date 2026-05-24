@@ -452,6 +452,21 @@ example (f : ℝ →ₗ[ℝ] ℝ) (hf : Function.Injective f) : f 1 ≠ 0 := by
   have : (1 : ℝ) = 0 := hf (h.trans hf0.symm)
   exact one_ne_zero this
 
+/-- The linear-bijection-respecting-negation classification: if `f : ℝ → ℝ` is
+ℝ-linear, bijective, and respects negation (automatic for linear maps),
+then `f x = f 1 * x` and `f 1 ≠ 0`. So every linear `PTrans ℝ`-like
+function is a scaling, demonstrating `scaleHom(ℝˣ)` = `{linear ϕ : ϕ ∈ PTrans ℝ}`. -/
+example (f : ℝ →ₗ[ℝ] ℝ) (hf_inj : Function.Injective f) :
+    ∃ a : ℝ, a ≠ 0 ∧ ∀ x, f x = a * x := by
+  refine ⟨f 1, ?_, ?_⟩
+  · intro h
+    have hf0 : f 0 = 0 := f.map_zero
+    exact one_ne_zero (hf_inj (h.trans hf0.symm))
+  · intro x
+    have h := f.map_smul x 1
+    rw [smul_eq_mul, smul_eq_mul, mul_one] at h
+    rw [h, mul_comm]
+
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
