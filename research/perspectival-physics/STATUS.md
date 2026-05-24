@@ -46,6 +46,17 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | **No-cloning theorem** — cross-term vanishing from linearity | `NoCloning.lean :: cross_terms_vanish` | ✓ |
 | **No-cloning theorem** — contradiction with distinguishing bilinear form | `NoCloning.lean :: no_cloning` | ✓ |
 | **No-cloning from linear independence** (standard formulation) | `NoCloning.lean :: no_cloning_of_linear_independent` | ✓ |
+| `fromPTransHom` MonoidHom into LinearMap monoid | `WantableGPT.lean :: fromPTransHom` | ✓ |
+| `fromPTransTransformHom` MonoidHom into Transform monoid | `WantableGPT.lean :: fromPTransTransformHom` | ✓ |
+| `fromPTransHom` is injective | `WantableGPT.lean :: fromPTransHom_injective` | ✓ |
+| `complementPTrans` is an involution | `WantableGPT.lean :: complementPTrans_sq` | ✓ |
+| Bridge respects complement: `fromPTrans complementPTrans = complementAction` | `WantableGPT.lean :: fromPTransHom_complementPTrans` | ✓ |
+| Coe instance: PTrans → Transform | `WantableGPT.lean` | ✓ |
+| WantableGPT vertices linearly independent | `WantableGPT.lean :: vertex_linear_independent_of_fintype` | ✓ |
+| Self-Transforms form a Monoid | `GPT.lean (instance)` | ✓ |
+| Transform composition (`Transform.comp`) | `GPT.lean :: Transform.comp` | ✓ |
+| Reachable is reflexive | `Continuity.lean :: Reachable.refl` | ✓ |
+| Trivial HasConnectedAgency instance | `Continuity.lean :: trivialAgency` | ✓ |
 | Classical n-outcome GPT — full construction | `Classical.lean :: gpt` | ✓ |
 | Classical GPT — convex states (std simplex) | `Classical.lean :: states_convex` | ✓ |
 | Classical GPT — convex effects | `Classical.lean :: effects_convex` | ✓ |
