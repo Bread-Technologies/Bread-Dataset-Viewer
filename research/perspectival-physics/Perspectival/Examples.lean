@@ -8134,3 +8134,29 @@ theorem diagonalIndicatorLin_add_antiDiagonalIndicatorLin :
     have := congr_fun diagonalIndicator_add_antiDiagonalIndicator p
     simpa using this
   rw [← add_mul, h, one_mul]
+
+/-- Born-rule normalization: every state ρ has diagonalIndicatorLin ρ
++ antiDiagonalIndicatorLin ρ = 1 (probabilities sum to 1). -/
+theorem indicator_probs_sum_to_one
+    (ρ : Perspectival.WantableGPT.V (Bool × Bool))
+    (hρ : ρ ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    diagonalIndicatorLin ρ + antiDiagonalIndicatorLin ρ = 1 := by
+  have := congr_fun
+    (congrArg (·.toFun) diagonalIndicatorLin_add_antiDiagonalIndicatorLin) ρ
+  simpa using
+    (LinearMap.congr_fun diagonalIndicatorLin_add_antiDiagonalIndicatorLin ρ).trans hρ.2
+
+/-- Concrete: diagonalState satisfies the probability normalization for
+the indicator measurement. -/
+example : diagonalIndicatorLin diagonalState
+        + antiDiagonalIndicatorLin diagonalState = 1 := by
+  rw [diagonalIndicatorLin_on_diagonalState,
+      antiDiagonalIndicatorLin_on_diagonalState]
+  norm_num
+
+/-- Concrete: antiDiagonalState satisfies the normalization. -/
+example : diagonalIndicatorLin antiDiagonalState
+        + antiDiagonalIndicatorLin antiDiagonalState = 1 := by
+  rw [diagonalIndicatorLin_on_antiDiagonalState,
+      antiDiagonalIndicatorLin_on_antiDiagonalState]
+  norm_num
