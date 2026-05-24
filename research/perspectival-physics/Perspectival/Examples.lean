@@ -7724,3 +7724,18 @@ example {C : Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ]
     (hC : Perspectival.IsLinearCloner Set.univ C) : False :=
   no_universal_cloner_WantableGPT_vertices hC
     (by decide : ((true, true) : Bool × Bool) ≠ (true, false))
+
+/-- New theorem: cloner of the empty set is vacuous. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (C : V →ₗ[ℝ] V ⊗[ℝ] V) :
+    Perspectival.IsLinearCloner (∅ : Set V) C := by
+  intro v hv
+  exact absurd hv (Set.notMem_empty v)
+
+/-- New theorem: cloner of any singleton {0} is satisfied by the zero map. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] :
+    Perspectival.IsLinearCloner ({0} : Set V) (0 : V →ₗ[ℝ] V ⊗[ℝ] V) := by
+  intro v hv
+  rw [Set.mem_singleton_iff] at hv
+  subst hv
+  simp
