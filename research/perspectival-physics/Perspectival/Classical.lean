@@ -610,5 +610,26 @@ theorem swap_in_n2_two_strict :
     swapStrictReversible ∈ n2_two_strict := by
   right; rfl
 
+/-! ## Bijection sends extreme points to extreme points -/
+
+/-- A state-preserving INJECTIVE linear map V 2 →ₗ V 2 must send
+distinct vertices to distinct states. -/
+theorem classical_n2_injective_distinct_images
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hinj : Function.Injective R) :
+    R (vertex 2 0) ≠ R (vertex 2 1) := by
+  intro h
+  apply hinj at h
+  have h00 : vertex 2 0 0 = vertex 2 1 0 := congr_fun h 0
+  rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1] at h00
+  norm_num at h00
+
+/-- A state-preserving SURJECTIVE linear map V 2 →ₗ V 2 has every
+state in its image. In particular vertex 2 0 is in the image. -/
+theorem classical_n2_surjective_vertex_image
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hsurj : Function.Surjective R) :
+    ∃ v, R v = vertex 2 0 := hsurj _
+
 end Classical
 end Perspectival
