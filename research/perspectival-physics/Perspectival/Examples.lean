@@ -9099,3 +9099,27 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 ⊕ Bool)) = 5 :
 example (p : Fin 3 ⊕ Bool) : uniformState (Fin 3 ⊕ Bool) p = 1/5 := by
   show (1 : ℝ) / (Fintype.card (Fin 3 ⊕ Bool) : ℝ) = 1/5
   norm_cast
+
+/-- Concrete: |Bool × (Bool × Bool)| = 8 = |Bool × Bool × Bool|. -/
+example : Fintype.card (Bool × (Bool × Bool)) = Fintype.card (Bool × Bool × Bool) := by
+  decide
+
+/-- Concrete: |(Bool × Bool) × Bool| = 8. -/
+example : Fintype.card ((Bool × Bool) × Bool) = 8 := by decide
+
+/-- Concrete: |Bool × Bool × Bool × Bool| = 16. -/
+example : Fintype.card (Bool × Bool × Bool × Bool) = 16 := by decide
+
+/-- Concrete: WantableGPT dim on Bool × Bool × Bool × Bool = 16. -/
+example : Module.finrank ℝ
+    (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool)) = 16 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Concrete: triple no-go on Bool⁴. -/
+example : Module.finrank ℝ
+    (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool))
+    ≠ Fintype.card (Bool × Bool × Bool × Bool)
+    * Fintype.card (Bool × Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.wantableGPT_not_quantum (Bool × Bool × Bool × Bool)
+    (by decide)
