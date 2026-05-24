@@ -32,6 +32,7 @@ operational level but does not show one produces the other.
 
 import Perspectival.Ontology
 import Perspectival.Transformations
+import Perspectival.Composition
 import Perspectival.GPT
 import Perspectival.Hardy
 import Perspectival.Distinguish
@@ -463,6 +464,27 @@ theorem wantableGPT_is_classical [Fintype W] :
   -- we get card W ≤ finrank (via `operational_dim_le_state_dim` reasoning,
   -- but we have the cleaner direct bound from the basis size).
   exact (finrank_V_eq_card W).symm.le
+
+/-- **Product-composition dimension.** For finite Wantables W₁, W₂,
+the WantableGPT of `W₁ × W₂` has dimension `|W₁| · |W₂|`. This is the
+Hardy "composition rule" K_AB = K_A · K_B, holding *automatically*
+for our finite-Wantable bridge (no additional tensor postulate required
+at the dimension-counting level — though tensor structure of states /
+effects is more than this). -/
+theorem finrank_V_prod_eq_mul {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (V (W₁ × W₂)) = Fintype.card W₁ * Fintype.card W₂ := by
+  rw [finrank_V_eq_card (W₁ × W₂), Fintype.card_prod]
+
+/-- **Sum-composition dimension.** For finite Wantables W₁, W₂,
+the WantableGPT of `W₁ ⊕ W₂` has dimension `|W₁| + |W₂|`. This is the
+classical "additive" composition rule. -/
+theorem finrank_V_sum_eq_add {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂] :
+    Module.finrank ℝ (V (W₁ ⊕ W₂)) = Fintype.card W₁ + Fintype.card W₂ := by
+  rw [finrank_V_eq_card (W₁ ⊕ W₂), Fintype.card_sum]
 
 /-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
 give distinct linear maps on the state space.
