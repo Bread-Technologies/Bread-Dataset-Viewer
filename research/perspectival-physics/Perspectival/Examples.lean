@@ -10659,3 +10659,28 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     (Perspectival.WantableGPT.complementPTrans W) ^ 10 = 1 := by
   rw [show (10 : ℕ) = 2 * 5 from rfl, pow_mul,
       WantableGPT_complementPTrans_order_two, one_pow]
+
+/-- complementTransform powers cycle with period 2. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementTransform W) ^ 5
+      = Perspectival.WantableGPT.complementTransform W := by
+  rw [show (5 : ℕ) = 2 * 2 + 1 from rfl, pow_add,
+      pow_mul, WantableGPT_complementTransform_order_two,
+      one_pow, one_mul, pow_one]
+
+/-- complementTransform^100 = 1. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementTransform W) ^ 100
+      = (1 : Perspectival.GPT.Transform
+              (Perspectival.WantableGPT.gpt W)
+              (Perspectival.WantableGPT.gpt W)) := by
+  rw [show (100 : ℕ) = 2 * 50 from rfl, pow_mul,
+      WantableGPT_complementTransform_order_two, one_pow]
+
+/-- complementTransform^101 = complementTransform. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementTransform W) ^ 101
+      = Perspectival.WantableGPT.complementTransform W := by
+  rw [show (101 : ℕ) = 2 * 50 + 1 from rfl, pow_add,
+      pow_mul, WantableGPT_complementTransform_order_two,
+      one_pow, one_mul, pow_one]
