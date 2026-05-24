@@ -3403,6 +3403,17 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) : False :=
   Perspectival.Distinguish.no_oversized_perfect_distinguishability h ρ w
 
+/-- Distinguishable states are unequal. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ρ₁ ρ₂ : V}
+    (h : Perspectival.Hardy.Distinguishable G ρ₁ ρ₂) : ρ₁ ≠ ρ₂ :=
+  Perspectival.Distinguish.distinguishable_ne h
+
+/-- States are nonzero. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ρ : V} (h : ρ ∈ G.states) : ρ ≠ 0 :=
+  Perspectival.Distinguish.state_ne_zero h
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
