@@ -108,6 +108,40 @@ and `PAPER_DRAFT.md` (writeup form).
   Technical, uses `LinearMap.exists_leftInverse_of_injective`; not
   pursued in this codebase to avoid bookkeeping.
 
+## The framework's two levels — and the gap between them
+
+The codebase has *two structurally distinct levels* that the framework
+claims should be unified:
+
+**Metaphysical level** (`Ontology`, `Transformations`, `Composition`).
+Types describing perspective, wanting, meeting. Group-theoretic
+transformation structure. Carrier: `Wantable W` for some `W`.
+
+**Operational level** (`GPT`, `Hardy`, `Distinguish`, `Continuity`,
+`Classical`, `NoCloning`, `NoBroadcasting`). Probabilistic structure
+with convex state spaces, linear algebra, effects. Carrier: `GPT V`
+for a real vector space `V`.
+
+These two levels are *independently coherent* — each is internally
+consistent and has its own verified theorems. They share the
+`Ontology` foundation (the `Wantable` axioms motivate the operational
+notions in prose), and the CHSH module imports both Mathlib's
+operator-algebra side and our `Wantable`-derived `BinaryObservable`,
+but the **bridge in the strong sense** — showing that the operational
+structure *emerges* from the metaphysical — is not formalized.
+
+What would such a bridge look like? A construction that, given a
+`Wantable W` (possibly with additional postulates), *produces* a
+concrete `GPT V` whose states correspond to some natural notion of
+"perspective" on `W`, whose effects come from `W`'s complement
+structure, etc. This is the framework's central technical claim
+(Axiom IV: matter is patterning of perspectival transformations);
+formalizing it is the natural Tier 1+ research target.
+
+This gap is the framework's honest structural limitation. Both levels
+do real work; they don't yet *unify*. ROADMAP R6 and R7 are the path
+toward closing this gap.
+
 ## Clarifications and limitations
 
 ### L1. Scope of `no_cloning`
