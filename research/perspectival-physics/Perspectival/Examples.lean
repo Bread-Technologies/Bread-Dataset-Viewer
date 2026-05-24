@@ -8423,3 +8423,27 @@ example : ∃ (coeffs : Bool × Bool → ℝ),
       • productState (Perspectival.WantableGPT.vertex Bool p.1)
                      (Perspectival.WantableGPT.vertex Bool p.2) :=
   WantableGPT_classical_separability _
+
+/-- Generic classical-separability for triples (Bool × Bool × Bool). -/
+example (f : Perspectival.WantableGPT.V (Bool × (Bool × Bool))) :
+    ∃ (coeffs : Bool × (Bool × Bool) → ℝ),
+      f = ∑ p, coeffs p
+        • productState (Perspectival.WantableGPT.vertex Bool p.1)
+                       (Perspectival.WantableGPT.vertex (Bool × Bool) p.2) :=
+  WantableGPT_classical_separability f
+
+/-- Generic classical-separability for Fin 3 × Bool. -/
+example (f : Perspectival.WantableGPT.V (Fin 3 × Bool)) :
+    ∃ (coeffs : Fin 3 × Bool → ℝ),
+      f = ∑ p, coeffs p
+        • productState (Perspectival.WantableGPT.vertex (Fin 3) p.1)
+                       (Perspectival.WantableGPT.vertex Bool p.2) :=
+  WantableGPT_classical_separability f
+
+/-- Generic classical-separability for Fin 4 × Fin 4. -/
+example (f : Perspectival.WantableGPT.V (Fin 4 × Fin 4)) :
+    ∃ (coeffs : Fin 4 × Fin 4 → ℝ),
+      f = ∑ p, coeffs p
+        • productState (Perspectival.WantableGPT.vertex (Fin 4) p.1)
+                       (Perspectival.WantableGPT.vertex (Fin 4) p.2) :=
+  WantableGPT_classical_separability f
