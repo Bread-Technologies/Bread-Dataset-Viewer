@@ -2663,6 +2663,20 @@ example (i : Fin 3) :
     = Perspectival.Classical.vertex 3 i ⊗ₜ[ℝ] Perspectival.Classical.vertex 3 i :=
   Perspectival.NoBroadcasting.classicalBroadcaster_vertex 3 i
 
+/-- Classical broadcaster on vertex 0 of Fin 2. -/
+example :
+    Perspectival.NoBroadcasting.classicalBroadcaster 2
+      (Perspectival.Classical.vertex 2 0)
+    = Perspectival.Classical.vertex 2 0 ⊗ₜ[ℝ] Perspectival.Classical.vertex 2 0 :=
+  Perspectival.NoBroadcasting.classicalBroadcaster_vertex 2 0
+
+/-- Classical broadcaster on vertex 1 of Fin 2. -/
+example :
+    Perspectival.NoBroadcasting.classicalBroadcaster 2
+      (Perspectival.Classical.vertex 2 1)
+    = Perspectival.Classical.vertex 2 1 ⊗ₜ[ℝ] Perspectival.Classical.vertex 2 1 :=
+  Perspectival.NoBroadcasting.classicalBroadcaster_vertex 2 1
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
