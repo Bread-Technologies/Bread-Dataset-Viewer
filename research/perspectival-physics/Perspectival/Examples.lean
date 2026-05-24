@@ -8402,3 +8402,24 @@ example : ∃ (coeffs : Bool × Bool → ℝ),
       • productState (Perspectival.WantableGPT.vertex Bool p.1)
                      (Perspectival.WantableGPT.vertex Bool p.2) :=
   WantableGPT_classical_separability diagonalState
+
+/-- antiDiagonalState exhibits classical separability. -/
+example : ∃ (coeffs : Bool × Bool → ℝ),
+    antiDiagonalState = ∑ p, coeffs p
+      • productState (Perspectival.WantableGPT.vertex Bool p.1)
+                     (Perspectival.WantableGPT.vertex Bool p.2) :=
+  WantableGPT_classical_separability antiDiagonalState
+
+/-- uniformState (Bool × Bool) exhibits classical separability. -/
+example : ∃ (coeffs : Bool × Bool → ℝ),
+    uniformState (Bool × Bool) = ∑ p, coeffs p
+      • productState (Perspectival.WantableGPT.vertex Bool p.1)
+                     (Perspectival.WantableGPT.vertex Bool p.2) :=
+  WantableGPT_classical_separability _
+
+/-- productState uniformBool uniformBool exhibits classical separability. -/
+example : ∃ (coeffs : Bool × Bool → ℝ),
+    productState uniformBool uniformBool = ∑ p, coeffs p
+      • productState (Perspectival.WantableGPT.vertex Bool p.1)
+                     (Perspectival.WantableGPT.vertex Bool p.2) :=
+  WantableGPT_classical_separability _
