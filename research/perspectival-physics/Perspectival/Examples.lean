@@ -14800,6 +14800,41 @@ example (a b c x y z : Bool) :
   rw [deltaIndicatorLin_eq_apply]
   rfl
 
+/-! ### Convex-combination identities -/
+
+/-- 1/4 of each of 4 Bool × Bool vertices gives uniformState. -/
+example :
+    (1/4 : ℝ) • Perspectival.WantableGPT.vertex (Bool × Bool) (true, true)
+    + (1/4 : ℝ) • Perspectival.WantableGPT.vertex (Bool × Bool) (true, false)
+    + (1/4 : ℝ) • Perspectival.WantableGPT.vertex (Bool × Bool) (false, true)
+    + (1/4 : ℝ) • Perspectival.WantableGPT.vertex (Bool × Bool) (false, false)
+    = uniformState (Bool × Bool) := by
+  funext p
+  obtain ⟨b₁, b₂⟩ := p
+  cases b₁ with
+  | true => cases b₂ with
+    | true =>
+      show (1/4 : ℝ) * 1 + (1/4 : ℝ) * 0 + (1/4 : ℝ) * 0 + (1/4 : ℝ) * 0
+         = (1 : ℝ) / Fintype.card (Bool × Bool)
+      rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+      norm_num
+    | false =>
+      show (1/4 : ℝ) * 0 + (1/4 : ℝ) * 1 + (1/4 : ℝ) * 0 + (1/4 : ℝ) * 0
+         = (1 : ℝ) / Fintype.card (Bool × Bool)
+      rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+      norm_num
+  | false => cases b₂ with
+    | true =>
+      show (1/4 : ℝ) * 0 + (1/4 : ℝ) * 0 + (1/4 : ℝ) * 1 + (1/4 : ℝ) * 0
+         = (1 : ℝ) / Fintype.card (Bool × Bool)
+      rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+      norm_num
+    | false =>
+      show (1/4 : ℝ) * 0 + (1/4 : ℝ) * 0 + (1/4 : ℝ) * 0 + (1/4 : ℝ) * 1
+         = (1 : ℝ) / Fintype.card (Bool × Bool)
+      rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+      norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
