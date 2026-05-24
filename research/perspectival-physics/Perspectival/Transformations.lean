@@ -17,6 +17,7 @@ Calibrated status:
 import Perspectival.Ontology
 import Mathlib.Algebra.Group.Defs
 import Mathlib.GroupTheory.GroupAction.Defs
+import Mathlib.GroupTheory.Perm.Basic
 
 namespace Perspectival
 
@@ -219,6 +220,64 @@ theorem actMeeting_faithful (f g : PTrans W)
   have : (actMeeting f (Meeting.mk_fromSide W w)).side₁
        = (actMeeting g (Meeting.mk_fromSide W w)).side₁ := by rw [hm]
   exact this
+
+/-! ## The forgetful bridge: PTrans → Equiv.Perm
+
+A perspectival transformation forgets its `resp_complement` law and
+becomes a plain self-bijection of `W` — an `Equiv.Perm W`. This is
+a `MonoidHom` (because PTrans's composition matches Mathlib's
+permutation multiplication) and it is injective. -/
+
+/-- The underlying self-bijection of a perspectival transformation. -/
+def toEquivPerm (φ : PTrans W) : Equiv.Perm W where
+  toFun := φ.toFun
+  invFun := φ.invFun
+  left_inv := φ.left_inv
+  right_inv := φ.right_inv
+
+@[simp] theorem toEquivPerm_apply (φ : PTrans W) (w : W) :
+    toEquivPerm φ w = φ.toFun w := rfl
+
+@[simp] theorem toEquivPerm_symm_apply (φ : PTrans W) (w : W) :
+    (toEquivPerm φ).symm w = φ.invFun w := rfl
+
+@[simp] theorem toEquivPerm_one : toEquivPerm (1 : PTrans W) = 1 := rfl
+
+theorem toEquivPerm_mul (g f : PTrans W) :
+    toEquivPerm (g * f) = toEquivPerm g * toEquivPerm f := rfl
+
+/-- The forgetful bridge as a `MonoidHom` from `PTrans W` to the
+permutation group on `W`. -/
+def toEquivPermHom : PTrans W →* Equiv.Perm W where
+  toFun := toEquivPerm
+  map_one' := toEquivPerm_one
+  map_mul' := toEquivPerm_mul
+
+@[simp] theorem toEquivPermHom_apply (φ : PTrans W) :
+    toEquivPermHom φ = toEquivPerm φ := rfl
+
+/-- The forgetful bridge is injective: a perspectival transformation
+is determined by its underlying permutation (the `resp_complement`
+law is propositional). -/
+theorem toEquivPermHom_injective :
+    Function.Injective (toEquivPermHom : PTrans W →* Equiv.Perm W) := by
+  intro f g h
+  apply PTrans.ext
+  intro w
+  have hh : toEquivPerm f = toEquivPerm g := h
+  have : (toEquivPerm f) w = (toEquivPerm g) w := by rw [hh]
+  exact this
+
+/-- Image-characterizing fact: the underlying permutation of any
+PTrans commutes with the complement permutation. (PTrans embeds into
+the centralizer of `complement` inside `Equiv.Perm W`.) -/
+theorem toEquivPerm_commutes_complement (φ : PTrans W) :
+    toEquivPerm φ * toEquivPerm (complement : PTrans W)
+    = toEquivPerm (complement : PTrans W) * toEquivPerm φ := by
+  apply Equiv.ext
+  intro w
+  show φ.toFun (Wantable.complement w) = Wantable.complement (φ.toFun w)
+  exact φ.resp_complement w
 
 end PTrans
 
