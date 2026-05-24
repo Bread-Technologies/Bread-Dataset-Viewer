@@ -207,6 +207,27 @@ The interesting research question is whether *additional* postulates
 on top of I–IV can pick out non-classical mathematics; the bare
 ontology, as the no-go and the deflations together establish, cannot.
 
+## Continuous setting (path toward R6/R7)
+
+The `ContinuousWantable` / `ContinuousPTrans` refinement (Examples.lean,
+verified) packages Wantable on a topological space with continuous
+complement, and the corresponding PTrans whose `toFun` is continuous.
+
+A concrete observation in this setting: `Wantable ℝ` (with
+`complement := Neg.neg`) admits not just `{1, complement}` but also
+all scaling maps `x ↦ a*x` for `a ≠ 0` as elements of `PTrans ℝ`
+(verified: `scaleByPTrans`). The PTrans group on ℝ contains
+`ℝˣ` (the multiplicative group of nonzero reals — a 1-dimensional Lie
+group). This is the first concrete realization in the codebase that
+*infinite / topological Wantables naturally support Lie-group
+structure on PTrans*, where finite Wantables only support finite
+(discrete) subgroup structure.
+
+This is the natural setting in which to attempt R6/R7 — strengthening
+agency to force path-connectedness — because path-connectedness
+is automatic in continuous Lie groups, whereas it must be added as
+a postulate over finite/discrete carriers.
+
 ## Clarifications and limitations
 
 ### L1. Scope of `no_cloning`
