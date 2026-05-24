@@ -998,6 +998,10 @@ example : (complementEquiv : Equiv.Perm Bool).toFun (complementEquiv.toFun true)
   show Wantable.complement (Wantable.complement true) = true
   rfl
 
+example : (complementEquiv : Equiv.Perm Bool).toFun (complementEquiv.toFun false) = false := by
+  show Wantable.complement (Wantable.complement false) = false
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
