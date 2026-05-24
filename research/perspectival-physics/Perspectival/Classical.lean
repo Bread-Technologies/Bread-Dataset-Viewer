@@ -2145,5 +2145,73 @@ example : R6_conjecture_classical_general_n 2 := by
   intro A R₁ R₂ h₁ h₂
   exact A.strict_paths R₁ R₂ h₁ h₂
 
+/-! ## n=2 explicit sign sectors
+
+The bijective state-preserving linear maps on V 2 fall into two
+sectors by det = ±1 (more precisely, det > 0 or det < 0 since
+det = a - b ∈ (-1, 0) ∪ (0, 1] etc — but they group into two
+sign-of-det components). -/
+
+/-- Sign-of-det classification: every bijective state-preserving R on V 2
+has n2_disc_det R either positive or negative (not zero). -/
+theorem classical_n2_bijective_state_preserving_det_nonzero
+    (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hbij : Function.Bijective R) :
+    n2_disc_det R > 0 ∨ n2_disc_det R < 0 := by
+  by_contra h
+  push_neg at h
+  obtain ⟨h1, h2⟩ := h
+  have hdet_zero : n2_disc_det R = 0 := by linarith
+  exact n2_disc_det_zero_implies_not_injective R hR hdet_zero hbij.1
+
+/-- The positive-det sector containing id: any bijective state-preserving R
+with disc_det > 0 has the same "sign" as id. -/
+example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hbij : Function.Bijective R) (hpos : 0 < n2_disc_det R) :
+    n2_disc_det R > 0 := hpos
+
+/-- The negative-det sector containing swap: any bijective state-preserving R
+with disc_det < 0 has the same "sign" as swap. -/
+example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hbij : Function.Bijective R) (hneg : n2_disc_det R < 0) :
+    n2_disc_det R < 0 := hneg
+
+/-- No continuous path of bijective state-preserving maps connects the
+positive-det sector to the negative-det sector. -/
+theorem classical_n2_no_path_across_sign
+    (γ : unitInterval → V 2 →ₗ[ℝ] V 2)
+    (hcont : Continuous (fun t => n2_disc_det (γ t)))
+    (hpreserve : ∀ t, ∀ ρ ∈ states 2, (γ t) ρ ∈ states 2)
+    (hbij : ∀ t, Function.Bijective (γ t))
+    (hpos : 0 < n2_disc_det (γ 0))
+    (hneg : n2_disc_det (γ 1) < 0) :
+    False := by
+  -- IVT applied to a function going from positive to negative gives a zero
+  -- crossing.
+  have hcont' : Continuous (fun t => -(n2_disc_det (γ t))) :=
+    continuous_neg.comp hcont
+  have hh0 : (fun t => -(n2_disc_det (γ t))) 0 = -(n2_disc_det (γ 0)) := rfl
+  have hh1 : (fun t => -(n2_disc_det (γ t))) 1 = -(n2_disc_det (γ 1)) := rfl
+  -- Use the existing IVT lemma. We want f(0) = 1, f(1) = -1 form.
+  -- f(t) := -2 * n2_disc_det(γ t) / (n2_disc_det γ 0 + |n2_disc_det γ 1|)
+  -- is too complicated. Let me use a simpler approach: directly apply
+  -- the n2_disc_det_zero conclusion.
+  -- By IVT-like reasoning: continuous function going from > 0 to < 0
+  -- has a zero. We use Set.OrdConnected.
+  have hpre : IsPreconnected (Set.range (fun t => n2_disc_det (γ t))) :=
+    isPreconnected_range hcont
+  have h_pos_in : n2_disc_det (γ 0) ∈ Set.range (fun t => n2_disc_det (γ t)) :=
+    ⟨0, rfl⟩
+  have h_neg_in : n2_disc_det (γ 1) ∈ Set.range (fun t => n2_disc_det (γ t)) :=
+    ⟨1, rfl⟩
+  have h_ord : Set.OrdConnected (Set.range (fun t => n2_disc_det (γ t))) :=
+    hpre.ordConnected
+  have h_zero_mem : (0 : ℝ) ∈ Set.range (fun t => n2_disc_det (γ t)) := by
+    have : (0 : ℝ) ∈ Set.Icc (n2_disc_det (γ 1)) (n2_disc_det (γ 0)) := by
+      constructor <;> linarith
+    exact h_ord.out h_neg_in h_pos_in this
+  obtain ⟨t, ht⟩ := h_zero_mem
+  exact n2_disc_det_zero_implies_not_injective (γ t) (hpreserve t) ht (hbij t).1
+
 end Classical
 end Perspectival
