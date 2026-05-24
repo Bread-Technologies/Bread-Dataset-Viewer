@@ -373,6 +373,20 @@ theorem vertex_perfectly_distinguishable [Fintype W] :
       ∀ i j : W, e i (vertex W j) = if i = j then (1 : ℝ) else 0 :=
   ⟨proj W, (perfectWitness W).kronecker⟩
 
+/-- The vertex map is injective: distinct elements of W give distinct vertices. -/
+theorem vertex_injective [Fintype W] : Function.Injective (vertex W) := by
+  intro i j hij
+  by_contra hne
+  -- Apply proj i to both sides.
+  have h1 : proj W i (vertex W i) = 1 := by rw [proj_vertex]; simp
+  have h2 : proj W i (vertex W j) = 0 := by
+    rw [proj_vertex]
+    have : ¬ j = i := fun h => hne h.symm
+    simp [this]
+  have h3 : proj W i (vertex W i) = proj W i (vertex W j) := by rw [hij]
+  rw [h1, h2] at h3
+  linarith
+
 /-- The vertex set forms a Hardy-style distinguishability set. -/
 theorem vertex_distinguishability_set :
     Perspectival.Hardy.DistinguishabilitySet (gpt W)
