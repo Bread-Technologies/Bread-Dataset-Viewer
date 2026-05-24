@@ -774,6 +774,16 @@ def boolEquivFin2 : WantableEquiv Bool (Fin 2) where
 example : boolEquivFin2.toEquiv true = 1 := rfl
 example : boolEquivFin2.toEquiv false = 0 := rfl
 
+/-- boolEquivFin2's symm is a WantableEquiv (Fin 2) Bool. -/
+example : WantableEquiv (Fin 2) Bool := boolEquivFin2.symm
+
+/-- boolEquivFin2.symm maps 0 ↦ false, 1 ↦ true. -/
+example : boolEquivFin2.symm.toEquiv 0 = false := rfl
+example : boolEquivFin2.symm.toEquiv 1 = true := rfl
+
+/-- The double symm is the original. -/
+example : boolEquivFin2.symm.symm = boolEquivFin2 := rfl
+
 /-- A Wantable isomorphism induces a PTrans isomorphism: conjugate a
 PTrans of W₁ by the equiv to get a PTrans of W₂. -/
 def WantableEquiv.mapPTrans {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
