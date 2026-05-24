@@ -114,6 +114,11 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 2)) = 2 := by
   show Module.finrank ℝ (Fin 2 → ℝ) = 2
   simp
 
+/-- The WantableGPT on `Fin 4` has 4-dimensional carrier. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) = 4 := by
+  show Module.finrank ℝ (Fin 4 → ℝ) = 4
+  simp
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
