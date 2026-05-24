@@ -255,6 +255,14 @@ example :
     = [true, false] :=
   Wantable.complement_involutive _
 
+/-- The PTrans group on Unit is trivial: only the identity. -/
+example (f : PTrans Unit) : f = 1 := by
+  apply PTrans.ext
+  intro u
+  cases u
+  -- f.toFun () = () (only one possible value for Unit)
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
