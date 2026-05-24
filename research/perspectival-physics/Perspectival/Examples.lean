@@ -3093,6 +3093,11 @@ example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) :=
 example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V Unit) :=
   Perspectival.WantableGPT.wantableGPT_dim_pos Unit
 
+/-- This is the central K = |W| dimension formula. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
+  Perspectival.WantableGPT.finrank_V_eq_card W
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
