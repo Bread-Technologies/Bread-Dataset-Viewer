@@ -6620,5 +6620,49 @@ example : (Perspectival.WantableGPT.fromPTrans Bool 1).toLin
         = Perspectival.WantableGPT.vertex Bool true :=
   WantableGPT_fromPTrans_one_apply _
 
+/-- New theorem: vertex 0, vertex 1, vertex 2 of WantableGPT (Fin 3)
+are pairwise distinguishable. -/
+theorem WantableGPT_Fin3_three_distinguishable :
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) 0)
+      (Perspectival.WantableGPT.vertex (Fin 3) 1) ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) 0)
+      (Perspectival.WantableGPT.vertex (Fin 3) 2) ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) 1)
+      (Perspectival.WantableGPT.vertex (Fin 3) 2) :=
+  ⟨Perspectival.WantableGPT.vertices_distinguishable (Fin 3) 0 1 (by decide),
+   Perspectival.WantableGPT.vertices_distinguishable (Fin 3) 0 2 (by decide),
+   Perspectival.WantableGPT.vertices_distinguishable (Fin 3) 1 2 (by decide)⟩
+
+/-- New theorem: vertex 0..3 of WantableGPT (Fin 4) are all pairwise
+distinguishable (6 pairs). -/
+theorem WantableGPT_Fin4_six_distinguishable :
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 0)
+      (Perspectival.WantableGPT.vertex (Fin 4) 1) ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 0)
+      (Perspectival.WantableGPT.vertex (Fin 4) 2) ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 0)
+      (Perspectival.WantableGPT.vertex (Fin 4) 3) ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 1)
+      (Perspectival.WantableGPT.vertex (Fin 4) 2) ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 1)
+      (Perspectival.WantableGPT.vertex (Fin 4) 3) ∧
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 2)
+      (Perspectival.WantableGPT.vertex (Fin 4) 3) :=
+  ⟨Perspectival.WantableGPT.vertices_distinguishable (Fin 4) 0 1 (by decide),
+   Perspectival.WantableGPT.vertices_distinguishable (Fin 4) 0 2 (by decide),
+   Perspectival.WantableGPT.vertices_distinguishable (Fin 4) 0 3 (by decide),
+   Perspectival.WantableGPT.vertices_distinguishable (Fin 4) 1 2 (by decide),
+   Perspectival.WantableGPT.vertices_distinguishable (Fin 4) 1 3 (by decide),
+   Perspectival.WantableGPT.vertices_distinguishable (Fin 4) 2 3 (by decide)⟩
+
 end Examples
 end Perspectival
