@@ -9751,3 +9751,21 @@ example : Perspectival.WantableGPT.fromPTransTransformHom (Fin 4)
             (Perspectival.WantableGPT.complementPTrans (Fin 4))
         = Perspectival.WantableGPT.complementTransform (Fin 4) :=
   Perspectival.WantableGPT.fromPTransTransformHom_complementPTrans (Fin 4)
+
+/-- fromPTransHom is injective on Bool. -/
+example : Function.Injective (Perspectival.WantableGPT.fromPTransHom Bool) :=
+  Perspectival.WantableGPT.fromPTransHom_injective Bool
+
+/-- fromPTransHom is injective on Fin 4. -/
+example : Function.Injective (Perspectival.WantableGPT.fromPTransHom (Fin 4)) :=
+  Perspectival.WantableGPT.fromPTransHom_injective (Fin 4)
+
+/-- fromPTransHom is injective on Bool × Bool. -/
+example : Function.Injective
+    (Perspectival.WantableGPT.fromPTransHom (Bool × Bool)) :=
+  Perspectival.WantableGPT.fromPTransHom_injective (Bool × Bool)
+
+/-- fromPTransHom is injective on Bool ⊕ Bool. -/
+example : Function.Injective
+    (Perspectival.WantableGPT.fromPTransHom (Bool ⊕ Bool)) :=
+  Perspectival.WantableGPT.fromPTransHom_injective (Bool ⊕ Bool)
