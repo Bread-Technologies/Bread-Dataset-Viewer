@@ -752,5 +752,74 @@ than merely state-preserving linear maps. This refines the R6
 program: the path must consist of `Reversible G`-valued maps, not
 just state-preserving maps. -/
 
+/-! ## R6-bis: ReversiblePath — paths of Reversibles -/
+
+/-- A continuous path of *Reversibles*: the intermediate maps must
+themselves be Reversible (continuous, preserve states, preserve unit). -/
+structure ReversiblePath (G : GPT V) (R₁ R₂ : Reversible G) where
+  /-- The path of underlying linear maps. -/
+  γ : unitInterval → V →ₗ[ℝ] V
+  /-- Joint continuity. -/
+  continuous : Continuous (fun p : unitInterval × V => γ p.1 p.2)
+  /-- Start. -/
+  start : γ 0 = R₁.toLin
+  /-- End. -/
+  finish : γ 1 = R₂.toLin
+  /-- Every intermediate map preserves states. -/
+  preserves_states_along : ∀ t : unitInterval, ∀ ρ ∈ G.states, γ t ρ ∈ G.states
+  /-- Every intermediate map preserves the unit. -/
+  preserves_unit_along : ∀ t : unitInterval, G.unit.comp (γ t) = G.unit
+  /-- Every intermediate map's induced map is continuous (automatic from joint
+  continuity above, but exposed as a field for convenience). -/
+  continuous_at : ∀ t : unitInterval, Continuous (γ t)
+
+/-- ReversiblePath is strictly stronger than StatePreservingPath. -/
+def ReversiblePath.toStatePreservingPath {G : GPT V} {R₁ R₂ : Reversible G}
+    (p : ReversiblePath G R₁ R₂) :
+    StatePreservingPath G R₁.toLin R₂.toLin where
+  γ := p.γ
+  continuous := p.continuous
+  start := p.start
+  finish := p.finish
+  preserves_states_along := p.preserves_states_along
+
+/-- The identity ReversiblePath (constant path at id). -/
+def ReversiblePath.id (G : GPT V) :
+    ReversiblePath G (Reversible.id G) (Reversible.id G) where
+  γ := fun _ => LinearMap.id
+  continuous := by
+    show Continuous (fun p : unitInterval × V => LinearMap.id p.2)
+    show Continuous (fun p : unitInterval × V => p.2)
+    exact continuous_snd
+  start := rfl
+  finish := rfl
+  preserves_states_along := fun _ ρ hρ => hρ
+  preserves_unit_along := fun _ => by
+    show G.unit.comp LinearMap.id = G.unit
+    rfl
+  continuous_at := fun _ => continuous_id
+
+/-- The constant ReversiblePath at R (R, R, R, ..., R). -/
+def ReversiblePath.const {G : GPT V} (R : Reversible G) :
+    ReversiblePath G R R where
+  γ := fun _ => R.toLin
+  continuous := by
+    show Continuous (fun p : unitInterval × V => R.toLin p.2)
+    exact R.continuous_toLin.comp continuous_snd
+  start := rfl
+  finish := rfl
+  preserves_states_along := fun _ ρ hρ => R.preserves_states ρ hρ
+  preserves_unit_along := fun _ => R.preserves_unit
+  continuous_at := fun _ => R.continuous_toLin
+
+/-- The R6-strong agency postulate: every pair of available Reversibles
+is connected by a ReversiblePath. -/
+class StrongConnectedAgency (G : GPT V) where
+  avail : Set (Reversible G)
+  id_avail : Reversible.id G ∈ avail
+  reversible_paths :
+    ∀ R₁ R₂ : Reversible G, R₁ ∈ avail → R₂ ∈ avail →
+      Nonempty (ReversiblePath G R₁ R₂)
+
 end Continuity
 end Perspectival
