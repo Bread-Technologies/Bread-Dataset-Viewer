@@ -2828,6 +2828,17 @@ def boolReality_alwaysComplementary : Reality Bool :=
 example : ∀ m : Meeting Bool, boolReality_alwaysComplementary m :=
   fun m => m.complementary
 
+/-- Every meeting in any Wantable satisfies the always-complementary
+reality. (This is just the `complementary` field of `Meeting`.) -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    Wantable.complement m.side₁ = m.side₂ :=
+  m.complementary
+
+/-- And the symmetric version: complement of side₂ = side₁. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    Wantable.complement m.side₂ = m.side₁ :=
+  m.complementary_symm
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
