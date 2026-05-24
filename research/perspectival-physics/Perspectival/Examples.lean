@@ -3488,6 +3488,14 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
 example {V : Type u} [AddCommGroup V] [Module ℝ V] {G : Perspectival.GPT V}
     {ρ : V} (hρ : ρ ∈ G.states) : G.unit ρ = 1 := G.states_normalized ρ hρ
 
+/-- The states form a convex set (GPT axiom). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    Convex ℝ G.states := G.states_convex
+
+/-- The effects form a convex set (GPT axiom). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    Convex ℝ G.effects := G.effects_convex
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
