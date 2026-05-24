@@ -62,6 +62,11 @@ theorem Wantable.complement_surjective {W : Type u} [Wantable W] :
     ∀ w : W, ∃ v, Wantable.complement v = w :=
   fun w => ⟨Wantable.complement w, Wantable.complement_involutive w⟩
 
+/-- Alias: `complement_complement` is `complement_involutive`. -/
+theorem Wantable.complement_complement {W : Type u} [Wantable W] (w : W) :
+    Wantable.complement (Wantable.complement w) = w :=
+  Wantable.complement_involutive w
+
 /-! ## Axiom III: reality is the structure of meetings
 
 A meeting is a pair of complementary wants. Reality is a collection
