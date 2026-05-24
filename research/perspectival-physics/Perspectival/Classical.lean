@@ -582,5 +582,33 @@ theorem classical_n2_state_preserving_first_coord_bound
   have hnn1 := hRv.1 1
   linarith
 
+/-- Similarly for vertex 1. -/
+theorem classical_n2_state_preserving_first_coord_bound_v1
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    0 ≤ R (vertex 2 1) 0 ∧ R (vertex 2 1) 0 ≤ 1 := by
+  have hRv := hR (vertex 2 1) (vertex_in_states 2 1)
+  refine ⟨hRv.1 0, ?_⟩
+  have hsum := classical_n2_state_sum (R (vertex 2 1)) hRv
+  have hnn1 := hRv.1 1
+  linarith
+
+/-! ## Twoavailable strict-agency on Classical n=2 -/
+
+/-- The set `{id, swap}` of StrictReversibles on Classical n=2. -/
+def n2_two_strict :
+    Set (Perspectival.Continuity.StrictReversible (gpt 2)) :=
+  {Perspectival.Continuity.StrictReversible.id (gpt 2), swapStrictReversible}
+
+/-- id is in n2_two_strict. -/
+theorem id_in_n2_two_strict :
+    Perspectival.Continuity.StrictReversible.id (gpt 2) ∈ n2_two_strict := by
+  left; rfl
+
+/-- swap is in n2_two_strict. -/
+theorem swap_in_n2_two_strict :
+    swapStrictReversible ∈ n2_two_strict := by
+  right; rfl
+
 end Classical
 end Perspectival
