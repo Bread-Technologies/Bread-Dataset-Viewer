@@ -7265,5 +7265,19 @@ example : uniformState Bool ∈ (Perspectival.WantableGPT.gpt Bool).states :=
 example : uniformState (Fin 4) ∈ (Perspectival.WantableGPT.gpt (Fin 4)).states :=
   uniformState_in_states
 
+/-- New: uniformState has constant coord values. -/
+theorem uniformState_constant
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W]
+    (w₁ w₂ : W) :
+    uniformState W w₁ = uniformState W w₂ := rfl
+
+/-- New: uniformState is determined by a single coord (and they're all equal). -/
+example : uniformState Bool true = uniformState Bool false := rfl
+
+/-- New: on Fin 4, all four coords of uniformState are equal. -/
+example : uniformState (Fin 4) 0 = uniformState (Fin 4) 1 := rfl
+example : uniformState (Fin 4) 1 = uniformState (Fin 4) 2 := rfl
+example : uniformState (Fin 4) 2 = uniformState (Fin 4) 3 := rfl
+
 end Examples
 end Perspectival
