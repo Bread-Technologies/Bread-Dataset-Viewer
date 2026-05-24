@@ -3235,6 +3235,20 @@ example : ¬ SelfComplementary ([true, true] : List Bool) := by
   injection this with h1 _
   exact Bool.false_ne_true h1
 
+/-- The complement on List Bool reverses each Bool entry: [t,f] ↦ [f,t]. -/
+example : Wantable.complement ([true, false] : List Bool) = [false, true] := rfl
+
+/-- Lists [true, false] is NOT self-complementary. -/
+example : ¬ SelfComplementary ([true, false] : List Bool) := by
+  intro h
+  have : ([false, true] : List Bool) = [true, false] := h
+  injection this with h1 _
+  exact Bool.false_ne_true h1
+
+/-- The complement is involutive on List Bool (instance of general theorem). -/
+example (l : List Bool) : Wantable.complement (Wantable.complement l) = l :=
+  Wantable.complement_involutive l
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
