@@ -2284,6 +2284,12 @@ example : (PTrans.complement : PTrans (Fin 3)) * PTrans.complement =
           (1 : PTrans (Fin 3)) :=
   PTrans.complement_sq
 
+/-- For Fin 3 (id-complement), `PTrans.complement = 1`. -/
+example : (PTrans.complement : PTrans (Fin 3)) = (1 : PTrans (Fin 3)) := by
+  apply PTrans.ext
+  intro i
+  rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
