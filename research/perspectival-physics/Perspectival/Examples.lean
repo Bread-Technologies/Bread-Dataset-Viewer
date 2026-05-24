@@ -6312,5 +6312,33 @@ example : Perspectival.WantableGPT.proj Bool true
             (Perspectival.WantableGPT.vertex Bool true) :=
   WantableGPT_proj_eq_innerLin_vertex true
 
+/-- New theorem: sum over W of vertex w (across all w) equals the
+constant-1 function (each coordinate hits exactly one vertex). -/
+theorem WantableGPT_sum_vertices_eq_one
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (∑ w, Perspectival.WantableGPT.vertex W w)
+      = fun _ : W => (1 : ℝ) := by
+  funext v
+  rw [Finset.sum_apply]
+  rw [Finset.sum_eq_single v
+    (fun w _ hwv => by
+      show Perspectival.WantableGPT.vertex W w v = 0
+      show (if w = v then (1 : ℝ) else 0) = 0
+      simp [hwv])
+    (fun h => absurd (Finset.mem_univ v) h)]
+  show Perspectival.WantableGPT.vertex W v v = 1
+  show (if v = v then (1 : ℝ) else 0) = 1
+  simp
+
+/-- Concrete: on Bool, sum of vertices is constant 1. -/
+example : (∑ w, Perspectival.WantableGPT.vertex Bool w)
+        = fun _ : Bool => (1 : ℝ) :=
+  WantableGPT_sum_vertices_eq_one
+
+/-- Concrete: on Fin 4, sum of vertices is constant 1. -/
+example : (∑ w, Perspectival.WantableGPT.vertex (Fin 4) w)
+        = fun _ : Fin 4 => (1 : ℝ) :=
+  WantableGPT_sum_vertices_eq_one
+
 end Examples
 end Perspectival
