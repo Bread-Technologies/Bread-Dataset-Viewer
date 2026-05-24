@@ -15045,6 +15045,48 @@ example :
   · exact hf_true h
   · exact hg_false h
 
+/-! ### antiDiagonalState is also not a product state -/
+
+/-- antiDiagonalState cannot be factorized as productState. -/
+example :
+    ¬ ∃ (f : Perspectival.WantableGPT.V Bool) (g : Perspectival.WantableGPT.V Bool),
+      antiDiagonalState = productState f g := by
+  rintro ⟨f, g, h⟩
+  -- antiDiagonalState (true, false) = 1/2 ⇒ f true * g false = 1/2
+  -- antiDiagonalState (false, false) = 0 ⇒ f false * g false = 0
+  -- antiDiagonalState (false, true) = 1/2 ⇒ f false * g true = 1/2
+  have h1 : antiDiagonalState (true, false) = f true * g false := by
+    have := congr_fun h (true, false)
+    rw [show antiDiagonalState (true, false) = 1/2 from rfl] at this
+    rw [show productState f g (true, false) = f true * g false from rfl] at this
+    exact this
+  have h2 : antiDiagonalState (false, false) = f false * g false := by
+    have := congr_fun h (false, false)
+    rw [show antiDiagonalState (false, false) = 0 from rfl] at this
+    rw [show productState f g (false, false) = f false * g false from rfl] at this
+    exact this
+  have h3 : antiDiagonalState (false, true) = f false * g true := by
+    have := congr_fun h (false, true)
+    rw [show antiDiagonalState (false, true) = 1/2 from rfl] at this
+    rw [show productState f g (false, true) = f false * g true from rfl] at this
+    exact this
+  -- h1 forces g false ≠ 0; h3 forces f false ≠ 0
+  have hg_false : g false ≠ 0 := by
+    intro hc
+    rw [hc] at h1
+    have : (1/2 : ℝ) = f true * 0 := h1
+    simp at this
+  have hf_false : f false ≠ 0 := by
+    intro hc
+    rw [hc] at h3
+    have : (1/2 : ℝ) = 0 * g true := h3
+    simp at this
+  -- h2 : 0 = f false * g false. Contradiction.
+  have h2_zero : f false * g false = 0 := h2.symm
+  rcases mul_eq_zero.mp h2_zero with h | h
+  · exact hf_false h
+  · exact hg_false h
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
