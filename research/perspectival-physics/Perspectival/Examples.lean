@@ -6781,5 +6781,22 @@ example : Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr true)
             (Sum.inl true) = 0 := by
   rw [WantableGPT_vertex_sum_inr]
 
+/-- New: the unit functional on Bool ⊕ Bool sums in two summands. -/
+theorem WantableGPT_unitFn_sum
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ ⊕ W₂)) :
+    Perspectival.WantableGPT.unitFn (W₁ ⊕ W₂) f
+      = (∑ w₁ : W₁, f (Sum.inl w₁)) + (∑ w₂ : W₂, f (Sum.inr w₂)) := by
+  show ∑ w, f w
+      = (∑ w₁ : W₁, f (Sum.inl w₁)) + (∑ w₂ : W₂, f (Sum.inr w₂))
+  rw [Fintype.sum_sum_type]
+
+/-- Concrete: on Bool ⊕ Bool the unit functional splits between summands. -/
+example (f : Perspectival.WantableGPT.V (Bool ⊕ Bool)) :
+    Perspectival.WantableGPT.unitFn (Bool ⊕ Bool) f
+      = (∑ b : Bool, f (Sum.inl b)) + (∑ b : Bool, f (Sum.inr b)) :=
+  WantableGPT_unitFn_sum f
+
 end Examples
 end Perspectival
