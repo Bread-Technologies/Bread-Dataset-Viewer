@@ -24,6 +24,7 @@ distinguish it from quantum until additional axioms are added.
 
 import Perspectival.GPT
 import Perspectival.Distinguish
+import Perspectival.Continuity
 import Mathlib.Analysis.Convex.Combination
 import Mathlib.Analysis.Convex.Basic
 import Mathlib.Analysis.Convex.StdSimplex
@@ -308,6 +309,18 @@ theorem classical_n1_state_preserving_eq_id
   rw [hR0]
   show (v 0) • vertex 1 0 = LinearMap.id ((v 0) • vertex 1 0)
   rfl
+
+/-- Concrete: every Reversible on Classical n=1 GPT has toLin = id. -/
+theorem classical_n1_reversible_toLin_eq_id
+    (R : Perspectival.Continuity.Reversible (gpt 1)) :
+    R.toLin = LinearMap.id :=
+  classical_n1_state_preserving_eq_id R.toLin R.preserves_states
+
+/-- The same expressed via StrictReversible. -/
+theorem classical_n1_strict_reversible_toLin_eq_id
+    (R : Perspectival.Continuity.StrictReversible (gpt 1)) :
+    R.toLin = LinearMap.id :=
+  classical_n1_state_preserving_eq_id R.toLin R.preserves_states
 
 end Classical
 end Perspectival
