@@ -1836,5 +1836,14 @@ example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Fin 4),
     Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt (Fin 4)) ρ₁ ρ₂ :=
   Perspectival.WantableGPT.exists_two_distinguishable (Fin 4) (by decide)
 
+/-- Concrete instance of `exists_two_distinguishable` for Bool × Bool
+(card = 4). -/
+example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Bool × Bool),
+    ρ₁ ∈ Perspectival.WantableGPT.states (Bool × Bool) ∧
+    ρ₂ ∈ Perspectival.WantableGPT.states (Bool × Bool) ∧
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool)) ρ₁ ρ₂ :=
+  Perspectival.WantableGPT.exists_two_distinguishable (Bool × Bool) (by decide)
+
 end Examples
 end Perspectival
