@@ -49,6 +49,7 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | **No-cloning theorem** — contradiction with distinguishing bilinear form | `NoCloning.lean :: no_cloning` | ✓ |
 | **No-cloning from linear independence** (standard formulation) | `NoCloning.lean :: no_cloning_of_linear_independent` | ✓ |
 | `fromPTransHom` MonoidHom into LinearMap monoid | `WantableGPT.lean :: fromPTransHom` | ✓ |
+| `transformAction φ` permutes vertices: `vertex w ↦ vertex (φ.toFun w)` | `WantableGPT.lean :: transformAction_vertex` | ✓ |
 | `fromPTransTransformHom` MonoidHom into Transform monoid | `WantableGPT.lean :: fromPTransTransformHom` | ✓ |
 | `fromPTransHom` is injective | `WantableGPT.lean :: fromPTransHom_injective` | ✓ |
 | `complementPTrans` is an involution | `WantableGPT.lean :: complementPTrans_sq` | ✓ |
