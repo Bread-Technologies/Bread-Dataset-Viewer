@@ -3180,7 +3180,18 @@ example :
         (G := Perspectival.WantableGPT.gpt Bool)
         (self := Perspectival.Continuity.trivialAgency _) := rfl
 
--- (Removed: id_avail synthesis was finicky; the avail-membership example above suffices.)
+/-- Some R ∈ trivial avail satisfies the id-condition. -/
+example :
+    let _inst : Perspectival.Continuity.HasConnectedAgency
+                  (Perspectival.WantableGPT.gpt Bool) :=
+      Perspectival.Continuity.trivialAgency _
+    ∃ R ∈ Perspectival.Continuity.HasConnectedAgency.avail
+              (G := Perspectival.WantableGPT.gpt Bool),
+      ∀ v : Perspectival.WantableGPT.V Bool, R.toLin v = v := by
+  let _inst : Perspectival.Continuity.HasConnectedAgency
+                (Perspectival.WantableGPT.gpt Bool) :=
+    Perspectival.Continuity.trivialAgency _
+  exact Perspectival.Continuity.HasConnectedAgency.id_avail
 
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
