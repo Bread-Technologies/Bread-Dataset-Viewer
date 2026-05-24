@@ -1050,6 +1050,9 @@ example : (complementEquiv : Equiv.Perm (Bool × Bool)).toFun (false, false) = (
 example : (complementEquiv : Equiv.Perm (Bool ⊕ Bool)).toFun (Sum.inl true) = Sum.inl false := rfl
 example : (complementEquiv : Equiv.Perm (Bool ⊕ Bool)).toFun (Sum.inr false) = Sum.inr true := rfl
 
+example : (complementEquiv : Equiv.Perm (Option Bool)).toFun (some true) = some false := rfl
+example : (complementEquiv : Equiv.Perm (Option Bool)).toFun none = none := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
