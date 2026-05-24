@@ -1261,6 +1261,45 @@ example : boolSwap⁻¹ = boolSwap := by
   intro b
   cases b <;> rfl
 
+/-- **Concrete classification.** Every `PTrans Bool` is either the
+identity or `boolSwap`. (So `PTrans Bool ≃ Fin 2` as a set, and
+`|PTrans Bool| = 2`.) -/
+theorem ptrans_bool_classification (f : PTrans Bool) :
+    f = (1 : PTrans Bool) ∨ f = boolSwap := by
+  cases ht : f.toFun true
+  · -- f.toFun true = false; then by resp_complement, f.toFun false = true
+    right
+    apply PTrans.ext
+    intro b
+    cases b
+    · show f.toFun false = boolSwap.toFun false
+      have h := f.resp_complement true
+      show f.toFun false = true
+      have : f.toFun (Wantable.complement true) = Wantable.complement (f.toFun true) := h
+      show f.toFun false = true
+      have hc : Wantable.complement true = false := rfl
+      rw [hc] at this
+      rw [this, ht]
+      rfl
+    · show f.toFun true = boolSwap.toFun true
+      rw [ht]
+      rfl
+  · -- f.toFun true = true; then by resp_complement, f.toFun false = false
+    left
+    apply PTrans.ext
+    intro b
+    cases b
+    · show f.toFun false = (1 : PTrans Bool).toFun false
+      have h := f.resp_complement true
+      show f.toFun false = false
+      have hc : Wantable.complement true = false := rfl
+      rw [hc] at h
+      rw [h, ht]
+      rfl
+    · show f.toFun true = (1 : PTrans Bool).toFun true
+      rw [ht]
+      rfl
+
 /-! ## Example 6 — No linear cloner on classical vertices (chained theorem)
 
 A concrete instance combining: (a) vertices are states, (b) distinct
