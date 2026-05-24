@@ -10907,3 +10907,25 @@ example (m : Meeting Bool) :
       ((PTrans.complement : PTrans Bool) • m))
     = (PTrans.complement : PTrans Bool) • m := by
   rw [← mul_smul, ← mul_smul, PTrans.complement_sq, one_mul]
+
+/-- Same on Reality: complement•R = R after pull-back interpretation. -/
+example (R : Reality Bool) :
+    (PTrans.complement : PTrans Bool) • ((PTrans.complement : PTrans Bool) • R) = R := by
+  rw [← mul_smul, PTrans.complement_sq, one_smul]
+
+/-- complement applied 4 times on Reality = identity. -/
+example (R : Reality Bool) :
+    (PTrans.complement : PTrans Bool) • ((PTrans.complement : PTrans Bool) •
+      ((PTrans.complement : PTrans Bool) • ((PTrans.complement : PTrans Bool) • R))) = R := by
+  rw [← mul_smul, PTrans.complement_sq]
+  rw [one_smul, ← mul_smul, PTrans.complement_sq, one_smul]
+
+/-- complement applied n=2k times on Reality = identity. -/
+theorem complement_pow_two_n_smul_reality
+    {W : Type u} [Wantable W] (R : Reality W) (n : ℕ) :
+    ((PTrans.complement : PTrans W) ^ (2 * n)) • R = R := by
+  rw [PTrans_complement_pow_two_n, one_smul]
+
+example (R : Reality Bool) :
+    ((PTrans.complement : PTrans Bool) ^ 200) • R = R :=
+  complement_pow_two_n_smul_reality R 100
