@@ -2611,6 +2611,19 @@ example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := 
 /-- Wantable.complement on Bool ⊕ Bool: inr false ↔ inr true (within right summand). -/
 example : Wantable.complement (Sum.inr false : Bool ⊕ Bool) = Sum.inr true := rfl
 
+/-- Wantable.complement on Bool × Bool × Bool — componentwise. -/
+example : Wantable.complement ((true, false, true) : Bool × Bool × Bool)
+        = (false, true, false) := rfl
+
+/-- Self-complementary check on Bool × Bool × Bool. -/
+example : ¬ SelfComplementary ((true, true, true) : Bool × Bool × Bool) := by
+  intro h
+  have : Wantable.complement ((true, true, true) : Bool × Bool × Bool)
+       = (true, true, true) := h
+  have hh : ((false, false, false) : Bool × Bool × Bool) = (true, true, true) := this
+  injection hh with h1 _
+  exact Bool.false_ne_true h1
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
