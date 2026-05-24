@@ -389,6 +389,35 @@ theorem vertex_linear_independent_of_fintype [Fintype W] :
       show proj W i (vertex W i) = 1
       rw [proj_vertex]; simp)
 
+/-- **Vertex decomposition.** Every element of `V W = W → ℝ` is its
+own coordinate-wise vertex combination:
+  `f = ∑ w, f w • vertex w`.
+For states (probability distributions) this exhibits the WantableGPT
+state space as the convex hull of the vertex set — i.e., a simplex
+on `W`. -/
+theorem vertex_decomposition (f : V W) :
+    f = ∑ w, f w • vertex W w := by
+  funext v
+  show f v = (∑ w, f w • vertex W w) v
+  rw [Finset.sum_apply]
+  rw [Finset.sum_eq_single v
+    (fun w _ hwv => by
+      show f w • vertex W w v = 0
+      show f w * (if w = v then (1 : ℝ) else 0) = 0
+      simp [hwv])
+    (fun h => absurd (Finset.mem_univ v) h)]
+  symm
+  show (f v • vertex W v) v = f v
+  show f v * (if v = v then (1 : ℝ) else 0) = f v
+  simp
+
+/-- **Convex-hull characterization.** Every state of the WantableGPT
+is a convex combination (with coefficients given by its outcome
+probabilities) of the vertices. This is the precise statement that
+the WantableGPT is the classical simplex on `W`. -/
+theorem state_is_convex_combination_of_vertices (f : V W) (_hf : f ∈ states W) :
+    f = ∑ w, f w • vertex W w := vertex_decomposition W f
+
 /-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
 give distinct linear maps on the state space.
 
