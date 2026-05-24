@@ -2155,6 +2155,22 @@ example : (0 : Perspectival.WantableGPT.V Bool) ∈
 example : (fun _ : Bool => (1 : ℝ)) ∈ Perspectival.WantableGPT.effectVec Bool :=
   Perspectival.WantableGPT.one_in_effectVec Bool
 
+/-- The vertex `true` is a state of the WantableGPT Bool. -/
+example : Perspectival.WantableGPT.vertex Bool true ∈
+          Perspectival.WantableGPT.states Bool :=
+  Perspectival.WantableGPT.vertex_in_states Bool true
+
+/-- The vertex `false` is a state of the WantableGPT Bool. -/
+example : Perspectival.WantableGPT.vertex Bool false ∈
+          Perspectival.WantableGPT.states Bool :=
+  Perspectival.WantableGPT.vertex_in_states Bool false
+
+/-- The complement action sends `vertex true` to `vertex false` (= complement true = false). -/
+example : Perspectival.WantableGPT.complementAction Bool
+            (Perspectival.WantableGPT.vertex Bool true)
+        = Perspectival.WantableGPT.vertex Bool false :=
+  Perspectival.WantableGPT.complementAction_vertex Bool true
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
