@@ -277,6 +277,24 @@ theorem vertex_in_states (w : W) : vertex W w ∈ states W := by
         (by intro h; exact absurd (Finset.mem_univ w) h)]
     simp
 
+/-- The general `transformAction φ` permutes vertices: it sends
+`vertex w` to `vertex (φ.toFun w)`. The PTrans action on the operational
+state space restricts to a permutation of the vertex set. -/
+@[simp] theorem transformAction_vertex (φ : PTrans W) (w : W) :
+    transformAction W φ (vertex W w) = vertex W (φ.toFun w) := by
+  funext v
+  show (if w = φ.invFun v then (1 : ℝ) else 0)
+       = (if φ.toFun w = v then (1 : ℝ) else 0)
+  by_cases h : w = φ.invFun v
+  · have hv : φ.toFun w = v := by rw [h]; exact φ.right_inv v
+    simp [h, hv, φ.right_inv v]
+  · have : φ.toFun w ≠ v := by
+      intro h'
+      apply h
+      rw [← h']
+      exact (φ.left_inv w).symm
+    simp [h, this]
+
 /-- The Wantable-complement action sends `vertex w` to `vertex (complement w)`. -/
 theorem complementAction_vertex (w : W) :
     complementAction W (vertex W w) = vertex W (Wantable.complement w) := by
