@@ -175,6 +175,25 @@ instance : MulAction (PTrans W) (Meeting W) where
 /-- `PTrans W` is inhabited by the identity. -/
 instance : Inhabited (PTrans W) := ⟨1⟩
 
+/-- The complement function on a Wantable, packaged as a perspectival
+transformation. Available for any Wantable, not just finite ones. -/
+def complement : PTrans W where
+  toFun := Wantable.complement
+  invFun := Wantable.complement
+  left_inv := Wantable.complement_involutive
+  right_inv := Wantable.complement_involutive
+  resp_complement := fun _ => rfl
+
+/-- The complement PTrans is an involution. -/
+@[simp] theorem complement_sq : (complement : PTrans W) * complement = 1 := by
+  apply PTrans.ext
+  intro w
+  show Wantable.complement (Wantable.complement w) = w
+  exact Wantable.complement_involutive w
+
+theorem complement_inv : (complement : PTrans W)⁻¹ = complement :=
+  inv_eq_of_mul_eq_one_right complement_sq
+
 end PTrans
 
 end Perspectival
