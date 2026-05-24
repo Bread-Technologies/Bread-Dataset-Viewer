@@ -16431,3 +16431,45 @@ example (p : Bool × Bool × Bool) :
     PatternStableWantable.Stable_nontrivial p := by
   rw [PatternStableWantable.stable_nontrivial_iff]
   exact bool3_no_fixed_points p
+
+/-! ## Stable_nontrivial is PTrans-invariant
+
+The framework's pattern-stability predicate is preserved by perspectival
+transformations — formalizing Axiom IV's claim that patterns are
+"stable" in a way that respects the transformation structure. -/
+
+/-- Stable_nontrivial is preserved under PTrans action. -/
+theorem stable_nontrivial_ptrans_invariant {W : Type u} [Wantable W]
+    [DecidableEq W] (φ : PTrans W) (w : W)
+    (h : PatternStableWantable.Stable_nontrivial w) :
+    PatternStableWantable.Stable_nontrivial (φ.toFun w) := by
+  rw [PatternStableWantable.stable_nontrivial_iff] at h ⊢
+  intro hbad
+  apply h
+  -- PTrans φ commutes with complement: φ(complement w) = complement (φ w)
+  -- So φ(w) = complement (φ(w)) ⇒ via φ.injective ⇒ w = complement w.
+  -- We have hbad : φ.toFun w = Wantable.complement (φ.toFun w)
+  -- And by resp_complement: φ.toFun (Wantable.complement w)
+  --                        = Wantable.complement (φ.toFun w)
+  -- So φ.toFun (Wantable.complement w) = φ.toFun w (using hbad)
+  -- Hence by injectivity of φ: Wantable.complement w = w
+  have hrc : φ.toFun (Wantable.complement w)
+           = Wantable.complement (φ.toFun w) := φ.resp_complement w
+  -- Apply hbad to rewrite RHS
+  have hcombined : φ.toFun (Wantable.complement w) = φ.toFun w := by
+    rw [hrc]; exact hbad.symm
+  -- φ.toFun is injective (since φ has an inverse — PTrans is a Group)
+  have hinj : Function.Injective φ.toFun := by
+    intro a b heq
+    have h1 : φ.invFun (φ.toFun a) = φ.invFun (φ.toFun b) := by rw [heq]
+    rw [φ.left_inv, φ.left_inv] at h1
+    exact h1
+  exact (hinj hcombined).symm
+
+/-- Concrete: complement of (true) on Bool preserves Stable_nontrivial. -/
+example :
+    PatternStableWantable.Stable_nontrivial
+      ((PTrans.complement : PTrans Bool).toFun true) := by
+  apply stable_nontrivial_ptrans_invariant
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  decide
