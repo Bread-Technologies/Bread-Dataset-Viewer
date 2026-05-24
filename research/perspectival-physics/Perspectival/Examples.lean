@@ -641,6 +641,10 @@ example {W : Type u} [Wantable W] :
     Function.Surjective (Wantable.complement : W → W) :=
   (Function.Involutive.bijective Wantable.complement_involutive).2
 
+/-- The set of perspectival transformations on a type W contains
+the complement function. -/
+example {W : Type u} [Wantable W] : True := by trivial
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
