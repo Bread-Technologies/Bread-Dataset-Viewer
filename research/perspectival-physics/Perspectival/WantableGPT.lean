@@ -500,6 +500,32 @@ theorem exists_two_distinguishable [Fintype W]
   refine ⟨vertex W w, vertex W v, vertex_in_states W w, vertex_in_states W v, ?_⟩
   exact vertices_distinguishable W w v hwv
 
+/-- **Hardy's "classical signature" `N = K` is satisfied for the
+WantableGPT bridge.** The maximal perfectly-distinguishable family is
+the vertex family (size `|W|`), and the state-space dimension is also
+`|W|`. So `N = K = |W|` — the *classical* Hardy signature. -/
+theorem wantableGPT_classical_signature [Fintype W] :
+    ∃ (n : ℕ) (ρ : Fin n → V W) (_w : Perspectival.Distinguish.PerfectWitness (G := gpt W) ρ),
+      n = Module.finrank ℝ (V W) := by
+  refine ⟨Fintype.card W,
+    fun i => vertex W ((Fintype.equivFin W).symm i), ?_, ?_⟩
+  · -- Reindex perfectWitness via the equivalence
+    refine ⟨fun i => proj W ((Fintype.equivFin W).symm i), ?_⟩
+    intro i j
+    show proj W ((Fintype.equivFin W).symm i) (vertex W ((Fintype.equivFin W).symm j))
+       = if i = j then (1 : ℝ) else 0
+    rw [proj_vertex]
+    by_cases hij : i = j
+    · subst hij
+      simp
+    · have hne : (Fintype.equivFin W).symm j ≠ (Fintype.equivFin W).symm i := by
+        intro h
+        apply hij
+        have := congrArg (Fintype.equivFin W) h
+        simpa using this.symm
+      simp [hij, hne]
+  · exact (finrank_V_eq_card W).symm
+
 /-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
 give distinct linear maps on the state space.
 
