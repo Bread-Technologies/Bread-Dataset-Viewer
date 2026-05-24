@@ -2515,5 +2515,31 @@ def n3_R6_disconnect_conjecture : Prop :=
             (Perspectival.Continuity.StrictReversible.id (gpt 3))
             swap01StrictReversible)
 
+/-! ## Attempted closure of the deferred lemma
+
+The cofactor approach for n3_disc_det = 0 ⇒ not injective. Define the
+cofactor vector at the first row, show it's either nonzero (giving a
+kernel element) or zero (forcing column-rank ≤ 2 and giving another
+kernel element).
+
+Currently STATED as conjecture; proof requires significant 3x3 algebra. -/
+
+/-- The conjectured key lemma (UNPROVEN, target). -/
+def n3_det_zero_implies_not_injective_conjecture : Prop :=
+  ∀ R : V 3 →ₗ[ℝ] V 3,
+    (∀ ρ ∈ states 3, R ρ ∈ states 3) →
+    n3_disc_det R = 0 →
+    ¬ Function.Injective R
+
+/-- If the deferred lemma holds, the full n=3 disconnect follows. -/
+theorem n3_disconnect_from_det_lemma
+    (h : n3_det_zero_implies_not_injective_conjecture) :
+    IsEmpty (Perspectival.Continuity.StrictReversiblePath (gpt 3)
+              (Perspectival.Continuity.StrictReversible.id (gpt 3))
+              swap01StrictReversible) := by
+  rw [isEmpty_iff]
+  intro p
+  exact classical_n3_no_strict_path_id_to_swap01_conditional h p
+
 end Classical
 end Perspectival
