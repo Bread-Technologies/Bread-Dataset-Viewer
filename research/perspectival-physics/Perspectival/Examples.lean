@@ -440,6 +440,10 @@ example : Meeting ℤ := Perspectival.Meeting.mk_fromSide ℤ 5
 
 example : (Perspectival.Meeting.mk_fromSide ℤ 5).side₂ = -5 := rfl
 
+example : (Perspectival.Meeting.mk_fromSide ℤ 100).side₂ = -100 := rfl
+
+example : (Perspectival.Meeting.mk_fromSide ℤ 0).side₂ = 0 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
