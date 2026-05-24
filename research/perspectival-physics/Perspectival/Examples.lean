@@ -3225,6 +3225,18 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
     0 ≤ e ρ ∧ e ρ ≤ 1 :=
   (Perspectival.WantableGPT.gpt W).prob_in_unit_interval e he ρ hρ
 
+/-- Concrete: probability of vertex true under proj true is 1. -/
+example : (Perspectival.WantableGPT.proj Bool true)
+            (Perspectival.WantableGPT.vertex Bool true) = 1 := by
+  show (if true = true then (1 : ℝ) else 0) = 1
+  simp
+
+/-- Concrete: probability of vertex true under proj false is 0. -/
+example : (Perspectival.WantableGPT.proj Bool false)
+            (Perspectival.WantableGPT.vertex Bool true) = 0 := by
+  show (if true = false then (1 : ℝ) else 0) = 0
+  simp
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
