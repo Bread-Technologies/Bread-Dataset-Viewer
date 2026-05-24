@@ -2957,6 +2957,20 @@ example : ((Finset.univ : Finset (Bool × Bool × Bool × Bool)).image
             (Perspectival.WantableGPT.vertex (Bool × Bool × Bool × Bool))).card = 16 := by
   rw [Perspectival.WantableGPT.vertex_image_card]; decide
 
+/-- The Bool⁴ classical dichotomy (full bundle). -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool))
+            = Fintype.card (Bool × Bool × Bool × Bool) ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool))
+            ≠ Fintype.card (Bool × Bool × Bool × Bool)
+              * Fintype.card (Bool × Bool × Bool × Bool) ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool)) * 2
+            ≠ Fintype.card (Bool × Bool × Bool × Bool)
+              * (Fintype.card (Bool × Bool × Bool × Bool) + 1) ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool))
+            ≠ Fintype.card (Bool × Bool × Bool × Bool)
+              * (2 * Fintype.card (Bool × Bool × Bool × Bool) - 1) :=
+  Perspectival.WantableGPT.wantableGPT_classical_dichotomy (Bool × Bool × Bool × Bool) (by decide)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
