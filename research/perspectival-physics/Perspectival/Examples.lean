@@ -12076,3 +12076,68 @@ example (f : Perspectival.WantableGPT.V (Bool × Bool))
         Finset.sum_insert (by decide), Finset.sum_singleton]
     ring]
   exact h
+
+/-! ### Pointwise-indicator evaluation on vertex states -/
+
+/-- innerLin pointIndicatorTT applied to vertex (true,true) = 1. -/
+example :
+    Perspectival.WantableGPT.innerLin (Bool × Bool) pointIndicatorTT
+      (Perspectival.WantableGPT.vertex (Bool × Bool) (true, true)) = 1 := by
+  show ∑ p, pointIndicatorTT p
+    * Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) p = 1
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show pointIndicatorTT (true, true)
+        * Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) (true, true)
+     + (pointIndicatorTT (true, false)
+        * Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) (true, false)
+     + (pointIndicatorTT (false, true)
+        * Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) (false, true)
+     + pointIndicatorTT (false, false)
+        * Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) (false, false)))
+     = 1
+  show (1 : ℝ) * (1 : ℝ) + (0 * 0 + (0 * 0 + 0 * 0)) = 1
+  norm_num
+
+/-- innerLin pointIndicatorTT applied to vertex (false, false) = 0. -/
+example :
+    Perspectival.WantableGPT.innerLin (Bool × Bool) pointIndicatorTT
+      (Perspectival.WantableGPT.vertex (Bool × Bool) (false, false)) = 0 := by
+  show ∑ p, pointIndicatorTT p
+    * Perspectival.WantableGPT.vertex (Bool × Bool) (false, false) p = 0
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show pointIndicatorTT (true, true)
+        * Perspectival.WantableGPT.vertex (Bool × Bool) (false, false) (true, true)
+     + (pointIndicatorTT (true, false)
+        * Perspectival.WantableGPT.vertex (Bool × Bool) (false, false) (true, false)
+     + (pointIndicatorTT (false, true)
+        * Perspectival.WantableGPT.vertex (Bool × Bool) (false, false) (false, true)
+     + pointIndicatorTT (false, false)
+        * Perspectival.WantableGPT.vertex (Bool × Bool) (false, false) (false, false)))
+     = 0
+  show (1 : ℝ) * (0 : ℝ) + (0 * 0 + (0 * 0 + 0 * 1)) = 0
+  norm_num
+
+/-- innerLin pointIndicatorTT applied to uniformState (Bool × Bool) = 1/4. -/
+example :
+    Perspectival.WantableGPT.innerLin (Bool × Bool) pointIndicatorTT
+      (uniformState (Bool × Bool)) = (1/4 : ℝ) := by
+  show ∑ p, pointIndicatorTT p * uniformState (Bool × Bool) p = 1/4
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show pointIndicatorTT (true, true) * uniformState (Bool × Bool) (true, true)
+     + (pointIndicatorTT (true, false) * uniformState (Bool × Bool) (true, false)
+     + (pointIndicatorTT (false, true) * uniformState (Bool × Bool) (false, true)
+     + pointIndicatorTT (false, false) * uniformState (Bool × Bool) (false, false)))
+     = 1/4
+  show (1 : ℝ) * ((1 : ℝ) / Fintype.card (Bool × Bool))
+     + (0 * _ + (0 * _ + 0 * _)) = 1/4
+  rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+  norm_num
