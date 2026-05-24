@@ -132,6 +132,13 @@ example (m : Meeting Unit) : m.side₁ = () := rfl
 
 example (m : Meeting Unit) : m.side₂ = () := rfl
 
+/-- All meetings on Unit are equal: the unit Wantable has a single
+meeting up to equality. -/
+example (m₁ m₂ : Meeting Unit) : m₁ = m₂ := by
+  cases m₁
+  cases m₂
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
