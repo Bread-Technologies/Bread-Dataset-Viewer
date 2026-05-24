@@ -2466,6 +2466,16 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Fin 3)) = 6 :=
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3)) = 5 :=
   Perspectival.WantableGPT.finrank_V_sum_eq_add.trans (by decide)
 
+/-- Triple-product on Bool: K(Bool × Bool × Bool) = 2 * 2 * 2 = 8. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool)) = 8 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Triple-sum on Bool: K(Bool ⊕ Bool ⊕ Bool) = 2 + 2 + 2 = 6. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool ⊕ Bool)) = 6 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
