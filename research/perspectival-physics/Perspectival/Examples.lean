@@ -6571,5 +6571,30 @@ example : Perspectival.WantableGPT.unitFn (Fin 4)
         = Perspectival.WantableGPT.innerLin (Fin 4) (fun _ : Fin 4 => 1) :=
   WantableGPT_unitFn_eq_innerLin_one
 
+/-- New theorem: complementTransform applied twice to a vertex gives the
+same vertex back. -/
+theorem WantableGPT_complementTransform_vertex_sq
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    (Perspectival.WantableGPT.complementTransform W).toLin
+      ((Perspectival.WantableGPT.complementTransform W).toLin
+        (Perspectival.WantableGPT.vertex W w))
+      = Perspectival.WantableGPT.vertex W w :=
+  WantableGPT_complementTransform_invertible _
+
+/-- New theorem: complementTransform applied to vertex w gives vertex
+(complement w). -/
+theorem WantableGPT_complementTransform_vertex
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    (Perspectival.WantableGPT.complementTransform W).toLin
+      (Perspectival.WantableGPT.vertex W w)
+      = Perspectival.WantableGPT.vertex W (Wantable.complement w) :=
+  Perspectival.WantableGPT.complementAction_vertex W w
+
+/-- Concrete: on Bool, complementTransform vertex true = vertex false. -/
+example : (Perspectival.WantableGPT.complementTransform Bool).toLin
+            (Perspectival.WantableGPT.vertex Bool true)
+        = Perspectival.WantableGPT.vertex Bool false :=
+  WantableGPT_complementTransform_vertex true
+
 end Examples
 end Perspectival
