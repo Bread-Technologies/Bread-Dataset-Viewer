@@ -517,6 +517,10 @@ example : Wantable.complement (1000 : ℤ) = -1000 := rfl
 example (n : ℤ) : Wantable.complement (Wantable.complement n) = n :=
   Wantable.complement_involutive n
 
+/-- Symmetry: 3 and -3 swap under complement. -/
+example : Wantable.complement (3 : ℤ) = -3 ∧ Wantable.complement (-3 : ℤ) = 3 :=
+  ⟨rfl, by show -(-3 : ℤ) = 3; ring⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
