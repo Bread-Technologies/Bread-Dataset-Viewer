@@ -2857,6 +2857,8 @@ example : Fintype.card (Fin 5) = 5 := by decide
 example : Fintype.card (Fin 10) = 10 := by decide
 example : Fintype.card (Fin 100) = 100 := by decide
 
+-- (Classical.V n finrank deferred — instance issue.)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
