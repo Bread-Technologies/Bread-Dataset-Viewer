@@ -239,15 +239,15 @@ def perfectWitness_singleton {G : GPT V}
     exact G.states_normalized ρ hρ
 
 /-- A PerfectWitness gives effects such that diagonal entries equal 1. -/
-@[simp] theorem PerfectWitness.diag {G : GPT V} {n : ℕ} {ρ : Fin n → V}
-    (w : PerfectWitness (G := G) ρ) (i : Fin n) :
+@[simp] theorem PerfectWitness.diag {G : GPT V} {ι : Type*} [DecidableEq ι] {ρ : ι → V}
+    (w : PerfectWitness (G := G) ρ) (i : ι) :
     w.e i (ρ i) = 1 := by
   have := w.kronecker i i
   simpa using this
 
 /-- A PerfectWitness gives effects such that off-diagonal entries equal 0. -/
-theorem PerfectWitness.offdiag {G : GPT V} {n : ℕ} {ρ : Fin n → V}
-    (w : PerfectWitness (G := G) ρ) {i j : Fin n} (hij : i ≠ j) :
+theorem PerfectWitness.offdiag {G : GPT V} {ι : Type*} [DecidableEq ι] {ρ : ι → V}
+    (w : PerfectWitness (G := G) ρ) {i j : ι} (hij : i ≠ j) :
     w.e i (ρ j) = 0 := by
   have := w.kronecker i j
   simpa [hij] using this
