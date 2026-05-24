@@ -10444,3 +10444,33 @@ example {W : Type u} [Wantable W] : Equiv.Perm W :=
     invFun := Wantable.complement
     left_inv := Wantable.complement_involutive
     right_inv := Wantable.complement_involutive }
+
+/-- PTrans.complement's underlying Equiv.Perm = complement equivalence. -/
+example {W : Type u} [Wantable W] :
+    PTrans.toEquivPerm (PTrans.complement : PTrans W)
+    = ({ toFun := Wantable.complement
+         invFun := Wantable.complement
+         left_inv := Wantable.complement_involutive
+         right_inv := Wantable.complement_involutive } : Equiv.Perm W) := by
+  apply Equiv.ext
+  intro w
+  rfl
+
+/-- PTrans.toEquivPerm of PTrans.id = 1 (identity permutation). -/
+example {W : Type u} [Wantable W] :
+    PTrans.toEquivPerm (1 : PTrans W) = 1 :=
+  PTrans.toEquivPerm_one
+
+/-- toEquivPerm is multiplicative. -/
+example {W : Type u} [Wantable W] (g f : PTrans W) :
+    PTrans.toEquivPerm (g * f) = PTrans.toEquivPerm g * PTrans.toEquivPerm f :=
+  PTrans.toEquivPerm_mul g f
+
+/-- toEquivPermHom is a MonoidHom. -/
+example {W : Type u} [Wantable W] : PTrans W →* Equiv.Perm W :=
+  PTrans.toEquivPermHom
+
+/-- toEquivPermHom is injective. -/
+example {W : Type u} [Wantable W] :
+    Function.Injective (PTrans.toEquivPermHom : PTrans W →* Equiv.Perm W) :=
+  PTrans.toEquivPermHom_injective
