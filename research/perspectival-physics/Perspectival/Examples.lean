@@ -6131,5 +6131,29 @@ example : @Perspectival.Continuity.Reachable _ _ _ _
             (Perspectival.WantableGPT.vertex Bool true) :=
   Perspectival.Continuity.trivialAgency_reachable_refl _ _
 
+/-- Born-rule-style: `G.prob (proj w) (vertex w) = 1` on WantableGPT Bool. -/
+example : (Perspectival.WantableGPT.gpt Bool).prob
+            (Perspectival.WantableGPT.proj Bool true)
+            (Perspectival.WantableGPT.vertex Bool true) = 1 := by
+  show Perspectival.WantableGPT.proj Bool true
+        (Perspectival.WantableGPT.vertex Bool true) = 1
+  rw [Perspectival.WantableGPT.proj_vertex]; simp
+
+/-- Born-rule-style: `G.prob (proj true) (vertex false) = 0`. -/
+example : (Perspectival.WantableGPT.gpt Bool).prob
+            (Perspectival.WantableGPT.proj Bool true)
+            (Perspectival.WantableGPT.vertex Bool false) = 0 := by
+  show Perspectival.WantableGPT.proj Bool true
+        (Perspectival.WantableGPT.vertex Bool false) = 0
+  rw [Perspectival.WantableGPT.proj_vertex]; simp
+
+/-- Born-rule-style: `Classical.prob (proj i) (vertex j) = δ_{ji}`. -/
+example (n : ℕ) (i j : Fin n) :
+    (Perspectival.Classical.gpt n).prob
+      (Perspectival.Classical.proj n i)
+      (Perspectival.Classical.vertex n j)
+    = if j = i then 1 else 0 :=
+  Perspectival.Classical.proj_vertex n i j
+
 end Examples
 end Perspectival
