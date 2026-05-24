@@ -1024,6 +1024,12 @@ example : (complementEquiv : Equiv.Perm Bool).toFun = Bool.not := rfl
 /-- ℤ's complement Equiv is negation. -/
 example : (complementEquiv : Equiv.Perm ℤ).toFun = Neg.neg := rfl
 
+/-- Unit's complement Equiv is the identity function. -/
+example : (complementEquiv : Equiv.Perm Unit).toFun = id := rfl
+
+/-- Fin 3's complement Equiv is the identity function (id complement). -/
+example : (complementEquiv : Equiv.Perm (Fin 3)).toFun = id := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
