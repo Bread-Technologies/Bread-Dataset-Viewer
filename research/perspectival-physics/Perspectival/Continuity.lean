@@ -42,6 +42,7 @@ import Perspectival.GPT
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.ContinuousOn
 import Mathlib.Topology.UnitInterval
+import Mathlib.Analysis.Convex.Extreme
 
 namespace Perspectival
 namespace Continuity
@@ -134,6 +135,48 @@ theorem hardy_axiom5_of_agency [HasConnectedAgency G]
     exact hR_id_eq v
   · rw [hγ_1]
     exact hRρ
+
+/-! ## Pure states and Hardy Axiom 5 proper
+
+A *pure state* in a GPT is an extreme point of the convex state space.
+Hardy's original Axiom 5 quantifies over pure states. We define the
+notion and refine the agency derivation accordingly. -/
+
+/-- A pure state is an extreme point of the convex state space. -/
+def PureState (G : GPT V) (ρ : V) : Prop :=
+  ρ ∈ G.states ∧ IsExtreme ℝ G.states {ρ}
+
+/-- Pure-state Hardy Axiom 5. If the agency postulate holds and `R`
+preserves pure states (which is automatic for reversible
+transformations preserving the state space and its extreme structure),
+then between any two reachable PURE states there is a continuous path
+of linear maps from the identity to a transformation realizing the
+reachability. -/
+theorem hardy_axiom5_pure_states [HasConnectedAgency G]
+    {ρ₁ ρ₂ : V} (hp₁ : PureState G ρ₁) (_hp₂ : PureState G ρ₂)
+    (h : Reachable (G := G) ρ₁ ρ₂) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      (∀ v, γ 0 v = v) ∧
+      γ 1 ρ₁ = ρ₂ :=
+  hardy_axiom5_of_agency ρ₁ ρ₂ h
+
+/-- Pure-state Hardy Axiom 5, stronger transitive form: assuming the
+group of available transformations acts transitively on pure states
+(which is the substantive content of Hardy's hypothesis), and the
+agency postulate gives path-connectedness, between any two pure states
+there exists a continuous path of linear maps realizing the
+transformation. -/
+theorem hardy_axiom5_transitive [HasConnectedAgency G]
+    (h_transitive :
+      ∀ ρ₁ ρ₂, PureState G ρ₁ → PureState G ρ₂ →
+        Reachable (G := G) ρ₁ ρ₂)
+    (ρ₁ ρ₂ : V) (hp₁ : PureState G ρ₁) (hp₂ : PureState G ρ₂) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      (∀ v, γ 0 v = v) ∧
+      γ 1 ρ₁ = ρ₂ :=
+  hardy_axiom5_pure_states hp₁ hp₂ (h_transitive ρ₁ ρ₂ hp₁ hp₂)
 
 /-! ## Honest framing
 
