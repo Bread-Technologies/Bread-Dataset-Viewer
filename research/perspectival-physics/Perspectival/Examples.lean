@@ -15390,6 +15390,40 @@ example :
       (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr false)) :=
   vertices_distinguishable_via_delta (Sum.inl true) (Sum.inr false) (by decide)
 
+/-! ### Fin 3 / Fin 4 vertex distinguishability (all pairs) -/
+
+/-- Fin 3 vertex 0 and 1 distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) 0)
+      (Perspectival.WantableGPT.vertex (Fin 3) 1) :=
+  vertices_distinguishable_via_delta 0 1 (by decide)
+
+/-- Fin 3 vertex 1 and 2 distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) 1)
+      (Perspectival.WantableGPT.vertex (Fin 3) 2) :=
+  vertices_distinguishable_via_delta 1 2 (by decide)
+
+/-- Fin 4 vertex 0 and 3 distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 0)
+      (Perspectival.WantableGPT.vertex (Fin 4) 3) :=
+  vertices_distinguishable_via_delta 0 3 (by decide)
+
+/-- Fin 4 vertex 1 and 2 distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 4))
+      (Perspectival.WantableGPT.vertex (Fin 4) 1)
+      (Perspectival.WantableGPT.vertex (Fin 4) 2) :=
+  vertices_distinguishable_via_delta 1 2 (by decide)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
