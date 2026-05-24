@@ -1408,5 +1408,44 @@ example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
   rw [h_swap_sign]
   norm_num
 
+/-! ## R6 generalization to arbitrary n: vertex-image-collision invariant -/
+
+/-- For any n, the (i, j)-vertex collision: if R sends vertex i and
+vertex j to the same state, R is not injective. -/
+theorem classical_vertex_collision_implies_not_injective
+    (R : V n →ₗ[ℝ] V n) (i j : Fin n) (h : i ≠ j)
+    (hcoll : R (vertex n i) = R (vertex n j)) :
+    ¬ Function.Injective R := by
+  intro hinj
+  have heq : vertex n i = vertex n j := hinj hcoll
+  have hc := congr_fun heq i
+  show False
+  show False
+  rw [show vertex n i i = (if i = i then (1 : ℝ) else 0) from rfl,
+      show vertex n j i = (if j = i then (1 : ℝ) else 0) from rfl] at hc
+  rw [if_pos rfl, if_neg (Ne.symm h)] at hc
+  norm_num at hc
+
+/-- For n=2 specifically. -/
+example
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hcoll : R (vertex 2 0) = R (vertex 2 1)) :
+    ¬ Function.Injective R :=
+  classical_vertex_collision_implies_not_injective (n := 2) R 0 1 (by decide) hcoll
+
+/-- For n=3, vertex 0 ≠ vertex 1 collision rules out injectivity. -/
+example
+    (R : V 3 →ₗ[ℝ] V 3)
+    (hcoll : R (vertex 3 0) = R (vertex 3 1)) :
+    ¬ Function.Injective R :=
+  classical_vertex_collision_implies_not_injective (n := 3) R 0 1 (by decide) hcoll
+
+/-- For n=4. -/
+example
+    (R : V 4 →ₗ[ℝ] V 4)
+    (hcoll : R (vertex 4 1) = R (vertex 4 3)) :
+    ¬ Function.Injective R :=
+  classical_vertex_collision_implies_not_injective (n := 4) R 1 3 (by decide) hcoll
+
 end Classical
 end Perspectival
