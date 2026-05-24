@@ -139,6 +139,17 @@ example (m₁ m₂ : Meeting Unit) : m₁ = m₂ := by
   cases m₂
   rfl
 
+/-- The disjoint union Bool ⊕ Bool inherits a Wantable structure
+from each Bool. -/
+example : Wantable (Bool ⊕ Bool) := inferInstance
+
+/-- The product Bool × Bool inherits a Wantable structure. -/
+example : Wantable (Bool × Bool) := inferInstance
+
+/-- The complement in Bool ⊕ Bool acts component-wise. -/
+example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := rfl
+example : Wantable.complement (Sum.inr false : Bool ⊕ Bool) = Sum.inr true := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
