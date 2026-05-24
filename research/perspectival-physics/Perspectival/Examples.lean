@@ -492,6 +492,13 @@ example (i : Fin 4) : Wantable.complement i ≠ i := by
 /-- Fin 3 (with complement = id) has EVERY element as a fixed point. -/
 example (i : Fin 3) : Wantable.complement i = i := rfl
 
+/-- Unit's only element is a fixed point. -/
+example : Wantable.complement () = () := rfl
+
+/-- Empty has trivially no elements, so vacuously every "element" is
+both a fixed point and not (vacuous truth). -/
+example (e : Empty) : Wantable.complement e = e := e.elim
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
