@@ -137,23 +137,171 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | **N perfectly distinguishable states ⇒ linear independence** | `Distinguish.lean :: perfect_distinguishable_imp_linear_independent` | ✓ |
 | **N ≤ K (operational dim ≤ state space dim)** in finite-dim GPT | `Distinguish.lean :: operational_dim_le_state_dim` | ✓ |
 
+## R6 strengthened-agency framework (this session)
+
+The R6 program (strengthening the agency postulate so path-connectedness
+forces non-classical reversible dynamics) was substantially advanced.
+A four-level hierarchy of agency postulates was formalized, and the
+n=2 classical disconnect theorem was proven *hypothesis-free*. Each
+entry below carries an (a/b/c/d) calibration tag per ORIGINAL_PROMPT §7.
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| `StatePreservingPath G R₁ R₂` — continuous linear-map path with state preservation at every t | `Continuity.lean :: StatePreservingPath` | ✓ (a) |
+| `StatePreservingAgency G` — every pair of avail reversibles connected by a StatePreservingPath | `Continuity.lean :: StatePreservingAgency` | ✓ (a) |
+| `HasConnectedAgency.ofStatePreservingAgency` — SPA strengthens HCA | `Continuity.lean` | ✓ (a) |
+| `continuous_state_preserving_path` — under SPA, the path of states stays inside the state space | `Continuity.lean` | ✓ (a) |
+| `StatePreservingPath.{id, reverse, const, value_in_states, start_preserves_states, finish_preserves_states}` | `Continuity.lean` | ✓ (a) |
+| **KEY R6 OBSERVATION** (verbal): convex `G.states` makes affine interpolation auto-state-preserving, so SPA alone is too weak | inline comment in `Continuity.lean` | ○ (b) — argued, but motivates the stronger hierarchy |
+| `ReversiblePath G R₁ R₂` — each γ(t) is a Reversible (continuous, state-preserving, unit-preserving) | `Continuity.lean :: ReversiblePath` | ✓ (a) |
+| `ReversiblePath.{toStatePreservingPath, id, const}` | `Continuity.lean` | ✓ (a) |
+| `StrongConnectedAgency G` — every pair of avail Reversibles connected by a ReversiblePath | `Continuity.lean :: StrongConnectedAgency` | ✓ (a) |
+| `StrictReversiblePath G R₁ R₂` — each γ(t) is a *bijection* (the strongest R6 condition) | `Continuity.lean :: StrictReversiblePath` | ✓ (a) |
+| `StrictReversiblePath.{toReversiblePath, id}` | `Continuity.lean` | ✓ (a) |
+| `StrictConnectedAgency G` — substantive R6 condition (avail StrictReversibles connected by StrictReversiblePaths) | `Continuity.lean :: StrictConnectedAgency` | ✓ (a) |
+| `trivialStrictAgency`, `trivialStrictAgency_reachable_iff` | `Continuity.lean` | ✓ (a) |
+
+## R6 Birkhoff disconnect — Classical n=2 (this session)
+
+The substantive new theorem: on the classical n=2 GPT, no continuous
+path of bijective state-preserving linear maps connects `id` and `swap`.
+This is proved with **no continuity hypothesis** (auto-continuity is
+derived from the joint continuity field of `StrictReversiblePath`).
+No other GPT reconstruction is known to have a Lean-formalized version
+of this discreteness phenomenon.
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| `swapLin`, `swapLin_{vertex_zero, vertex_one, swapLin, preserves_states, preserves_unit, bijective, continuous}` | `Classical.lean` | ✓ (a) |
+| `swapReversible`, `swapStrictReversible`, `swapReversible_ne_id` | `Classical.lean` | ✓ (a) |
+| `n2_disc_det` — discrete determinant `R(v0) 0 − R(v1) 0` for V 2 | `Classical.lean :: n2_disc_det` | ✓ (a) |
+| `n2_disc_det_id = 1`, `n2_disc_det_swap = -1` | `Classical.lean` | ✓ (a) |
+| `ivt_path_one_to_neg_one` — IVT specialization for `[0,1] → ℝ` going `1 → −1` | `Classical.lean` | ✓ (a) |
+| `n2_no_continuous_path_id_to_swap_through_bijections` — any continuous path id→swap hits det = 0 | `Classical.lean` | ✓ (a) |
+| `n2_disc_det_zero_implies_not_injective` — det = 0 on state-preserving R forces non-injective R | `Classical.lean` | ✓ (a) |
+| `classical_n2_no_strict_path_id_to_swap` — combination of the chain (state-preserving + bijective + path id↔swap ⇒ False) | `Classical.lean` | ✓ (a) |
+| `n2_disc_det_path_continuous` — auto-continuity of det along a jointly-continuous path | `Classical.lean` | ✓ (a) |
+| `classical_n2_no_strict_reversible_path` — hypothesis-free for given path (with explicit cont. hyp.) | `Classical.lean` | ✓ (a) |
+| **`classical_n2_strict_reversible_path_id_swap_empty` — R6 FINAL: no `StrictReversiblePath` from id to swap on Classical n=2 (no hypotheses)** | `Classical.lean` | ✓ (a) **framework-distinctive** |
+| `classical_n2_strict_reversible_path_id_swap_nonempty_false` — contrapositive form | `Classical.lean` | ✓ (a) |
+| `classical_n2_strict_reversible_path_swap_id_nonempty_false` — reverse direction | `Classical.lean` | ✓ (a) |
+| `classical_n2_no_two_element_strict_agency` — no StrictConnectedAgency on n=2 containing both id and swap | `Classical.lean` | ✓ (a) |
+| `classical_n2_id_avail_implies_swap_not_avail`, `classical_n2_trivial_agency_id_avail` | `Classical.lean` | ✓ (a) |
+| `classical_n2_state_preserving_first_coord_bound{,_v1}` — R(vertex i) 0 ∈ [0,1] for state-preserving R | `Classical.lean` | ✓ (a) |
+| `classical_n2_injective_distinct_images`, `classical_n2_surjective_vertex_image` | `Classical.lean` | ✓ (a) |
+| `classical_n2_image_vertex_{zero,one}_in_states`, `classical_n2_state_eq_combo` | `Classical.lean` | ✓ (a) |
+| `classical_n2_bijection_image_vertex{0,1}_form` — image-of-vertex decomposition under state preservation | `Classical.lean` | ✓ (a) |
+| **`classical_n2_det_one_eq_id` — every state-preserving R on V 2 with det = 1 is `LinearMap.id`** | `Classical.lean` | ✓ (a) |
+| `classical_n2_no_bijective_state_pres_joint_path` — cleaner restatement using joint-continuity directly | `Classical.lean` | ✓ (a) |
+| `classical_n1_state_preserving_eq_id` — every state-preserving R on V 1 is id (n=1 is trivial agency only) | `Classical.lean` | ✓ (a) |
+| `classical_unique_state`, `classical_n1_reversible_toLin_eq_id` and StrictReversible variant | `Classical.lean` | ✓ (a) |
+| `n2_midpoint`, `n2_midpoint_in_states`, `n2_midpoint_decomp` | `Classical.lean` | ✓ (a) |
+| **n=2 strict-reversible enumeration `{id, swap} = S_2`** — symmetric det=−1 case (`classical_n2_det_neg_one_eq_swap`) | claimed in `SESSION_REPORT.md` line 47 but **NOT in `Classical.lean`** | ○ (b) **argued; pending formalization** |
+| n=3 disconnect via `n3_swap01_detector` | `Classical.lean` (scaffolding present) | ▲ partial — detector defined, full theorem not yet wrapped at `StrictReversiblePath` level |
+
+## WantableGPT correlation / entanglement-like results (this session)
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| `productState f₁ f₂` — tensor-product state construction on `V (W₁ × W₂)` | `Examples.lean :: productState` | ✓ (a) |
+| `productState_unitFn` — unit factors over product | `Examples.lean` | ✓ (a) |
+| `productState_nonneg`, `productState_in_states` — product of states is a state | `Examples.lean` | ✓ (a) |
+| `productState_vertex` — `productState (vertex w₁) (vertex w₂) = vertex (w₁, w₂)` | `Examples.lean` | ✓ (a) |
+| `productState_assoc`, `productState_swap` | `Examples.lean` | ✓ (a) |
+| `productState_complement_factor`, `productState_transform_factor` | `Examples.lean` | ✓ (a) |
+| `productState_{smul_left, smul_right, add_left, add_right}` | `Examples.lean` | ✓ (a) |
+| `uniformState_prod_factor` — uniform state factors over products | `Examples.lean` | ✓ (a) |
+| `diagonalState` on `Bool × Bool` — `(1/2)(vertex (t,t)) + (1/2)(vertex (f,f))` | `Examples.lean :: diagonalState` | ✓ (a) |
+| `diagonalState_in_states`, `diagonalState_{left, right}_marginal = uniformBool` | `Examples.lean` | ✓ (a) |
+| `diagonalIndicatorLin_on_diagonalState = 1`, `antiDiagonalIndicatorLin_on_diagonalState = 0` | `Examples.lean` | ✓ (a) |
+| `diagonalState_distinguishable_antiDiagonalState` — perfect distinguishability witness | `Examples.lean` | ✓ (a) |
+| `diagonalState ≠ productState uniformBool uniformBool` (with same marginals) | `Examples.lean :: diagonalState_ne_productState_uniformBool` and the SAME-marginals-different-state example near line 14899 | ✓ (a) |
+| **`diagonalState` is NOT factorizable as ANY `productState f g` — first formal classical-correlation no-factorization result** | anonymous example at `Examples.lean :: ~15000` | ✓ (a) — **framework-distinctive; classical analog of entanglement-as-non-factorizability** |
+| Same statement for `antiDiagonalState` | adjacent example in `Examples.lean` | ✓ (a) |
+| `WantableGPT_classical_separability` and `WantableGPT_state_prod_vertex_decomp` — every product-Wantable state is a sum of weighted product-vertex states (the framework's "no entanglement at the state-decomposition level" theorem) | `Examples.lean` | ✓ (a) |
+| `mixedCorrelatedState`: `(1/2) diagonal + (1/2) antiDiagonal = uniformState (Bool × Bool)` with both marginals uniform | `Examples.lean` | ✓ (a) |
+
+## Subgroup-theoretic centrality (this session)
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| `PTrans.complement` commutes with every `φ : PTrans W` (`PTrans_complement_central`) | `Examples.lean` | ✓ (a) |
+| `complement ∈ Subgroup.center (PTrans W)` (anonymous example) | `Examples.lean` | ✓ (a) |
+| `complementSubgroup W := Subgroup.zpowers PTrans.complement` | `Examples.lean :: complementSubgroup` | ✓ (a) |
+| **`complementSubgroup W ≤ Subgroup.center (PTrans W)`** — the cyclic subgroup ⟨complement⟩ is central in PTrans | `Examples.lean` (anonymous example) | ✓ (a) |
+| Concrete `complementSubgroup Bool ≤ Subgroup.center (PTrans Bool)` | `Examples.lean` | ✓ (a) |
+| `complement^n` commutes with every `φ` (both `n : ℤ` and `n : ℕ` forms) | `Examples.lean` | ✓ (a) |
+
+## Tier 2 #6 — first gauge-group baby step (this session)
+
+Per `TIER2_GAUGE_SCOPING.md`: use the existing `scaleHom : ℝˣ →* PTrans ℝ`
+to exhibit nontrivial, distinct, continuously-parametrized PTrans on
+the Wantable type ℝ. This is the framework's first formally-verified
+witness that the bare PTrans construction already contains
+Lie-group-like structure on a continuous Wantable.
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| `scaleHom : ℝˣ →* PTrans ℝ` (MonoidHom, restated) | `Examples.lean` (Tier 2 #6 section ~15630) | ✓ (a) prior session |
+| `scaleHom.map_mul` — 1-parameter-subgroup property `scaleHom(a*b) = scaleHom a * scaleHom b` | `Examples.lean` | ✓ (a) |
+| `scaleHom (Units.mk0 2) ≠ scaleHom (Units.mk0 3)` (distinct scalings = distinct PTrans) | `Examples.lean` | ✓ (a) |
+| `scaleHom (-1) ≠ 1` (concrete non-identity) | `Examples.lean` | ✓ (a) |
+| **`∃ φ₁ φ₂ φ₃ : PTrans ℝ, pairwise ≠`** — `PTrans ℝ` has at least three distinct elements (id, scale-by-2, scale-by-(−1)) | `Examples.lean` | ✓ (a) |
+| For any `r ≠ 0`, `scaleHom (Units.mk0 r _)` is a PTrans on ℝ — continuously-parametrized family | `Examples.lean` (noncomputable example) | ✓ (a) |
+
+**Tier 2 calibration.** These are (a) formally verified *witnesses* of
+nontrivial continuous structure inside `PTrans ℝ`. They are NOT (a) a
+derivation of `U(1)` from axioms; that remains ? OPEN, and
+`TIER2_GAUGE_SCOPING.md` is explicit that even the `u(1)` baby step
+(Lie-algebra structure on the tangent space of `scaleHom(ℝˣ)` ⊂ `PTrans ℝ`)
+is unfinished. The scoping doc downgrades the framework's Tier 2 #6
+claim from "derivation of `U(1)×SU(2)×SU(3)`" to "the framework can
+articulate the gauge-as-connection move on its smallest nontrivial
+example."
+
+## New Tier-scoping documents (this session)
+
+These are calibration documents, not derivations. They tighten the
+program's honest scope per ORIGINAL_PROMPT §7–§8.
+
+| Document | Tier | Content | Calibration of overall tier target |
+|----------|------|---------|------------------------------------|
+| `TIER1_5_HILBERT.md` | 1 #5 | Path from current operational machinery to a complex-vs-real-vs-quaternionic-Hilbert-space derivation (Renou extension). Classifies sub-steps as tractable / blocked-on-R6-R7 / speculative. qQM exclusion via local tomography flagged as tractable Lean target; rQM exclusion identified as gated on the same agency-connectedness gap as Hardy Axiom 5; full uniqueness gated on an unformalized "agency–observable duality" postulate (S3). | overall ? OPEN; scoping is (a/b) — calibration of sub-steps is verbal but tight |
+| `TIER2_GAUGE_SCOPING.md` | 2 #6 | Honest reframing of the gauge-group target. Commits the program to one Lean baby step (the `u(1)` toy from `scaleHom`) and documents two unforced inputs (which Lie group, which representations) as empirical input rather than forthcoming derivation. | overall ✗ NOT STARTED; baby step is (a)-verified in this session (see Tier 2 #6 section above) |
+| `TIER3_DARK_MATTER.md` | 3 #11 | Reframes multi-sector dark matter as *motivational* (qualitative prediction the framework's no-cross-meetings structure naturally supports), not as quantitative-signature derivation. Sketches a `MultiSectorWantable` formal structure as the smallest concrete next step. | overall ✗ SPECULATIVE; per the doc, P5 in `PREDICTIONS.md` remains **S** until `MultiSectorWantable` formalization is done |
+| `TIER4_DISSOLUTIONS.md` | 4 #14, #15, #16 | Articulates the three dissolution moves (hard problem, why-something, before-big-bang) as consequences of taking Axiom I seriously, not as independent achievements. Honest that this is philosophy, not derivation, and earns its keep only if Tier 1–3 succeed. | overall ○ ARGUED |
+
+These documents are themselves (a) for *what they claim*: namely that
+no formal derivation of #5, #6, #11, #14–#16 has been carried out
+inside the framework, and that the explicit obstacles (R6/R7 closure,
+agency–observable duality, multi-sector formalization, etc.) are the
+load-bearing items. They are (b)/(c) for the conjectures they sketch
+about what *could* be derived under stated further postulates.
+
 ## What is NOT YET done — honest open list
 
 | Target | Tier | Status | Bottleneck |
 |--------|------|--------|------------|
-| Hardy reconstruction in this language | 1 | ? OPEN | Needs GPT (convex state spaces) — Mathlib has the pieces |
+| Hardy reconstruction in this language | 1 | ▲ PARTIAL | A1, A3, A5 verified-derivable; A2 auxiliary; A4 placeholder. Full reconstruction (composition, tensor) open |
 | Tsirelson 2√2 from axioms | 1 | ▲ PARTIAL | Bound is verified given the *-ring picture (`bound_perspectival`). DERIVING the *-ring picture from I–IV remains open |
-| No-cloning / no-broadcasting | 1 | ? OPEN | Needs operational composition structure |
-| Complex Hilbert space (vs real/quaternionic) | 1 | ? OPEN | Renou-style; needs tensor products in GPT |
-| Gauge group U(1)×SU(2)×SU(3) | 2 | ? OPEN | Unknown to anyone from any axiomatic framework |
-| Three fermion generations | 2 | ? OPEN | Unknown to anyone |
-| Specific particle representations | 2 | ? OPEN | Wigner gives the form; specific reps are empirical |
-| Mass hierarchies | 2 | ? OPEN | Empirical input in all known approaches |
-| Cosmological constant value | 3 | ? OPEN | Open problem; "category error" claim ARGUED only |
-| Dark matter multi-sector prediction | 3 | ? OPEN | Sharp prediction; experimental test pending |
-| Fine-tuning forcing | 3 | ? OPEN | Argued; not derived |
-| QM/GR unification | 3 | ? OPEN | Framework provides setting; no technical fix yet |
-| Hard problem dissolution | 4 | ○ ARGUED | Philosophical move; no formal counterpart |
+| No-cloning / no-broadcasting | 1 | ✓ VERIFIED | `NoCloning.lean`, `NoBroadcasting.lean`, full chain via distinguishability in `Distinguish.lean` |
+| Complex Hilbert space (vs real/quaternionic) | 1 #5 | ? OPEN | `TIER1_5_HILBERT.md` (this session) sketches path: qQM exclusion tractable via local tomography; rQM exclusion gated on R6/R7; full uniqueness gated on unformalized agency–observable duality (S3) |
+| R6: classical GPTs cannot support nontrivial StrictConnectedAgency | 1 | ▲ PARTIAL | n=2 disconnect ✓ VERIFIED hypothesis-free this session (`classical_n2_strict_reversible_path_id_swap_empty`); n=3 scaffolded; general-n via sign-of-permutation invariant still ? OPEN |
+| R6: quantum GPTs DO support nontrivial StrictConnectedAgency (U(N) connected) | 1 | ? OPEN | Positive complement of the n=2 disconnect; needs quantum GPT construction |
+| R7: Lie-group refinement of `Reversible` | 1/2 | ? OPEN | Prerequisite for Wigner-style particle reps |
+| Gauge group U(1)×SU(2)×SU(3) | 2 #6 | ? OPEN | `TIER2_GAUGE_SCOPING.md` (this session) reframes to a `u(1)` baby step; "which Lie group" and "which reps" documented as empirical input, not forthcoming derivations |
+| Continuous PTrans witnesses on ℝ (Lie-group-like structure inside `PTrans ℝ`) | 2 #6 | ✓ VERIFIED (this session) | `scaleHom`-based 3-element distinctness + continuously-parametrized family; first concrete step toward gauge structure |
+| Three fermion generations | 2 #7 | ✗ NEGATIVE | `TIER2_ATTEMPT.md` documents five candidate angles, all fail |
+| Specific particle representations | 2 #8 | ? OPEN | Wigner gives the form; specific reps are empirical. Gated on R7 |
+| Mass hierarchies | 2 #9 | ? OPEN | Empirical input in all known approaches |
+| Cosmological constant value | 3 #10 | ✗ SPECULATIVE | Open problem; "category error" claim ARGUED only |
+| Dark matter multi-sector prediction (qualitative motivation) | 3 #11 | ○ ARGUED → tractable to ▲ | `TIER3_DARK_MATTER.md` (this session): qualitative motivation is honest; quantitative signatures NOT achievable from current axioms; `MultiSectorWantable` formalization is the explicit next step |
+| Dark matter multi-sector prediction (quantitative signatures) | 3 #11 | ✗ NOT ACHIEVABLE from current axioms | Per `TIER3_DARK_MATTER.md` verdict |
+| Fine-tuning forcing | 3 #12 | ? OPEN | Argued; not derived |
+| QM/GR unification | 3 #13 | ? OPEN | Framework provides setting; no technical fix yet |
+| Hard problem dissolution | 4 #14 | ○ ARGUED | `TIER4_DISSOLUTIONS.md` (this session) — philosophical move from Axiom I, not formal counterpart; earns keep only if Tier 1–3 succeed |
+| Why-something-rather-than-nothing | 4 #15 | ○ ARGUED | `TIER4_DISSOLUTIONS.md` — dissolution via Axiom I |
+| Origin of universe / before-big-bang | 4 #16 | ○ ARGUED | `TIER4_DISSOLUTIONS.md` — dissolution: "before" requires substantival time the framework rejects |
 
 ## Honest meta-assessment
 
@@ -194,5 +342,37 @@ the research target sharply.
   specific GPT (e.g., qubit) that realist axioms don't.
 - A sharp testable prediction not derivable from existing reconstructions.
 
-**Until one of those lands, the program has not yet justified itself
-technically.** That is the honest position and the working target.
+**Partial progress (this session): the R6 Birkhoff disconnect.** The
+hypothesis-free Lean theorem
+`classical_n2_strict_reversible_path_id_swap_empty` is the first
+framework-distinctive *non-classical-discriminator* the program has
+produced: a `StrictConnectedAgency` on the classical n=2 GPT that
+contains both `id` and `swap` is *impossible*. The argument is fully
+formalized — an IVT applied to the discrete determinant `R(v0) 0 −
+R(v1) 0`, plus a state-preservation argument showing det=0 forces
+non-injectivity. No comparable result is known in the existing GPT
+reconstruction literature at the Lean level. This is *necessary* but
+not sufficient: the result rules classical n=2 OUT of nontrivial
+strict-agency support; it does not yet rule the quantum case IN. The
+positive complement (path-connectedness of quantum reversibles =
+`U(N)`) remains the next R6 milestone.
+
+**Honest re-calibration of "diagonalState is not a productState".**
+The Lean-verified non-factorization of `diagonalState` on `Bool × Bool`
+into any `productState f g` is a clean *classical* analog of
+entanglement-as-non-factorizability. It is NOT a quantum entanglement
+result — both states involved are perfectly distinguishable classical
+mixtures — but it formalizes the operational content that "correlated"
+≠ "factorizable" inside the framework's own state space. This is (a)
+verified, (b) framework-distinctive in vocabulary (we know of no
+analogous Lean formalization in this register), and (c) limited in
+scope: classical correlation, not Bell nonlocality. It is the
+strongest formal "non-product state" result the bare ontology can
+support; per `wantableGPT_is_classical`, anything stronger requires
+extra postulates beyond I–IV.
+
+**Until the positive complement (quantum) of the R6 disconnect lands,
+the program has earned only the negative side: a class of theories
+(classical) is provably excluded from supporting strict agency, but
+the class of theories that DO support it has not yet been
+characterized.** That is the honest position and the working target.
