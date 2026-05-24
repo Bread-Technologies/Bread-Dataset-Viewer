@@ -4714,5 +4714,28 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
     Perspectival.Continuity.Reachable (G := G) ρ₁ (R.toLin ρ₂) :=
   Perspectival.Continuity.Reachable.apply_available h R hR
 
+/-- Generic dimension inequality: a `PerfectWitness` on `n` indexes
+gives `n ≤ Module.finrank ℝ V` (operational ≤ structural). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [Module.Finite ℝ V]
+    {G : Perspectival.GPT V}
+    (n : ℕ) (ρ : Fin n → V)
+    (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) :
+    n ≤ Module.finrank ℝ V :=
+  Perspectival.Distinguish.operational_dim_le_state_dim ρ w
+
+/-- For Bool's WantableGPT: |Bool| = 2 ≤ finrank = 2 (concrete dim
+inequality). -/
+example : (2 : ℕ) ≤ Module.finrank ℝ (Perspectival.WantableGPT.V Bool) := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- `no_oversized_perfect_distinguishability`: cannot have more
+perfectly distinguishable states than the dimension of V. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [Module.Finite ℝ V]
+    {G : Perspectival.GPT V}
+    {n : ℕ} (hn : n > Module.finrank ℝ V) (ρ : Fin n → V)
+    (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) : False :=
+  Perspectival.Distinguish.no_oversized_perfect_distinguishability hn ρ w
+
 end Examples
 end Perspectival
