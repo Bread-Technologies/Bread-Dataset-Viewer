@@ -13881,6 +13881,59 @@ example (a b : Bool) :
      = (if b = v then (1 : ℝ) else 0)
   cases a <;> cases b <;> cases v <;> simp
 
+/-! ### Marginal of mixed states -/
+
+/-- leftMarginal of mixedCorrelatedState is uniformBool. -/
+example : leftMarginal mixedCorrelatedState = uniformBool := by
+  funext b
+  show (∑ b₂, mixedCorrelatedState (b, b₂)) = uniformBool b
+  show (∑ b₂, ((1/2 : ℝ) * diagonalState (b, b₂)
+              + (1/2 : ℝ) * antiDiagonalState (b, b₂))) = uniformBool b
+  rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
+  -- (1/2)·(∑ diagonalState (b, b₂)) + (1/2)·(∑ antiDiagonalState (b, b₂))
+  have hd : (∑ b₂, diagonalState (b, b₂)) = uniformBool b :=
+    diagonalState_left_marginal b
+  have ha : (∑ b₂, antiDiagonalState (b, b₂)) = uniformBool b := by
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    cases b with
+    | true =>
+      show antiDiagonalState (true, true) + antiDiagonalState (true, false) = uniformBool true
+      show (0 : ℝ) + 1/2 = 1/2
+      norm_num
+    | false =>
+      show antiDiagonalState (false, true) + antiDiagonalState (false, false) = uniformBool false
+      show (1/2 : ℝ) + 0 = 1/2
+      norm_num
+  rw [hd, ha]
+  show (1/2 : ℝ) * uniformBool b + (1/2 : ℝ) * uniformBool b = uniformBool b
+  ring
+
+/-- rightMarginal of mixedCorrelatedState is uniformBool. -/
+example : rightMarginal mixedCorrelatedState = uniformBool := by
+  funext b
+  show (∑ b₁, mixedCorrelatedState (b₁, b)) = uniformBool b
+  show (∑ b₁, ((1/2 : ℝ) * diagonalState (b₁, b)
+              + (1/2 : ℝ) * antiDiagonalState (b₁, b))) = uniformBool b
+  rw [Finset.sum_add_distrib, ← Finset.mul_sum, ← Finset.mul_sum]
+  have hd : (∑ b₁, diagonalState (b₁, b)) = uniformBool b :=
+    diagonalState_right_marginal b
+  have ha : (∑ b₁, antiDiagonalState (b₁, b)) = uniformBool b := by
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    cases b with
+    | true =>
+      show antiDiagonalState (true, true) + antiDiagonalState (false, true) = uniformBool true
+      show (0 : ℝ) + 1/2 = 1/2
+      norm_num
+    | false =>
+      show antiDiagonalState (true, false) + antiDiagonalState (false, false) = uniformBool false
+      show (1/2 : ℝ) + 0 = 1/2
+      norm_num
+  rw [hd, ha]
+  show (1/2 : ℝ) * uniformBool b + (1/2 : ℝ) * uniformBool b = uniformBool b
+  ring
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
