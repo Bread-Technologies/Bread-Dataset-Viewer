@@ -3127,6 +3127,16 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4))
         = Fintype.card (Fin 4) :=
   WantableGPT_classical_K_eq_N
 
+/-- Verification: K = N concretely on Bool × Bool × Bool gives 8 = 8. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool))
+        = Fintype.card (Bool × Bool × Bool) :=
+  WantableGPT_classical_K_eq_N
+
+/-- Verification: K = N concretely on Bool × Bool × Bool × Bool gives 16 = 16. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool))
+        = Fintype.card (Bool × Bool × Bool × Bool) :=
+  WantableGPT_classical_K_eq_N
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
