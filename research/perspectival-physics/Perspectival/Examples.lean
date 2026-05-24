@@ -420,6 +420,29 @@ def WantableEquiv.mapPTrans {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   intro w
   rfl
 
+/-- `mapPTrans` sends the identity PTrans to the identity. -/
+@[simp] theorem WantableEquiv.mapPTrans_one {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (e : WantableEquiv W₁ W₂) :
+    e.mapPTrans (1 : PTrans W₁) = (1 : PTrans W₂) := by
+  apply PTrans.ext
+  intro w
+  show e.toEquiv ((1 : PTrans W₁).toFun (e.toEquiv.symm w)) = w
+  show e.toEquiv (e.toEquiv.symm w) = w
+  exact e.toEquiv.apply_symm_apply w
+
+/-- `mapPTrans` is a group homomorphism: it preserves composition. -/
+theorem WantableEquiv.mapPTrans_mul {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (e : WantableEquiv W₁ W₂)
+    (φ ψ : PTrans W₁) :
+    e.mapPTrans (φ * ψ) = e.mapPTrans φ * e.mapPTrans ψ := by
+  apply PTrans.ext
+  intro w
+  show e.toEquiv ((φ * ψ).toFun (e.toEquiv.symm w))
+     = (e.mapPTrans φ).toFun ((e.mapPTrans ψ).toFun w)
+  show e.toEquiv (φ.toFun (ψ.toFun (e.toEquiv.symm w)))
+     = e.toEquiv (φ.toFun (e.toEquiv.symm (e.toEquiv (ψ.toFun (e.toEquiv.symm w)))))
+  rw [e.toEquiv.symm_apply_apply]
+
 /-- **Concrete classification of `PTrans (Fin 2)`.** Either the
 identity or `fin2Swap`. -/
 theorem ptrans_fin2_classification (f : PTrans (Fin 2)) :
