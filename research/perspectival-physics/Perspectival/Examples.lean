@@ -9533,3 +9533,25 @@ example : Perspectival.Distinguish.PerfectWitness
 example : (100 : ℕ) ≤ Module.finrank ℝ (Perspectival.Classical.V 100) :=
   Perspectival.Distinguish.operational_dim_le_state_dim
     (Perspectival.Classical.vertex 100) (Perspectival.Classical.perfectWitness 100)
+
+/-- WantableGPT Fin 4 perfect witness exists. -/
+example : Perspectival.Distinguish.PerfectWitness
+            (G := Perspectival.WantableGPT.gpt (Fin 4))
+            (Perspectival.WantableGPT.vertex (Fin 4)) :=
+  Perspectival.WantableGPT.perfectWitness (Fin 4)
+
+/-- WantableGPT Bool perfect witness exists. -/
+example : Perspectival.Distinguish.PerfectWitness
+            (G := Perspectival.WantableGPT.gpt Bool)
+            (Perspectival.WantableGPT.vertex Bool) :=
+  Perspectival.WantableGPT.perfectWitness Bool
+
+/-- Operational dim ≤ structural dim for WantableGPT Fin 4. -/
+example : (Fintype.card (Fin 4) : ℕ)
+        ≤ Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) :=
+  (Perspectival.WantableGPT.wantableGPT_is_classical (Fin 4)).1
+
+/-- The classical signature holds with equality. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4))
+        = Fintype.card (Fin 4) :=
+  Perspectival.WantableGPT.finrank_V_eq_card (Fin 4)
