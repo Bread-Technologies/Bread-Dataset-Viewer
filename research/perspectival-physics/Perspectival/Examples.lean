@@ -10210,3 +10210,19 @@ example : ∃ φ : PTrans (Fin 4), φ ≠ 1 := by
   have : (PTrans.complement : PTrans (Fin 4)).toFun 0
        = (1 : PTrans (Fin 4)).toFun 0 := by rw [h]
   exact absurd this (by decide)
+
+/-- For Bool, complement actually equals "not" on the underlying type. -/
+example (b : Bool) : Wantable.complement b = !b := by
+  cases b <;> rfl
+
+/-- For ℤ, complement is the negation. -/
+example (n : ℤ) : Wantable.complement n = -n := rfl
+
+/-- For ℝ, complement is the negation. -/
+example (r : ℝ) : Wantable.complement r = -r := rfl
+
+/-- For Unit, complement is the unique element. -/
+example (u : Unit) : Wantable.complement u = () := rfl
+
+/-- For Fin 3 (with id complement), complement is the identity. -/
+example (i : Fin 3) : Wantable.complement i = i := rfl
