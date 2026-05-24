@@ -8381,3 +8381,24 @@ example (f : Perspectival.WantableGPT.V (Bool × Bool)) :
       • productState (Perspectival.WantableGPT.vertex Bool b₁)
                      (Perspectival.WantableGPT.vertex Bool b₂) :=
   WantableGPT_state_prod_vertex_decomp f
+
+/-- Classical separability: every state on a product Wantable is a
+"separable mixture" — a sum of weighted product-vertex states. -/
+theorem WantableGPT_classical_separability
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂)) :
+    ∃ (coeffs : W₁ × W₂ → ℝ),
+      f = ∑ p, coeffs p
+        • productState (Perspectival.WantableGPT.vertex W₁ p.1)
+                       (Perspectival.WantableGPT.vertex W₂ p.2) := by
+  refine ⟨f, ?_⟩
+  rw [Fintype.sum_prod_type]
+  exact WantableGPT_state_prod_vertex_decomp f
+
+/-- Concrete: diagonalState exhibits classical separability. -/
+example : ∃ (coeffs : Bool × Bool → ℝ),
+    diagonalState = ∑ p, coeffs p
+      • productState (Perspectival.WantableGPT.vertex Bool p.1)
+                     (Perspectival.WantableGPT.vertex Bool p.2) :=
+  WantableGPT_classical_separability diagonalState
