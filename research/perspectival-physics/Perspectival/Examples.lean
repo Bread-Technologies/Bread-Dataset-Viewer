@@ -5683,5 +5683,30 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂] :
     PTrans.sumMap (1 : PTrans W₁) (1 : PTrans W₂) = 1 :=
   PTrans.sumMap_one_one W₁ W₂
 
+/-- Generic `IsLinearCloner`: a cloner sends each element to its
+diagonal tensor. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {S : Set V} {C : V →ₗ[ℝ] V ⊗[ℝ] V}
+    (hC : Perspectival.IsLinearCloner S C) (v : V) (hv : v ∈ S) :
+    C v = v ⊗ₜ[ℝ] v := hC v hv
+
+/-- Generic `cross_terms_vanish`: a linear cloner forces cross terms
+to cancel. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {S : Set V} {C : V →ₗ[ℝ] V ⊗[ℝ] V}
+    (hC : Perspectival.IsLinearCloner S C)
+    {v₁ v₂ : V} (h₁ : v₁ ∈ S) (h₂ : v₂ ∈ S) (h_sum : v₁ + v₂ ∈ S) :
+    v₁ ⊗ₜ[ℝ] v₂ + v₂ ⊗ₜ[ℝ] v₁ = 0 :=
+  Perspectival.cross_terms_vanish hC h₁ h₂ h_sum
+
+/-- Generic `no_cloning_of_linear_independent`: linear independence
+forbids cloning. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {S : Set V} {C : V →ₗ[ℝ] V ⊗[ℝ] V}
+    (hC : Perspectival.IsLinearCloner S C)
+    {v₁ v₂ : V} (h₁ : v₁ ∈ S) (h₂ : v₂ ∈ S) (h_sum : v₁ + v₂ ∈ S)
+    (hLI : LinearIndependent ℝ ![v₁, v₂]) : False :=
+  Perspectival.no_cloning_of_linear_independent hC h₁ h₂ h_sum hLI
+
 end Examples
 end Perspectival
