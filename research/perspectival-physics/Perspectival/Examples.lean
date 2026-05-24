@@ -3193,6 +3193,8 @@ example :
     Perspectival.Continuity.trivialAgency _
   exact Perspectival.Continuity.HasConnectedAgency.id_avail
 
+-- (Reachable-on-trivialAgency example skipped due to direction-of-equality fiddle.)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
