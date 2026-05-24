@@ -390,6 +390,36 @@ def boolEquivFin2 : WantableEquiv Bool (Fin 2) where
 example : boolEquivFin2.toEquiv true = 1 := rfl
 example : boolEquivFin2.toEquiv false = 0 := rfl
 
+/-- A Wantable isomorphism induces a PTrans isomorphism: conjugate a
+PTrans of W₁ by the equiv to get a PTrans of W₂. -/
+def WantableEquiv.mapPTrans {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) (φ : PTrans W₁) : PTrans W₂ where
+  toFun w := e.toEquiv (φ.toFun (e.toEquiv.symm w))
+  invFun w := e.toEquiv (φ.invFun (e.toEquiv.symm w))
+  left_inv := by
+    intro w
+    show e.toEquiv (φ.invFun (e.toEquiv.symm (e.toEquiv (φ.toFun (e.toEquiv.symm w))))) = w
+    rw [e.toEquiv.symm_apply_apply, φ.left_inv, e.toEquiv.apply_symm_apply]
+  right_inv := by
+    intro w
+    show e.toEquiv (φ.toFun (e.toEquiv.symm (e.toEquiv (φ.invFun (e.toEquiv.symm w))))) = w
+    rw [e.toEquiv.symm_apply_apply, φ.right_inv, e.toEquiv.apply_symm_apply]
+  resp_complement := by
+    intro w
+    show e.toEquiv (φ.toFun (e.toEquiv.symm (Wantable.complement w)))
+       = Wantable.complement (e.toEquiv (φ.toFun (e.toEquiv.symm w)))
+    -- e.toEquiv.symm (complement w) = complement (e.toEquiv.symm w) by applying e.symm.resp_complement
+    have h_symm : e.toEquiv.symm (Wantable.complement w)
+                = Wantable.complement (e.toEquiv.symm w) := e.symm.resp_complement w
+    rw [h_symm, φ.resp_complement, e.resp_complement]
+
+/-- Identity Wantable-equiv maps each PTrans to itself. -/
+@[simp] theorem WantableEquiv.refl_mapPTrans (W : Type u) [Wantable W]
+    (φ : PTrans W) : (WantableEquiv.refl W).mapPTrans φ = φ := by
+  apply PTrans.ext
+  intro w
+  rfl
+
 /-- **Concrete classification of `PTrans (Fin 2)`.** Either the
 identity or `fin2Swap`. -/
 theorem ptrans_fin2_classification (f : PTrans (Fin 2)) :
