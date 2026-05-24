@@ -124,6 +124,11 @@ theorem mk_fromSide_side₁_inv (W : Type u) [Wantable W] (m : Meeting W) :
   subst this
   rfl
 
+-- NOTE: swap of mk_fromSide w should equal mk_fromSide (complement w),
+-- but stating this cleanly requires proof-irrelevance for the
+-- `complementary` field, which is delicate at the structural level.
+-- Left as a follow-up.
+
 end Meeting
 
 /-- Collective form of Axiom III: reality is a set (= predicate) of meetings. -/
