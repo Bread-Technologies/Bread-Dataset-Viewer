@@ -216,5 +216,14 @@ theorem operational_dim_le_state_dim
   have := hLI.fintype_card_le_finrank
   simpa using this
 
+/-- **Equivalent formulation.** No injective family of perfectly
+distinguishable states of cardinality exceeding the state-space
+dimension exists. -/
+theorem no_oversized_perfect_distinguishability
+    {G : GPT V} [Module.Finite ℝ V]
+    {n : ℕ} (h : n > Module.finrank ℝ V)
+    (ρ : Fin n → V) (w : PerfectWitness (G := G) ρ) : False :=
+  Nat.lt_irrefl _ (lt_of_lt_of_le h (operational_dim_le_state_dim ρ w))
+
 end Distinguish
 end Perspectival
