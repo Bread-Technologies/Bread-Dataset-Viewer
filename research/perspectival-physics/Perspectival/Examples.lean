@@ -214,6 +214,20 @@ example : (PTrans.complement : PTrans (Fin 3)) = 1 := by
   intro i
   rfl
 
+/-- The `Option` type lifts a Wantable structure: `none` is its own
+complement, `some w` complements to `some (complement w)`. -/
+instance {W : Type u} [Wantable W] : Wantable (Option W) where
+  complement
+    | some w => some (Wantable.complement w)
+    | none => none
+  complement_involutive
+    | some w => by show some (Wantable.complement (Wantable.complement w)) = some w
+                   rw [Wantable.complement_involutive]
+    | none => rfl
+
+example : Wantable.complement (some true : Option Bool) = some false := rfl
+example : (Wantable.complement (none : Option Bool)) = none := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
