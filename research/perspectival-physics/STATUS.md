@@ -66,6 +66,7 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | **Quantum signature ruled out**: K ≠ N² for `|W|≥2` | `WantableGPT.lean :: wantableGPT_not_quantum` | ✓ |
 | **Real-QM signature ruled out**: 2K ≠ N(N+1) for `|W|≥2` | `WantableGPT.lean :: wantableGPT_not_realQM` | ✓ |
 | **Quaternionic-QM signature ruled out**: K ≠ N(2N-1) for `|W|≥2` | `WantableGPT.lean :: wantableGPT_not_quaternionicQM` | ✓ |
+| **Classical dichotomy (bundled)**: K = N AND all non-classical Hardy signatures fail | `WantableGPT.lean :: wantableGPT_classical_dichotomy` | ✓ |
 | WantableGPT product-composition dimension: `K(W₁ × W₂) = |W₁| · |W₂|` | `WantableGPT.lean :: finrank_V_prod_eq_mul` | ✓ |
 | WantableGPT sum-composition dimension: `K(W₁ ⊕ W₂) = |W₁| + |W₂|` | `WantableGPT.lean :: finrank_V_sum_eq_add` | ✓ |
 | Concrete classification `PTrans Bool = {1, boolSwap}` | `Examples.lean :: ptrans_bool_classification` | ✓ |
