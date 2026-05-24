@@ -2731,6 +2731,11 @@ example (f : Perspectival.WantableGPT.V (Bool × Bool × Bool))
     (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool)) :
     ∑ w, f w = 1 := hf.2
 
+/-- For any state in Bool³, every coordinate is non-negative. -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool))
+    (w : Bool × Bool × Bool) : 0 ≤ f w := hf.1 w
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
