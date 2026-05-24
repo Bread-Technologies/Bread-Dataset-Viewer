@@ -313,6 +313,10 @@ example : LinearIndependent ℝ
 -- NOTE: a String Wantable via reversal exists but stating it depends
 -- on Lean's specific representation of String. Skipped for portability.
 
+/-- Symmetric formulation: complement on Bool. -/
+example : (Wantable.complement true = false) ↔ true = Wantable.complement false :=
+  Wantable.complement_eq_iff true false
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
