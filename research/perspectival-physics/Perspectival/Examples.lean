@@ -4806,5 +4806,35 @@ example {W : Type u} [Wantable W] (g f : PTrans W) (m : Meeting W) :
       PTrans.actMeeting g (PTrans.actMeeting f m) :=
   PTrans.actMeeting_comp g f m
 
+/-- `actReality_mul`: action on Reality respects PTrans multiplication. -/
+example {W : Type u} [Wantable W] (ψ φ : PTrans W) (R : Reality W) :
+    PTrans.actReality (ψ * φ) R = PTrans.actReality ψ (PTrans.actReality φ R) :=
+  PTrans.actReality_mul ψ φ R
+
+/-- `actReality_and`: action distributes over logical conjunction. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (R₁ R₂ : Reality W) :
+    PTrans.actReality φ (fun m => R₁ m ∧ R₂ m) =
+      fun m => PTrans.actReality φ R₁ m ∧ PTrans.actReality φ R₂ m :=
+  PTrans.actReality_and φ R₁ R₂
+
+/-- `actReality_or`: action distributes over logical disjunction. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (R₁ R₂ : Reality W) :
+    PTrans.actReality φ (fun m => R₁ m ∨ R₂ m) =
+      fun m => PTrans.actReality φ R₁ m ∨ PTrans.actReality φ R₂ m :=
+  PTrans.actReality_or φ R₁ R₂
+
+/-- `actReality_empty`: empty reality is φ-invariant. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    PTrans.actReality φ (fun _ : Meeting W => False) = fun _ => False :=
+  PTrans.actReality_empty φ
+
+/-- `actReality_full`: full reality is φ-invariant. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    PTrans.actReality φ (fun _ : Meeting W => True) = fun _ => True :=
+  PTrans.actReality_full φ
+
+/-- `Reality` admits a `MulAction` instance from PTrans. -/
+example {W : Type u} [Wantable W] : MulAction (PTrans W) (Reality W) := inferInstance
+
 end Examples
 end Perspectival
