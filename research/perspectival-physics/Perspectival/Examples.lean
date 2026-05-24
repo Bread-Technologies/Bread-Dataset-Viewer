@@ -10423,3 +10423,24 @@ example {W : Type u} [Wantable W] : W ≃ W where
   invFun := Wantable.complement
   left_inv := Wantable.complement_involutive
   right_inv := Wantable.complement_involutive
+
+/-- complement equivalence on Bool. -/
+example : Bool ≃ Bool where
+  toFun := Wantable.complement
+  invFun := Wantable.complement
+  left_inv := Wantable.complement_involutive
+  right_inv := Wantable.complement_involutive
+
+/-- complement equivalence on Fin 4. -/
+example : Fin 4 ≃ Fin 4 where
+  toFun := Wantable.complement
+  invFun := Wantable.complement
+  left_inv := Wantable.complement_involutive
+  right_inv := Wantable.complement_involutive
+
+/-- complementEquiv is an automorphism (it's a permutation as a function). -/
+example {W : Type u} [Wantable W] : Equiv.Perm W :=
+  { toFun := Wantable.complement
+    invFun := Wantable.complement
+    left_inv := Wantable.complement_involutive
+    right_inv := Wantable.complement_involutive }
