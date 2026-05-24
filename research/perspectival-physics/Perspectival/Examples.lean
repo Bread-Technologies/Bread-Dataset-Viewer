@@ -12323,3 +12323,47 @@ example (f : Perspectival.WantableGPT.V (Fin 3)) :
       Finset.sum_insert (by decide), Finset.sum_insert (by decide),
       Finset.sum_singleton] at this
   linarith [this]
+
+/-! ### Born rule: deltaIndicatorLin w f = f w -/
+
+/-- For ANY f, deltaIndicatorLin w f extracts the w-th component (Born rule). -/
+theorem deltaIndicatorLin_eq_apply {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] (w : W) (f : Perspectival.WantableGPT.V W) :
+    deltaIndicatorLin w f = f w := by
+  show (∑ w', deltaIndicator w w' * f w') = f w
+  show (∑ w', (if w' = w then (1 : ℝ) else 0) * f w') = f w
+  rw [Finset.sum_eq_single w]
+  · simp
+  · intro w' _ hne
+    rw [if_neg hne]; ring
+  · intro h
+    exact absurd (Finset.mem_univ w) h
+
+/-- Concrete: deltaIndicatorLin true on Bool state f gives f true. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    deltaIndicatorLin true f = f true :=
+  deltaIndicatorLin_eq_apply true f
+
+/-- Concrete: deltaIndicatorLin false on Bool state f gives f false. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    deltaIndicatorLin false f = f false :=
+  deltaIndicatorLin_eq_apply false f
+
+/-- Concrete: deltaIndicatorLin (true, true) on Bool × Bool state gives f (true,true). -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool)) :
+    deltaIndicatorLin (true, true) f = f (true, true) :=
+  deltaIndicatorLin_eq_apply (true, true) f
+
+/-- For a state, deltaIndicatorLin w gives the probability of outcome w. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W)
+    (f : Perspectival.WantableGPT.V W) (hf : f ∈ Perspectival.WantableGPT.states W) :
+    0 ≤ deltaIndicatorLin w f := by
+  rw [deltaIndicatorLin_eq_apply]
+  exact hf.1 w
+
+/-- For a state f, the sum of deltaIndicatorLin probabilities is 1. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) (hf : f ∈ Perspectival.WantableGPT.states W) :
+    (∑ w, deltaIndicatorLin w f) = 1 := by
+  rw [sum_deltaIndicatorLin f]
+  exact hf.2
