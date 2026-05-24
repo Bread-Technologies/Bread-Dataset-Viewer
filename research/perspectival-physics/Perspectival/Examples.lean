@@ -2813,6 +2813,8 @@ example : (0 : Perspectival.WantableGPT.V (Bool × Bool × Bool))
   rw [← Perspectival.WantableGPT.effectVec_eq_hypercube]
   exact Perspectival.WantableGPT.zero_in_effectVec _
 
+-- (effectVec_eq_hypercube concrete instance skipped — type inference fiddly.)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
