@@ -14994,6 +14994,57 @@ example :
     have : (0 : ℝ) = (1/2 : ℝ) * (1/2 : ℝ) := hcol
     norm_num at this
 
+/-! ### diagonalState as a non-product state: explicit proof -/
+
+/-- diagonalState cannot be written as productState f g for any f g. -/
+example :
+    ¬ ∃ (f : Perspectival.WantableGPT.V Bool) (g : Perspectival.WantableGPT.V Bool),
+      diagonalState = productState f g := by
+  rintro ⟨f, g, h⟩
+  -- diagonalState (true, true) = 1/2 ⇒ f true * g true = 1/2
+  -- diagonalState (true, false) = 0 ⇒ f true * g false = 0
+  -- diagonalState (false, false) = 1/2 ⇒ f false * g false = 1/2
+  -- From (1) and (3), f true ≠ 0 and g false ≠ 0 (else products would be 0).
+  -- But (2) says f true * g false = 0 — contradiction.
+  have h1 : diagonalState (true, true) = f true * g true := by
+    show (1/2 : ℝ) = f true * g true
+    have := congr_fun h (true, true)
+    rw [show diagonalState (true, true) = 1/2 from rfl] at this
+    rw [show productState f g (true, true) = f true * g true from rfl] at this
+    exact this
+  have h2 : diagonalState (true, false) = f true * g false := by
+    show (0 : ℝ) = f true * g false
+    have := congr_fun h (true, false)
+    rw [show diagonalState (true, false) = 0 from rfl] at this
+    rw [show productState f g (true, false) = f true * g false from rfl] at this
+    exact this
+  have h3 : diagonalState (false, false) = f false * g false := by
+    show (1/2 : ℝ) = f false * g false
+    have := congr_fun h (false, false)
+    rw [show diagonalState (false, false) = 1/2 from rfl] at this
+    rw [show productState f g (false, false) = f false * g false from rfl] at this
+    exact this
+  -- From h1: 1/2 = f true * g true, so f true ≠ 0.
+  -- From h3: 1/2 = f false * g false, so g false ≠ 0.
+  -- From h2: 0 = f true * g false. Then f true = 0 or g false = 0.
+  -- Either case contradicts h1 or h3.
+  have hf_true : f true ≠ 0 := by
+    intro hc
+    rw [hc] at h1
+    -- h1 : 1/2 = 0 * g true = 0
+    have : (1/2 : ℝ) = 0 * g true := h1
+    simp at this
+  have hg_false : g false ≠ 0 := by
+    intro hc
+    rw [hc] at h3
+    have : (1/2 : ℝ) = f false * 0 := h3
+    simp at this
+  -- h2 : 0 = f true * g false
+  have h2_zero : f true * g false = 0 := h2.symm
+  rcases mul_eq_zero.mp h2_zero with h | h
+  · exact hf_true h
+  · exact hg_false h
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
