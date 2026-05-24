@@ -14407,6 +14407,35 @@ example :
       diagonalIndicatorLin_on_antiDiagonalState]
   norm_num
 
+/-! ### Linearity of innerLin -/
+
+/-- innerLin is linear in the state argument: innerLin f (g+h) = innerLin f g + innerLin f h. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) (g h : Perspectival.WantableGPT.V W) :
+    Perspectival.WantableGPT.innerLin W f (g + h)
+    = Perspectival.WantableGPT.innerLin W f g + Perspectival.WantableGPT.innerLin W f h := by
+  rw [map_add]
+
+/-- innerLin scales in state argument. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) (c : ℝ) (g : Perspectival.WantableGPT.V W) :
+    Perspectival.WantableGPT.innerLin W f (c • g)
+    = c * Perspectival.WantableGPT.innerLin W f g := by
+  rw [map_smul]
+  show c * _ = c * _
+  rfl
+
+/-- The Born rule formula: e(state) = ∑ p, e_vec(p) * state(p). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (e_vec : Perspectival.WantableGPT.V W) (state : Perspectival.WantableGPT.V W) :
+    Perspectival.WantableGPT.innerLin W e_vec state
+    = ∑ w, e_vec w * state w := rfl
+
+/-- Born for delta-indicator: δ_w state = state(w). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (w : W) (state : Perspectival.WantableGPT.V W) :
+    deltaIndicatorLin w state = state w := deltaIndicatorLin_eq_apply w state
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
