@@ -215,6 +215,23 @@ def trivialAgency (G : GPT V) : HasConnectedAgency G := {
     · subst hR₂id; rfl
 }
 
+/-- Under trivial agency, only equal states are reachable from each
+other (since the only available transformation is the identity). -/
+theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
+    (@Reachable V _ _ _ G (trivialAgency G) ρ₁ ρ₂) ↔ ρ₁ = ρ₂ := by
+  constructor
+  · rintro ⟨R, hR, hRρ⟩
+    -- R ∈ {Reversible.id G}, so R = Reversible.id G
+    have hReq : R = Reversible.id G := hR
+    -- (Reversible.id G).toLin ρ₁ = ρ₁ by definition
+    rw [hReq] at hRρ
+    -- hRρ : (Reversible.id G).toLin ρ₁ = ρ₂, i.e., LinearMap.id ρ₁ = ρ₂
+    show ρ₁ = ρ₂
+    have : LinearMap.id (R := ℝ) ρ₁ = ρ₂ := hRρ
+    simpa using this
+  · rintro rfl
+    exact @Reachable.refl V _ _ _ G (trivialAgency G) ρ₁
+
 /-! ## Honest framing
 
 What `continuous_path_of_reachable` shows: if the agency postulate is
