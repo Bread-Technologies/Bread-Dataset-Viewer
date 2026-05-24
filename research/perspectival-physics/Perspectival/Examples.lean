@@ -94,6 +94,10 @@ example (m : Meeting Bool) :
     m = Perspectival.Meeting.mk_fromSide Bool m.side₁ :=
   (Perspectival.Meeting.mk_fromSide_side₁_inv Bool m).symm
 
+/-- A meeting on `Fin 2` constructed from its first side. -/
+example : (Perspectival.Meeting.mk_fromSide (Fin 2) 0).side₂ = 1 := rfl
+example : (Perspectival.Meeting.mk_fromSide (Fin 2) 1).side₂ = 0 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
