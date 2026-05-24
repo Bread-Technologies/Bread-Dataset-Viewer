@@ -789,6 +789,11 @@ example : (complementEquiv : Equiv.Perm Bool) * complementEquiv = 1 := by
   intro b
   cases b <;> rfl
 
+example : (complementEquiv : Equiv.Perm Bool)⁻¹ = complementEquiv := by
+  apply Equiv.ext
+  intro b
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
