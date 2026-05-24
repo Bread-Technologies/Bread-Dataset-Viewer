@@ -13632,6 +13632,42 @@ example :
   show (0 : ℝ) + 1/2 + 1/2 + 0 = 1
   norm_num
 
+/-! ### Sum-of-vertices identities -/
+
+/-- For Bool: vertex true + vertex false = unit. -/
+example :
+    Perspectival.WantableGPT.vertex Bool true
+    + Perspectival.WantableGPT.vertex Bool false = (fun _ => (1 : ℝ)) := by
+  funext b
+  cases b with
+  | true => show (1 : ℝ) + 0 = 1; norm_num
+  | false => show (0 : ℝ) + 1 = 1; norm_num
+
+/-- For Bool × Bool: sum of all 4 vertices = unit. -/
+example :
+    Perspectival.WantableGPT.vertex (Bool × Bool) (true, true)
+    + Perspectival.WantableGPT.vertex (Bool × Bool) (true, false)
+    + Perspectival.WantableGPT.vertex (Bool × Bool) (false, true)
+    + Perspectival.WantableGPT.vertex (Bool × Bool) (false, false)
+    = (fun _ => (1 : ℝ)) := by
+  funext p
+  obtain ⟨b₁, b₂⟩ := p
+  cases b₁ with
+  | true => cases b₂ with
+    | true =>
+      show (1 : ℝ) + 0 + 0 + 0 = 1
+      norm_num
+    | false =>
+      show (0 : ℝ) + 1 + 0 + 0 = 1
+      norm_num
+  | false => cases b₂ with
+    | true =>
+      show (0 : ℝ) + 0 + 1 + 0 = 1
+      norm_num
+    | false =>
+      show (0 : ℝ) + 0 + 0 + 1 = 1
+      norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
