@@ -8471,3 +8471,52 @@ example : Perspectival.WantableGPT.proj (Bool × Bool) (true, true)
   rw [proj_productState]
   show (if true = true then (1 : ℝ) else 0) * (if true = true then 1 else 0) = 1
   simp
+
+/-- Left marginal of productState f₁ f₂ at w₁ gives f₁ w₁ * (unit f₂). -/
+theorem productState_left_marginal
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (w₁ : W₁) :
+    (∑ w₂, productState f₁ f₂ (w₁, w₂))
+      = f₁ w₁ * Perspectival.WantableGPT.unitFn W₂ f₂ := by
+  show (∑ w₂, f₁ w₁ * f₂ w₂) = f₁ w₁ * Perspectival.WantableGPT.unitFn W₂ f₂
+  rw [← Finset.mul_sum]
+  rfl
+
+/-- Right marginal of productState f₁ f₂ at w₂ gives (unit f₁) * f₂ w₂. -/
+theorem productState_right_marginal
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (w₂ : W₂) :
+    (∑ w₁, productState f₁ f₂ (w₁, w₂))
+      = Perspectival.WantableGPT.unitFn W₁ f₁ * f₂ w₂ := by
+  show (∑ w₁, f₁ w₁ * f₂ w₂) = Perspectival.WantableGPT.unitFn W₁ f₁ * f₂ w₂
+  rw [← Finset.sum_mul]
+  rfl
+
+/-- For normalized factors (f₁, f₂ states), the left marginal of
+productState gives exactly f₁. -/
+theorem productState_left_marginal_state
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (h₂ : f₂ ∈ Perspectival.WantableGPT.states W₂) (w₁ : W₁) :
+    (∑ w₂, productState f₁ f₂ (w₁, w₂)) = f₁ w₁ := by
+  rw [productState_left_marginal]
+  have : Perspectival.WantableGPT.unitFn W₂ f₂ = 1 := h₂.2
+  rw [this]
+  ring
+
+/-- For normalized factors, the right marginal gives f₂. -/
+theorem productState_right_marginal_state
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (h₁ : f₁ ∈ Perspectival.WantableGPT.states W₁) (w₂ : W₂) :
+    (∑ w₁, productState f₁ f₂ (w₁, w₂)) = f₂ w₂ := by
+  rw [productState_right_marginal]
+  have : Perspectival.WantableGPT.unitFn W₁ f₁ = 1 := h₁.2
+  rw [this]
+  ring
