@@ -628,6 +628,11 @@ example {W : Type u} [Wantable W] :
     Function.Involutive (Wantable.complement : W → W) :=
   Wantable.complement_involutive
 
+/-- An involution is bijective. -/
+example {W : Type u} [Wantable W] :
+    Function.Bijective (Wantable.complement : W → W) :=
+  Function.Involutive.bijective Wantable.complement_involutive
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
