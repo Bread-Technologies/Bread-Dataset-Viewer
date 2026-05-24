@@ -3,6 +3,24 @@
 This is the source-of-truth for the program's goal. Re-read before each
 work session. Audit drift against it.
 
+## KEY USER CLARIFICATION (added later)
+
+**The metaphysics (§2 below) is fixed. The axioms (§1) are a
+formalization ATTEMPT and can be adjusted if they prove inadequate.**
+
+Quote: "Or find out it's impossible to do all that; and if it is
+impossible, maybe the axioms need slight adjustment. Because there is
+*some* way to get everything. The only thing fixed is the metaphysics."
+
+Implication: when bare Axioms I-IV can't derive a Tier 1-3 target, the
+move is to STRENGTHEN/REFINE the axioms (preserving the metaphysical
+commitments in §2), not to give up. The R6/R7 strengthenings of the
+agency postulate are an example of this in practice. If even those
+don't work, refine further. The fixed point is the philosophical
+commitments — perspective-with-wanting as existence, anti-Dennett
+libertarian agency, anti-Goff Russellian-monism-extended, etc. — not
+any specific Lean encoding.
+
 ## Mission
 
 Superhuman AI executing a foundations-of-physics research program. The goal
