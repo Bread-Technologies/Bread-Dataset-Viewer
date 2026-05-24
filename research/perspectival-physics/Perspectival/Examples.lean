@@ -172,6 +172,10 @@ example : Wantable (Bool ⊕ Empty) := inferInstance
 isomorphic to Bool. -/
 example : Wantable (Bool × Unit) := inferInstance
 
+/-- The `complement` on `Bool ⊕ Empty` acts only on the Bool side
+(Empty side has no elements). -/
+example : Wantable.complement (Sum.inl true : Bool ⊕ Empty) = Sum.inl false := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
