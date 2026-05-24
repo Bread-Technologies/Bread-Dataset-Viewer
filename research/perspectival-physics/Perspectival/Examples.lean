@@ -2221,6 +2221,12 @@ example (g f : PTrans Bool) :
     PTrans.sumMap g g * PTrans.sumMap f f :=
   PTrans.sumMap_mul g f g f
 
+/-- Concrete: `prodMap` is multiplicative on Bool. -/
+example (g f : PTrans Bool) :
+    PTrans.prodMap (g * f) (g * f) =
+    PTrans.prodMap g g * PTrans.prodMap f f :=
+  PTrans.prodMap_mul g f g f
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
