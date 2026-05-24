@@ -10889,3 +10889,21 @@ example {W : Type u} [Wantable W] (m : Meeting W) :
 /-- The PTrans action on Meeting respects multiplication. -/
 example {W : Type u} [Wantable W] (φ ψ : PTrans W) (m : Meeting W) :
     (φ * ψ) • m = φ • (ψ • m) := mul_smul _ _ _
+
+/-- PTrans action: complementPTrans on (Meeting Bool) via smul. -/
+example (m : Meeting Bool) :
+    (PTrans.complement : PTrans Bool) • m = m.swap := by
+  show PTrans.actMeeting PTrans.complement m = m.swap
+  exact PTrans.actMeeting_complement m
+
+/-- PTrans action squared (complementPTrans on Meeting): involution. -/
+example (m : Meeting Bool) :
+    (PTrans.complement : PTrans Bool) • ((PTrans.complement : PTrans Bool) • m) = m := by
+  rw [← mul_smul, PTrans.complement_sq, one_smul]
+
+/-- Multiple complement actions cycle. -/
+example (m : Meeting Bool) :
+    (PTrans.complement : PTrans Bool) • ((PTrans.complement : PTrans Bool) •
+      ((PTrans.complement : PTrans Bool) • m))
+    = (PTrans.complement : PTrans Bool) • m := by
+  rw [← mul_smul, ← mul_smul, PTrans.complement_sq, one_mul]
