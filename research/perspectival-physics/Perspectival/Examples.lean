@@ -13986,6 +13986,40 @@ example :
   rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
   norm_num
 
+/-! ### uniformState transformAction invariance for Bool -/
+
+/-- transformAction Bool complement preserves uniformBool. -/
+example : Perspectival.WantableGPT.transformAction Bool PTrans.complement uniformBool
+        = uniformBool := by
+  funext b
+  show uniformBool ((PTrans.complement : PTrans Bool).invFun b) = uniformBool b
+  -- Both sides equal 1/2 regardless of b
+  show (1/2 : ℝ) = (1/2 : ℝ)
+  rfl
+
+/-- transformAction Bool (1) preserves uniformBool. -/
+example : Perspectival.WantableGPT.transformAction Bool 1 uniformBool = uniformBool := by
+  funext b
+  show uniformBool ((1 : PTrans Bool).invFun b) = uniformBool b
+  rfl
+
+/-- For any PTrans Bool φ, transformAction Bool φ uniformBool = uniformBool. -/
+example (φ : PTrans Bool) :
+    Perspectival.WantableGPT.transformAction Bool φ uniformBool = uniformBool := by
+  funext b
+  show uniformBool (φ.invFun b) = uniformBool b
+  -- uniformBool is constant 1/2
+  rfl
+
+/-- For any PTrans (Fin 3), transformAction (Fin 3) φ uniformState fixed point. -/
+example (φ : PTrans (Fin 3)) :
+    Perspectival.WantableGPT.transformAction (Fin 3) φ (uniformState (Fin 3))
+    = uniformState (Fin 3) := by
+  funext j
+  show uniformState (Fin 3) (φ.invFun j) = uniformState (Fin 3) j
+  show (1 : ℝ) / Fintype.card (Fin 3) = (1 : ℝ) / Fintype.card (Fin 3)
+  rfl
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
