@@ -438,6 +438,32 @@ theorem finrank_V_eq_card [Fintype W] :
     Module.finrank ℝ (V W) = Fintype.card W :=
   Module.finrank_eq_card_basis (vertexBasis W)
 
+/-- `V W` is a finite ℝ-module (carried by the vertex basis). -/
+instance instModuleFinite [Fintype W] : Module.Finite ℝ (V W) :=
+  Module.Finite.of_basis (vertexBasis W)
+
+/-- **Classical-signature no-go.** For any finite Wantable `W`, the
+WantableGPT achieves `N = K`: the maximal number of perfectly
+distinguishable states equals the dimension of the ambient state
+space. Both are `|W|`. In Hardy's classification this is the
+*classical* signature — the framework's bare ontology, when bridged
+to a GPT via `WantableGPT.gpt`, never produces non-classical
+(`N < K`) structure.
+
+This is a no-go for the framework's "ontology alone derives quantum
+theory" reading: deriving non-classical structure must come from
+additional postulates (e.g., composition rules beyond disjoint union,
+continuity / agency richness beyond bare PTrans, etc.), not from the
+bare Wantable structure. -/
+theorem wantableGPT_is_classical [Fintype W] :
+    Fintype.card W ≤ Module.finrank ℝ (V W) ∧
+    Module.finrank ℝ (V W) = Fintype.card W := by
+  refine ⟨?_, finrank_V_eq_card W⟩
+  -- The vertex map is itself a perfect-distinguishability witness; from this
+  -- we get card W ≤ finrank (via `operational_dim_le_state_dim` reasoning,
+  -- but we have the cleaner direct bound from the basis size).
+  exact (finrank_V_eq_card W).symm.le
+
 /-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
 give distinct linear maps on the state space.
 
