@@ -587,6 +587,19 @@ example {W : Type u} [Wantable W] (s : Set W) :
     refine ⟨Wantable.complement w, ⟨w, hw, rfl⟩, ?_⟩
     exact Wantable.complement_involutive w
 
+/-- Complement preserves emptiness. -/
+example {W : Type u} [Wantable W] :
+    Wantable.complement '' (∅ : Set W) = ∅ := Set.image_empty _
+
+/-- Complement preserves universe. -/
+example {W : Type u} [Wantable W] :
+    Wantable.complement '' (Set.univ : Set W) = Set.univ := by
+  ext w
+  constructor
+  · rintro ⟨_, _, rfl⟩; trivial
+  · intro _
+    exact ⟨Wantable.complement w, trivial, Wantable.complement_involutive w⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
