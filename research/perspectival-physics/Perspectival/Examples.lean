@@ -2698,6 +2698,13 @@ example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Bool × Bool × Bool),
       (Perspectival.WantableGPT.gpt (Bool × Bool × Bool)) ρ₁ ρ₂ :=
   Perspectival.WantableGPT.exists_two_distinguishable (Bool × Bool × Bool) (by decide)
 
+/-- Bool³ vertex set is distinguishability set. -/
+example : Perspectival.Hardy.DistinguishabilitySet
+            (Perspectival.WantableGPT.gpt (Bool × Bool × Bool))
+            ((Finset.univ : Finset (Bool × Bool × Bool)).image
+              (Perspectival.WantableGPT.vertex (Bool × Bool × Bool))) :=
+  Perspectival.WantableGPT.vertex_distinguishability_set (Bool × Bool × Bool)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
