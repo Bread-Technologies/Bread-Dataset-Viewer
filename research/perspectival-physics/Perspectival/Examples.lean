@@ -345,6 +345,23 @@ example : (scaleByPTrans 2 (by norm_num)).toFun 5 = 10 := by
 example : (scaleByPTrans 2 (by norm_num)).invFun 10 = 5 := by
   show (10 : ℝ) / 2 = 5; ring
 
+/-- Scaling by `a` and `b` composes to scaling by `a * b`. -/
+example (a b : ℝ) (ha : a ≠ 0) (hb : b ≠ 0) :
+    ((scaleByPTrans a ha) * (scaleByPTrans b hb)).toFun =
+    (scaleByPTrans (a * b) (mul_ne_zero ha hb)).toFun := by
+  funext x
+  show a * (b * x) = a * b * x
+  ring
+
+/-- Scaling by 1 is the identity PTrans. -/
+example : (scaleByPTrans 1 (by norm_num)).toFun = (1 : PTrans ℝ).toFun := by
+  funext x; show (1 : ℝ) * x = x; ring
+
+/-- Scaling by -1 equals the complement. -/
+example : (scaleByPTrans (-1) (by norm_num)).toFun
+        = (PTrans.complement : PTrans ℝ).toFun := by
+  funext x; show (-1 : ℝ) * x = -x; ring
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
