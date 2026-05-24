@@ -135,6 +135,13 @@ the complement action swaps them, and the projection `proj true`
 operationally distinguishes them. See `Examples.lean` for these and
 others (Fin 2, ℤ, Unit, Empty, product Wantables).
 
+## Q10b. Are there examples I can play with?
+
+**Framework answer:** Yes — `Perspectival/Examples.lean` contains a
+dozen-plus worked examples on the simplest Wantables (Bool, Fin 2,
+Fin 3, Fin 4, ℤ, Unit, Empty, Bool × Bool, Bool ⊕ Bool, lists,
+options, function spaces) showing the framework in action.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
