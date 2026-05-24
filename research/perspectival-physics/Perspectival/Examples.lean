@@ -3286,6 +3286,19 @@ example : (Perspectival.WantableGPT.complementAction Bool)
   rw [this]
   rfl
 
+/-- complementAction is involutive on all states. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) :
+    Perspectival.WantableGPT.complementAction W
+      (Perspectival.WantableGPT.complementAction W f) = f :=
+  Perspectival.WantableGPT.complementAction_involutive W f
+
+/-- complementAction on Bool is involutive. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    Perspectival.WantableGPT.complementAction Bool
+      (Perspectival.WantableGPT.complementAction Bool f) = f :=
+  Perspectival.WantableGPT.complementAction_involutive Bool f
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
