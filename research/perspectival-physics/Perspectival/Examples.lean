@@ -2290,6 +2290,14 @@ example : (PTrans.complement : PTrans (Fin 3)) = (1 : PTrans (Fin 3)) := by
   intro i
   rfl
 
+/-- Group identities valid for PTrans Bool: associativity, commutativity
+of complement with itself (group axioms inherited from the Group instance). -/
+example (a b c : PTrans Bool) : (a * b) * c = a * (b * c) := mul_assoc a b c
+
+example : (1 : PTrans Bool) * boolSwap = boolSwap := one_mul _
+
+example : boolSwap * (1 : PTrans Bool) = boolSwap := mul_one _
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
