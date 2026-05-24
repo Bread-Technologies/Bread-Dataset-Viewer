@@ -2621,6 +2621,20 @@ example : Perspectival.Hardy.Axiom1_Probabilities (Perspectival.WantableGPT.gpt 
 example : Perspectival.Hardy.Axiom3_Subspaces (Perspectival.WantableGPT.gpt (Fin 4)) :=
   Perspectival.Hardy.axiom3_holds _
 
+/-- The Classical GPT (3-outcome) satisfies Hardy Axiom 1. -/
+example : Perspectival.Hardy.Axiom1_Probabilities (Perspectival.Classical.gpt 3) :=
+  Perspectival.Hardy.axiom1_holds _
+
+/-- The Classical GPT (3-outcome) satisfies Hardy Axiom 3. -/
+example : Perspectival.Hardy.Axiom3_Subspaces (Perspectival.Classical.gpt 3) :=
+  Perspectival.Hardy.axiom3_holds _
+
+/-- Hardy Axiom 4 placeholder is satisfied trivially. -/
+example : Perspectival.Hardy.Axiom4_Composite_States_Multiply
+    (Perspectival.WantableGPT.gpt Bool)
+    (Perspectival.WantableGPT.gpt Bool) 2 2 :=
+  Perspectival.Hardy.axiom4_holds_placeholder _ _ 2 2
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
