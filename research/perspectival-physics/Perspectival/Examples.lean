@@ -2237,6 +2237,17 @@ example : boolEquivFin2.toEquiv (Wantable.complement true)
 /-- The Wantable iso `boolEquivFin2` has `(refl Bool).trans boolEquivFin2 = boolEquivFin2`. -/
 example : (WantableEquiv.refl Bool).trans boolEquivFin2 = boolEquivFin2 := rfl
 
+/-- The MulEquiv induced by `boolEquivFin2` sends `boolSwap` to `fin2Swap` (or
+its equivalent under the conjugation). Below: composing `boolEquivFin2.mapPTrans`
+with `boolSwap` produces a PTrans on Fin 2 whose `toFun` matches `fin2Swap.toFun`. -/
+example : (boolEquivFin2.mapPTrans boolSwap).toFun = fin2Swap.toFun := by
+  funext i
+  fin_cases i <;> rfl
+
+/-- The MulEquiv `mapPTransMulEquiv` boolSwap = fin2Swap (transported version). -/
+example : boolEquivFin2.mapPTransMulEquiv boolSwap = boolEquivFin2.mapPTrans boolSwap :=
+  rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
