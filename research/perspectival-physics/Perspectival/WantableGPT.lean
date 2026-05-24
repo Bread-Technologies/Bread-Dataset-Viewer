@@ -229,5 +229,24 @@ theorem fromPTrans_mul_toLin (ψ φ : PTrans W) :
   -- (ψ * φ).invFun w = φ.invFun (ψ.invFun w) by definition of comp
   rfl
 
+/-- The complement function on `W`, packaged as a PTrans. -/
+def complementPTrans : PTrans W where
+  toFun := Wantable.complement
+  invFun := Wantable.complement
+  left_inv := Wantable.complement_involutive
+  right_inv := Wantable.complement_involutive
+  resp_complement := fun _ => rfl
+
+/-- The complement-action GPT-transformation is the image of the
+complement-as-PTrans under `fromPTrans`. The two routes to "Wantable
+complement acts on the GPT" coincide. -/
+theorem complementTransform_eq_fromPTrans :
+    (complementTransform W).toLin = (fromPTrans W (complementPTrans W)).toLin := by
+  apply LinearMap.ext
+  intro f
+  funext w
+  show f (Wantable.complement w) = f ((complementPTrans W).invFun w)
+  rfl
+
 end WantableGPT
 end Perspectival
