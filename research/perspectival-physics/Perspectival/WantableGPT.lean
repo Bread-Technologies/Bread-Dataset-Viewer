@@ -214,5 +214,20 @@ theorem fromPTrans_one_toLin :
   show f ((1 : PTrans W).invFun w) = f w
   rfl
 
+/-- `fromPTrans` is multiplicative: composing two perspectival
+transformations and then sending to GPT-transformations equals
+composing the corresponding GPT-transformations.
+
+(This is the group-homomorphism property `fromPTrans (ψ * φ) = ψ.fromPTrans ∘ φ.fromPTrans`.) -/
+theorem fromPTrans_mul_toLin (ψ φ : PTrans W) :
+    (fromPTrans W (ψ * φ)).toLin =
+      (fromPTrans W ψ).toLin.comp (fromPTrans W φ).toLin := by
+  apply LinearMap.ext
+  intro f
+  funext w
+  show f ((ψ * φ).invFun w) = f (φ.invFun (ψ.invFun w))
+  -- (ψ * φ).invFun w = φ.invFun (ψ.invFun w) by definition of comp
+  rfl
+
 end WantableGPT
 end Perspectival
