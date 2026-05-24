@@ -8191,3 +8191,28 @@ example : diagonalIndicatorLin antiDiagonalState = 0 :=
 
 example : antiDiagonalIndicatorLin antiDiagonalState = 1 :=
   antiDiagonalIndicatorLin_on_antiDiagonalState
+
+/-- The pair (diagonal-indicator, antiDiagonal-indicator) forms a
+2-outcome perfect measurement for the (diagonalState, antiDiagonalState)
+family. -/
+noncomputable def diagAntiDiagWitness :
+    Perspectival.Distinguish.PerfectWitness
+      (G := Perspectival.WantableGPT.gpt (Bool × Bool))
+      ![diagonalState, antiDiagonalState] where
+  e := ![diagonalIndicatorLin, antiDiagonalIndicatorLin]
+  kronecker i j := by
+    fin_cases i <;> fin_cases j
+    · show diagonalIndicatorLin diagonalState = if (0 : Fin 2) = 0 then 1 else 0
+      simp [diagonalIndicatorLin_on_diagonalState]
+    · show diagonalIndicatorLin antiDiagonalState = if (0 : Fin 2) = 1 then 1 else 0
+      simp [diagonalIndicatorLin_on_antiDiagonalState]
+    · show antiDiagonalIndicatorLin diagonalState = if (1 : Fin 2) = 0 then 1 else 0
+      simp [antiDiagonalIndicatorLin_on_diagonalState]
+    · show antiDiagonalIndicatorLin antiDiagonalState = if (1 : Fin 2) = 1 then 1 else 0
+      simp [antiDiagonalIndicatorLin_on_antiDiagonalState]
+
+/-- The diagonal/antiDiagonal pair gives a linearly-independent family
+of states. -/
+example : LinearIndependent ℝ ![diagonalState, antiDiagonalState] :=
+  Perspectival.Distinguish.perfect_distinguishable_imp_linear_independent
+    ![diagonalState, antiDiagonalState] diagAntiDiagWitness
