@@ -15626,3 +15626,69 @@ example (f : Perspectival.WantableGPT.V Bool)
     have h0 := hn true
     have h1 := hn false
     linarith
+
+/-! ## Tier 2 #6: scaleHom witnesses nontrivial continuous PTrans structure on ℝ
+
+First concrete Lean step toward gauge-group structure (per
+TIER2_GAUGE_SCOPING.md): use the existing `scaleHom : ℝˣ →* PTrans ℝ`
+to exhibit nontrivial, distinct, continuously-parametrized PTrans
+on the Wantable type ℝ.
+
+This is the framework's first witness that the bare PTrans construction
+on a continuous Wantable already contains Lie-group-like structure. -/
+
+/-- scaleHom (a*b) = scaleHom a * scaleHom b — the 1-parameter SUBGROUP property. -/
+example (a b : ℝˣ) : scaleHom (a * b) = scaleHom a * scaleHom b :=
+  scaleHom.map_mul a b
+
+/-- Concrete: scaleHom 2 ≠ scaleHom 3 (distinct scalings give distinct PTrans). -/
+example :
+    scaleHom (Units.mk0 (2 : ℝ) (by norm_num))
+    ≠ scaleHom (Units.mk0 (3 : ℝ) (by norm_num)) := by
+  intro h
+  have := scaleHom_injective h
+  have h2 : (2 : ℝ) = (3 : ℝ) := by
+    have := Units.ext_iff.mp this
+    exact this
+  norm_num at h2
+
+/-- Concrete: scaleHom (-1) is non-identity. -/
+example : scaleHom (-1 : ℝˣ) ≠ 1 := by
+  intro h
+  have hh : scaleHom (-1 : ℝˣ) = scaleHom (1 : ℝˣ) := by
+    rw [h, scaleHom.map_one]
+  have := scaleHom_injective hh
+  have h3 : (-1 : ℝ) = (1 : ℝ) := by
+    have := Units.ext_iff.mp this
+    exact this
+  norm_num at h3
+
+/-- For any nonzero real `r`, scaleHom (Units.mk0 r _) is a PTrans on ℝ. -/
+noncomputable example (r : ℝ) (hr : r ≠ 0) : PTrans ℝ := scaleHom (Units.mk0 r hr)
+
+/-- PTrans ℝ has at least 3 distinct elements (1, scale-by-2, scale-by-(-1)). -/
+example : ∃ φ₁ φ₂ φ₃ : PTrans ℝ, φ₁ ≠ φ₂ ∧ φ₁ ≠ φ₃ ∧ φ₂ ≠ φ₃ := by
+  refine ⟨1, scaleHom (Units.mk0 (2 : ℝ) (by norm_num)),
+          scaleHom (-1 : ℝˣ), ?_, ?_, ?_⟩
+  · intro h
+    have h2 : scaleHom (Units.mk0 (2 : ℝ) (by norm_num)) = scaleHom (1 : ℝˣ) := by
+      rw [← h, scaleHom.map_one]
+    have := scaleHom_injective h2
+    have h3 : (2 : ℝ) = (1 : ℝ) := by
+      have := Units.ext_iff.mp this
+      exact this
+    norm_num at h3
+  · intro h
+    have h2 : scaleHom (-1 : ℝˣ) = scaleHom (1 : ℝˣ) := by
+      rw [← h, scaleHom.map_one]
+    have := scaleHom_injective h2
+    have h3 : (-1 : ℝ) = (1 : ℝ) := by
+      have := Units.ext_iff.mp this
+      exact this
+    norm_num at h3
+  · intro h
+    have := scaleHom_injective h
+    have h3 : (2 : ℝ) = (-1 : ℝ) := by
+      have := Units.ext_iff.mp this
+      exact this
+    norm_num at h3
