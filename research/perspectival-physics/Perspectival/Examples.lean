@@ -764,6 +764,14 @@ example : (complementEquiv : Equiv.Perm Bool).toFun false = true := rfl
 example : (complementEquiv : Equiv.Perm ℤ).toFun 5 = -5 := rfl
 example : (complementEquiv : Equiv.Perm ℤ).invFun (-5) = 5 := by show -(-5 : ℤ) = 5; ring
 
+/-- complementEquiv squared is the identity Equiv. -/
+example {W : Type u} [Wantable W] :
+    (complementEquiv : Equiv.Perm W).trans complementEquiv = Equiv.refl W := by
+  apply Equiv.ext
+  intro w
+  show Wantable.complement (Wantable.complement w) = w
+  exact Wantable.complement_involutive w
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
