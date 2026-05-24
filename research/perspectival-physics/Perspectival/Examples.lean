@@ -7793,3 +7793,22 @@ theorem WantableGPT_three_vertices_ne
   ⟨WantableGPT_vertex_ne w v hwv,
    WantableGPT_vertex_ne v u hvu,
    WantableGPT_vertex_ne w u hwu⟩
+
+/-- New: vertex spans of distinct singletons are pairwise different
+state-space rays. -/
+theorem WantableGPT_vertex_pair_smul_independent
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (w v : W) (hwv : w ≠ v) (a b : ℝ)
+    (h : a • Perspectival.WantableGPT.vertex W w
+       + b • Perspectival.WantableGPT.vertex W v = 0) :
+    a = 0 ∧ b = 0 := by
+  have hLI := WantableGPT_vertex_pair_independent w v hwv
+  rw [LinearIndependent.pair_iff] at hLI
+  exact hLI a b h
+
+/-- Concrete: a • vertex true + b • vertex false = 0 ⇒ a = 0 ∧ b = 0. -/
+example (a b : ℝ)
+    (h : a • Perspectival.WantableGPT.vertex Bool true
+       + b • Perspectival.WantableGPT.vertex Bool false = 0) :
+    a = 0 ∧ b = 0 :=
+  WantableGPT_vertex_pair_smul_independent true false (by decide) a b h
