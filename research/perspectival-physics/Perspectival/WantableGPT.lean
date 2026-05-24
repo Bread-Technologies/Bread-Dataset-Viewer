@@ -365,6 +365,14 @@ def perfectWitness : Perspectival.Distinguish.PerfectWitness (G := gpt W) (verte
     · simp [h]
     · simp [h, Ne.symm h]
 
+/-- The vertex map (indexed by `W` itself, not `Fin n`) is a perfect
+distinguishability family. This is the "natural" form of the witness
+that doesn't require a Fin-reindexing. -/
+theorem vertex_perfectly_distinguishable [Fintype W] :
+    ∃ e : W → V W →ₗ[ℝ] ℝ,
+      ∀ i j : W, e i (vertex W j) = if i = j then (1 : ℝ) else 0 :=
+  ⟨proj W, (perfectWitness W).kronecker⟩
+
 /-- The vertex set forms a Hardy-style distinguishability set. -/
 theorem vertex_distinguishability_set :
     Perspectival.Hardy.DistinguishabilitySet (gpt W)
