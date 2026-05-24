@@ -229,5 +229,12 @@ example : boolSwap = Perspectival.WantableGPT.complementPTrans Bool := by
   intro b
   cases b <;> rfl
 
+/-- The two vertices of the boolean WantableGPT are distinguishable. -/
+example : Perspectival.Hardy.Distinguishable
+    (Perspectival.WantableGPT.gpt Bool)
+    (Perspectival.WantableGPT.vertex Bool true)
+    (Perspectival.WantableGPT.vertex Bool false) :=
+  Perspectival.WantableGPT.vertices_distinguishable Bool true false (by decide)
+
 end Examples
 end Perspectival
