@@ -2677,6 +2677,18 @@ example :
     = Perspectival.Classical.vertex 2 1 ⊗ₜ[ℝ] Perspectival.Classical.vertex 2 1 :=
   Perspectival.NoBroadcasting.classicalBroadcaster_vertex 2 1
 
+/-- The cardinality of `Bool ⊕ Bool` = 4. -/
+example : Fintype.card (Bool ⊕ Bool) = 4 := by decide
+
+/-- The cardinality of `Bool × Bool` = 4. -/
+example : Fintype.card (Bool × Bool) = 4 := by decide
+
+/-- The cardinality of `Fin 3 ⊕ Fin 4` = 7. -/
+example : Fintype.card (Fin 3 ⊕ Fin 4) = 7 := by decide
+
+/-- The cardinality of `Fin 3 × Fin 4` = 12. -/
+example : Fintype.card (Fin 3 × Fin 4) = 12 := by decide
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
