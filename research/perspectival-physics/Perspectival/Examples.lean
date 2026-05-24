@@ -15,6 +15,7 @@ import Perspectival.Composition
 import Perspectival.Classical
 import Perspectival.Distinguish
 import Perspectival.NoCloning
+import Perspectival.NoBroadcasting
 import Perspectival.WantableGPT
 import Perspectival.Hardy
 import Mathlib.LinearAlgebra.TensorProduct.Basic
@@ -287,6 +288,11 @@ instance : Subsingleton (PTrans Empty) := ⟨by
 -- NOTE: PTrans Bool has exactly 2 elements (identity and complement).
 -- Proof omitted for brevity; the structural argument is standard
 -- (case analysis on f.toFun true).
+
+/-- The classical broadcaster exists for the 2-outcome classical GPT. -/
+noncomputable example : Perspectival.Classical.V 2 →ₗ[ℝ]
+          Perspectival.Classical.V 2 ⊗[ℝ] Perspectival.Classical.V 2 :=
+  Perspectival.NoBroadcasting.classicalBroadcaster 2
 
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
