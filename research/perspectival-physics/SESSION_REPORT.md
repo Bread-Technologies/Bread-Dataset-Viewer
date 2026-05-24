@@ -5,10 +5,15 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~9,000 lines of Lean** (excluding Mathlib dependencies) — 9000-line milestone approaching
-- **~300+ verified theorems / examples** (no `sorry` outside documented placeholders)
+- **~9,400 lines of Lean** (excluding Mathlib dependencies) — 9000-line milestone passed
+- **~330+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **835+ commits** to the research branch (extended session — 835 milestone reached)
+- **875+ commits** to the research branch (extended session — 875 milestone reached)
+- **New productState mini-theory**: tensor-product structure for the
+  WantableGPT bridge (`productState`, `productState_unitFn`,
+  `productState_in_states`, `productState_vertex`, `productState_assoc`,
+  `productState_swap`, `productState_complement_factor`,
+  `productEffectVec`, `productEffectVec_in_effectVec`)
 
 ## Major new content (latest batch)
 
