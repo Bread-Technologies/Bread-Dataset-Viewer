@@ -504,6 +504,12 @@ example (n : ℤ) (h : Wantable.complement n = n) : n = 0 := by
   have : -n = n := h
   linarith
 
+/-- ℤ-meetings: 5 and -5 are complementary. -/
+example : Wantable.complement (5 : ℤ) = -5 := rfl
+
+/-- ℤ-meetings: -7 and 7 are complementary. -/
+example : Wantable.complement (-7 : ℤ) = 7 := by show -(-7 : ℤ) = 7; ring
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
