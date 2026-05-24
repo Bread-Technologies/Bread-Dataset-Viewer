@@ -341,6 +341,20 @@ theorem PTrans.complement_ne_one_of_fixedPointFree {W : Type u} [Wantable W]
   have : Wantable.complement w = w := hw
   exact h w this
 
+/-- Concrete: complement on Bool is not the identity PTrans. -/
+example : (PTrans.complement : PTrans Bool) ≠ (1 : PTrans Bool) :=
+  PTrans.complement_ne_one_of_fixedPointFree (W := Bool) (by
+    intro b hb
+    cases b
+    · exact Bool.false_ne_true hb.symm
+    · exact Bool.false_ne_true hb)
+
+/-- Concrete: complement on Fin 2 (= swap) is not the identity PTrans. -/
+example : (PTrans.complement : PTrans (Fin 2)) ≠ (1 : PTrans (Fin 2)) :=
+  PTrans.complement_ne_one_of_fixedPointFree (W := Fin 2) (by
+    intro i h
+    fin_cases i <;> (simp [SelfComplementary, Wantable.complement] at h))
+
 /-- **Concrete classification of `PTrans Unit`.** Since `Unit` has
 only one element, only the identity transformation exists. -/
 theorem ptrans_unit_classification (f : PTrans Unit) : f = (1 : PTrans Unit) := by
