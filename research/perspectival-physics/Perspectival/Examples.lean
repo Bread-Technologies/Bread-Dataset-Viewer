@@ -7536,3 +7536,30 @@ theorem uniformBool_convex_combo :
                 + (1 - 1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool false := by
   rw [uniformBool_decomp]
   ring_nf
+
+/-- New theorem: the uniform state on any finite W is a convex
+combination of the vertex states with all coefficients equal to 1/|W|. -/
+theorem uniformState_eq_vertex_combo
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W] :
+    uniformState W = ∑ w, (1 / (Fintype.card W : ℝ))
+      • Perspectival.WantableGPT.vertex W w := by
+  funext v
+  show 1 / (Fintype.card W : ℝ)
+     = (∑ w, (1 / (Fintype.card W : ℝ)) • Perspectival.WantableGPT.vertex W w) v
+  rw [Finset.sum_apply]
+  show 1 / (Fintype.card W : ℝ)
+     = ∑ w, (1 / (Fintype.card W : ℝ)) * (if w = v then (1 : ℝ) else 0)
+  rw [Finset.sum_eq_single v
+    (fun w _ hwv => by
+      show (1 / (Fintype.card W : ℝ)) * (if w = v then (1 : ℝ) else 0) = 0
+      rw [if_neg hwv]; ring)
+    (fun h => absurd (Finset.mem_univ v) h)]
+  show 1 / (Fintype.card W : ℝ)
+     = (1 / (Fintype.card W : ℝ)) * (if v = v then (1 : ℝ) else 0)
+  rw [if_pos rfl]; ring
+
+/-- Concrete: uniformBool decomposes through this generic formula. -/
+example : uniformBool = ∑ b, (1 / (Fintype.card Bool : ℝ)) •
+                              Perspectival.WantableGPT.vertex Bool b := by
+  rw [show uniformBool = uniformState Bool from by funext b; show (1/2 : ℝ) = 1 / (Fintype.card Bool : ℝ); norm_cast]
+  exact uniformState_eq_vertex_combo
