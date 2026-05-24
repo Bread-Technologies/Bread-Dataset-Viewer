@@ -663,6 +663,11 @@ example : Nonempty (Wantable (Fin 2)) := ⟨inferInstance⟩
 example : Nonempty (Wantable (Fin 3)) := ⟨inferInstance⟩
 example : Nonempty (Wantable (Fin 4)) := ⟨inferInstance⟩
 
+example : Nonempty (Wantable (Bool × Bool)) := ⟨inferInstance⟩
+example : Nonempty (Wantable (Bool ⊕ Bool)) := ⟨inferInstance⟩
+example : Nonempty (Wantable (Option Bool)) := ⟨inferInstance⟩
+example : Nonempty (Wantable (List Bool)) := ⟨inferInstance⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
