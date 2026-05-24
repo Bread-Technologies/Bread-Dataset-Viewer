@@ -1368,5 +1368,45 @@ theorem n2_perturbedIdLin_half_not_injective :
   rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1] at hc
   norm_num at hc
 
+/-! ## R6 corollary: sign of det invariant for continuous bijection paths -/
+
+/-- For any state-preserving linear map R on V 2, the disc_det
+absolute value is bounded by 1. -/
+example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    |n2_disc_det R| ≤ 1 := by
+  have h0 := classical_n2_state_preserving_first_coord_bound R hR
+  have h1 := classical_n2_state_preserving_first_coord_bound_v1 R hR
+  have hge : -1 ≤ n2_disc_det R := by
+    show -1 ≤ R (vertex 2 0) 0 - R (vertex 2 1) 0
+    linarith
+  have hle : n2_disc_det R ≤ 1 := by
+    show R (vertex 2 0) 0 - R (vertex 2 1) 0 ≤ 1
+    linarith
+  exact abs_le.mpr ⟨hge, hle⟩
+
+/-- For a state-preserving BIJECTIVE R on V 2, |disc_det R| > 0
+(strictly nonzero, ruling out singular matrices). -/
+example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hbij : Function.Bijective R) :
+    n2_disc_det R ≠ 0 := by
+  intro h
+  exact n2_disc_det_zero_implies_not_injective R hR h hbij.1
+
+/-- For a state-preserving bijective R on V 2 with disc_det = 1 (i.e.,
+"identity sign"), the disc_det is positive. -/
+example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hbij : Function.Bijective R) (h_id_sign : n2_disc_det R = 1) :
+    0 < n2_disc_det R := by
+  rw [h_id_sign]
+  norm_num
+
+/-- For a state-preserving bijective R on V 2 with disc_det = -1 (i.e.,
+"swap sign"), the disc_det is negative. -/
+example (R : V 2 →ₗ[ℝ] V 2) (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hbij : Function.Bijective R) (h_swap_sign : n2_disc_det R = -1) :
+    n2_disc_det R < 0 := by
+  rw [h_swap_sign]
+  norm_num
+
 end Classical
 end Perspectival
