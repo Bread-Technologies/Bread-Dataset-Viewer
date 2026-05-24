@@ -2171,6 +2171,22 @@ example : Perspectival.WantableGPT.complementAction Bool
         = Perspectival.WantableGPT.vertex Bool false :=
   Perspectival.WantableGPT.complementAction_vertex Bool true
 
+/-- The complement action sends `vertex false` to `vertex true`. -/
+example : Perspectival.WantableGPT.complementAction Bool
+            (Perspectival.WantableGPT.vertex Bool false)
+        = Perspectival.WantableGPT.vertex Bool true := by
+  have := Perspectival.WantableGPT.complementAction_vertex Bool false
+  -- complement false = true (in Wantable Bool)
+  show _ = Perspectival.WantableGPT.vertex Bool true
+  rw [this]
+  rfl
+
+/-- The complement action is an involution on states. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    Perspectival.WantableGPT.complementAction Bool
+      (Perspectival.WantableGPT.complementAction Bool f) = f :=
+  Perspectival.WantableGPT.complementAction_involutive Bool f
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
