@@ -461,6 +461,20 @@ example (n : ℤ) :
     subst h
     rfl
 
+/-- For ℤ, the meeting is self-meeting iff the want is a complement-
+fixed-point. This is a general principle. -/
+example {W : Type u} [Wantable W] (w : W) :
+    (Perspectival.Meeting.mk_fromSide W w).side₁
+    = (Perspectival.Meeting.mk_fromSide W w).side₂
+    ↔ Wantable.complement w = w := by
+  constructor
+  · intro h
+    show Wantable.complement w = w
+    exact h.symm
+  · intro h
+    show w = Wantable.complement w
+    exact h.symm
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
