@@ -5,10 +5,19 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~10,150 lines of Lean** (excluding Mathlib dependencies) — 10K-line milestone passed
-- **~410+ verified theorems / examples** (no `sorry` outside documented placeholders)
+- **~10,400 lines of Lean** (excluding Mathlib dependencies) — 10K-line milestone passed
+- **~430+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **927+ commits** to the research branch (extended session — milestone reached)
+- **940+ commits** to the research branch (extended session — milestone reached)
+- **Classical-separability theorem**: every state on a product Wantable is
+  a sum of weighted product-vertex states — the framework's "no
+  entanglement" no-go theorem made precise
+  (`WantableGPT_state_prod_vertex_decomp`,
+  `WantableGPT_classical_separability`).
+- **Perfect-correlation/anti-correlation states**: diagonal and antidiagonal
+  states on Bool × Bool, with verified perfect distinguishability and
+  the complete `{diagonalIndicator, antiDiagonalIndicator}` measurement
+  summing to the unit functional.
 - **New productState mini-theory**: tensor-product structure for the
   WantableGPT bridge (`productState`, `productState_unitFn`,
   `productState_in_states`, `productState_vertex`, `productState_assoc`,
