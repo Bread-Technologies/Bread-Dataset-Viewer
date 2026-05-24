@@ -15,9 +15,12 @@ import Perspectival.Composition
 import Perspectival.Classical
 import Perspectival.Distinguish
 import Perspectival.NoCloning
+import Mathlib.LinearAlgebra.TensorProduct.Basic
 
 namespace Perspectival
 namespace Examples
+
+open TensorProduct
 
 /-! ## Example 1 — A boolean Wantable
 
@@ -105,6 +108,24 @@ example : boolSwap⁻¹ = boolSwap := by
   apply PTrans.ext
   intro b
   cases b <;> rfl
+
+/-! ## Example 6 — No linear cloner on classical vertices (chained theorem)
+
+A concrete instance combining: (a) vertices are states, (b) distinct
+vertices are distinguishable via coordinate projections, (c) the
+no-cloning chain (`no_cloning_of_distinguishable`). -/
+
+example (n : ℕ) (i j : Fin n) (hij : i ≠ j)
+    {S : Set (Classical.V n)}
+    (h_vi : Classical.vertex n i ∈ S) (h_vj : Classical.vertex n j ∈ S)
+    (h_sum : Classical.vertex n i + Classical.vertex n j ∈ S)
+    {C : Classical.V n →ₗ[ℝ] Classical.V n ⊗[ℝ] Classical.V n}
+    (hC : Perspectival.IsLinearCloner S C) : False :=
+  Perspectival.Distinguish.no_cloning_of_distinguishable
+    hC h_vi h_vj h_sum
+    (Classical.vertex_in_states n i)
+    (Classical.vertex_in_states n j)
+    (Classical.vertices_distinguishable n i j hij)
 
 end Examples
 end Perspectival
