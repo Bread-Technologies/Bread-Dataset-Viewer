@@ -6,6 +6,7 @@ import Perspectival.CHSH
 import Perspectival.GPT
 import Perspectival.Hardy
 import Perspectival.NoCloning
+import Perspectival.NoBroadcasting
 import Perspectival.Classical
 import Perspectival.Continuity
 import Perspectival.Distinguish
