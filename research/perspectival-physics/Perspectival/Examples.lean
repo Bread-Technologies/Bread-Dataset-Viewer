@@ -6670,6 +6670,35 @@ example : PTrans.prodMap (PTrans.complement : PTrans Bool) (1 : PTrans Bool)
   have hap := congrArg (fun (φ : PTrans (Bool × Bool)) => φ.toFun (true, true)) h
   exact absurd hap (by decide)
 
+/-- New: vertex on Bool × Bool decomposes as a "tensor" of two Bool
+vertices (this is the simplex-tensor identification on the product). -/
+theorem WantableGPT_vertex_prod_decomp
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w₁ : W₁) (w₂ : W₂) (p : W₁ × W₂) :
+    Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂) p
+      = Perspectival.WantableGPT.vertex W₁ w₁ p.1
+      * Perspectival.WantableGPT.vertex W₂ w₂ p.2 := by
+  rcases p with ⟨a, b⟩
+  show (if (w₁, w₂) = (a, b) then (1 : ℝ) else 0)
+      = (if w₁ = a then 1 else 0) * (if w₂ = b then 1 else 0)
+  by_cases h₁ : w₁ = a
+  · by_cases h₂ : w₂ = b
+    · simp [h₁, h₂]
+    · have hne : (w₁, w₂) ≠ (a, b) := by
+        intro h; exact h₂ (Prod.mk.inj h).2
+      simp [hne, h₂]
+  · have hne : (w₁, w₂) ≠ (a, b) := by
+      intro h; exact h₁ (Prod.mk.inj h).1
+    simp [hne, h₁]
+
+/-- Concrete: vertex (true, false) on Bool × Bool factors through Bool vertices. -/
+example (p : Bool × Bool) :
+    Perspectival.WantableGPT.vertex (Bool × Bool) (true, false) p
+      = Perspectival.WantableGPT.vertex Bool true p.1
+      * Perspectival.WantableGPT.vertex Bool false p.2 :=
+  WantableGPT_vertex_prod_decomp true false p
+
 /-- New theorem: vertex 0..3 of WantableGPT (Fin 4) are all pairwise
 distinguishable (6 pairs). -/
 theorem WantableGPT_Fin4_six_distinguishable :
