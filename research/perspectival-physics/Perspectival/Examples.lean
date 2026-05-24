@@ -13750,6 +13750,43 @@ example :
       (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr false)) :=
   vertices_distinguishable_via_delta (Sum.inl true) (Sum.inr false) (by decide)
 
+/-! ### productState properties: nonneg and unit-preservation -/
+
+/-- productState f g is nonneg if f and g are nonneg. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V W₁) (g : Perspectival.WantableGPT.V W₂)
+    (hf : ∀ w₁, 0 ≤ f w₁) (hg : ∀ w₂, 0 ≤ g w₂)
+    (p : W₁ × W₂) :
+    0 ≤ productState f g p := by
+  show 0 ≤ f p.1 * g p.2
+  exact mul_nonneg (hf p.1) (hg p.2)
+
+/-- productState f g unit = (sum f) * (sum g). -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V W₁) (g : Perspectival.WantableGPT.V W₂) :
+    Perspectival.WantableGPT.unitFn (W₁ × W₂) (productState f g)
+    = Perspectival.WantableGPT.unitFn W₁ f * Perspectival.WantableGPT.unitFn W₂ g := by
+  show (∑ p : W₁ × W₂, productState f g p) = (∑ w₁, f w₁) * (∑ w₂, g w₂)
+  rw [Fintype.sum_prod_type]
+  show (∑ w₁, ∑ w₂, f w₁ * g w₂) = (∑ w₁, f w₁) * (∑ w₂, g w₂)
+  rw [Finset.sum_mul_sum]
+
+/-- If f, g are states (sum = 1), productState f g has sum = 1. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V W₁) (g : Perspectival.WantableGPT.V W₂)
+    (hf : Perspectival.WantableGPT.unitFn W₁ f = 1)
+    (hg : Perspectival.WantableGPT.unitFn W₂ g = 1) :
+    Perspectival.WantableGPT.unitFn (W₁ × W₂) (productState f g) = 1 := by
+  show (∑ p : W₁ × W₂, productState f g p) = 1
+  rw [Fintype.sum_prod_type]
+  show (∑ w₁, ∑ w₂, f w₁ * g w₂) = 1
+  rw [← Finset.sum_mul_sum]
+  rw [show ∑ w₁, f w₁ = 1 from hf, show ∑ w₂, g w₂ = 1 from hg]
+  ring
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
