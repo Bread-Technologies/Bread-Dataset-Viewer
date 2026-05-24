@@ -2541,5 +2541,21 @@ theorem n3_disconnect_from_det_lemma
   intro p
   exact classical_n3_no_strict_path_id_to_swap01_conditional h p
 
+/-! ## R6 n=3 corollaries -/
+
+/-- For the IDENTITY linear map on V 3, n3_disc_det = 1 (positive sign). -/
+example : n3_disc_det (LinearMap.id : V 3 →ₗ[ℝ] V 3) > 0 := by
+  rw [n3_disc_det_id]; norm_num
+
+/-- For swap01Lin on V 3, n3_disc_det = -1 (negative sign). -/
+example : n3_disc_det swap01Lin < 0 := by
+  rw [n3_disc_det_swap01]; norm_num
+
+/-- The sign-of-det invariant distinguishes id and swap01Lin. -/
+example : n3_disc_det (LinearMap.id : V 3 →ₗ[ℝ] V 3)
+        ≠ n3_disc_det swap01Lin := by
+  rw [n3_disc_det_id, n3_disc_det_swap01]
+  norm_num
+
 end Classical
 end Perspectival
