@@ -5153,5 +5153,38 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
         ∀ v : V, S.toLin (R.toLin v) = v :=
   Perspectival.Continuity.trivialAgency_inv_avail G
 
+/-- `pairAgency_reaches_R₁`: in a pairAgency, R₁'s output is reachable
+from any state. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : Perspectival.GPT V)
+    (R₀ R₁ : Perspectival.Continuity.Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) (ρ : V) :
+    @Perspectival.Continuity.Reachable V _ _ _ G
+      (Perspectival.Continuity.pairAgency G R₀ R₁ hR₀_id) ρ (R₁.toLin ρ) :=
+  Perspectival.Continuity.pairAgency_reaches_R₁ G R₀ R₁ hR₀_id ρ
+
+/-- `pairAgency_reaches_self`: in a pairAgency, every state is
+reachable from itself via R₀ = id. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : Perspectival.GPT V)
+    (R₀ R₁ : Perspectival.Continuity.Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) (ρ : V) :
+    @Perspectival.Continuity.Reachable V _ _ _ G
+      (Perspectival.Continuity.pairAgency G R₀ R₁ hR₀_id) ρ ρ :=
+  Perspectival.Continuity.pairAgency_reaches_self G R₀ R₁ hR₀_id ρ
+
+/-- `pairAgency_avail_eq`: the avail set in a pairAgency is exactly {R₀, R₁}. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : Perspectival.GPT V)
+    (R₀ R₁ : Perspectival.Continuity.Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) :
+    Perspectival.Continuity.HasConnectedAgency.avail
+      (G := G) (self := Perspectival.Continuity.pairAgency G R₀ R₁ hR₀_id)
+      = {R₀, R₁} :=
+  Perspectival.Continuity.pairAgency_avail_eq G R₀ R₁ hR₀_id
+
 end Examples
 end Perspectival
