@@ -2778,6 +2778,24 @@ example {W : Type u} [Wantable W] (P : Pattern W) (R : Reality W) :
     Pattern.or P (Pattern.empty W) R ↔ P R :=
   ⟨fun h => h.elim id (False.elim), fun h => Or.inl h⟩
 
+/-- The singleton Pattern: only one specific Reality satisfies it. -/
+def singletonPattern {W : Type u} [Wantable W] (R₀ : Reality W) : Pattern W :=
+  fun R => R = R₀
+
+example {W : Type u} [Wantable W] (R₀ : Reality W) :
+    (singletonPattern R₀) R₀ := rfl
+
+/-- The complementPattern: a Pattern is "complementary" if it's defined
+by being the complement (negation) of another Pattern. -/
+def complementPattern {W : Type u} [Wantable W] (P : Pattern W) : Pattern W :=
+  fun R => ¬ P R
+
+/-- Double-complement-of-Pattern is identity (classically). -/
+example {W : Type u} [Wantable W] (P : Pattern W) (R : Reality W) :
+    complementPattern (complementPattern P) R ↔ P R := by
+  show ¬ ¬ P R ↔ P R
+  exact ⟨Classical.not_not.mp, Classical.not_not.mpr⟩
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
