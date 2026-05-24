@@ -159,6 +159,16 @@ def Axiom4_Composite_States_Multiply
   -- We do not yet have the tensor product of GPTs formalized.
   True  -- placeholder; precise formalization pending tensor product of GPTs
 
+/-- Vacuous proof of the placeholder Axiom 4. Once Axiom 4 is given
+non-trivial content (via tensor product structure), this should be
+replaced with a real derivation or marked AUXILIARY. -/
+theorem axiom4_holds_placeholder
+    {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
+    [AddCommGroup VB] [Module ℝ VB]
+    (GA : GPT VA) (GB : GPT VB) (nA nB : ℕ) :
+    Axiom4_Composite_States_Multiply GA GB nA nB := by
+  intro _ _; trivial
+
 /-- **Axiom 5 — Continuity of reversible transformations.**
 There exists a continuous reversible transformation on a system
 between any two pure states of that system.
