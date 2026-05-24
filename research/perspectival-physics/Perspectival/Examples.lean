@@ -2919,6 +2919,12 @@ example : Fintype.card (Unit × Bool) = 2 := by decide
 /-- |Unit| + |Bool| = 3. -/
 example : Fintype.card (Unit ⊕ Bool) = 3 := by decide
 
+/-- |Bool ⊕ Bool ⊕ Bool ⊕ Bool| = 8 (left-associated). -/
+example : Fintype.card (Bool ⊕ (Bool ⊕ (Bool ⊕ Bool))) = 8 := by decide
+
+/-- |Bool × Bool × Bool × Bool| = 16. -/
+example : Fintype.card (Bool × Bool × Bool × Bool) = 16 := by decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
