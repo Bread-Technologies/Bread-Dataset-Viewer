@@ -55,7 +55,44 @@ copies. Linearity is the structural shadow of Axiom II's
 two-sidedness. The theorem itself is independent of the philosophy;
 the philosophy provides the reading.
 
-### F4. Axiom 1 (Hardy) is DERIVABLE (verified)
+### F4. Libertarian agency ⇒ continuous reversible state paths (verified)
+
+`Perspectival/Continuity.lean :: continuous_path_of_reachable`
+formally proves: given the framework's libertarian-agency postulate
+(formalized as `HasConnectedAgency` — the set of reversible
+transformations is path-connected and contains identity), any two
+states reachable by the available transformations are connected by a
+continuous path in `V`.
+
+This is the formal *easy direction* of the framework's distinctive
+claim that "libertarian agency at every instant ⇒ Hardy Axiom 5
+(continuity of reversible transformations between pure states)."
+
+**Honest framing of what is still missing:**
+
+  1. Whether "libertarian agency" really forces *path-connectedness*
+     rather than mere richness is the philosophical-to-formal step
+     this file does NOT settle.
+  2. Transitivity of the group action on pure states is left as a
+     separable hypothesis; full Hardy Axiom 5 would require it.
+  3. Restriction to PURE states (extreme points) is bookkeeping left
+     for follow-up.
+
+What this DOES show: the easy half of the framework's most distinctive
+contribution is real, machine-verified mathematics. The hard half —
+deriving connected-group structure from agency — is well-posed and is
+the next research target.
+
+### F5. Classical GPT instance — fully constructed (verified)
+
+`Perspectival/Classical.lean :: gpt` provides a complete instance of
+the GPT structure for the n-outcome classical theory. Verifies
+convexity of the standard simplex (states), convexity of the unit
+hypercube (effects, as inner-product functionals), normalization, and
+[0,1]-valued probabilities. The first concrete example showing the
+GPT framework is non-vacuous.
+
+### F6. Axiom 1 (Hardy) is DERIVABLE (verified)
 
 `Perspectival/Hardy.lean :: axiom1_holds` formally proves that every
 `GPT` instance satisfies Hardy's probability axiom. Trivially so by

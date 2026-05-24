@@ -47,6 +47,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Classical GPT — convex states (std simplex) | `Classical.lean :: states_convex` | ✓ |
 | Classical GPT — convex effects | `Classical.lean :: effects_convex` | ✓ |
 | Classical GPT — probabilities in [0,1] | `Classical.lean :: prob_in_unit_interval` | ✓ |
+| HasConnectedAgency postulate (libertarian agency formalized) | `Continuity.lean :: HasConnectedAgency` | ✓ |
+| **Agency ⇒ continuous-path between reachable states** | `Continuity.lean :: continuous_path_of_reachable` | ✓ |
 
 ## What is NOT YET done — honest open list
 
