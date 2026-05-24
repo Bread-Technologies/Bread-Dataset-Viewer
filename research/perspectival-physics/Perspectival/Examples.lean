@@ -6081,5 +6081,27 @@ example : Perspectival.Hardy.Axiom5_Continuity
             (Perspectival.WantableGPT.gpt Bool) := by
   intro _ _ _ _ _ _; trivial
 
+/-- `Reversible.id` is a valid Reversible on the Bool WantableGPT. -/
+example : Perspectival.Continuity.Reversible
+            (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Continuity.Reversible.id _
+
+/-- `Reversible.id` has toLin = LinearMap.id. -/
+example : (Perspectival.Continuity.Reversible.id
+            (Perspectival.WantableGPT.gpt Bool)).toLin = LinearMap.id := rfl
+
+/-- `Reversible.id` continuous_toLin: continuous_id. -/
+example : Continuous
+    (Perspectival.Continuity.Reversible.id
+      (Perspectival.WantableGPT.gpt Bool)).toLin :=
+  (Perspectival.Continuity.Reversible.id _).continuous_toLin
+
+/-- `Reversible.id.preserves_unit`: G.unit composed with id = G.unit. -/
+example : (Perspectival.WantableGPT.gpt Bool).unit.comp
+            (Perspectival.Continuity.Reversible.id
+              (Perspectival.WantableGPT.gpt Bool)).toLin
+        = (Perspectival.WantableGPT.gpt Bool).unit :=
+  (Perspectival.Continuity.Reversible.id _).preserves_unit
+
 end Examples
 end Perspectival
