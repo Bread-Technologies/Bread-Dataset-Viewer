@@ -456,5 +456,10 @@ theorem fromPTransHom_complementPTrans :
     fromPTransHom W (complementPTrans W) = complementAction W :=
   (complementTransform_eq_fromPTrans W).symm
 
+/-- Transform-level version: `fromPTransTransformHom (complementPTrans) = complementTransform`. -/
+theorem fromPTransTransformHom_complementPTrans :
+    fromPTransTransformHom W (complementPTrans W) = complementTransform W :=
+  (complementTransform_eq_fromPTrans_full W).symm
+
 end WantableGPT
 end Perspectival
