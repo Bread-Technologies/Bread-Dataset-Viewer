@@ -29,7 +29,9 @@ Pattern`.
 
 **PTrans** — A *perspectival transformation*: a self-bijection of `W`
 commuting with `complement`. PTrans W forms a Group (verified). Lean:
-`Transformations.lean :: PTrans`.
+`Transformations.lean :: PTrans`. The `Wantable.complement` itself,
+packaged as a PTrans, lives at `PTrans.complement` and is verified to
+be an involution (`PTrans.complement_sq`).
 
 ## Operational (GPT-level) terms
 
