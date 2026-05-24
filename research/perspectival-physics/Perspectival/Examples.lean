@@ -14631,6 +14631,36 @@ example : Perspectival.WantableGPT.vertex (Bool × Bool) (true, true)
     ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).states :=
   Perspectival.WantableGPT.vertex_in_states _ _
 
+/-! ### Hardy axiom 2: composite systems (product structure) -/
+
+/-- Hardy axiom 2 for Bool × Bool: V (Bool × Bool) is a tensor-like product
+of V Bool and V Bool. Recovery via marginalization. -/
+example (f : Perspectival.WantableGPT.V Bool) (g : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool)
+    (hg : g ∈ Perspectival.WantableGPT.states Bool) :
+    leftMarginal (productState f g) = f := by
+  funext w₁
+  exact productState_left_marginal_state f g hg w₁
+
+/-- The right marginal of a product state recovers the second factor. -/
+example (f : Perspectival.WantableGPT.V Bool) (g : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool)
+    (hg : g ∈ Perspectival.WantableGPT.states Bool) :
+    rightMarginal (productState f g) = g := by
+  funext w₂
+  exact productState_right_marginal_state f g hf w₂
+
+/-- Marginal preserves states. -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    leftMarginal f ∈ Perspectival.WantableGPT.states Bool :=
+  leftMarginal_preserves_states f hf
+
+example (f : Perspectival.WantableGPT.V (Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool)) :
+    rightMarginal f ∈ Perspectival.WantableGPT.states Bool :=
+  rightMarginal_preserves_states f hf
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
