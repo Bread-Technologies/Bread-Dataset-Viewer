@@ -11179,3 +11179,25 @@ example : (Perspectival.Classical.gpt 5).unit = Perspectival.Classical.unitFn 5 
 
 example : (Perspectival.Classical.gpt 10).unit
         = Perspectival.Classical.unitFn 10 := rfl
+
+/-- WantableGPT effects on Bool = innerLin Bool '' effectVec Bool. -/
+example : (Perspectival.WantableGPT.gpt Bool).effects
+        = Perspectival.WantableGPT.innerLin Bool ''
+            Perspectival.WantableGPT.effectVec Bool := rfl
+
+/-- WantableGPT effects on Fin 4 = innerLin (Fin 4) '' effectVec (Fin 4). -/
+example : (Perspectival.WantableGPT.gpt (Fin 4)).effects
+        = Perspectival.WantableGPT.innerLin (Fin 4) ''
+            Perspectival.WantableGPT.effectVec (Fin 4) := rfl
+
+/-- Classical effects = innerLin n '' effectVec n. -/
+example (n : ℕ) : (Perspectival.Classical.gpt n).effects
+        = Perspectival.Classical.innerLin n ''
+            Perspectival.Classical.effectVec n := rfl
+
+/-- WantableGPT.states = stdSimplex ℝ W. -/
+example {W : Type u} [Wantable W] [Fintype W] :
+    Perspectival.WantableGPT.states W = stdSimplex ℝ W := rfl
+
+/-- Classical.states = stdSimplex ℝ (Fin n). -/
+example (n : ℕ) : Perspectival.Classical.states n = stdSimplex ℝ (Fin n) := rfl
