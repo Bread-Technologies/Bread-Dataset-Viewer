@@ -15569,6 +15569,43 @@ example : Wantable.complement true = false := rfl
 /-- On Bool, complement(false) = true. -/
 example : Wantable.complement false = true := rfl
 
+/-! ### Product / Sum Wantable complement properties -/
+
+/-- On Bool × Bool, complement of (true, true) = (false, false). -/
+example : Wantable.complement ((true, true) : Bool × Bool) = (false, false) := rfl
+
+/-- On Bool × Bool, complement of (true, false) = (false, true). -/
+example : Wantable.complement ((true, false) : Bool × Bool) = (false, true) := rfl
+
+/-- On Bool × Bool, complement of (false, true) = (true, false). -/
+example : Wantable.complement ((false, true) : Bool × Bool) = (true, false) := rfl
+
+/-- On Bool × Bool, complement of (false, false) = (true, true). -/
+example : Wantable.complement ((false, false) : Bool × Bool) = (true, true) := rfl
+
+/-- On Bool ⊕ Bool, complement of Sum.inl true = Sum.inl false. -/
+example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := rfl
+
+/-- On Bool ⊕ Bool, complement of Sum.inr false = Sum.inr true. -/
+example : Wantable.complement (Sum.inr false : Bool ⊕ Bool) = Sum.inr true := rfl
+
+/-! ### Wantable involutivity composed with itself -/
+
+/-- complement ∘ complement = id on Bool. -/
+example : (fun b : Bool => Wantable.complement (Wantable.complement b)) = id := by
+  funext b
+  exact Wantable.complement_involutive b
+
+/-- complement ∘ complement = id on Bool × Bool. -/
+example : (fun p : Bool × Bool => Wantable.complement (Wantable.complement p)) = id := by
+  funext p
+  exact Wantable.complement_involutive p
+
+/-- complement ∘ complement = id on Fin 4. -/
+example : (fun i : Fin 4 => Wantable.complement (Wantable.complement i)) = id := by
+  funext i
+  exact Wantable.complement_involutive i
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
