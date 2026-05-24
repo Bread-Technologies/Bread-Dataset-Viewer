@@ -400,6 +400,14 @@ example (f : Bool → Bool) : Wantable.complement f = fun b => not (f b) := rfl
 /-- The constant-true function complements to constant-false. -/
 example : Wantable.complement (fun _ : Bool => true) = (fun _ => false) := rfl
 
+/-- The identity function on Bool complements to negation. -/
+example : Wantable.complement (id : Bool → Bool) = not := rfl
+
+/-- Negation complements to identity. -/
+example : Wantable.complement (not : Bool → Bool) = id := by
+  funext b
+  cases b <;> rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
