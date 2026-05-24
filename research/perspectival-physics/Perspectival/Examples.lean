@@ -8881,3 +8881,32 @@ example : antiDiagonalState ≠ productState (leftMarginal antiDiagonalState)
     norm_num
   rw [h_LHS, h_RHS] at h_val
   norm_num at h_val
+
+/-- The framework's "no-signaling" predicate: the marginal at one factor
+is the same whether or not we marginalize over the other (trivially
+holds since marginalization is a single operation). -/
+theorem WantableGPT_no_signaling_left
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f g : Perspectival.WantableGPT.V (W₁ × W₂))
+    (h : ∀ w₁ w₂, f (w₁, w₂) = g (w₁, w₂)) :
+    leftMarginal f = leftMarginal g := by
+  funext w₁
+  show (∑ w₂, f (w₁, w₂)) = (∑ w₂, g (w₁, w₂))
+  apply Finset.sum_congr rfl
+  intro w₂ _
+  exact h w₁ w₂
+
+/-- Similarly for rightMarginal: if f = g pointwise, then so are
+their right marginals. -/
+theorem WantableGPT_no_signaling_right
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f g : Perspectival.WantableGPT.V (W₁ × W₂))
+    (h : ∀ w₁ w₂, f (w₁, w₂) = g (w₁, w₂)) :
+    rightMarginal f = rightMarginal g := by
+  funext w₂
+  show (∑ w₁, f (w₁, w₂)) = (∑ w₁, g (w₁, w₂))
+  apply Finset.sum_congr rfl
+  intro w₁ _
+  exact h w₁ w₂
