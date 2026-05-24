@@ -155,6 +155,13 @@ def PTrans.prodMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   cases p
   rfl
 
+/-- Swap on a product meeting equals the prodMk of the component swaps. -/
+theorem Meeting.prod_swap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (m : Meeting (W₁ × W₂)) :
+    m.swap = Meeting.prodMk m.prodFst.swap m.prodSnd.swap := by
+  cases m
+  rfl
+
 def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ ⊕ W₂) where
   toFun := fun
