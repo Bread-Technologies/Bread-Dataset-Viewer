@@ -362,6 +362,16 @@ example {W₁ W₂ : Type u} [Fintype W₁] [Fintype W₂] :
   rw [Module.finrank_pi, Module.finrank_pi, Module.finrank_pi]
   exact Fintype.card_prod W₁ W₂
 
+/-- For disjoint-union Wantables, finrank ADDS (not multiplies). This
+distinguishes our two composition modes — the disjoint union gives
+N(W₁ ⊕ W₂) = N(W₁) + N(W₂), while the product gives N(W₁ × W₂) =
+N(W₁) · N(W₂). Hardy's Axiom 4 demands multiplicativity. -/
+example {W₁ W₂ : Type u} [Fintype W₁] [Fintype W₂] :
+    Module.finrank ℝ (W₁ ⊕ W₂ → ℝ)
+    = Module.finrank ℝ (W₁ → ℝ) + Module.finrank ℝ (W₂ → ℝ) := by
+  rw [Module.finrank_pi, Module.finrank_pi, Module.finrank_pi]
+  exact Fintype.card_sum
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
