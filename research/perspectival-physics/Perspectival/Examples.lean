@@ -10047,3 +10047,24 @@ example : Monoid (Perspectival.GPT.Transform
 example : Monoid (Perspectival.GPT.Transform
                     (Perspectival.Classical.gpt 10)
                     (Perspectival.Classical.gpt 10)) := inferInstance
+
+/-- Transform.id is the identity of the Monoid. -/
+example : (Perspectival.GPT.Transform.id (Perspectival.WantableGPT.gpt Bool))
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt Bool)
+                  (Perspectival.WantableGPT.gpt Bool)) := rfl
+
+/-- Transform composition is the multiplication in the Monoid. -/
+example (T₁ T₂ : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt Bool)
+                  (Perspectival.WantableGPT.gpt Bool)) :
+    T₁ * T₂ = Perspectival.GPT.Transform.comp T₁ T₂ := rfl
+
+/-- Transform.id_toLin equals LinearMap.id (generic). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    (Perspectival.GPT.Transform.id G).toLin = LinearMap.id := rfl
+
+/-- Transform composition's toLin factors through linear-map composition. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} (T₁ T₂ : Perspectival.GPT.Transform G G) :
+    (T₁ * T₂).toLin = T₁.toLin ∘ₗ T₂.toLin := rfl
