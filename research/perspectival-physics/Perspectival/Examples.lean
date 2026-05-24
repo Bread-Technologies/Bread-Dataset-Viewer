@@ -10147,3 +10147,21 @@ example : (Perspectival.WantableGPT.complementPTrans Bool) ^ 3
         = Perspectival.WantableGPT.complementPTrans Bool := by
   rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add,
       WantableGPT_complementPTrans_order_two, one_mul, pow_one]
+
+/-- PTrans.complement has order 2 in the PTrans group. -/
+example : (PTrans.complement : PTrans Bool) ^ 2 = 1 := by
+  rw [pow_two]
+  exact PTrans.complement_sq
+
+example : (PTrans.complement : PTrans (Fin 4)) ^ 2 = 1 := by
+  rw [pow_two]
+  exact PTrans.complement_sq
+
+example : (PTrans.complement : PTrans (Bool × Bool)) ^ 2 = 1 := by
+  rw [pow_two]
+  exact PTrans.complement_sq
+
+/-- PTrans.complement squared = identity (generic). -/
+example {W : Type u} [Wantable W] : (PTrans.complement : PTrans W) ^ 2 = 1 := by
+  rw [pow_two]
+  exact PTrans.complement_sq
