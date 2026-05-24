@@ -2918,6 +2918,16 @@ trueMeetsFalse. -/
 example : PTrans.actMeeting (1 : PTrans Bool) trueMeetsFalse = trueMeetsFalse :=
   PTrans.actMeeting_id _
 
+/-- The action of PTrans.complement on a meeting equals its swap. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    PTrans.actMeeting (PTrans.complement : PTrans W) m = m.swap :=
+  PTrans.actMeeting_complement m
+
+/-- Specifically: complement-action on trueMeetsFalse = trueMeetsFalse.swap. -/
+example : PTrans.actMeeting (PTrans.complement : PTrans Bool) trueMeetsFalse
+        = trueMeetsFalse.swap :=
+  PTrans.actMeeting_complement trueMeetsFalse
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
