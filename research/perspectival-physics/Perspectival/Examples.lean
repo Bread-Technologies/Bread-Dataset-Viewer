@@ -14835,6 +14835,37 @@ example :
       rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
       norm_num
 
+/-! ### Bool × Bool tensor structure: vertex (a, b) = productState (vertex a) (vertex b) -/
+
+/-- The joint vertex (a, b) on Bool × Bool equals the productState of the
+factor vertices. -/
+example (a b : Bool) :
+    Perspectival.WantableGPT.vertex (Bool × Bool) (a, b)
+    = productState (Perspectival.WantableGPT.vertex Bool a)
+                   (Perspectival.WantableGPT.vertex Bool b) := by
+  funext p
+  show Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) p
+     = Perspectival.WantableGPT.vertex Bool a p.1
+     * Perspectival.WantableGPT.vertex Bool b p.2
+  obtain ⟨q₁, q₂⟩ := p
+  show (if (a, b) = (q₁, q₂) then (1 : ℝ) else 0)
+     = (if a = q₁ then (1 : ℝ) else 0) * (if b = q₂ then (1 : ℝ) else 0)
+  cases a <;> cases b <;> cases q₁ <;> cases q₂ <;> simp
+
+/-- vertex (true, false) on Bool × Bool: explicit form. -/
+example :
+    Perspectival.WantableGPT.vertex (Bool × Bool) (true, false)
+    = productState (Perspectival.WantableGPT.vertex Bool true)
+                   (Perspectival.WantableGPT.vertex Bool false) := by
+  funext p
+  show Perspectival.WantableGPT.vertex (Bool × Bool) (true, false) p
+     = Perspectival.WantableGPT.vertex Bool true p.1
+     * Perspectival.WantableGPT.vertex Bool false p.2
+  obtain ⟨q₁, q₂⟩ := p
+  show (if (true, false) = (q₁, q₂) then (1 : ℝ) else 0)
+     = (if true = q₁ then (1 : ℝ) else 0) * (if false = q₂ then (1 : ℝ) else 0)
+  cases q₁ <;> cases q₂ <;> simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
