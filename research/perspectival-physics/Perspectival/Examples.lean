@@ -9354,3 +9354,34 @@ example : (Perspectival.WantableGPT.gpt (Fin 4)).prob
   show Perspectival.WantableGPT.proj (Fin 4) 2
         (Perspectival.WantableGPT.vertex (Fin 4) 1) = 0
   rw [Perspectival.WantableGPT.proj_vertex]; simp
+
+/-- A non-Bool small Wantable instance: Fin 2 with the swap complement
+gives the same essential structure as Bool. The cardinalities match. -/
+example : Fintype.card (Fin 2) = Fintype.card Bool := by decide
+
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 2))
+        = Module.finrank ℝ (Perspectival.WantableGPT.V Bool) := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card,
+      Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Concrete vertices on Fin 2 evaluate to 1 at same point. -/
+example : Perspectival.WantableGPT.vertex (Fin 2) 0
+            (0 : Fin 2) = 1 := by
+  show (if (0 : Fin 2) = 0 then (1 : ℝ) else 0) = 1
+  simp
+
+example : Perspectival.WantableGPT.vertex (Fin 2) 0
+            (1 : Fin 2) = 0 := by
+  show (if (0 : Fin 2) = 1 then (1 : ℝ) else 0) = 0
+  simp
+
+example : Perspectival.WantableGPT.vertex (Fin 2) 1
+            (0 : Fin 2) = 0 := by
+  show (if (1 : Fin 2) = 0 then (1 : ℝ) else 0) = 0
+  simp
+
+example : Perspectival.WantableGPT.vertex (Fin 2) 1
+            (1 : Fin 2) = 1 := by
+  show (if (1 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
+  simp
