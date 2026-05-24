@@ -2417,6 +2417,14 @@ theorem WantableEquiv.preserves_finrank {W₁ W₂ : Type u}
       Perspectival.WantableGPT.finrank_V_eq_card,
       e.preserves_card]
 
+/-- Concrete instance: boolEquivFin2 preserves cardinality. -/
+example : Fintype.card Bool = Fintype.card (Fin 2) := boolEquivFin2.preserves_card
+
+/-- Concrete instance: boolEquivFin2 preserves WantableGPT finrank. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+        = Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 2)) :=
+  boolEquivFin2.preserves_finrank
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
