@@ -7452,5 +7452,18 @@ example : Perspectival.WantableGPT.complementAction (Bool × Bool) antiDiagonalS
   rcases p with ⟨a, b⟩
   cases a <;> cases b <;> rfl
 
-end Examples
-end Perspectival
+/-- The "diagonal-indicator" coefficient vector (1 on diagonal, 0 off). -/
+noncomputable def diagonalIndicator : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p = (true, true) ∨ p = (false, false) then (1 : ℝ) else 0
+
+/-- diagonalIndicator is in effectVec. -/
+theorem diagonalIndicator_in_effectVec :
+    diagonalIndicator ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p = (true, true) ∨ p = (false, false)
+              then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p = (true, true) ∨ p = (false, false)
+          then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
