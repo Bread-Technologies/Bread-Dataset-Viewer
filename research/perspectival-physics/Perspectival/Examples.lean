@@ -6155,5 +6155,31 @@ example (n : ℕ) (i j : Fin n) :
     = if j = i then 1 else 0 :=
   Perspectival.Classical.proj_vertex n i j
 
+/-- Generic: state probabilities sum to 1 across the perfect-witness
+effects on the vertex family. -/
+theorem WantableGPT_sum_probs_vertex_eq_one
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    ∑ v, Perspectival.WantableGPT.proj W v
+            (Perspectival.WantableGPT.vertex W w) = 1 := by
+  rw [Finset.sum_eq_single w
+    (fun v _ hvw => by
+      rw [Perspectival.WantableGPT.proj_vertex]
+      simp [hvw.symm])
+    (fun h => absurd (Finset.mem_univ w) h)]
+  rw [Perspectival.WantableGPT.proj_vertex]
+  simp
+
+/-- Concrete: on Bool, the sum of projection-probabilities over vertex true
+equals 1. -/
+example : ∑ v, Perspectival.WantableGPT.proj Bool v
+            (Perspectival.WantableGPT.vertex Bool true) = 1 :=
+  WantableGPT_sum_probs_vertex_eq_one true
+
+/-- Concrete: on Fin 4, the sum of projection-probabilities over vertex 2
+equals 1. -/
+example : ∑ v, Perspectival.WantableGPT.proj (Fin 4) v
+            (Perspectival.WantableGPT.vertex (Fin 4) 2) = 1 :=
+  WantableGPT_sum_probs_vertex_eq_one (2 : Fin 4)
+
 end Examples
 end Perspectival
