@@ -160,10 +160,22 @@ theorem mk_fromSide_side₁_inv (W : Type u) [Wantable W] (m : Meeting W) :
   subst this
   rfl
 
--- NOTE: swap of mk_fromSide w should equal mk_fromSide (complement w),
--- but stating this cleanly requires proof-irrelevance for the
--- `complementary` field, which is delicate at the structural level.
--- Left as a follow-up.
+/-- A meeting is determined by `side₁`: two meetings are equal iff
+their first sides are equal. (The second side is forced by
+`complementary`, and the proof itself is propositional.) -/
+theorem ext_of_side₁ (m₁ m₂ : Meeting W) (h : m₁.side₁ = m₂.side₁) :
+    m₁ = m₂ := by
+  rcases m₁ with ⟨s₁, s₂, h₁⟩
+  rcases m₂ with ⟨t₁, t₂, h₂⟩
+  cases h
+  have hs : s₂ = t₂ := h₁.symm.trans h₂
+  cases hs
+  rfl
+
+/-- Swap of `mk_fromSide w` is exactly `mk_fromSide (complement w)`. -/
+@[simp] theorem swap_mk_fromSide (w : W) :
+    (mk_fromSide W w).swap = mk_fromSide W (Wantable.complement w) :=
+  ext_of_side₁ _ _ rfl
 
 end Meeting
 
