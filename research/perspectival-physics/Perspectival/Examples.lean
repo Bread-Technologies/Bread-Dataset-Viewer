@@ -1133,6 +1133,16 @@ example (m n : ℤ) : Wantable.complement (m - n) = Wantable.complement m + n :=
 example (m n : ℤ) : Wantable.complement (m + n) = Wantable.complement m + Wantable.complement n := by
   show -(m + n) = -m + -n; ring
 
+example : Wantable.complement (0 : ℤ) = 0 := by show -(0 : ℤ) = 0; ring
+
+/-- On ℤ, `Wantable.complement` is an `AddMonoidHom` (it's negation). -/
+def intComplementHom : ℤ →+ ℤ where
+  toFun := Wantable.complement
+  map_zero' := by show -(0 : ℤ) = 0; ring
+  map_add' m n := by show -(m + n) = -m + -n; ring
+
+example : (intComplementHom (5 : ℤ)) = -5 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
