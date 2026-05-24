@@ -3257,6 +3257,20 @@ example : Function.Injective (Wantable.complement : List Bool → List Bool) :=
 example : Function.Surjective (Wantable.complement : List Bool → List Bool) :=
   Wantable.complement_surjective
 
+/-- For Wantable on function spaces Bool → Bool: complement is pointwise complement. -/
+example (f : Bool → Bool) (b : Bool) :
+    (Wantable.complement f) b = Wantable.complement (f b) := rfl
+
+/-- The constant-true function and the constant-false function are complementary. -/
+example : Wantable.complement (fun _ : Bool => true) = (fun _ : Bool => false) := by
+  funext b; rfl
+
+/-- The identity function on Bool is its own complement composed with itself. -/
+example : Wantable.complement (Wantable.complement (id : Bool → Bool)) = id := by
+  funext b
+  show Wantable.complement (Wantable.complement b) = b
+  exact Wantable.complement_involutive b
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
