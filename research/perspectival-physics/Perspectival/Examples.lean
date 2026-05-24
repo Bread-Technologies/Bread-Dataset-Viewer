@@ -4675,5 +4675,17 @@ example : Monoid (Perspectival.GPT.Transform
                     (Perspectival.WantableGPT.gpt (Bool × Bool))
                     (Perspectival.WantableGPT.gpt (Bool × Bool))) := inferInstance
 
+/-- `Reachable.preorder` gives reflexivity and transitivity under
+`ClosedAgency`. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V}
+    [Perspectival.Continuity.ClosedAgency G] :
+    (∀ ρ : V, Perspectival.Continuity.Reachable (G := G) ρ ρ) ∧
+    (∀ ρ₁ ρ₂ ρ₃ : V,
+      Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂ →
+      Perspectival.Continuity.Reachable (G := G) ρ₂ ρ₃ →
+      Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₃) :=
+  Perspectival.Continuity.Reachable.preorder
+
 end Examples
 end Perspectival
