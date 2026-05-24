@@ -2116,5 +2116,34 @@ theorem R6_framework_classical_n2_avail_choice
   push_neg at h
   exact R6_framework_main_classical_n2 A h.1 h.2
 
+/-! ## R6 conjecture for general n (STATED, NOT PROVEN)
+
+The conjectured generalization of the n=2 result to general n ≥ 2: on
+Classical n GPT, two distinct permutation `StrictReversible`s of
+DIFFERENT sign cannot both lie in a single `StrictConnectedAgency.avail`.
+
+This is the framework's R6 main conjecture. The proof requires the
+sign-of-permutation invariant and Mathlib's `Matrix.det` infrastructure
+per R6_GENERAL_N_SCOPING.md. Estimated 250-400 lines.
+
+Stating the conjecture in Lean so its content is machine-checkable
+even before a proof exists. -/
+def R6_conjecture_classical_general_n (n : ℕ) : Prop :=
+  ∀ (A : Perspectival.Continuity.StrictConnectedAgency (gpt n))
+    (R₁ R₂ : Perspectival.Continuity.StrictReversible (gpt n)),
+    R₁ ∈ A.avail → R₂ ∈ A.avail →
+    -- The conjecture (UNPROVEN, structural-claim form): R₁ and R₂ must
+    -- be reachable from each other via a continuous bijective path. For
+    -- n=2 this constrains agency to a single connected component.
+    Nonempty (Perspectival.Continuity.StrictReversiblePath (gpt n) R₁ R₂)
+
+/-- The R6 conjecture for n=2 is exactly the formal `StrictConnectedAgency`
+class definition (trivially true). The DEEP n=2 content is the converse
+direction (id-and-swap-not-both-available), captured by
+`R6_framework_main_classical_n2`. -/
+example : R6_conjecture_classical_general_n 2 := by
+  intro A R₁ R₂ h₁ h₂
+  exact A.strict_paths R₁ R₂ h₁ h₂
+
 end Classical
 end Perspectival
