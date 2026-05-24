@@ -812,6 +812,12 @@ example : (complementEquiv : Equiv.Perm (Fin 3)) = 1 := by
   show Wantable.complement i = i
   rfl
 
+example : (complementEquiv : Equiv.Perm Unit) = 1 := by
+  apply Equiv.ext
+  intro u
+  cases u
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
