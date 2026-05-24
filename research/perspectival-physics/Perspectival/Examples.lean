@@ -3030,6 +3030,15 @@ example {W : Type u} [Wantable W] :
   funext w
   exact Wantable.complement_involutive w
 
+/-- The complement function is its own inverse (in the bijection sense). -/
+example {W : Type u} [Wantable W] :
+    Function.LeftInverse (Wantable.complement : W → W) Wantable.complement :=
+  Wantable.complement_involutive
+
+example {W : Type u} [Wantable W] :
+    Function.RightInverse (Wantable.complement : W → W) Wantable.complement :=
+  Wantable.complement_involutive
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
