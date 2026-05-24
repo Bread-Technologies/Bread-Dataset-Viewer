@@ -16705,6 +16705,25 @@ example (w : Bool) (h : PatternStableWantable.Stable_nontrivial w) :
   have : (Sum.inl w : Bool ⊕ Bool) = Sum.inl (Wantable.complement w) := hbad
   exact Sum.inl.inj this
 
+/-! ## Pattern stability → PTrans richness for Bool -/
+
+/-- For Bool, the existence of Stable_nontrivial elements (which holds)
+implies PTrans Bool has at least 2 distinct elements. -/
+example :
+    ∃ φ₁ φ₂ : PTrans Bool, φ₁ ≠ φ₂ ∧
+      φ₁ = (1 : PTrans Bool) ∧ φ₂ = PTrans.complement := by
+  refine ⟨1, PTrans.complement, ?_, rfl, rfl⟩
+  intro h
+  -- h : 1 = complement; would imply complement.toFun true = true, but complement true = false
+  have h2 : (1 : PTrans Bool).toFun true = (PTrans.complement : PTrans Bool).toFun true := by
+    rw [h]
+  exact absurd h2 (by decide)
+
+/-- Connection: pattern-stability + finite Wantable ⇒ richer PTrans. -/
+example (w : Bool) (h : PatternStableWantable.Stable_nontrivial w) :
+    ∃ φ : PTrans Bool, φ ≠ 1 :=
+  ⟨PTrans.complement, stable_nontrivial_implies_complement_ne_one w h⟩
+
 /-- Stable_nontrivial is preserved under Sum.inl. -/
 example (w : Bool) (h : PatternStableWantable.Stable_nontrivial w) :
     PatternStableWantable.Stable_nontrivial (Sum.inl w : Bool ⊕ Bool) := by
