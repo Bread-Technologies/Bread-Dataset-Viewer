@@ -150,6 +150,16 @@ example : Wantable (Bool × Bool) := inferInstance
 example : Wantable.complement (Sum.inl true : Bool ⊕ Bool) = Sum.inl false := rfl
 example : Wantable.complement (Sum.inr false : Bool ⊕ Bool) = Sum.inr true := rfl
 
+/-- On `ℤ` with `complement := Neg.neg`, the complement PTrans is
+not the identity. -/
+example : (PTrans.complement : PTrans ℤ) ≠ 1 := by
+  intro h
+  have hap : (PTrans.complement : PTrans ℤ).toFun 1 = (1 : PTrans ℤ).toFun 1 := by
+    rw [h]
+  -- (complement).toFun 1 = -1, while (1).toFun 1 = 1
+  have : (-1 : ℤ) = 1 := hap
+  linarith
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
