@@ -8308,3 +8308,33 @@ example :
       (productState uniformBool uniformBool)
     = productState uniformBool uniformBool :=
   fromPTrans_prodMap_id_id_eq _ _
+
+/-- New: PTrans.prodMap (complementPTrans, complementPTrans) ∘
+productState f₁ f₂ = productState (complement·f₁) (complement·f₂). -/
+theorem fromPTrans_prodMap_complement_complement_apply
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (f₁ f₂ : Perspectival.WantableGPT.V W) :
+    (Perspectival.WantableGPT.fromPTrans (W × W)
+        (PTrans.prodMap (Perspectival.WantableGPT.complementPTrans W)
+                        (Perspectival.WantableGPT.complementPTrans W))).toLin
+      (productState f₁ f₂)
+    = productState
+        (Perspectival.WantableGPT.complementAction W f₁)
+        (Perspectival.WantableGPT.complementAction W f₂) :=
+  productState_transform_factor _ _ f₁ f₂
+
+/-- Concrete: applying complement on both factors of Bool × Bool maps
+productState (vertex true) (vertex true) to productState (vertex false)
+(vertex false). -/
+example :
+    (Perspectival.WantableGPT.fromPTrans (Bool × Bool)
+        (PTrans.prodMap (Perspectival.WantableGPT.complementPTrans Bool)
+                        (Perspectival.WantableGPT.complementPTrans Bool))).toLin
+      (productState (Perspectival.WantableGPT.vertex Bool true)
+                    (Perspectival.WantableGPT.vertex Bool true))
+    = productState
+        (Perspectival.WantableGPT.vertex Bool false)
+        (Perspectival.WantableGPT.vertex Bool false) := by
+  rw [fromPTrans_prodMap_complement_complement_apply,
+      Perspectival.WantableGPT.complementAction_vertex]
+  rfl
