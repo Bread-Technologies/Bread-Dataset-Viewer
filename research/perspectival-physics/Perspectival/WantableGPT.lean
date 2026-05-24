@@ -633,6 +633,12 @@ theorem wantableGPT_dim_eq_card [Fintype W] :
     Module.finrank ℝ (V W) = Fintype.card W :=
   finrank_V_eq_card W
 
+/-- For a non-empty finite Wantable, the WantableGPT has positive dimension. -/
+theorem wantableGPT_dim_pos [Fintype W] [Nonempty W] :
+    0 < Module.finrank ℝ (V W) := by
+  rw [finrank_V_eq_card]
+  exact Fintype.card_pos
+
 /-- **Hardy-signature dichotomy.** For finite Wantable W with `|W| ≥ 2`,
 the WantableGPT satisfies the classical signature `K = N = |W|` and
 *does not* satisfy any of the standard non-classical signatures
