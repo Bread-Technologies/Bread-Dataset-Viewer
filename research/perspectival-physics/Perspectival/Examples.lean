@@ -680,6 +680,9 @@ example (n : ℤ) : Existent ℤ := ⟨n⟩
 example (b : Bool) : (Existent.mk b).want = b := rfl
 example (n : ℤ) : (Existent.mk n).want = n := rfl
 
+example : (Existent.mk true : Existent Bool).want = true := rfl
+example : (Existent.mk () : Existent Unit).want = () := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
