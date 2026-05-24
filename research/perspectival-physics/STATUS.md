@@ -49,6 +49,14 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Classical GPT — probabilities in [0,1] | `Classical.lean :: prob_in_unit_interval` | ✓ |
 | HasConnectedAgency postulate (libertarian agency formalized) | `Continuity.lean :: HasConnectedAgency` | ✓ |
 | **Agency ⇒ continuous-path between reachable states** | `Continuity.lean :: continuous_path_of_reachable` | ✓ |
+| **Agency ⇒ Hardy Axiom 5 (concrete form)** | `Continuity.lean :: hardy_axiom5_of_agency` | ✓ |
+| Distinguishable states are unequal | `Distinguish.lean :: distinguishable_ne` | ✓ |
+| States are nonzero | `Distinguish.lean :: state_ne_zero` | ✓ |
+| **Distinguishable states are linearly independent** | `Distinguish.lean :: distinguishable_imp_linear_independent` | ✓ |
+| Outer-product bilinear form | `Distinguish.lean :: outerForm` | ✓ |
+| **No-cloning from distinguishability** (full chain) | `Distinguish.lean :: no_cloning_of_distinguishable` | ✓ |
+| **N perfectly distinguishable states ⇒ linear independence** | `Distinguish.lean :: perfect_distinguishable_imp_linear_independent` | ✓ |
+| **N ≤ K (operational dim ≤ state space dim)** in finite-dim GPT | `Distinguish.lean :: operational_dim_le_state_dim` | ✓ |
 
 ## What is NOT YET done — honest open list
 

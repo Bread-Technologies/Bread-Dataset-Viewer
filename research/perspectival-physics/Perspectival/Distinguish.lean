@@ -19,6 +19,7 @@ import Perspectival.Hardy
 import Perspectival.NoCloning
 import Mathlib.LinearAlgebra.LinearIndependent.Defs
 import Mathlib.LinearAlgebra.TensorProduct.Basic
+import Mathlib.LinearAlgebra.Dimension.Finite
 
 namespace Perspectival
 namespace Distinguish
@@ -158,6 +159,18 @@ theorem perfect_distinguishable_imp_linear_independent
     simp
   rw [this] at happly
   exact happly
+
+/-- **N perfectly distinguishable states require an N-dimensional state space.**
+
+This is the structural form of Hardy's "operational dimension ≤
+state-space dimension" inequality, derived in our framework. -/
+theorem operational_dim_le_state_dim
+    {G : GPT V} [Module.Finite ℝ V]
+    {n : ℕ} (ρ : Fin n → V) (w : PerfectWitness (G := G) ρ) :
+    n ≤ Module.finrank ℝ V := by
+  have hLI := perfect_distinguishable_imp_linear_independent ρ w
+  have := hLI.fintype_card_le_finrank
+  simpa using this
 
 end Distinguish
 end Perspectival
