@@ -7709,3 +7709,18 @@ example {C : Perspectival.WantableGPT.V Bool →ₗ[ℝ]
               Perspectival.WantableGPT.V Bool ⊗[ℝ] Perspectival.WantableGPT.V Bool}
     (hC : Perspectival.IsLinearCloner Set.univ C) : False :=
   no_universal_cloner_WantableGPT_vertices hC (by decide : true ≠ false)
+
+/-- Concrete: no universal cloner on V (Fin 4). -/
+example {C : Perspectival.WantableGPT.V (Fin 4) →ₗ[ℝ]
+              Perspectival.WantableGPT.V (Fin 4) ⊗[ℝ]
+              Perspectival.WantableGPT.V (Fin 4)}
+    (hC : Perspectival.IsLinearCloner Set.univ C) : False :=
+  no_universal_cloner_WantableGPT_vertices hC (by decide : (0 : Fin 4) ≠ 1)
+
+/-- Concrete: no universal cloner on V (Bool × Bool). -/
+example {C : Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ]
+              Perspectival.WantableGPT.V (Bool × Bool) ⊗[ℝ]
+              Perspectival.WantableGPT.V (Bool × Bool)}
+    (hC : Perspectival.IsLinearCloner Set.univ C) : False :=
+  no_universal_cloner_WantableGPT_vertices hC
+    (by decide : ((true, true) : Bool × Bool) ≠ (true, false))
