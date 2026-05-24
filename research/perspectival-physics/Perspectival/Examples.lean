@@ -2837,6 +2837,13 @@ example : SelfComplementary () := rfl
 /-- Wantable.complement on Empty is vacuously involutive. -/
 example (e : Empty) : Wantable.complement (Wantable.complement e) = e := e.elim
 
+/-- FixedPointFreeComplement Empty (vacuously). -/
+example : FixedPointFreeComplement Empty := fun e _ => e.elim
+
+/-- |Empty| = 0 is trivially even. -/
+example : Even (Fintype.card Empty) := by
+  rw [show Fintype.card Empty = 0 from by decide]; exact ⟨0, rfl⟩
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
