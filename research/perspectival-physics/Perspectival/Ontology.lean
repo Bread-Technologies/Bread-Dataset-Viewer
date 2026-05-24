@@ -46,6 +46,8 @@ honored by refusing any substrate field other than the want itself.
 structure Existent (W : Type u) where
   want : W
 
+instance {W : Type u} [Inhabited W] : Inhabited (Existent W) := ⟨⟨default⟩⟩
+
 /-! ## Axiom III: reality is the structure of meetings
 
 A meeting is a pair of complementary wants. Reality is a collection
