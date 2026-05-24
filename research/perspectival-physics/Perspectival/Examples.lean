@@ -14234,6 +14234,36 @@ example (f : Perspectival.WantableGPT.V Bool)
     show f false = (if false = false then (1 : ℝ) else 0)
     simp; exact h_false
 
+/-! ### Bool state probabilities are convex coefficients on vertices -/
+
+/-- For Bool state f with f true = α (∈ [0,1]), f = α • vertex true + (1-α) • vertex false. -/
+example (α : ℝ) (hα : 0 ≤ α) (hα1 : α ≤ 1) :
+    let f : Perspectival.WantableGPT.V Bool := fun b => if b = true then α else 1 - α
+    f = α • Perspectival.WantableGPT.vertex Bool true
+      + (1 - α) • Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  cases b with
+  | true =>
+    show (if true = true then α else 1 - α)
+       = α * (if true = true then (1 : ℝ) else 0)
+       + (1 - α) * (if false = true then (1 : ℝ) else 0)
+    simp
+  | false =>
+    show (if false = true then α else 1 - α)
+       = α * (if true = false then (1 : ℝ) else 0)
+       + (1 - α) * (if false = false then (1 : ℝ) else 0)
+    simp
+
+/-- The convex combination α • vertex true + (1-α) • vertex false with α ∈ [0,1] is a state. -/
+example (α : ℝ) (hα : 0 ≤ α) (hα1 : α ≤ 1) :
+    α • Perspectival.WantableGPT.vertex Bool true
+    + (1 - α) • Perspectival.WantableGPT.vertex Bool false
+    ∈ Perspectival.WantableGPT.states Bool :=
+  WantableGPT_convex_combo_in_states _ _ α (1 - α)
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+    (Perspectival.WantableGPT.vertex_in_states Bool false)
+    hα (by linarith) (by ring)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
