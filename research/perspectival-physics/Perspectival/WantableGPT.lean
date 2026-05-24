@@ -141,5 +141,23 @@ def gpt : Perspectival.GPT (V W) where
       show ∑ w, 1 * f w = ∑ w, f w
       simp
 
+/-- The unit functional is preserved by the complement action. -/
+theorem unitFn_complementAction (f : V W) :
+    unitFn W (complementAction W f) = unitFn W f := by
+  show ∑ w, f (Wantable.complement w) = ∑ w, f w
+  exact Equiv.sum_comp ⟨Wantable.complement, Wantable.complement,
+      Wantable.complement_involutive, Wantable.complement_involutive⟩ f
+
+/-- The Wantable-complement action is a structure-preserving GPT
+transformation: a Transform from `gpt W` to itself. -/
+def complementTransform : Perspectival.GPT.Transform (gpt W) (gpt W) where
+  toLin := complementAction W
+  preserves_states := complementAction_preserves_states W
+  preserves_unit := by
+    apply LinearMap.ext
+    intro f
+    show unitFn W (complementAction W f) = unitFn W f
+    exact unitFn_complementAction W f
+
 end WantableGPT
 end Perspectival
