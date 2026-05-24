@@ -12508,3 +12508,65 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
       intro heq
       exact hw (Prod.mk.inj heq).2
     rw [if_neg this]
+
+/-! ### Sum of vertices equals constant 1 (the unit "1-vector") -/
+
+/-- Sum over all vertex w functions equals constant 1. -/
+theorem sum_vertices_eq_one_const {W : Type u} [Wantable W] [Fintype W]
+    [DecidableEq W] :
+    (∑ w, Perspectival.WantableGPT.vertex W w) = (fun _ => (1 : ℝ)) := by
+  funext w'
+  rw [Finset.sum_apply]
+  show ∑ w, Perspectival.WantableGPT.vertex W w w' = 1
+  show ∑ w, (if w = w' then (1 : ℝ) else 0) = 1
+  rw [Finset.sum_eq_single w']
+  · simp
+  · intro w _ hne
+    rw [if_neg hne]
+  · intro h
+    exact absurd (Finset.mem_univ w') h
+
+/-- Concrete Bool: vertex true + vertex false = (fun _ => 1). -/
+example :
+    Perspectival.WantableGPT.vertex Bool true
+    + Perspectival.WantableGPT.vertex Bool false
+    = (fun _ => (1 : ℝ)) := by
+  have := sum_vertices_eq_one_const (W := Bool)
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton] at this
+  exact this
+
+/-- Concrete Fin 3: vertex 0 + vertex 1 + vertex 2 = (fun _ => 1). -/
+example :
+    Perspectival.WantableGPT.vertex (Fin 3) 0
+    + Perspectival.WantableGPT.vertex (Fin 3) 1
+    + Perspectival.WantableGPT.vertex (Fin 3) 2
+    = (fun _ => (1 : ℝ)) := by
+  funext i
+  show Perspectival.WantableGPT.vertex (Fin 3) 0 i
+     + Perspectival.WantableGPT.vertex (Fin 3) 1 i
+     + Perspectival.WantableGPT.vertex (Fin 3) 2 i = 1
+  show (if (0 : Fin 3) = i then (1 : ℝ) else 0)
+     + (if (1 : Fin 3) = i then (1 : ℝ) else 0)
+     + (if (2 : Fin 3) = i then (1 : ℝ) else 0)
+     = 1
+  fin_cases i <;> simp
+
+/-- Concrete Fin 4: sum of all vertices is the unit. -/
+example :
+    Perspectival.WantableGPT.vertex (Fin 4) 0
+    + Perspectival.WantableGPT.vertex (Fin 4) 1
+    + Perspectival.WantableGPT.vertex (Fin 4) 2
+    + Perspectival.WantableGPT.vertex (Fin 4) 3
+    = (fun _ => (1 : ℝ)) := by
+  funext i
+  show Perspectival.WantableGPT.vertex (Fin 4) 0 i
+     + Perspectival.WantableGPT.vertex (Fin 4) 1 i
+     + Perspectival.WantableGPT.vertex (Fin 4) 2 i
+     + Perspectival.WantableGPT.vertex (Fin 4) 3 i = 1
+  show (if (0 : Fin 4) = i then (1 : ℝ) else 0)
+     + (if (1 : Fin 4) = i then (1 : ℝ) else 0)
+     + (if (2 : Fin 4) = i then (1 : ℝ) else 0)
+     + (if (3 : Fin 4) = i then (1 : ℝ) else 0)
+     = 1
+  fin_cases i <;> simp
