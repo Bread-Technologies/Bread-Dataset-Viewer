@@ -88,6 +88,12 @@ theorem Wantable.complement_eq_iff {W : Type u} [Wantable W] (a b : W) :
     rw [Wantable.complement_involutive] at this
     exact this
 
+/-- Complement is self-inverse as a function. -/
+theorem Wantable.complement_complement_eq_id {W : Type u} [Wantable W] :
+    Wantable.complement ∘ Wantable.complement = (id : W → W) := by
+  funext w
+  exact Wantable.complement_involutive w
+
 /-! ## Axiom III: reality is the structure of meetings
 
 A meeting is a pair of complementary wants. Reality is a collection
