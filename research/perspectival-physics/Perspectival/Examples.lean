@@ -14661,6 +14661,50 @@ example (f : Perspectival.WantableGPT.V (Bool × Bool))
     rightMarginal f ∈ Perspectival.WantableGPT.states Bool :=
   rightMarginal_preserves_states f hf
 
+/-! ### Reduced states (marginals) of common joint states -/
+
+/-- The reduced state (marginal) of uniformState (Bool × Bool) is uniformBool. -/
+example : leftMarginal (uniformState (Bool × Bool)) = uniformBool := by
+  funext b
+  show (∑ b₂, uniformState (Bool × Bool) (b, b₂)) = uniformBool b
+  show (∑ b₂, ((1 : ℝ) / Fintype.card (Bool × Bool))) = uniformBool b
+  rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show (1 : ℝ) / 4 + 1 / 4 = uniformBool b
+  show (1 : ℝ) / 4 + 1 / 4 = 1 / 2
+  norm_num
+
+/-- The reduced state of uniformState (Bool × Bool) (right) is uniformBool. -/
+example : rightMarginal (uniformState (Bool × Bool)) = uniformBool := by
+  funext b
+  show (∑ b₁, uniformState (Bool × Bool) (b₁, b)) = uniformBool b
+  show (∑ b₁, ((1 : ℝ) / Fintype.card (Bool × Bool))) = uniformBool b
+  rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show (1 : ℝ) / 4 + 1 / 4 = uniformBool b
+  show (1 : ℝ) / 4 + 1 / 4 = 1 / 2
+  norm_num
+
+/-- leftMarginal of productState (vertex true) (vertex true) is vertex true. -/
+example :
+    leftMarginal (productState (Perspectival.WantableGPT.vertex Bool true)
+                               (Perspectival.WantableGPT.vertex Bool true))
+    = Perspectival.WantableGPT.vertex Bool true := by
+  funext b
+  exact productState_left_marginal_state _ _
+    (Perspectival.WantableGPT.vertex_in_states Bool true) b
+
+/-- rightMarginal of productState (vertex true) (vertex false) is vertex false. -/
+example :
+    rightMarginal (productState (Perspectival.WantableGPT.vertex Bool true)
+                                (Perspectival.WantableGPT.vertex Bool false))
+    = Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  exact productState_right_marginal_state _ _
+    (Perspectival.WantableGPT.vertex_in_states Bool true) b
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
