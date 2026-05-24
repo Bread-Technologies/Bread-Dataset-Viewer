@@ -3051,6 +3051,26 @@ example {W : Type u} [Wantable W] : Function.Injective (Wantable.complement : W 
 example {W : Type u} [Wantable W] : Function.Surjective (Wantable.complement : W → W) :=
   Wantable.complement_surjective
 
+/-- Concrete: WantableGPT Bool does not have quantum signature. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+        ≠ Fintype.card Bool * Fintype.card Bool :=
+  Perspectival.WantableGPT.wantableGPT_not_quantum Bool (by decide)
+
+/-- Concrete: WantableGPT Fin 4 does not have quantum signature. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4))
+        ≠ Fintype.card (Fin 4) * Fintype.card (Fin 4) :=
+  Perspectival.WantableGPT.wantableGPT_not_quantum (Fin 4) (by decide)
+
+/-- Concrete: WantableGPT Bool does not have real-QM signature. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool) * 2
+        ≠ Fintype.card Bool * (Fintype.card Bool + 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_realQM Bool (by decide)
+
+/-- Concrete: WantableGPT Bool does not have quaternionic-QM signature. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+        ≠ Fintype.card Bool * (2 * Fintype.card Bool - 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_quaternionicQM Bool (by decide)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
