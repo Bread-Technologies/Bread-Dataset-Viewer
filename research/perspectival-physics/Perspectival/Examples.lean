@@ -2935,6 +2935,19 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool �
           * Fintype.card (Bool × Bool × Bool × Bool) :=
   Perspectival.WantableGPT.wantableGPT_not_quantum (Bool × Bool × Bool × Bool) (by decide)
 
+/-- WantableGPT (Bool⁴) has K = N = 16. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool))
+        = Fintype.card (Bool × Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.finrank_V_eq_card (Bool × Bool × Bool × Bool)
+
+/-- Bool⁴ has fixed-point-free complement. -/
+example : FixedPointFreeComplement (Bool × Bool × Bool × Bool) := by
+  intro ⟨b₁, _, _, _⟩ h
+  have h1 : Wantable.complement b₁ = b₁ := (Prod.mk.injEq _ _ _ _).mp h |>.1
+  cases b₁
+  · exact Bool.false_ne_true h1.symm
+  · exact Bool.false_ne_true h1
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
