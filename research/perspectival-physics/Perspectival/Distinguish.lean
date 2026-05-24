@@ -122,5 +122,42 @@ theorem no_cloning_of_distinguishable {G : GPT V} {C : V →ₗ[ℝ] V ⊗[ℝ] 
   rw [he₁, he₂, G.states_normalized ρ₁ hst₁, G.states_normalized ρ₂ hst₂]
   norm_num
 
+/-! ## Perfect distinguishability (Hardy-style)
+
+A family of states is *perfectly distinguishable* if there is a
+single measurement — i.e., a family of effects summing to the unit —
+that picks each state out with certainty. -/
+
+/-- A perfect-distinguishability witness for a family `ρ : ι → V`:
+effects `e : ι → V →ₗ[ℝ] ℝ` with `e i (ρ j) = δᵢⱼ`. -/
+structure PerfectWitness {G : GPT V} {ι : Type*} [DecidableEq ι] (ρ : ι → V) where
+  e : ι → V →ₗ[ℝ] ℝ
+  kronecker : ∀ i j, e i (ρ j) = if i = j then 1 else 0
+
+/-- **N perfectly distinguishable states are linearly independent.**
+
+Given a finite family `ρ : Fin n → V` of states with a perfect-
+distinguishability witness, `ρ` is linearly independent.
+
+Proof: from `∑ aⱼ • ρⱼ = 0`, apply `e i` to both sides; the sum
+collapses by the Kronecker condition to `aᵢ · 1 = 0`, so `aᵢ = 0`. -/
+theorem perfect_distinguishable_imp_linear_independent
+    {G : GPT V} {n : ℕ} (ρ : Fin n → V)
+    (w : PerfectWitness (G := G) ρ) :
+    LinearIndependent ℝ ρ := by
+  rw [Fintype.linearIndependent_iff]
+  intro a hcomb i
+  -- Apply e i to both sides; surviving term is a i * 1.
+  have happly : w.e i (∑ j, a j • ρ j) = w.e i (0 : V) := by rw [hcomb]
+  rw [map_zero, map_sum] at happly
+  simp only [map_smul, smul_eq_mul, w.kronecker] at happly
+  -- happly : ∑ j, a j * (if i = j then 1 else 0) = 0
+  have : ∑ j : Fin n, a j * (if i = j then (1 : ℝ) else 0) = a i := by
+    rw [Finset.sum_eq_single i (fun j _ hji => by simp [if_neg (Ne.symm hji)])
+        (fun h => by exact absurd (Finset.mem_univ i) h)]
+    simp
+  rw [this] at happly
+  exact happly
+
 end Distinguish
 end Perspectival
