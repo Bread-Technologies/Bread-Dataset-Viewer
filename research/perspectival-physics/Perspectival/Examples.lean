@@ -414,6 +414,14 @@ example (a b : ℝˣ) : scaleHom (a * b) = scaleHom a * scaleHom b :=
 example (a : ℝˣ) : (scaleHom a)⁻¹ = scaleHom a⁻¹ := by
   rw [← scaleHom.map_inv]
 
+-- A linear PTrans on ℝ is exactly a scaling: any LinearMap ℝ → ℝ that
+-- is a bijection respecting negation is `x ↦ a*x` for some `a ≠ 0`.
+-- The intersection of `PTrans ℝ` with the linear maps is exactly the
+-- multiplicative group `ℝˣ`.
+--
+-- Conceptually: PTrans ℝ contains many non-linear odd bijections; the
+-- *linear* subgroup is `scaleHom(ℝˣ)`.
+
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
