@@ -6399,5 +6399,21 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
     Equivalence (Perspectival.Continuity.Reachable (G := G)) :=
   Perspectival.Continuity.Reachable.equivalence h_inv
 
+/-- `StrictReversible.id` has inverse equal to itself (via the bijective
+identity map). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : Perspectival.GPT V) (v : V) :
+    (Perspectival.Continuity.StrictReversible.id G).inv v = v := by
+  exact Perspectival.Continuity.StrictReversible.inv_comp _ v
+
+/-- Generic `StrictReversible.comp_toLin`: composition toLin is the
+underlying composition of linear maps. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V}
+    (R₂ R₁ : Perspectival.Continuity.StrictReversible G) :
+    (Perspectival.Continuity.StrictReversible.comp R₂ R₁).toLin
+      = R₂.toLin.comp R₁.toLin :=
+  Perspectival.Continuity.StrictReversible.comp_toLin R₂ R₁
+
 end Examples
 end Perspectival
