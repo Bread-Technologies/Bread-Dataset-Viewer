@@ -14367,6 +14367,46 @@ example (f : Perspectival.WantableGPT.V (Bool × Bool))
     (Perspectival.WantableGPT.innerLin (Bool × Bool) pointIndicatorTT)
     ⟨pointIndicatorTT, pointIndicatorTT_in_effectVec, rfl⟩ f hf
 
+/-! ### Linearity of effects -/
+
+/-- For any state f g and effect e: e(α f + (1-α) g) = α e(f) + (1-α) e(g). -/
+example (e : Perspectival.WantableGPT.V Bool →ₗ[ℝ] ℝ)
+    (f g : Perspectival.WantableGPT.V Bool) (α : ℝ) :
+    e (α • f + (1 - α) • g) = α * e f + (1 - α) * e g := by
+  rw [map_add, map_smul, map_smul]
+  show α * e f + (1 - α) * e g = α * e f + (1 - α) * e g
+  rfl
+
+/-- For deltaIndicatorLin true on convex combo of states. -/
+example (f g : Perspectival.WantableGPT.V Bool) (α : ℝ) :
+    deltaIndicatorLin true (α • f + (1 - α) • g)
+    = α * deltaIndicatorLin true f + (1 - α) * deltaIndicatorLin true g := by
+  rw [map_add, map_smul, map_smul]
+  show α * deltaIndicatorLin true f + (1 - α) * deltaIndicatorLin true g
+     = α * deltaIndicatorLin true f + (1 - α) * deltaIndicatorLin true g
+  rfl
+
+/-- For diagonalIndicatorLin on convex combo of two states on Bool × Bool. -/
+example (f g : Perspectival.WantableGPT.V (Bool × Bool)) (α : ℝ) :
+    diagonalIndicatorLin (α • f + (1 - α) • g)
+    = α * diagonalIndicatorLin f + (1 - α) * diagonalIndicatorLin g := by
+  rw [map_add, map_smul, map_smul]
+  show α * diagonalIndicatorLin f + (1 - α) * diagonalIndicatorLin g
+     = α * diagonalIndicatorLin f + (1 - α) * diagonalIndicatorLin g
+  rfl
+
+/-- Mixed = (1/2)·diagonal + (1/2)·antiDiagonal: diagonal-indicator gives 1/2. -/
+example :
+    diagonalIndicatorLin mixedCorrelatedState = (1/2 : ℝ) := by
+  show diagonalIndicatorLin ((1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState) = 1/2
+  rw [map_add, map_smul, map_smul]
+  show (1/2 : ℝ) * diagonalIndicatorLin diagonalState
+     + (1/2 : ℝ) * diagonalIndicatorLin antiDiagonalState
+     = 1/2
+  rw [diagonalIndicatorLin_on_diagonalState,
+      diagonalIndicatorLin_on_antiDiagonalState]
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
