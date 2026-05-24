@@ -5,15 +5,27 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~9,400 lines of Lean** (excluding Mathlib dependencies) — 9000-line milestone passed
-- **~330+ verified theorems / examples** (no `sorry` outside documented placeholders)
+- **~9,700 lines of Lean** (excluding Mathlib dependencies) — past 9500
+- **~360+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **875+ commits** to the research branch (extended session — 875 milestone reached)
+- **899+ commits** to the research branch (extended session — 900 milestone approached)
 - **New productState mini-theory**: tensor-product structure for the
   WantableGPT bridge (`productState`, `productState_unitFn`,
   `productState_in_states`, `productState_vertex`, `productState_assoc`,
   `productState_swap`, `productState_complement_factor`,
-  `productEffectVec`, `productEffectVec_in_effectVec`)
+  `productEffectVec`, `productEffectVec_in_effectVec`,
+  `productState_smul_left/right`, `productState_add_left/right`,
+  `productState_transform_factor`)
+- **New uniformState theory**: maximally-mixed state on any finite Wantable
+  (`uniformState`, `uniformState_in_states`, `uniformState_transformAction_invariant`,
+  `uniformState_complement_invariant`, `uniformState_proj_eq` (Born rule),
+  `uniformState_prod_factor` (factorization on products), `uniformState_constant`)
+- **New correlation examples**: classical correlated states on Bool × Bool
+  (`diagonalState`, `antiDiagonalState`, `diagonalState_in_states`,
+  `diagonalState_left/right_marginal`,
+  `diagonalState_ne_productState_uniformBool` (correlation witnessed),
+  `diagonalIndicator{,Lin,_in_effects}` (verified effect),
+  `diagonalState_distinguishable_antiDiagonalState`)
 
 ## Major new content (latest batch)
 
