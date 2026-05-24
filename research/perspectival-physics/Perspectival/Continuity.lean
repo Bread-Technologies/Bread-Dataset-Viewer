@@ -348,6 +348,9 @@ def StrictReversible.id {V : Type u} [AddCommGroup V] [Module ℝ V]
     [TopologicalSpace V] (G : GPT V) :
     (StrictReversible.id G).toLin = LinearMap.id := rfl
 
+-- Note: StrictReversible.id_inv = LinearMap.id is true but the proof
+-- involves LinearEquiv.ofBijective + symm machinery; deferred.
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
