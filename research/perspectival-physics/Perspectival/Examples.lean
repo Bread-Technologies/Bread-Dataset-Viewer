@@ -2581,6 +2581,12 @@ example : boolEquivFin2.mapPTransMulEquiv boolSwap = fin2Swap := by
   intro i
   fin_cases i <;> rfl
 
+/-- Inverse direction: mapPTransMulEquiv.symm fin2Swap = boolSwap. -/
+example : boolEquivFin2.mapPTransMulEquiv.symm fin2Swap = boolSwap := by
+  apply PTrans.ext
+  intro b
+  cases b <;> rfl
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
