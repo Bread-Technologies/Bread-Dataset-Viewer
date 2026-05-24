@@ -5117,5 +5117,41 @@ example (n : ℕ) (i : Fin n) :
           ⊗ₜ[ℝ] Perspectival.Classical.vertex n i :=
   Perspectival.NoBroadcasting.classicalBroadcaster_basisFun n i
 
+/-- `Reachable.symm_of_inv_avail`: with per-element inverse availability,
+Reachable is symmetric. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V}
+    [Perspectival.Continuity.HasConnectedAgency G]
+    (h_inv : ∀ R : Perspectival.Continuity.Reversible G,
+              R ∈ Perspectival.Continuity.HasConnectedAgency.avail (G := G) →
+              ∃ S : Perspectival.Continuity.Reversible G,
+                S ∈ Perspectival.Continuity.HasConnectedAgency.avail (G := G) ∧
+                ∀ v : V, S.toLin (R.toLin v) = v)
+    {ρ₁ ρ₂ : V}
+    (h : Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂) :
+    Perspectival.Continuity.Reachable (G := G) ρ₂ ρ₁ :=
+  Perspectival.Continuity.Reachable.symm_of_inv_avail h_inv h
+
+/-- `trivialAgency_reachable_refl`: under trivialAgency, every state is
+reachable from itself. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : Perspectival.GPT V) (ρ : V) :
+    @Perspectival.Continuity.Reachable V _ _ _ G
+      (Perspectival.Continuity.trivialAgency G) ρ ρ :=
+  Perspectival.Continuity.trivialAgency_reachable_refl G ρ
+
+/-- `trivialAgency_inv_avail`: identity-only agency vacuously satisfies
+the inverse-availability hypothesis. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : Perspectival.GPT V) :
+    ∀ R : Perspectival.Continuity.Reversible G,
+      R ∈ Perspectival.Continuity.HasConnectedAgency.avail
+            (G := G) (self := Perspectival.Continuity.trivialAgency G) →
+      ∃ S : Perspectival.Continuity.Reversible G,
+        S ∈ Perspectival.Continuity.HasConnectedAgency.avail
+            (G := G) (self := Perspectival.Continuity.trivialAgency G) ∧
+        ∀ v : V, S.toLin (R.toLin v) = v :=
+  Perspectival.Continuity.trivialAgency_inv_avail G
+
 end Examples
 end Perspectival
