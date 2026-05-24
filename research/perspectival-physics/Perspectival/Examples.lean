@@ -10684,3 +10684,31 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
   rw [show (101 : ℕ) = 2 * 50 + 1 from rfl, pow_add,
       pow_mul, WantableGPT_complementTransform_order_two,
       one_pow, one_mul, pow_one]
+
+/-- A general n-period theorem: complementTransform^(2n) = 1. -/
+theorem complementTransform_pow_two_n
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (n : ℕ) :
+    (Perspectival.WantableGPT.complementTransform W) ^ (2 * n)
+      = (1 : Perspectival.GPT.Transform
+              (Perspectival.WantableGPT.gpt W)
+              (Perspectival.WantableGPT.gpt W)) := by
+  rw [pow_mul, WantableGPT_complementTransform_order_two, one_pow]
+
+/-- A general (2n+1) theorem: complementTransform^(2n+1) = complementTransform. -/
+theorem complementTransform_pow_two_n_succ
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (n : ℕ) :
+    (Perspectival.WantableGPT.complementTransform W) ^ (2 * n + 1)
+      = Perspectival.WantableGPT.complementTransform W := by
+  rw [pow_add, complementTransform_pow_two_n, one_mul, pow_one]
+
+/-- Concrete: complementTransform^200 = 1 (Bool case). -/
+example : (Perspectival.WantableGPT.complementTransform Bool) ^ 200
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt Bool)
+                  (Perspectival.WantableGPT.gpt Bool)) :=
+  complementTransform_pow_two_n 100
+
+/-- Concrete: complementTransform^999 = complementTransform (Bool). -/
+example : (Perspectival.WantableGPT.complementTransform Bool) ^ 999
+        = Perspectival.WantableGPT.complementTransform Bool :=
+  complementTransform_pow_two_n_succ 499
