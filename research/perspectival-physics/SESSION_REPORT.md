@@ -5,11 +5,11 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~11,700 lines of Lean** (excluding Mathlib dependencies); Examples.lean
-  alone past 10,000 lines
-- **~620+ verified theorems / examples** (no `sorry` outside documented placeholders)
+- **~11,900 lines of Lean** (excluding Mathlib dependencies); Examples.lean
+  alone past 10,300 lines
+- **~650+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1020+ commits** to the research branch — 1020 milestone
+- **1030+ commits** to the research branch
 - **Marginalization theory**: `leftMarginal` and `rightMarginal` as
   LinearMaps on the product state space, with marginal-recovery
   theorems for productState and concrete computations for the
