@@ -58,6 +58,9 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Bridge respects complement: `fromPTrans complementPTrans = complementAction` | `WantableGPT.lean :: fromPTransHom_complementPTrans` | ✓ |
 | Coe instance: PTrans → Transform | `WantableGPT.lean` | ✓ |
 | WantableGPT vertices linearly independent | `WantableGPT.lean :: vertex_linear_independent_of_fintype` | ✓ |
+| WantableGPT vertex decomposition: `f = ∑ w, f w • vertex w` | `WantableGPT.lean :: vertex_decomposition` | ✓ |
+| WantableGPT is the classical simplex on `W` (convex-hull characterization) | `WantableGPT.lean :: state_is_convex_combination_of_vertices` | ✓ |
+| Concrete classification `PTrans Bool = {1, boolSwap}` | `Examples.lean :: ptrans_bool_classification` | ✓ |
 | Self-Transforms form a Monoid | `GPT.lean (instance)` | ✓ |
 | Transform composition (`Transform.comp`) | `GPT.lean :: Transform.comp` | ✓ |
 | Reachable is reflexive | `Continuity.lean :: Reachable.refl` | ✓ |
