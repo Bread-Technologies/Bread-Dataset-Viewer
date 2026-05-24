@@ -2543,6 +2543,11 @@ example {W₁ W₂ W₃ : Type u} [Wantable W₁] [Wantable W₂] [Wantable W₃
     PTrans W₁ ≃* PTrans W₃ :=
   (e₁.trans e₂).mapPTransMulEquiv
 
+/-- Refl on any Wantable gives the identity MulEquiv at PTrans level. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    (WantableEquiv.refl W).mapPTransMulEquiv.symm φ = φ := by
+  apply PTrans.ext; intro w; rfl
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
