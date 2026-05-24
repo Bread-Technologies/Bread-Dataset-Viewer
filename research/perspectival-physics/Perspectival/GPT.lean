@@ -66,7 +66,7 @@ namespace GPT
 variable {V : Type u} [AddCommGroup V] [Module ℝ V]
 
 /-- Born-rule-style probability assignment. -/
-def prob (G : GPT V) (e : V →ₗ[ℝ] ℝ) (ρ : V) : ℝ := e ρ
+def prob (_G : GPT V) (e : V →ₗ[ℝ] ℝ) (ρ : V) : ℝ := e ρ
 
 @[simp] theorem prob_def (G : GPT V) (e : V →ₗ[ℝ] ℝ) (ρ : V) :
     G.prob e ρ = e ρ := rfl

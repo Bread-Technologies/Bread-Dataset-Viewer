@@ -100,7 +100,7 @@ across theories, not a structural axiom about a single theory. In our
 framework it has no direct derivation from I–IV; we record it as an
 auxiliary postulate. Formal statement requires quantification over the
 class of GPTs satisfying the others, which is delicate; marked `sorry`. -/
-def Axiom2_Simplicity (G : GPT V) (n k : ℕ) : Prop := True  -- placeholder
+def Axiom2_Simplicity (_G : GPT V) (_n _k : ℕ) : Prop := True  -- placeholder
 
 theorem axiom2_argued_auxiliary :
     "Axiom 2 (Simplicity) is AUXILIARY: not derivable from I–IV." = "Axiom 2 (Simplicity) is AUXILIARY: not derivable from I–IV." := rfl

@@ -66,7 +66,7 @@ theorem linear_dependent_states_eq
   -- Negation of `LinearIndependent.pair_iff`: some (a, b) ≠ (0, 0) with
   -- a • ρ₁ + b • ρ₂ = 0.
   rw [LinearIndependent.pair_iff] at hdep
-  push_neg at hdep
+  push Not at hdep
   obtain ⟨a, b, hcomb, hne⟩ := hdep
   -- Apply unit: a * 1 + b * 1 = 0, i.e. a + b = 0.
   have hunit : G.unit (a • ρ₁ + b • ρ₂) = 0 := by rw [hcomb]; exact map_zero _
@@ -99,7 +99,7 @@ functional then forces the scalar to be 1, contradicting
 distinguishability. -/
 theorem distinguishable_imp_linear_independent
     {G : GPT V} {ρ₁ ρ₂ : V}
-    (h₁ : ρ₁ ∈ G.states) (h₂ : ρ₂ ∈ G.states)
+    (_h₁ : ρ₁ ∈ G.states) (h₂ : ρ₂ ∈ G.states)
     (hd : Hardy.Distinguishable G ρ₁ ρ₂) :
     LinearIndependent ℝ ![ρ₁, ρ₂] := by
   obtain ⟨e, _, he₁, he₂⟩ := hd

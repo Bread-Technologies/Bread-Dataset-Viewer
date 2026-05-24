@@ -65,7 +65,7 @@ def innerLin (f : V n) : V n →ₗ[ℝ] ℝ where
   map_add' x y := by
     simp [mul_add, Finset.sum_add_distrib]
   map_smul' c x := by
-    simp [mul_comm, Finset.mul_sum, mul_assoc, mul_left_comm]
+    simp [Finset.mul_sum, mul_left_comm]
 
 /-- Set of valid effects. -/
 def effects : Set (V n →ₗ[ℝ] ℝ) := innerLin n '' effectVec n

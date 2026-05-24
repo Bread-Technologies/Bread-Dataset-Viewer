@@ -92,7 +92,7 @@ path in V.
 The path is `t ↦ γ(t)(ρ₁)` where `γ` is the continuous interpolation
 from `id.toLin` to `R.toLin` provided by `HasConnectedAgency`. -/
 theorem continuous_path_of_reachable [HasConnectedAgency G]
-    (ρ₁ ρ₂ : V) (hρ₁ : ρ₁ ∈ G.states) (h : Reachable (G := G) ρ₁ ρ₂) :
+    (ρ₁ ρ₂ : V) (_hρ₁ : ρ₁ ∈ G.states) (h : Reachable (G := G) ρ₁ ρ₂) :
     ∃ p : unitInterval → V, Continuous p ∧ p 0 = ρ₁ ∧ p 1 = ρ₂ := by
   obtain ⟨R, hR, hRρ⟩ := h
   obtain ⟨R_id, hR_id_avail, hR_id_eq⟩ := HasConnectedAgency.id_avail (G := G)
@@ -153,7 +153,7 @@ then between any two reachable PURE states there is a continuous path
 of linear maps from the identity to a transformation realizing the
 reachability. -/
 theorem hardy_axiom5_pure_states [HasConnectedAgency G]
-    {ρ₁ ρ₂ : V} (hp₁ : PureState G ρ₁) (_hp₂ : PureState G ρ₂)
+    {ρ₁ ρ₂ : V} (_hp₁ : PureState G ρ₁) (_hp₂ : PureState G ρ₂)
     (h : Reachable (G := G) ρ₁ ρ₂) :
     ∃ γ : unitInterval → V →ₗ[ℝ] V,
       Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧

@@ -86,6 +86,6 @@ def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   resp_complement := by
     intro w; cases w with
     | inl w => simp [Wantable.complement, f₁.resp_complement]
-    | inr w => simp [instWantableSum, Wantable.complement, f₂.resp_complement]
+    | inr w => simp [Wantable.complement, f₂.resp_complement]
 
 end Perspectival
