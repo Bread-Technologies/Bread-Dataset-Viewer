@@ -5554,5 +5554,20 @@ example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
   · rintro ⟨_, h⟩; exact h
   · intro h; exact h.elim
 
+/-- `Pattern.or` of any pattern with `Pattern.trivial` is `Pattern.trivial`. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
+    Pattern.or P (Pattern.trivial W) r ↔ Pattern.trivial W r := by
+  constructor
+  · intro _; trivial
+  · intro _; exact Or.inr trivial
+
+/-- Pattern is itself a Type: `Pattern W = Reality W → Prop`. -/
+example {W : Type u} [Wantable W] :
+    Pattern W = (Reality W → Prop) := rfl
+
+/-- `Reality W` is an alias for `Meeting W → Prop`. -/
+example {W : Type u} [Wantable W] :
+    Reality W = (Meeting W → Prop) := rfl
+
 end Examples
 end Perspectival
