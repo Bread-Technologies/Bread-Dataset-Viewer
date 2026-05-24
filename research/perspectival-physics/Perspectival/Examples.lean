@@ -13845,6 +13845,42 @@ example (a b : Bool) :
      = (if (a, b) = (q₁, q₂) then (1 : ℝ) else 0)
   cases a <;> cases b <;> cases q₁ <;> cases q₂ <;> simp
 
+/-! ### Marginal of joint vertex states -/
+
+/-- leftMarginal of joint vertex (a, b) on Bool × Bool is vertex a. -/
+example (a b : Bool) :
+    leftMarginal (Perspectival.WantableGPT.vertex (Bool × Bool) (a, b))
+      = Perspectival.WantableGPT.vertex Bool a := by
+  funext v
+  show (∑ w, Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) (v, w))
+     = Perspectival.WantableGPT.vertex Bool a v
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) (v, true)
+     + Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) (v, false)
+     = Perspectival.WantableGPT.vertex Bool a v
+  show (if (a, b) = (v, true) then (1 : ℝ) else 0)
+     + (if (a, b) = (v, false) then (1 : ℝ) else 0)
+     = (if a = v then (1 : ℝ) else 0)
+  cases a <;> cases b <;> cases v <;> simp
+
+/-- rightMarginal of joint vertex (a, b) on Bool × Bool is vertex b. -/
+example (a b : Bool) :
+    rightMarginal (Perspectival.WantableGPT.vertex (Bool × Bool) (a, b))
+      = Perspectival.WantableGPT.vertex Bool b := by
+  funext v
+  show (∑ w, Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) (w, v))
+     = Perspectival.WantableGPT.vertex Bool b v
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) (true, v)
+     + Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) (false, v)
+     = Perspectival.WantableGPT.vertex Bool b v
+  show (if (a, b) = (true, v) then (1 : ℝ) else 0)
+     + (if (a, b) = (false, v) then (1 : ℝ) else 0)
+     = (if b = v then (1 : ℝ) else 0)
+  cases a <;> cases b <;> cases v <;> simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
