@@ -563,6 +563,18 @@ example : (1 : PTrans (List Bool)).toFun [] = [] := rfl
 
 example : (1 : PTrans (List Bool)).toFun [false, false, true] = [false, false, true] := rfl
 
+/-- Complement maps a set to its image under complement, an involution. -/
+example {W : Type u} [Wantable W] (s : Set W) :
+    {w | Wantable.complement w ∈ s} = (Wantable.complement '' s : Set W) := by
+  ext w
+  constructor
+  · intro h
+    -- complement w ∈ s, so w = complement (complement w) is image
+    exact ⟨Wantable.complement w, h, Wantable.complement_involutive w⟩
+  · rintro ⟨v, hv, rfl⟩
+    show Wantable.complement (Wantable.complement v) ∈ s
+    rwa [Wantable.complement_involutive]
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
