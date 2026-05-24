@@ -222,5 +222,12 @@ example :
   show f (boolSwap.invFun b) = f (Wantable.complement b)
   cases b <;> rfl
 
+/-- On the boolean Wantable, `boolSwap` and `Perspectival.WantableGPT.complementPTrans Bool`
+are equal as PTrans elements: both implement the negation. -/
+example : boolSwap = Perspectival.WantableGPT.complementPTrans Bool := by
+  apply PTrans.ext
+  intro b
+  cases b <;> rfl
+
 end Examples
 end Perspectival
