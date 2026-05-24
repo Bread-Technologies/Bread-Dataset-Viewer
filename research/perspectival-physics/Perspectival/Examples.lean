@@ -11244,3 +11244,28 @@ example (n : ℕ) (f : Perspectival.Classical.V n)
 example (n : ℕ) (f : Perspectival.Classical.V n)
     (hf : f ∈ Perspectival.Classical.states n) (i : Fin n) :
     0 ≤ f i := hf.1 i
+
+/-- Composition fold: a list of PTrans composes. -/
+example {W : Type u} [Wantable W] (φs : List (PTrans W)) :
+    PTrans W := φs.foldl (· * ·) 1
+
+example {W : Type u} [Wantable W] (φs : List (PTrans W)) :
+    PTrans W := φs.foldr (· * ·) 1
+
+/-- Empty list folds to identity. -/
+example {W : Type u} [Wantable W] :
+    ([] : List (PTrans W)).foldl (· * ·) 1 = 1 := rfl
+
+example {W : Type u} [Wantable W] :
+    ([] : List (PTrans W)).foldr (· * ·) 1 = 1 := rfl
+
+/-- Singleton list folds to the element. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    [φ].foldl (· * ·) 1 = φ := by
+  show 1 * φ = φ
+  exact one_mul φ
+
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    [φ].foldr (· * ·) 1 = φ := by
+  show φ * 1 = φ
+  exact mul_one φ
