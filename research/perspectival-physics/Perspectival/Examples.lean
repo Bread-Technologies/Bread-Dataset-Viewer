@@ -2815,6 +2815,14 @@ example : (0 : Perspectival.WantableGPT.V (Bool × Bool × Bool))
 
 -- (effectVec_eq_hypercube concrete instance skipped — type inference fiddly.)
 
+/-- The complement on Fin 2 sends 0 to 1. -/
+example : Wantable.complement (0 : Fin 2) = 1 := rfl
+
+/-- The complement on Fin 2 sends 1 to 0. -/
+example : Wantable.complement (1 : Fin 2) = 0 := rfl
+
+-- (Fin 4 concrete complement values — instance definition different; skip.)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
