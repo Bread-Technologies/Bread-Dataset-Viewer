@@ -50,13 +50,19 @@ operational_dim_le_state_dim`).
 
 ## Cosmological / dark-sector predictions
 
-### P5 — Plural hidden sectors (dark matter is multi-species)  [S]
+### P5 — Plural hidden sectors (dark matter is multi-species)  [D-qualitative, S-quantitative]
 
 The framework's `Composition.lean` shows that disjoint-union
 Wantables admit no cross-system meetings — independent perspectival
 sectors are *structurally* prohibited from non-gravitational
 interactions. The framework's natural ontology is therefore a
 *multiplicity* of weakly-coupled sectors, not a single dark species.
+
+**Upgraded this session:** `MultiSectorWantable n W` is now a formal
+Lean construction (in `Examples.lean`), with worked examples for n=2,3,4
+and cardinality-distinctness theorems showing the axioms ADMIT arbitrary
+n. Single-species DM is not forced — multi-species is the natural
+non-uniqueness default. See `TIER3_DARK_MATTER.md` for the full analysis.
 
 Specifically: if gravity is geometry (acting on all sectors uniformly
 by being part of the universal patterning of Axiom IV) but other
