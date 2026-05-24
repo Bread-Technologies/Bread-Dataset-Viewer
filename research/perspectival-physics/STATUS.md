@@ -35,6 +35,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | Action of PTrans on Meeting is functorial | `Transformations.lean :: actMeeting_id, actMeeting_comp` | ✓ |
 | `actMeeting PTrans.complement = Meeting.swap` (PTrans/swap identification) | `Transformations.lean :: actMeeting_complement` | ✓ |
 | PTrans action on Meeting is faithful | `Transformations.lean :: actMeeting_faithful` | ✓ |
+| Forgetful injective MonoidHom `PTrans W →* Equiv.Perm W` | `Transformations.lean :: toEquivPermHom, toEquivPermHom_injective` | ✓ |
+| **Characterization**: `PTrans W` is *exactly* the centralizer of `complement` in `Equiv.Perm W` | `Transformations.lean :: mem_range_toEquivPermHom_iff` | ✓ |
 | Disjoint-union Wantable structure (no cross-system meetings) | `Composition.lean :: instWantableSum, Meeting.sum_no_cross` | ✓ |
 | Componentwise PTrans on disjoint unions | `Composition.lean :: PTrans.sumMap` | ✓ |
 | Spacelike pair of binary perspectival observables → CHSH tuple | `CHSH.lean :: SpacelikePair, toCHSHTuple` | ✓ |
@@ -121,6 +123,18 @@ group actions on meetings. None of that is uniquely "perspectival" —
 it's the formal structure of any relational symmetry. **The philosophical
 load is not yet doing technical work.** That gap is the actual research
 problem and must be confronted head-on.
+
+**Structural identifications now formalized.** The framework's
+ostensibly novel structures reduce to well-known mathematics: `Meeting W`
+is in canonical bijection with `W` (`mk_fromSide` is an Equiv); `PTrans W`
+is *exactly* the centralizer of the complement involution inside the
+permutation group `Equiv.Perm W` (`mem_range_toEquivPermHom_iff`); the
+PTrans-level complement, acting on meetings, is identically the swap
+(`actMeeting_complement = Meeting.swap`). These are clarifying
+deflations: the perspectival vocabulary picks out no new mathematics
+beyond Z/2-equivariant permutations. The research question is whether
+*additional* postulates beyond I–IV can pick out specifically quantum
+mathematics, not whether the bare ontology already does so.
 
 **What would constitute the framework "earning its keep":**
 - A theorem of the form: *axioms I–IV (+ minimal compositional postulates)
