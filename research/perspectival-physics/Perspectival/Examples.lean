@@ -2742,6 +2742,12 @@ example : (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, t
   show (if (true, true, true) = (true, true, true) then (1 : ℝ) else 0) = 1
   simp
 
+/-- Bool³ vertex(t,t,t) has coordinate 0 at (f,f,f). -/
+example : (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true))
+            (false, false, false) = 0 := by
+  show (if (true, true, true) = (false, false, false) then (1 : ℝ) else 0) = 0
+  simp
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
