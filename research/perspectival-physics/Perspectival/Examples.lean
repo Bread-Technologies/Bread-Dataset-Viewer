@@ -5835,5 +5835,29 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 ⊕ Bool)) = 5 :
   rw [Perspectival.WantableGPT.finrank_V_sum_eq_add]
   decide
 
+/-- `IsBroadcaster` unfolds: two marginals coincide with the input. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (tr₁ tr₂ : V ⊗[ℝ] V →ₗ[ℝ] V) (S : Set V) (B : V →ₗ[ℝ] V ⊗[ℝ] V)
+    (h : Perspectival.NoBroadcasting.IsBroadcaster tr₁ tr₂ S B) (v : V)
+    (hv : v ∈ S) :
+    tr₁ (B v) = v ∧ tr₂ (B v) = v :=
+  ⟨h.marginal₁ v hv, h.marginal₂ v hv⟩
+
+/-- The classical broadcaster sends vertex 0 of Fin 2 to its diagonal. -/
+example :
+    Perspectival.NoBroadcasting.classicalBroadcaster 2
+        (Perspectival.Classical.vertex 2 0)
+      = Perspectival.Classical.vertex 2 0
+          ⊗ₜ[ℝ] Perspectival.Classical.vertex 2 0 :=
+  Perspectival.NoBroadcasting.classicalBroadcaster_vertex 2 0
+
+/-- The classical broadcaster sends vertex 1 of Fin 3 to its diagonal. -/
+example :
+    Perspectival.NoBroadcasting.classicalBroadcaster 3
+        (Perspectival.Classical.vertex 3 1)
+      = Perspectival.Classical.vertex 3 1
+          ⊗ₜ[ℝ] Perspectival.Classical.vertex 3 1 :=
+  Perspectival.NoBroadcasting.classicalBroadcaster_vertex 3 1
+
 end Examples
 end Perspectival
