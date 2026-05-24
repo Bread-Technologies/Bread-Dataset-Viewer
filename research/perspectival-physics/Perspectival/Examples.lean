@@ -575,6 +575,18 @@ example {W : Type u} [Wantable W] (s : Set W) :
     show Wantable.complement (Wantable.complement v) ∈ s
     rwa [Wantable.complement_involutive]
 
+/-- The complement image of the complement image of a set is the set. -/
+example {W : Type u} [Wantable W] (s : Set W) :
+    Wantable.complement '' (Wantable.complement '' s) = s := by
+  ext w
+  constructor
+  · rintro ⟨v, ⟨u, hu, rfl⟩, rfl⟩
+    -- complement (complement u) = u, so w = u
+    rwa [Wantable.complement_involutive]
+  · intro hw
+    refine ⟨Wantable.complement w, ⟨w, hw, rfl⟩, ?_⟩
+    exact Wantable.complement_involutive w
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
