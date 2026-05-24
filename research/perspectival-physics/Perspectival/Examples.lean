@@ -13304,6 +13304,60 @@ example : antiDiagonalState ≠ Perspectival.WantableGPT.vertex (Bool × Bool) (
     simp] at hcol
   norm_num at hcol
 
+/-! ### Boolean negation patterns -/
+
+/-- complement of true is false (PTrans Bool action). -/
+example : (PTrans.complement : PTrans Bool).toFun true = false := rfl
+
+/-- complement of false is true (PTrans Bool action). -/
+example : (PTrans.complement : PTrans Bool).toFun false = true := rfl
+
+/-- identity action on Bool. -/
+example : (1 : PTrans Bool).toFun true = true := rfl
+
+/-- identity inverse on Bool. -/
+example : (1 : PTrans Bool).invFun true = true := rfl
+
+/-- complement applied to (PTrans Bool) inverse gives the identity. -/
+example : (PTrans.complement : PTrans Bool).invFun true = false := rfl
+
+/-- complement applied to (PTrans Bool) inverse on false gives true. -/
+example : (PTrans.complement : PTrans Bool).invFun false = true := rfl
+
+/-- swap on Bool sends vertex true to vertex false (via transformAction). -/
+example :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement
+      (Perspectival.WantableGPT.vertex Bool true) =
+    Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  show Perspectival.WantableGPT.vertex Bool true
+        ((PTrans.complement : PTrans Bool).invFun b)
+     = Perspectival.WantableGPT.vertex Bool false b
+  cases b with
+  | true =>
+    show (if true = false then (1 : ℝ) else 0) = (if false = true then (1 : ℝ) else 0)
+    simp
+  | false =>
+    show (if true = true then (1 : ℝ) else 0) = (if false = false then (1 : ℝ) else 0)
+    simp
+
+/-- swap on Bool sends vertex false to vertex true (via transformAction). -/
+example :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement
+      (Perspectival.WantableGPT.vertex Bool false) =
+    Perspectival.WantableGPT.vertex Bool true := by
+  funext b
+  show Perspectival.WantableGPT.vertex Bool false
+        ((PTrans.complement : PTrans Bool).invFun b)
+     = Perspectival.WantableGPT.vertex Bool true b
+  cases b with
+  | true =>
+    show (if false = false then (1 : ℝ) else 0) = (if true = true then (1 : ℝ) else 0)
+    simp
+  | false =>
+    show (if false = true then (1 : ℝ) else 0) = (if true = false then (1 : ℝ) else 0)
+    simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
