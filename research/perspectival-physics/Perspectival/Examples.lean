@@ -9447,3 +9447,28 @@ example : Perspectival.WantableGPT.proj (Fin 4) 2
 example : Perspectival.WantableGPT.proj (Bool × Bool) (true, false)
         ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).effects :=
   Perspectival.WantableGPT.proj_in_effects (Bool × Bool) (true, false)
+
+/-- WantableGPT vertex_in_states applied generically. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.vertex W w ∈ (Perspectival.WantableGPT.gpt W).states :=
+  Perspectival.WantableGPT.vertex_in_states W w
+
+/-- Concrete: vertex true on Bool is in states. -/
+example : Perspectival.WantableGPT.vertex Bool true
+        ∈ (Perspectival.WantableGPT.gpt Bool).states :=
+  Perspectival.WantableGPT.vertex_in_states Bool true
+
+/-- Concrete: vertex (true, false) on Bool × Bool is in states. -/
+example : Perspectival.WantableGPT.vertex (Bool × Bool) (true, false)
+        ∈ (Perspectival.WantableGPT.gpt (Bool × Bool)).states :=
+  Perspectival.WantableGPT.vertex_in_states (Bool × Bool) (true, false)
+
+/-- Concrete: vertex 2 on Fin 4 is in states. -/
+example : Perspectival.WantableGPT.vertex (Fin 4) 2
+        ∈ (Perspectival.WantableGPT.gpt (Fin 4)).states :=
+  Perspectival.WantableGPT.vertex_in_states (Fin 4) 2
+
+/-- Concrete: vertex (true, true, true) on Bool×Bool×Bool is in states. -/
+example : Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true)
+        ∈ (Perspectival.WantableGPT.gpt (Bool × Bool × Bool)).states :=
+  Perspectival.WantableGPT.vertex_in_states (Bool × Bool × Bool) (true, true, true)
