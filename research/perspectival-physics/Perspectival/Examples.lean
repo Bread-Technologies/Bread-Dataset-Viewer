@@ -9063,3 +9063,13 @@ example : uniformState (Bool × Bool × Bool)
 example (p : Bool × Bool × Bool) : uniformState (Bool × Bool × Bool) p = 1/8 := by
   show (1 : ℝ) / (Fintype.card (Bool × Bool × Bool) : ℝ) = 1/8
   norm_cast
+
+-- Note: a triple-decomp theorem for vertex on Bool×Bool×Bool would be
+-- deferred — Lean's decidable reasoning has trouble with the
+-- classical-from-Mathlib instance interfering with reduction.
+
+/-- Concrete: vertex (true, false, true) on Bool³ at the same point = 1. -/
+example : Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, true)
+            (true, false, true) = 1 := by
+  show (if (true, false, true) = (true, false, true) then (1 : ℝ) else 0) = 1
+  simp
