@@ -431,6 +431,10 @@ example (n : ℤ) (h : 0 < n) : Wantable.complement n ≠ n := by
   have : -n = n := heq
   linarith
 
+/-- 1 and -1 form a complementary pair in ℤ. -/
+example : (Wantable.complement (1 : ℤ) = -1) ∧ (Wantable.complement (-1 : ℤ) = 1) :=
+  ⟨rfl, by show -(-1 : ℤ) = 1; ring⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
