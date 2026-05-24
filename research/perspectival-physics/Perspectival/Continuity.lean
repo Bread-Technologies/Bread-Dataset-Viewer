@@ -399,6 +399,29 @@ from the connected-agency structure). Whether this should be
 packaged as a `class` extension involves Lean's namespace
 resolution for `Reversible.comp`; deferred. -/
 
+/-! ## Symmetric-Reachable
+
+For `Reachable` to be an equivalence relation we need symmetry, which
+requires that if `R` is available, so is an inverse of `R` whose
+forward sends `R.toLin ρ ↦ ρ`. The `Reversible` structure does not
+inherently encode invertibility; the `StrictReversible` refinement
+above (with `isEquiv`) does. The full equivalence-relation upgrade
+requires an `InverseClosedAgency` class — a future refinement. -/
+
+/-- If for every `R ∈ avail`, an inverse-Reversible (also in avail)
+exists, then `Reachable` is symmetric. -/
+theorem Reachable.symm_of_inv_avail [HasConnectedAgency G]
+    (h_inv : ∀ R : Reversible G, R ∈ HasConnectedAgency.avail (G := G) →
+      ∃ S : Reversible G, S ∈ HasConnectedAgency.avail (G := G) ∧
+        ∀ v : V, S.toLin (R.toLin v) = v)
+    {ρ₁ ρ₂ : V} (h : Reachable (G := G) ρ₁ ρ₂) :
+    Reachable (G := G) ρ₂ ρ₁ := by
+  obtain ⟨R, hR, hRρ⟩ := h
+  obtain ⟨S, hS, hSinv⟩ := h_inv R hR
+  refine ⟨S, hS, ?_⟩
+  rw [← hRρ]
+  exact hSinv ρ₁
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
