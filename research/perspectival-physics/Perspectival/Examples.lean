@@ -2994,6 +2994,12 @@ example {W : Type u} [Wantable W] :
     (Wantable.complement w)
   rfl
 
+/-- complementEquiv (defined earlier) is precisely the underlying perm of
+PTrans.complement. -/
+example {W : Type u} [Wantable W] :
+    PTrans.toEquivPermHom (PTrans.complement : PTrans W) = complementEquiv :=
+  rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
