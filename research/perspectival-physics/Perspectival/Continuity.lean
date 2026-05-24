@@ -496,6 +496,17 @@ theorem Reachable.refl_symm_trans [ClosedAgency G]
    fun _ _ h => Reachable.symm_of_inv_avail h_inv h,
    fun _ _ _ h₁ h₂ => Reachable.trans h₁ h₂⟩
 
+/-- Under `ClosedAgency` + inverse availability, `Reachable` is an
+`Equivalence`. -/
+theorem Reachable.equivalence [ClosedAgency G]
+    (h_inv : ∀ R : Reversible G, R ∈ HasConnectedAgency.avail (G := G) →
+      ∃ S : Reversible G, S ∈ HasConnectedAgency.avail (G := G) ∧
+        ∀ v : V, S.toLin (R.toLin v) = v) :
+    Equivalence (Reachable (G := G)) :=
+  { refl := Reachable.refl
+    symm := fun h => Reachable.symm_of_inv_avail h_inv h
+    trans := fun h₁ h₂ => Reachable.trans h₁ h₂ }
+
 /-- `Reachable` under `ClosedAgency` is preserved under all available
 transformations: if `ρ₁ ~> ρ₂` and `R` is available, then
 `ρ₁ ~> R.toLin ρ₂`. -/
