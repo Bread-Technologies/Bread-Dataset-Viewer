@@ -3184,6 +3184,15 @@ example : Convex ℝ (Perspectival.WantableGPT.states (Fin 4)) := convex_stdSimp
 example : Convex ℝ (Perspectival.WantableGPT.states (Bool × Bool)) :=
   convex_stdSimplex ℝ (Bool × Bool)
 
+/-- The effects-set is convex. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Convex ℝ (Perspectival.WantableGPT.effects W) :=
+  (Perspectival.WantableGPT.gpt W).effects_convex
+
+/-- Bool's WantableGPT effects are convex. -/
+example : Convex ℝ (Perspectival.WantableGPT.effects Bool) :=
+  (Perspectival.WantableGPT.gpt Bool).effects_convex
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
