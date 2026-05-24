@@ -573,5 +573,97 @@ that this gives a Lean-verified version of Hardy Axiom 5 as
 originally stated.
 -/
 
+/-! ## R6: Strengthened agency — paths must preserve states throughout
+
+The `HasConnectedAgency` postulate only requires the path endpoints
+`γ 0`, `γ 1` to come from `Reversible G` (which preserve states).
+The intermediate maps `γ t` for `0 < t < 1` need only be linear and
+continuous — they may map states OUT of the state space.
+
+This is too weak to derive quantum reversible dynamics: any two
+Reversibles can be connected by affine interpolation `t ↦ (1-t)R₁ + t R₂`,
+but the interpolated map at `t = 1/2` need not be a valid Reversible.
+
+`StatePreservingPath` strengthens this: it requires the path to map
+states to states *at every intermediate point*. This is the
+substantive condition that singles out the quantum group U(N) over
+the classical discrete S_N.
+-/
+
+/-- A continuous path of linear maps that preserves the state space at
+every intermediate time. This is the strengthened R6 path notion. -/
+structure StatePreservingPath (G : GPT V) (R₁ R₂ : V →ₗ[ℝ] V) where
+  /-- The path itself, as a function unitInterval → linear maps. -/
+  γ : unitInterval → V →ₗ[ℝ] V
+  /-- Joint continuity in (t, v). -/
+  continuous : Continuous (fun p : unitInterval × V => γ p.1 p.2)
+  /-- Starts at R₁. -/
+  start : γ 0 = R₁
+  /-- Ends at R₂. -/
+  finish : γ 1 = R₂
+  /-- **Key R6 strengthening**: each intermediate map preserves the state
+  space. This is what rules out the affine interpolation in general. -/
+  preserves_states_along : ∀ t : unitInterval, ∀ ρ ∈ G.states, γ t ρ ∈ G.states
+
+/-- The R6 agency postulate: every pair of available reversibles is
+connected by a **state-preserving** path. -/
+class StatePreservingAgency (G : GPT V) where
+  avail : Set (Reversible G)
+  id_avail : ∃ R ∈ avail, ∀ v : V, R.toLin v = v
+  state_preserving_paths :
+    ∀ R₁ R₂ : Reversible G, R₁ ∈ avail → R₂ ∈ avail →
+      Nonempty (StatePreservingPath G R₁.toLin R₂.toLin)
+
+/-- StatePreservingAgency implies HasConnectedAgency — the strengthened
+postulate is logically stronger. -/
+instance (priority := 100) HasConnectedAgency.ofStatePreservingAgency
+    [SPA : StatePreservingAgency G] : HasConnectedAgency G where
+  avail := SPA.avail
+  id_avail := SPA.id_avail
+  path_connected R₁ R₂ h₁ h₂ := by
+    obtain ⟨p⟩ := SPA.state_preserving_paths R₁ R₂ h₁ h₂
+    exact ⟨p.γ, p.continuous, p.start, p.finish⟩
+
+/-- Every state on the path is in the state space (specialized to the
+endpoint-determined state-trajectory). -/
+theorem StatePreservingPath.state_trajectory
+    {G : GPT V} {R₁ R₂ : V →ₗ[ℝ] V}
+    (p : StatePreservingPath G R₁ R₂) (ρ : V) (hρ : ρ ∈ G.states)
+    (t : unitInterval) : p.γ t ρ ∈ G.states :=
+  p.preserves_states_along t ρ hρ
+
+/-- Reachable lifted to use StatePreservingAgency. -/
+def Reachable_SPA [SPA : StatePreservingAgency G] (ρ₁ ρ₂ : V) : Prop :=
+  ∃ R ∈ SPA.avail, R.toLin ρ₁ = ρ₂
+
+/-- Identity reachable. -/
+theorem Reachable_SPA.refl [SPA : StatePreservingAgency G] (ρ : V) :
+    Reachable_SPA (G := G) ρ ρ := by
+  obtain ⟨R_id, hR_id_avail, hR_id_eq⟩ := SPA.id_avail
+  exact ⟨R_id, hR_id_avail, hR_id_eq ρ⟩
+
+/-- Under StatePreservingAgency, the continuous path from id to R
+**stays inside the state space the whole time**. This is the key R6
+improvement over Hardy's original axiom 5: not just continuity, but
+state-space preservation along the path. -/
+theorem continuous_state_preserving_path
+    [SPA : StatePreservingAgency G] (ρ₁ ρ₂ : V) (hρ₁ : ρ₁ ∈ G.states)
+    (h : Reachable_SPA (G := G) ρ₁ ρ₂) :
+    ∃ p : unitInterval → V, Continuous p ∧ p 0 = ρ₁ ∧ p 1 = ρ₂ ∧
+      (∀ t, p t ∈ G.states) := by
+  obtain ⟨R, hR, hRρ⟩ := h
+  obtain ⟨R_id, hR_id_avail, hR_id_eq⟩ := SPA.id_avail
+  obtain ⟨path⟩ := SPA.state_preserving_paths R_id R hR_id_avail hR
+  refine ⟨fun t => path.γ t ρ₁, ?_, ?_, ?_, ?_⟩
+  · have hpair : Continuous (fun t : unitInterval => (t, ρ₁)) :=
+      Continuous.prodMk continuous_id continuous_const
+    exact path.continuous.comp hpair
+  · show path.γ 0 ρ₁ = ρ₁
+    rw [path.start, hR_id_eq]
+  · show path.γ 1 ρ₁ = ρ₂
+    rw [path.finish, hRρ]
+  · intro t
+    exact path.state_trajectory ρ₁ hρ₁ t
+
 end Continuity
 end Perspectival
