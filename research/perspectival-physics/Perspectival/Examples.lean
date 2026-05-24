@@ -2925,6 +2925,16 @@ example : Fintype.card (Bool ⊕ (Bool ⊕ (Bool ⊕ Bool))) = 8 := by decide
 /-- |Bool × Bool × Bool × Bool| = 16. -/
 example : Fintype.card (Bool × Bool × Bool × Bool) = 16 := by decide
 
+/-- WantableGPT (Bool⁴) has finrank 16. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool)) = 16 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
+/-- WantableGPT (Bool⁴) is not quantum (16 ≠ 16² = 256). -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool))
+        ≠ Fintype.card (Bool × Bool × Bool × Bool)
+          * Fintype.card (Bool × Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.wantableGPT_not_quantum (Bool × Bool × Bool × Bool) (by decide)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
