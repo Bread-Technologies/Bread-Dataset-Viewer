@@ -731,6 +731,9 @@ example : Wantable.complement (Wantable.complement (true : Bool)) = true :=
 example : Wantable.complement (Wantable.complement (false : Bool)) = false :=
   Wantable.complement_involutive false
 
+example : Wantable.complement (Wantable.complement (0 : ℤ)) = 0 :=
+  Wantable.complement_involutive 0
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
