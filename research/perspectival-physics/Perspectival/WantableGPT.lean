@@ -831,5 +831,22 @@ theorem Hardy_Axiom4_WantableGPT_dimension
     = (Module.finrank ℝ (V W₁)) * (Module.finrank ℝ (V W₂)) := by
   rw [finrank_V_prod_eq_mul, finrank_V_eq_card, finrank_V_eq_card]
 
+/-- **The Hardy A4 state-half existence claim** for WantableGPT: for any
+two states f₁ on W₁ and f₂ on W₂, there EXISTS a composite state on
+W₁ × W₂ whose unit functional equals u(f₁) · u(f₂). This is the
+combinatorial content of "states multiply" — the concrete factorizing
+state is the productState defined in Examples.lean (productStateBilin). -/
+theorem Hardy_Axiom4_WantableGPT_state_exists
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : V W₁) (f₂ : V W₂) :
+    ∃ h : V (W₁ × W₂),
+      unitFn (W₁ × W₂) h = unitFn W₁ f₁ * unitFn W₂ f₂ := by
+  -- Witness: h(w₁, w₂) := f₁ w₁ * f₂ w₂ (this is exactly productState).
+  refine ⟨fun p => f₁ p.1 * f₂ p.2, ?_⟩
+  show (∑ p : W₁ × W₂, f₁ p.1 * f₂ p.2) = (∑ w₁, f₁ w₁) * (∑ w₂, f₂ w₂)
+  rw [Fintype.sum_prod_type]
+  rw [← Finset.sum_mul_sum]
+
 end WantableGPT
 end Perspectival
