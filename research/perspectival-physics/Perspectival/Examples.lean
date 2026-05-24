@@ -9073,3 +9073,29 @@ example : Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, t
             (true, false, true) = 1 := by
   show (if (true, false, true) = (true, false, true) then (1 : ℝ) else 0) = 1
   simp
+
+/-- Concrete: on Fin 3 × Fin 4, |Fin 3 × Fin 4| = 12. -/
+example : Fintype.card (Fin 3 × Fin 4) = 12 := by decide
+
+/-- Concrete: WantableGPT dim on Fin 3 × Fin 4 = 12. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 × Fin 4)) = 12 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Concrete: uniformState (Fin 3 × Fin 4) at any point = 1/12. -/
+example (p : Fin 3 × Fin 4) : uniformState (Fin 3 × Fin 4) p = 1/12 := by
+  show (1 : ℝ) / (Fintype.card (Fin 3 × Fin 4) : ℝ) = 1/12
+  norm_cast
+
+/-- Concrete: on Fin 3 ⊕ Bool, |Fin 3 ⊕ Bool| = 5. -/
+example : Fintype.card (Fin 3 ⊕ Bool) = 5 := by decide
+
+/-- Concrete: WantableGPT dim on Fin 3 ⊕ Bool = 5. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 ⊕ Bool)) = 5 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Concrete: uniformState (Fin 3 ⊕ Bool) at any point = 1/5. -/
+example (p : Fin 3 ⊕ Bool) : uniformState (Fin 3 ⊕ Bool) p = 1/5 := by
+  show (1 : ℝ) / (Fintype.card (Fin 3 ⊕ Bool) : ℝ) = 1/5
+  norm_cast
