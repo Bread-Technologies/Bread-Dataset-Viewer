@@ -600,6 +600,16 @@ example {W : Type u} [Wantable W] :
   · intro _
     exact ⟨Wantable.complement w, trivial, Wantable.complement_involutive w⟩
 
+/-- Complement preserves a singleton. -/
+example {W : Type u} [Wantable W] (w : W) :
+    Wantable.complement '' ({w} : Set W) = {Wantable.complement w} := by
+  ext v
+  constructor
+  · rintro ⟨_, rfl, rfl⟩; rfl
+  · intro hv
+    refine ⟨w, rfl, ?_⟩
+    exact hv.symm
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
