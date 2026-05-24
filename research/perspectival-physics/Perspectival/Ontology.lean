@@ -95,6 +95,22 @@ theorem complementary_symm (m : Meeting W) :
   have h := m.complementary
   rw [← h, Wantable.complement_involutive]
 
+/-- `side₂` is determined by `side₁`: it's its complement. -/
+theorem side₂_eq_complement_side₁ (m : Meeting W) :
+    m.side₂ = Wantable.complement m.side₁ := m.complementary.symm
+
+/-- Construct a meeting from just one side (the other is determined). -/
+def mk_fromSide (W : Type u) [Wantable W] (w : W) : Meeting W where
+  side₁ := w
+  side₂ := Wantable.complement w
+  complementary := rfl
+
+@[simp] theorem mk_fromSide_side₁ {W : Type u} [Wantable W] (w : W) :
+    (mk_fromSide W w).side₁ = w := rfl
+
+@[simp] theorem mk_fromSide_side₂ {W : Type u} [Wantable W] (w : W) :
+    (mk_fromSide W w).side₂ = Wantable.complement w := rfl
+
 end Meeting
 
 /-- Collective form of Axiom III: reality is a set (= predicate) of meetings. -/
