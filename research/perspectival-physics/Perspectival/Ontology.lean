@@ -202,6 +202,16 @@ theorem SelfComplementary.preserved {W : Type u} [Wantable W]
   show Wantable.complement (f w) = f w
   rw [← hf, h]
 
+/-- A Wantable is *fixed-point-free* if no want is its own complement. -/
+def FixedPointFreeComplement (W : Type u) [Wantable W] : Prop :=
+  ∀ w : W, ¬ SelfComplementary w
+
+/-- If complement is fixed-point-free, then `w ≠ complement w` for all `w`. -/
+theorem ne_complement_of_fixedPointFree {W : Type u} [Wantable W]
+    (h : FixedPointFreeComplement W) (w : W) : w ≠ Wantable.complement w := by
+  intro hw
+  exact h w hw.symm
+
 /-- Collective form of Axiom III: reality is a set (= predicate) of meetings. -/
 abbrev Reality (W : Type u) [Wantable W] := Meeting W → Prop
 
