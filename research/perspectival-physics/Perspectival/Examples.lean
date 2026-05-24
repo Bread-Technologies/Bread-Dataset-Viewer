@@ -10286,3 +10286,30 @@ example : Wantable.complement (Option.none : Option Bool) = Option.none := rfl
 /-- Wantable on function spaces is pointwise complement. -/
 example (f : Bool → Bool) (b : Bool) :
     (Wantable.complement f) b = Wantable.complement (f b) := rfl
+
+/-- complement on `not : Bool → Bool` is `id : Bool → Bool`. -/
+example : Wantable.complement (Bool.not : Bool → Bool) = id := by
+  funext b
+  show Wantable.complement (Bool.not b) = b
+  cases b <;> rfl
+
+/-- complement on `id : Bool → Bool` is `not : Bool → Bool`. -/
+example : Wantable.complement (id : Bool → Bool) = Bool.not := by
+  funext b
+  show Wantable.complement b = !b
+  cases b <;> rfl
+
+/-- complement of constant-true function = constant-false function. -/
+example : Wantable.complement (fun _ : Bool => true) = (fun _ => false) := by
+  funext b
+  rfl
+
+/-- complement of constant-false function = constant-true function. -/
+example : Wantable.complement (fun _ : Bool => false) = (fun _ => true) := by
+  funext b
+  rfl
+
+/-- complement involution on functions. -/
+example (f : Bool → Bool) :
+    Wantable.complement (Wantable.complement f) = f :=
+  Wantable.complement_involutive f
