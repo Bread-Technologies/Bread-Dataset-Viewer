@@ -394,6 +394,12 @@ example : (PTrans.complement : PTrans (Bool ⊕ Bool)).toFun (Sum.inl true) = Su
 example : (PTrans.complement : PTrans (Bool ⊕ Bool)).toFun (Sum.inr false) = Sum.inr true :=
   rfl
 
+/-- Complement on a function space (Bool → Bool) acts pointwise. -/
+example (f : Bool → Bool) : Wantable.complement f = fun b => not (f b) := rfl
+
+/-- The constant-true function complements to constant-false. -/
+example : Wantable.complement (fun _ : Bool => true) = (fun _ => false) := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
