@@ -15482,6 +15482,55 @@ example :
   show (1/2 : ℝ) + 0 + 0 + 1/2 = 1
   norm_num
 
+/-! ### Fin 2 sanity tests -/
+
+/-- Fin 2 vertex 0 = (1, 0). -/
+example : Perspectival.WantableGPT.vertex (Fin 2) 0 0 = 1 := by
+  show (if (0 : Fin 2) = 0 then (1 : ℝ) else 0) = 1
+  simp
+
+example : Perspectival.WantableGPT.vertex (Fin 2) 0 1 = 0 := by
+  show (if (0 : Fin 2) = 1 then (1 : ℝ) else 0) = 0
+  simp
+
+example : Perspectival.WantableGPT.vertex (Fin 2) 1 0 = 0 := by
+  show (if (1 : Fin 2) = 0 then (1 : ℝ) else 0) = 0
+  simp
+
+example : Perspectival.WantableGPT.vertex (Fin 2) 1 1 = 1 := by
+  show (if (1 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
+  simp
+
+/-- Fin 2 vertex 0 and 1 are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Fin 2))
+      (Perspectival.WantableGPT.vertex (Fin 2) 0)
+      (Perspectival.WantableGPT.vertex (Fin 2) 1) :=
+  vertices_distinguishable_via_delta 0 1 (by decide)
+
+/-- Fin 2 sum of vertex 0 = 1. -/
+example : ∑ j, Perspectival.WantableGPT.vertex (Fin 2) 0 j = 1 :=
+  (Perspectival.WantableGPT.vertex_in_states (Fin 2) 0).2
+
+/-- Fin 2 sum of vertex 1 = 1. -/
+example : ∑ j, Perspectival.WantableGPT.vertex (Fin 2) 1 j = 1 :=
+  (Perspectival.WantableGPT.vertex_in_states (Fin 2) 1).2
+
+/-- Sum of all Fin 2 vertices = unit. -/
+example :
+    Perspectival.WantableGPT.vertex (Fin 2) 0
+    + Perspectival.WantableGPT.vertex (Fin 2) 1
+    = (fun _ => (1 : ℝ)) := by
+  funext j
+  fin_cases j
+  · show (if (0 : Fin 2) = 0 then (1 : ℝ) else 0)
+       + (if (1 : Fin 2) = 0 then (1 : ℝ) else 0) = 1
+    simp
+  · show (if (0 : Fin 2) = 1 then (1 : ℝ) else 0)
+       + (if (1 : Fin 2) = 1 then (1 : ℝ) else 0) = 1
+    simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
