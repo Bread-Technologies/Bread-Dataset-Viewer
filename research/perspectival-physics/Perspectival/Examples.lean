@@ -2476,6 +2476,16 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool ⊕ Bool
   rw [Perspectival.WantableGPT.finrank_V_eq_card]
   decide
 
+/-- Mixed composition: K((Bool × Fin 3) ⊕ Fin 4) = 6 + 4 = 10. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V ((Bool × Fin 3) ⊕ Fin 4)) = 10 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Mixed composition: K(Bool × (Bool ⊕ Bool)) = 2 * 4 = 8. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × (Bool ⊕ Bool))) = 8 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
