@@ -14071,6 +14071,34 @@ example :
   simp [Perspectival.WantableGPT.transformAction_vertex]
   rfl
 
+/-! ### Fin 3 transformAction concrete cases -/
+
+/-- For Fin 3, transformAction (1) on vertex 0 = vertex 0. -/
+example :
+    Perspectival.WantableGPT.transformAction (Fin 3) (1 : PTrans (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) 0)
+    = Perspectival.WantableGPT.vertex (Fin 3) 0 := by
+  simp [Perspectival.WantableGPT.transformAction_vertex]
+  rfl
+
+/-- For Fin 3 with id-complement, complement transformAction on vertex 0 = vertex 0. -/
+example :
+    Perspectival.WantableGPT.transformAction (Fin 3) PTrans.complement
+      (Perspectival.WantableGPT.vertex (Fin 3) 0)
+    = Perspectival.WantableGPT.vertex (Fin 3) 0 := by
+  -- For Fin 3, Wantable.complement = id, so PTrans.complement = 1.
+  -- Hence the action is identity.
+  simp [Perspectival.WantableGPT.transformAction_vertex]
+  rfl
+
+/-- For Fin 3, identity preserves all vertices. -/
+example (i : Fin 3) :
+    Perspectival.WantableGPT.transformAction (Fin 3) (1 : PTrans (Fin 3))
+      (Perspectival.WantableGPT.vertex (Fin 3) i)
+    = Perspectival.WantableGPT.vertex (Fin 3) i := by
+  rw [Perspectival.WantableGPT.transformAction_vertex]
+  rfl
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
