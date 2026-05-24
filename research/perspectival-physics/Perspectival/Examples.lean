@@ -2594,6 +2594,17 @@ example : Perspectival.WantableGPT.fromPTransHom Bool boolSwap =
   show f (boolSwap.invFun b) = f (Wantable.complement b)
   cases b <;> rfl
 
+/-- fromPTransHom is a MonoidHom (preserves composition). -/
+example (φ ψ : PTrans Bool) :
+    Perspectival.WantableGPT.fromPTransHom Bool (φ * ψ) =
+    Perspectival.WantableGPT.fromPTransHom Bool φ *
+    Perspectival.WantableGPT.fromPTransHom Bool ψ :=
+  (Perspectival.WantableGPT.fromPTransHom Bool).map_mul φ ψ
+
+/-- fromPTransHom sends 1 to 1. -/
+example : Perspectival.WantableGPT.fromPTransHom Bool 1 = 1 :=
+  (Perspectival.WantableGPT.fromPTransHom Bool).map_one
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
