@@ -983,17 +983,54 @@ classical-side composition structure concrete:
 
 **A.6 Cumulative count.** The codebase as of this appendix has
 ~140+ machine-verified theorems (cf. `STATUS.md`), no `sorry`s in
-the main proof line, and four philosophically motivated structural
+the main proof line, and SIX philosophically motivated structural
 results that go beyond restating standard GPT content:
 
   ✓ Hardy Axiom 5 from libertarian agency (Section 5.1).
   ✓ R6 Birkhoff disconnect: classical-side incompatibility with
-    strict agency (Section 5.2).
+    strict agency for n=2 (Section 5.2). Formally hypothesis-free.
+  ✓ R6 n=3 sign-of-det invariant: even/odd permutation discrimination
+    via the 6-term Leibniz formula `n3_disc_det`, with `n3_disc_det_id = 1`,
+    `n3_disc_det_swap01 = -1`, and IVT zero-crossing along any
+    continuous path. Conditional disconnect via
+    `classical_n3_no_strict_path_id_to_swap01_conditional`. (Closure
+    needs the `det = 0 ⇒ not injective` lemma.)
   ✓ Triple no-go: bare WantableGPT bridge always lands classical
     (Section 6.1).
   ✓ Vertex-decomposition + structural identification of
     PTrans as Z/2-equivariant permutations (Section 3.1).
+  ✓ PatternStableWantable axiom refinement (Ontology.lean):
+    typeclass-level expression of Axiom IV's pattern-stability
+    commitment, with discriminating `Stable_nontrivial` predicate
+    that distinguishes Bool/Bool×Bool/Bool³ (have non-trivial
+    pattern stability) from Fin 3 with id-complement (does not).
+    Connected to PTrans non-triviality via
+    `stable_nontrivial_implies_complement_ne_one`.
 
-These four together form the framework's current load-bearing
+These six together form the framework's current load-bearing
 formal content. Every other verified theorem is either an
 infrastructural lemma or a recasting of standard material.
+
+**A.7 Tier 1 #5 progress (Hardy A4 BOTH halves).**
+`Hardy_Axiom4_WantableGPT_dimension` proves dimensions multiply
+(`finrank V(W₁ × W₂) = (finrank V W₁) × (finrank V W₂)`).
+`Hardy_Axiom4_WantableGPT_state_exists` proves the state-half
+existence claim (for any pair of states, a composite state
+exists with multiplicatively-factoring unit). Together: Hardy
+Axiom 4 is fully *derivable* (not auxiliary) for the WantableGPT
+bridge. The bilinear-map packaging is `productStateBilin`.
+
+**A.8 Tier 2 #6 u(1) toy.** The smallest non-trivial Lie-group
+gauge instance is now formalized: `gaugeFamily`, `combinedFamily`,
+`rescale` in `Examples.lean` realize the "position-dependent
+rescaling compensated by a u(1) connection" picture from
+`TIER2_GAUGE_SCOPING.md` §7. Reuses the existing `scaleHom`
+infrastructure. Does NOT establish anything about non-abelian
+factors or specific gauge group selection.
+
+**A.9 R7 algebraic scaffold.** `GroupClosedReversiblePath` and
+`GroupClosedAgency` in `Continuity.lean` provide the algebraic
+precursor to the Lie-group reversible-dynamics target.
+`trivialGroupClosedAgency` shows the structure is non-vacuous.
+Full Lie-group bridge (smooth paths, Lie algebra) deferred to
+future work with Mathlib `LieGroup` infrastructure.
