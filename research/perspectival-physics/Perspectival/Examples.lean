@@ -13135,6 +13135,44 @@ example :
     norm_num] at h
   norm_num at h
 
+/-! ### Pointwise computations for tensor products of vertex states -/
+
+/-- productState vertex (true, true) at (true, true) gives 1. -/
+example :
+    productState (Perspectival.WantableGPT.vertex Bool true)
+                 (Perspectival.WantableGPT.vertex Bool true) (true, true) = 1 := by
+  show Perspectival.WantableGPT.vertex Bool true true
+     * Perspectival.WantableGPT.vertex Bool true true = 1
+  show (if true = true then (1 : ℝ) else 0) * (if true = true then (1 : ℝ) else 0) = 1
+  simp
+
+/-- productState vertex (true, true) at (true, false) gives 0. -/
+example :
+    productState (Perspectival.WantableGPT.vertex Bool true)
+                 (Perspectival.WantableGPT.vertex Bool true) (true, false) = 0 := by
+  show Perspectival.WantableGPT.vertex Bool true true
+     * Perspectival.WantableGPT.vertex Bool true false = 0
+  show (if true = true then (1 : ℝ) else 0) * (if true = false then (1 : ℝ) else 0) = 0
+  simp
+
+/-- productState vertex (false, false) at (false, false) gives 1. -/
+example :
+    productState (Perspectival.WantableGPT.vertex Bool false)
+                 (Perspectival.WantableGPT.vertex Bool false) (false, false) = 1 := by
+  show Perspectival.WantableGPT.vertex Bool false false
+     * Perspectival.WantableGPT.vertex Bool false false = 1
+  show (if false = false then (1 : ℝ) else 0) * (if false = false then (1 : ℝ) else 0) = 1
+  simp
+
+/-- productState vertex (true, false) at (false, false) gives 0. -/
+example :
+    productState (Perspectival.WantableGPT.vertex Bool true)
+                 (Perspectival.WantableGPT.vertex Bool false) (false, false) = 0 := by
+  show Perspectival.WantableGPT.vertex Bool true false
+     * Perspectival.WantableGPT.vertex Bool false false = 0
+  show (if true = false then (1 : ℝ) else 0) * (if false = false then (1 : ℝ) else 0) = 0
+  simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
