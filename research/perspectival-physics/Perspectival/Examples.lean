@@ -11595,3 +11595,37 @@ example : leftMarginal mixedCorrelatedState = uniformBool := by
   rw [hd, show leftMarginal antiDiagonalState b = uniformBool b from
         congr_fun hax b]
   ring
+
+/-- mixedCorrelatedState is a state (convex combo of states). -/
+example : mixedCorrelatedState ∈ Perspectival.WantableGPT.states (Bool × Bool) :=
+  WantableGPT_convex_combo_in_states _ _ (1/2) (1/2)
+    diagonalState_in_states antiDiagonalState_in_states
+    (by norm_num) (by norm_num) (by norm_num)
+
+/-- mixedCorrelatedState evaluated at (true, true) = 1/4. -/
+example : mixedCorrelatedState (true, true) = (1/4 : ℝ) := by
+  show ((1/2 : ℝ) * diagonalState (true, true))
+     + ((1/2 : ℝ) * antiDiagonalState (true, true)) = 1/4
+  simp [diagonalState, antiDiagonalState]
+  norm_num
+
+/-- mixedCorrelatedState evaluated at (true, false) = 1/4. -/
+example : mixedCorrelatedState (true, false) = (1/4 : ℝ) := by
+  show ((1/2 : ℝ) * diagonalState (true, false))
+     + ((1/2 : ℝ) * antiDiagonalState (true, false)) = 1/4
+  simp [diagonalState, antiDiagonalState]
+  norm_num
+
+/-- mixedCorrelatedState evaluated at (false, true) = 1/4. -/
+example : mixedCorrelatedState (false, true) = (1/4 : ℝ) := by
+  show ((1/2 : ℝ) * diagonalState (false, true))
+     + ((1/2 : ℝ) * antiDiagonalState (false, true)) = 1/4
+  simp [diagonalState, antiDiagonalState]
+  norm_num
+
+/-- mixedCorrelatedState evaluated at (false, false) = 1/4. -/
+example : mixedCorrelatedState (false, false) = (1/4 : ℝ) := by
+  show ((1/2 : ℝ) * diagonalState (false, false))
+     + ((1/2 : ℝ) * antiDiagonalState (false, false)) = 1/4
+  simp [diagonalState, antiDiagonalState]
+  norm_num
