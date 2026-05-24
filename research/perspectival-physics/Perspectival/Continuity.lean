@@ -178,6 +178,36 @@ theorem hardy_axiom5_transitive [HasConnectedAgency G]
       γ 1 ρ₁ = ρ₂ :=
   hardy_axiom5_pure_states hp₁ hp₂ (h_transitive ρ₁ ρ₂ hp₁ hp₂)
 
+/-! ## Trivial-agency case
+
+To verify the framework's structure: every GPT has a TRIVIAL
+`HasConnectedAgency` instance where the only available transformation
+is the identity. This is the "no choice" degenerate case — useful as
+a sanity check, not as a model of libertarian agency. -/
+
+/-- The identity as a `Reversible` transformation. -/
+def Reversible.id (G : GPT V) : Reversible G where
+  toLin := LinearMap.id
+  continuous_toLin := continuous_id
+  preserves_states := fun _ h => h
+  preserves_unit := LinearMap.id_comp _
+
+/-- Every GPT has the trivial agency instance: only the identity is
+available, and the constant path connects it to itself. -/
+@[reducible]
+def trivialAgency (G : GPT V) : HasConnectedAgency G := {
+  avail := { Reversible.id G }
+  id_avail := ⟨Reversible.id G, rfl, fun _ => rfl⟩
+  path_connected := fun R₁ R₂ hR₁ hR₂ => by
+    have hR₁id : R₁ = Reversible.id G := hR₁
+    have hR₂id : R₂ = Reversible.id G := hR₂
+    refine ⟨fun _ => LinearMap.id, ?_, ?_, ?_⟩
+    · -- Joint continuity of (t, v) ↦ v: it's the second projection.
+      exact continuous_snd
+    · subst hR₁id; rfl
+    · subst hR₂id; rfl
+}
+
 /-! ## Honest framing
 
 What `continuous_path_of_reachable` shows: if the agency postulate is
