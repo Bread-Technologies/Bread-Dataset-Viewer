@@ -215,6 +215,35 @@ def trivialAgency (G : GPT V) : HasConnectedAgency G := {
     · subst hR₂id; rfl
 }
 
+/-- A reflexive-only agency where the path between two available
+transformations is the affine line in the underlying linear-map
+space: `γ t = (1-t) * R₁.toLin + t * R₂.toLin`. This is jointly
+continuous as a function on `unitInterval × V`. Useful as a building
+block for richer agency instances. -/
+theorem path_via_affineLine {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : GPT V) (R₁ R₂ : Reversible G) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => (γ p.1) p.2) ∧
+      γ 0 = R₁.toLin ∧ γ 1 = R₂.toLin := by
+  refine ⟨fun t => (1 - (t : ℝ)) • R₁.toLin + (t : ℝ) • R₂.toLin, ?_, ?_, ?_⟩
+  · -- Joint continuity: scalar-multiply continuous toLin functions and add.
+    have h1 : Continuous (fun p : unitInterval × V => (1 - (p.1 : ℝ)) • R₁.toLin p.2) := by
+      apply Continuous.smul
+      · exact (continuous_const.sub (continuous_subtype_val.comp continuous_fst))
+      · exact R₁.continuous_toLin.comp continuous_snd
+    have h2 : Continuous (fun p : unitInterval × V => (p.1 : ℝ) • R₂.toLin p.2) := by
+      apply Continuous.smul
+      · exact (continuous_subtype_val.comp continuous_fst)
+      · exact R₂.continuous_toLin.comp continuous_snd
+    exact h1.add h2
+  · ext v
+    show (1 - (0 : ℝ)) • R₁.toLin v + (0 : ℝ) • R₂.toLin v = R₁.toLin v
+    simp
+  · ext v
+    show (1 - (1 : ℝ)) • R₁.toLin v + (1 : ℝ) • R₂.toLin v = R₂.toLin v
+    simp
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
