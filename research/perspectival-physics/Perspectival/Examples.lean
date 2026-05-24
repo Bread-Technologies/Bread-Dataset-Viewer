@@ -14777,6 +14777,29 @@ example (a b c : Bool) :
      * (if c = true then (1 : ℝ) else 0)
   cases a <;> cases b <;> cases c <;> simp
 
+/-! ### Generic vertex factorization on triple products -/
+
+/-- For triple product Bool × Bool × Bool, vertex (a,b,c) at point (x,y,z)
+factorizes as a product of three vertex evaluations. -/
+example (a b c x y z : Bool) :
+    Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (a, b, c) (x, y, z)
+    = Perspectival.WantableGPT.vertex Bool a x
+    * Perspectival.WantableGPT.vertex Bool b y
+    * Perspectival.WantableGPT.vertex Bool c z := by
+  show (if (a, b, c) = (x, y, z) then (1 : ℝ) else 0)
+     = (if a = x then (1 : ℝ) else 0)
+     * (if b = y then (1 : ℝ) else 0)
+     * (if c = z then (1 : ℝ) else 0)
+  cases a <;> cases b <;> cases c <;> cases x <;> cases y <;> cases z <;> simp
+
+/-- Born rule on (vertex a, vertex b, vertex c) gives 1 iff exact match. -/
+example (a b c x y z : Bool) :
+    deltaIndicatorLin (a, b, c)
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (x, y, z))
+    = (if (x, y, z) = (a, b, c) then (1 : ℝ) else 0) := by
+  rw [deltaIndicatorLin_eq_apply]
+  rfl
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
