@@ -936,5 +936,30 @@ theorem classical_n2_no_two_element_strict_agency
   have hp := A.strict_paths _ _ hid hswap
   exact classical_n2_strict_reversible_path_id_swap_nonempty_false hp
 
+/-! ## Corollaries: classical agency = single permutation -/
+
+/-- Any StrictConnectedAgency on Classical n=2 with id available
+cannot also have swap available. -/
+theorem classical_n2_id_avail_implies_swap_not_avail
+    (A : Perspectival.Continuity.StrictConnectedAgency (gpt 2))
+    (hid : Perspectival.Continuity.StrictReversible.id (gpt 2) ∈ A.avail) :
+    swapStrictReversible ∉ A.avail := by
+  intro hswap
+  exact classical_n2_no_two_element_strict_agency A hid hswap
+
+/-- The trivial agency (only id) is valid; no agency can extend it
+to include swap. -/
+theorem classical_n2_trivial_agency_id_avail :
+    Perspectival.Continuity.StrictReversible.id (gpt 2) ∈
+      (Perspectival.Continuity.trivialStrictAgency (gpt 2)).avail := by
+  rfl
+
+/-! ## NOTE: a "swap-only" StrictConnectedAgency does not exist because
+the `id_avail` axiom requires identity to be available. So Classical
+n=2's *only* StrictConnectedAgency is `trivialStrictAgency` itself
+(modulo extending with potential other matrices that aren't id/swap —
+but those would also have no continuous path to id, by the same
+det-IVT argument). -/
+
 end Classical
 end Perspectival
