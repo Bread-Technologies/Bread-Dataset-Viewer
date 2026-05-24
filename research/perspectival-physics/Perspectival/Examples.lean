@@ -5379,5 +5379,39 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
     Perspectival.WantableGPT.proj W w ∈ Perspectival.WantableGPT.effects W :=
   Perspectival.WantableGPT.proj_in_effects W w
 
+/-- Generic `wantableGPT_classical_signature`: the signature `N = K`
+holds for the WantableGPT bridge. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    ∃ (n : ℕ) (ρ : Fin n → Perspectival.WantableGPT.V W)
+      (_w : Perspectival.Distinguish.PerfectWitness
+              (G := Perspectival.WantableGPT.gpt W) ρ),
+      n = Module.finrank ℝ (Perspectival.WantableGPT.V W) :=
+  Perspectival.WantableGPT.wantableGPT_classical_signature W
+
+/-- Generic triple no-go (`wantableGPT_classical_dichotomy`):
+all three signatures simultaneously hold/fail. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (h : 2 ≤ Fintype.card W) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) ≠
+        Fintype.card W * Fintype.card W ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) * 2 ≠
+        Fintype.card W * (Fintype.card W + 1) ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) ≠
+        Fintype.card W * (2 * Fintype.card W - 1) :=
+  Perspectival.WantableGPT.wantableGPT_classical_dichotomy W h
+
+/-- Generic `wantableGPT_nontrivial_classical`: |W| ≥ 2 case has
+distinguishable states AND classical dimension. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (h : 2 ≤ Fintype.card W) :
+    (∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V W,
+      ρ₁ ∈ Perspectival.WantableGPT.states W ∧
+      ρ₂ ∈ Perspectival.WantableGPT.states W ∧
+      Perspectival.Hardy.Distinguishable
+        (Perspectival.WantableGPT.gpt W) ρ₁ ρ₂) ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
+  Perspectival.WantableGPT.wantableGPT_nontrivial_classical W h
+
 end Examples
 end Perspectival
