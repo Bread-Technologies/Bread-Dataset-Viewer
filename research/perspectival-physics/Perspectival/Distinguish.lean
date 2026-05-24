@@ -225,5 +225,18 @@ theorem no_oversized_perfect_distinguishability
     (ρ : Fin n → V) (w : PerfectWitness (G := G) ρ) : False :=
   Nat.lt_irrefl _ (lt_of_lt_of_le h (operational_dim_le_state_dim ρ w))
 
+/-- A single state always has a trivial PerfectWitness: the unit
+effect (giving probability 1 on that state). Useful as a base case. -/
+def perfectWitness_singleton {G : GPT V}
+    (ρ : V) (hρ : ρ ∈ G.states) :
+    PerfectWitness (G := G) (fun _ : Fin 1 => ρ) where
+  e := fun _ => G.unit
+  kronecker i j := by
+    have hi : i = 0 := Subsingleton.elim _ _
+    have hj : j = 0 := Subsingleton.elim _ _
+    subst hi; subst hj
+    simp
+    exact G.states_normalized ρ hρ
+
 end Distinguish
 end Perspectival
