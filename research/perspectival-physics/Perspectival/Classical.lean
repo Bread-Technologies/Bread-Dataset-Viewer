@@ -440,5 +440,85 @@ theorem n2_midpoint_decomp :
     rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]
     norm_num
 
+/-! ## The SWAP linear map on V 2 -/
+
+/-- The SWAP linear map on V 2 (swaps the two coordinates). -/
+def swapLin : V 2 →ₗ[ℝ] V 2 where
+  toFun v := fun j => v (1 - j)
+  map_add' u v := by
+    funext j
+    show u (1 - j) + v (1 - j) = u (1 - j) + v (1 - j)
+    rfl
+  map_smul' c v := by
+    funext j
+    show c * v (1 - j) = c * v (1 - j)
+    rfl
+
+/-- swapLin sends vertex 0 to vertex 1. -/
+theorem swapLin_vertex_zero : swapLin (vertex 2 0) = vertex 2 1 := by
+  funext j
+  show vertex 2 0 (1 - j) = vertex 2 1 j
+  show (if (0 : Fin 2) = 1 - j then (1 : ℝ) else 0)
+     = (if (1 : Fin 2) = j then (1 : ℝ) else 0)
+  fin_cases j <;> simp <;> decide
+
+/-- swapLin sends vertex 1 to vertex 0. -/
+theorem swapLin_vertex_one : swapLin (vertex 2 1) = vertex 2 0 := by
+  funext j
+  show vertex 2 1 (1 - j) = vertex 2 0 j
+  show (if (1 : Fin 2) = 1 - j then (1 : ℝ) else 0)
+     = (if (0 : Fin 2) = j then (1 : ℝ) else 0)
+  fin_cases j <;> simp <;> decide
+
+/-- swapLin is its own inverse. -/
+theorem swapLin_swapLin (v : V 2) : swapLin (swapLin v) = v := by
+  funext j
+  show v (1 - (1 - j)) = v j
+  congr 1
+  fin_cases j <;> decide
+
+/-- swapLin preserves states. -/
+theorem swapLin_preserves_states (v : V 2) (hv : v ∈ states 2) :
+    swapLin v ∈ states 2 := by
+  refine ⟨?_, ?_⟩
+  · intro j
+    show 0 ≤ v (1 - j)
+    exact hv.1 _
+  · show ∑ j, v (1 - j) = 1
+    have hv2 := hv.2
+    rw [show (Finset.univ : Finset (Fin 2)) = {0, 1} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    show v (1 - 0) + v (1 - 1) = 1
+    rw [show ((1 : Fin 2) - 0) = 1 from by decide,
+        show ((1 : Fin 2) - 1) = 0 from by decide]
+    rw [show (Finset.univ : Finset (Fin 2)) = {0, 1} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton] at hv2
+    linarith
+
+/-- swapLin preserves the unit functional. -/
+theorem swapLin_preserves_unit :
+    (unitFn 2).comp swapLin = unitFn 2 := by
+  apply LinearMap.ext
+  intro v
+  show ∑ j, v (1 - j) = ∑ j, v j
+  have univ_eq : (Finset.univ : Finset (Fin 2)) = {0, 1} := by decide
+  rw [univ_eq]
+  rw [Finset.sum_insert (by decide), Finset.sum_singleton]
+  rw [Finset.sum_insert (by decide), Finset.sum_singleton]
+  show v (1 - 0) + v (1 - 1) = v 0 + v 1
+  rw [show ((1 : Fin 2) - 0) = 1 from by decide,
+      show ((1 : Fin 2) - 1) = 0 from by decide]
+  ring
+
+/-- swapLin is bijective. -/
+theorem swapLin_bijective : Function.Bijective swapLin := by
+  refine ⟨?_, ?_⟩
+  · intro u v h
+    have h2 : swapLin (swapLin u) = swapLin (swapLin v) := by rw [h]
+    rw [swapLin_swapLin, swapLin_swapLin] at h2
+    exact h2
+  · intro v
+    exact ⟨swapLin v, swapLin_swapLin v⟩
+
 end Classical
 end Perspectival
