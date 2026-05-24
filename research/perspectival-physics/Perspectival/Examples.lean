@@ -13730,6 +13730,26 @@ example :
          = 1
       simp
 
+/-! ### Born rule on Bool ⊕ Bool states -/
+
+/-- deltaIndicatorLin (Sum.inl true) on vertex (Sum.inl true) = 1. -/
+example : deltaIndicatorLin (Sum.inl true : Bool ⊕ Bool)
+            (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl true)) = 1 :=
+  deltaIndicatorLin_vertex_self _
+
+/-- deltaIndicatorLin (Sum.inl true) on vertex (Sum.inr false) = 0. -/
+example : deltaIndicatorLin (Sum.inl true : Bool ⊕ Bool)
+            (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr false)) = 0 :=
+  deltaIndicatorLin_vertex_other _ _ (by decide)
+
+/-- Bool ⊕ Bool vertices are pairwise distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inl true))
+      (Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr false)) :=
+  vertices_distinguishable_via_delta (Sum.inl true) (Sum.inr false) (by decide)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
