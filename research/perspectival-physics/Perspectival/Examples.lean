@@ -11112,3 +11112,26 @@ example {W : Type u} [Wantable W] (R : Reality W) :
     PTrans.actReality (((PTrans.complement : PTrans W) * PTrans.complement) *
                        ((PTrans.complement : PTrans W) * PTrans.complement)) R = R := by
   rw [PTrans.complement_sq, one_mul, PTrans.actReality_one]
+
+/-- New theorem: The complement equiv has order 2 (in Equiv.Perm). -/
+theorem WantableGPT_complementEquiv_order_two
+    {W : Type u} [Wantable W] :
+    (⟨Wantable.complement, Wantable.complement,
+      Wantable.complement_involutive, Wantable.complement_involutive⟩
+      : Equiv.Perm W)
+    * (⟨Wantable.complement, Wantable.complement,
+        Wantable.complement_involutive, Wantable.complement_involutive⟩
+      : Equiv.Perm W) = 1 := by
+  apply Equiv.ext
+  intro w
+  show Wantable.complement (Wantable.complement w) = w
+  exact Wantable.complement_involutive w
+
+/-- complementEquiv inverse is itself. -/
+example {W : Type u} [Wantable W] :
+    (⟨Wantable.complement, Wantable.complement,
+      Wantable.complement_involutive, Wantable.complement_involutive⟩
+      : Equiv.Perm W).symm =
+    (⟨Wantable.complement, Wantable.complement,
+      Wantable.complement_involutive, Wantable.complement_involutive⟩
+      : Equiv.Perm W) := rfl
