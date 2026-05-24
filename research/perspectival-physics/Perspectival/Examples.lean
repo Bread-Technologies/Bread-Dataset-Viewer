@@ -15248,6 +15248,37 @@ example :
   rw [h (true, true), h (true, false), h (false, true), h (false, false)]
   norm_num
 
+/-! ### Effect equality from Born-rule values on all vertices -/
+
+/-- Two functionals e₁, e₂ agreeing on every Bool vertex are equal as functions
+on Bool states (and hence give same probabilities). -/
+example (e₁ e₂ : Perspectival.WantableGPT.V Bool →ₗ[ℝ] ℝ)
+    (h_true : e₁ (Perspectival.WantableGPT.vertex Bool true)
+            = e₂ (Perspectival.WantableGPT.vertex Bool true))
+    (h_false : e₁ (Perspectival.WantableGPT.vertex Bool false)
+             = e₂ (Perspectival.WantableGPT.vertex Bool false)) :
+    e₁ = e₂ := by
+  apply LinearMap.ext
+  intro f
+  have heq : f = (f true) • Perspectival.WantableGPT.vertex Bool true
+              + (f false) • Perspectival.WantableGPT.vertex Bool false := by
+    funext b
+    cases b with
+    | true =>
+      show f true = (f true) * (if true = true then (1 : ℝ) else 0)
+                  + (f false) * (if false = true then (1 : ℝ) else 0)
+      simp
+    | false =>
+      show f false = (f true) * (if true = false then (1 : ℝ) else 0)
+                   + (f false) * (if false = false then (1 : ℝ) else 0)
+      simp
+  rw [heq, map_add, map_smul, map_smul, map_add, map_smul, map_smul]
+  show f true * e₁ (Perspectival.WantableGPT.vertex Bool true)
+     + f false * e₁ (Perspectival.WantableGPT.vertex Bool false)
+     = f true * e₂ (Perspectival.WantableGPT.vertex Bool true)
+     + f false * e₂ (Perspectival.WantableGPT.vertex Bool false)
+  rw [h_true, h_false]
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
