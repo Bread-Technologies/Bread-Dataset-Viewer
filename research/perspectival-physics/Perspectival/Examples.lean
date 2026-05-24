@@ -754,6 +754,10 @@ theorem WantableEquiv.trans_assoc {W₁ W₂ W₃ W₄ : Type u}
     e.symm.symm = e := by
   rfl
 
+/-- WantableEquiv is symmetric: there's a Wantable iso the other direction. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) : WantableEquiv W₂ W₁ := e.symm
+
 /-- A `Bool ≃ Fin 2` equivalence that respects the swap-complement structures. -/
 def boolEquivFin2 : WantableEquiv Bool (Fin 2) where
   toEquiv :=
