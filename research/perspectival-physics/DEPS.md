@@ -146,7 +146,11 @@ deepened:
   `finrank_V_prod_eq_mul` and `finrank_V_sum_eq_add`,
   `exists_two_distinguishable`.
 - `Continuity.lean` adds `Reversible.comp`, `ClosedAgency` (closure
-  refinement), `Reachable.trans`, `Reachable.apply_available`.
+  refinement), `Reachable.trans`, `Reachable.apply_available`,
+  `path_via_affineLine`, `singletonAgency`/`pairAgency`,
+  `StrictReversible` (with `.id`, `.inv`, `.comp`, `inv_comp`,
+  `comp_inv`, `comp_toLin`), `Reachable.symm_of_inv_avail`,
+  `Reachable.equivalence`, `trivialAgency_inv_avail`.
 - `Classical.lean` adds `vertex_decomposition`, `vertices_span`.
 - `Examples.lean` adds `WantableEquiv` (Wantable iso, with refl/symm/trans
   groupoid structure), `mapPTransMulEquiv` (PTrans iso induced from
