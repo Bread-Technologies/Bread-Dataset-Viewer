@@ -10615,3 +10615,21 @@ example {W : Type u} [Wantable W] (f : PTrans W) : f ^ 0 = 1 := pow_zero f
 
 /-- PTrans^1 = f. -/
 example {W : Type u} [Wantable W] (f : PTrans W) : f ^ 1 = f := pow_one f
+
+/-- 1 ^ n = 1 for PTrans. -/
+example {W : Type u} [Wantable W] (n : ℕ) : (1 : PTrans W) ^ n = 1 := one_pow n
+
+/-- (f * g) * (g⁻¹ * f⁻¹) = 1 in PTrans. -/
+example {W : Type u} [Wantable W] (f g : PTrans W) :
+    (f * g) * (g⁻¹ * f⁻¹) = 1 := by
+  rw [mul_assoc, ← mul_assoc g g⁻¹ f⁻¹, mul_inv_cancel, one_mul, mul_inv_cancel]
+
+/-- (f * g)⁻¹ = g⁻¹ * f⁻¹ in PTrans. -/
+example {W : Type u} [Wantable W] (f g : PTrans W) :
+    (f * g)⁻¹ = g⁻¹ * f⁻¹ := mul_inv_rev f g
+
+/-- f⁻¹⁻¹ = f in PTrans (involution). -/
+example {W : Type u} [Wantable W] (f : PTrans W) : f⁻¹⁻¹ = f := inv_inv f
+
+/-- 1⁻¹ = 1 in PTrans. -/
+example {W : Type u} [Wantable W] : (1 : PTrans W)⁻¹ = 1 := inv_one
