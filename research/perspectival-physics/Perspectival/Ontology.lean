@@ -67,6 +67,10 @@ theorem Wantable.complement_complement {W : Type u} [Wantable W] (w : W) :
     Wantable.complement (Wantable.complement w) = w :=
   Wantable.complement_involutive w
 
+-- NOTE: Wantable.complement is a self-bijection (an Equiv). The
+-- Equiv type lives in Mathlib; not imported here to keep Ontology
+-- pure. See Examples.lean for an Equiv.Perm instance.
+
 /-- For any Wantable, every want has at least one complement (namely
 the standard complement). -/
 theorem Wantable.exists_complement {W : Type u} [Wantable W] (w : W) :
