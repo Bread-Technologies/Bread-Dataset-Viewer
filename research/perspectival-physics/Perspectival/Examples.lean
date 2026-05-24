@@ -3356,6 +3356,13 @@ example : ContinuousPTrans ℝ := ContinuousPTrans.id ℝ
 /-- ContinuousPTrans on ℝ contains the complement. -/
 example : ContinuousPTrans ℝ := ContinuousPTrans.complement ℝ
 
+/-- ContinuousPTrans.comp composes two continuous PTrans. -/
+example (φ ψ : ContinuousPTrans ℝ) : ContinuousPTrans ℝ := φ.comp ψ
+
+/-- complement.comp(complement) on ℝ has underlying PTrans = 1. -/
+example : ((ContinuousPTrans.complement ℝ).comp (ContinuousPTrans.complement ℝ)).toPTrans
+        = 1 := PTrans.complement_sq
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
