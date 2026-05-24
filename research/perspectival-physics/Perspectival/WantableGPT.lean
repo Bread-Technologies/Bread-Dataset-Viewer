@@ -39,7 +39,9 @@ import Mathlib.Data.Real.Basic
 namespace Perspectival
 namespace WantableGPT
 
-variable (W : Type u) [Wantable W] [Fintype W] [DecidableEq W]
+variable (W : Type u) [Wantable W] [Fintype W]
+-- DecidableEq W is needed only for `effects` and `gpt`; specific
+-- theorems may not require it. We bring it in locally where needed.
 
 /-- The carrier vector space of the Wantable-induced GPT. -/
 abbrev V := W → ℝ
