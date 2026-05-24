@@ -3160,6 +3160,16 @@ example : ∃ e : Perspectival.WantableGPT.V Bool →ₗ[ℝ] ℝ,
     e ∈ Perspectival.WantableGPT.effects Bool :=
   Perspectival.WantableGPT.wantableGPT_effect_inhabited Bool
 
+/-- Trivial fact: WantableGPT.states is the standard simplex. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.WantableGPT.states W = stdSimplex ℝ W := rfl
+
+/-- Concrete: WantableGPT Bool states is stdSimplex Bool. -/
+example : Perspectival.WantableGPT.states Bool = stdSimplex ℝ Bool := rfl
+
+/-- Concrete: WantableGPT (Fin 3) states is stdSimplex (Fin 3). -/
+example : Perspectival.WantableGPT.states (Fin 3) = stdSimplex ℝ (Fin 3) := rfl
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
