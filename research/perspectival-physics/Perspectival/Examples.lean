@@ -905,6 +905,9 @@ example {W : Type u} [Wantable W] :
 example {W : Type u} [Wantable W] :
     (complementEquiv : Equiv.Perm W) ^ 0 = 1 := pow_zero _
 
+example {W : Type u} [Wantable W] :
+    (complementEquiv : Equiv.Perm W) ^ 1 = complementEquiv := pow_one _
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
