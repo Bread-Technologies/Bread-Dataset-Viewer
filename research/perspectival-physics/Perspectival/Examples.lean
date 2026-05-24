@@ -5273,5 +5273,43 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
   intro ρ₁ ρ₂ _ _ _ _
   trivial
 
+/-- `PureState` unfolds: a pure state is a state which is also an
+extreme point of the convex state space. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : Perspectival.GPT V) (ρ : V) :
+    Perspectival.Continuity.PureState G ρ ↔
+    (ρ ∈ G.states ∧ IsExtreme ℝ G.states {ρ}) := Iff.rfl
+
+/-- `hardy_axiom5_pure_states`: between any two reachable pure states
+there exists a continuous path of linear maps. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.HasConnectedAgency G]
+    {ρ₁ ρ₂ : V}
+    (hp₁ : Perspectival.Continuity.PureState G ρ₁)
+    (hp₂ : Perspectival.Continuity.PureState G ρ₂)
+    (h : Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      (∀ v, γ 0 v = v) ∧
+      γ 1 ρ₁ = ρ₂ :=
+  Perspectival.Continuity.hardy_axiom5_pure_states hp₁ hp₂ h
+
+/-- `hardy_axiom5_transitive`: under transitivity of the agency action
+on pure states, Hardy Axiom 5 follows. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.HasConnectedAgency G]
+    (h_transitive :
+      ∀ ρ₁ ρ₂, Perspectival.Continuity.PureState G ρ₁ →
+                Perspectival.Continuity.PureState G ρ₂ →
+                Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂)
+    (ρ₁ ρ₂ : V)
+    (hp₁ : Perspectival.Continuity.PureState G ρ₁)
+    (hp₂ : Perspectival.Continuity.PureState G ρ₂) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      (∀ v, γ 0 v = v) ∧
+      γ 1 ρ₁ = ρ₂ :=
+  Perspectival.Continuity.hardy_axiom5_transitive h_transitive ρ₁ ρ₂ hp₁ hp₂
+
 end Examples
 end Perspectival
