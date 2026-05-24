@@ -1787,5 +1787,23 @@ theorem n_vertex_coord_continuous_of_joint
     hcont.comp hpair
   exact (continuous_apply j).comp h1
 
+/-- n3_swap01_detector at γ is continuous in t when γ is jointly continuous. -/
+example
+    (γ : unitInterval → V 3 →ₗ[ℝ] V 3)
+    (hcont : Continuous (fun p : unitInterval × V 3 => γ p.1 p.2)) :
+    Continuous (fun t => n3_swap01_detector (γ t)) := by
+  show Continuous (fun t => γ t (vertex 3 0) 1 + γ t (vertex 3 1) 0)
+  exact (n_vertex_coord_continuous_of_joint (n := 3) γ hcont 0 1).add
+        (n_vertex_coord_continuous_of_joint (n := 3) γ hcont 1 0)
+
+/-- n2_disc_det at γ is continuous in t when γ is jointly continuous. -/
+example
+    (γ : unitInterval → V 2 →ₗ[ℝ] V 2)
+    (hcont : Continuous (fun p : unitInterval × V 2 => γ p.1 p.2)) :
+    Continuous (fun t => n2_disc_det (γ t)) := by
+  show Continuous (fun t => γ t (vertex 2 0) 0 - γ t (vertex 2 1) 0)
+  exact (n_vertex_coord_continuous_of_joint (n := 2) γ hcont 0 0).sub
+        (n_vertex_coord_continuous_of_joint (n := 2) γ hcont 1 0)
+
 end Classical
 end Perspectival
