@@ -3110,6 +3110,16 @@ example : ((Finset.univ : Finset (Bool × Bool)).image
             (Perspectival.WantableGPT.vertex (Bool × Bool))).card = 4 := by
   rw [Perspectival.WantableGPT.vertex_image_card]; decide
 
+/-- StrictReversible.id on the boolean WantableGPT. -/
+example : Perspectival.Continuity.StrictReversible (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Continuity.StrictReversible.id _
+
+/-- Composition of two identity StrictReversibles is again identity-like. -/
+example : Perspectival.Continuity.StrictReversible (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Continuity.StrictReversible.comp
+    (Perspectival.Continuity.StrictReversible.id _)
+    (Perspectival.Continuity.StrictReversible.id _)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
