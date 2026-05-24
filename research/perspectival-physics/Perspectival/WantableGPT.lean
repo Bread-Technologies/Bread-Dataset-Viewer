@@ -401,8 +401,9 @@ def complementPTrans : PTrans W where
   resp_complement := fun _ => rfl
 
 /-- The complement-action GPT-transformation is the image of the
-complement-as-PTrans under `fromPTrans`. The two routes to "Wantable
-complement acts on the GPT" coincide. -/
+complement-as-PTrans under `fromPTrans` (at the level of underlying
+linear maps). The two routes to "Wantable complement acts on the GPT"
+coincide. -/
 theorem complementTransform_eq_fromPTrans :
     (complementTransform W).toLin = (fromPTrans W (complementPTrans W)).toLin := by
   apply LinearMap.ext
@@ -410,6 +411,12 @@ theorem complementTransform_eq_fromPTrans :
   funext w
   show f (Wantable.complement w) = f ((complementPTrans W).invFun w)
   rfl
+
+/-- The full-Transform version: `complementTransform W = fromPTrans W
+(complementPTrans W)` as GPT-transformations. -/
+theorem complementTransform_eq_fromPTrans_full :
+    complementTransform W = fromPTrans W (complementPTrans W) :=
+  Perspectival.GPT.Transform.ext (complementTransform_eq_fromPTrans W)
 
 end WantableGPT
 end Perspectival
