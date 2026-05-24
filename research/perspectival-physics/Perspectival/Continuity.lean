@@ -337,6 +337,17 @@ noncomputable def StrictReversible.inv {V : Type u} [AddCommGroup V] [Module ℝ
     LinearEquiv.ofBijective R.toLin R.isEquiv
   e.symm.toLinearMap
 
+/-- The identity reversible is a StrictReversible. -/
+def StrictReversible.id {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] (G : GPT V) : StrictReversible G where
+  toReversible := Reversible.id G
+  isEquiv := Function.bijective_id
+
+/-- The identity StrictReversible has toLin = LinearMap.id. -/
+@[simp] theorem StrictReversible.id_toLin {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] (G : GPT V) :
+    (StrictReversible.id G).toLin = LinearMap.id := rfl
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
