@@ -9018,3 +9018,27 @@ example : Wantable.complement ((true, false, true) : Bool × Bool × Bool)
 /-- Complement is involutive on Bool × Bool × Bool. -/
 example (p : Bool × Bool × Bool) : Wantable.complement (Wantable.complement p) = p :=
   Wantable.complement_involutive p
+
+/-- Concrete: |Bool × Bool × Bool| = 8. -/
+example : Fintype.card (Bool × Bool × Bool) = 8 := by decide
+
+/-- Concrete: WantableGPT dim on Bool × Bool × Bool = 8. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool)) = 8 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- Concrete triple no-go on Bool × Bool × Bool. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool))
+        ≠ Fintype.card (Bool × Bool × Bool) * Fintype.card (Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.wantableGPT_not_quantum (Bool × Bool × Bool) (by decide)
+
+/-- Concrete: vertex (true, false, true) on Bool × Bool × Bool. -/
+example : Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, true)
+            (true, false, true) = 1 := by
+  show (if (true, false, true) = (true, false, true) then (1 : ℝ) else 0) = 1
+  simp
+
+example : Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, true)
+            (false, false, true) = 0 := by
+  show (if (true, false, true) = (false, false, true) then (1 : ℝ) else 0) = 0
+  simp
