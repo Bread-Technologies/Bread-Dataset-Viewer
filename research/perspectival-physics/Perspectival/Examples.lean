@@ -9123,3 +9123,34 @@ example : Module.finrank ℝ
     * Fintype.card (Bool × Bool × Bool × Bool) :=
   Perspectival.WantableGPT.wantableGPT_not_quantum (Bool × Bool × Bool × Bool)
     (by decide)
+
+/-- Concrete: real-QM signature ruled out on Bool⁴. -/
+example : Module.finrank ℝ
+    (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool)) * 2
+    ≠ Fintype.card (Bool × Bool × Bool × Bool)
+    * (Fintype.card (Bool × Bool × Bool × Bool) + 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_realQM (Bool × Bool × Bool × Bool)
+    (by decide)
+
+/-- Concrete: quaternionic-QM signature ruled out on Bool⁴. -/
+example : Module.finrank ℝ
+    (Perspectival.WantableGPT.V (Bool × Bool × Bool × Bool))
+    ≠ Fintype.card (Bool × Bool × Bool × Bool)
+    * (2 * Fintype.card (Bool × Bool × Bool × Bool) - 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_quaternionicQM
+    (Bool × Bool × Bool × Bool) (by decide)
+
+/-- Triple no-go on Bool³. -/
+example : Module.finrank ℝ
+    (Perspectival.WantableGPT.V (Bool × Bool × Bool)) * 2
+    ≠ Fintype.card (Bool × Bool × Bool)
+    * (Fintype.card (Bool × Bool × Bool) + 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_realQM (Bool × Bool × Bool)
+    (by decide)
+
+example : Module.finrank ℝ
+    (Perspectival.WantableGPT.V (Bool × Bool × Bool))
+    ≠ Fintype.card (Bool × Bool × Bool)
+    * (2 * Fintype.card (Bool × Bool × Bool) - 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_quaternionicQM (Bool × Bool × Bool)
+    (by decide)
