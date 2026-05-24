@@ -136,6 +136,19 @@ instance {V : Type u} [AddCommGroup V] [Module ℝ V] (G : GPT V) :
     (G : GPT V) : Transform.id G * Transform.id G = Transform.id G :=
   one_mul _
 
+/-- The identity transformation has `toLin = LinearMap.id`. -/
+@[simp] theorem Transform.id_toLin {V : Type u} [AddCommGroup V] [Module ℝ V]
+    (G : GPT V) : (Transform.id G).toLin = LinearMap.id := rfl
+
+/-- The composition transformation has `toLin` = composition of linear maps. -/
+@[simp] theorem Transform.comp_toLin {V V' V'' : Type u}
+    [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup V'] [Module ℝ V']
+    [AddCommGroup V''] [Module ℝ V'']
+    {G : GPT V} {G' : GPT V'} {G'' : GPT V''}
+    (T' : Transform G' G'') (T : Transform G G') :
+    (Transform.comp T' T).toLin = T'.toLin.comp T.toLin := rfl
+
 end GPT
 
 end Perspectival
