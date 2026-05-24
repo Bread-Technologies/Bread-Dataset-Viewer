@@ -325,6 +325,57 @@ A quantum instance is the next milestone, via density matrices —
 Mathlib + Physlib provide the ingredients but the assembly is open
 work in this codebase.
 
+### 6.1 No-go: the finite-Wantable bridge stays classical
+
+(Lean: `WantableGPT.lean :: wantableGPT_is_classical`.)
+
+A verified theorem now establishes that the WantableGPT bridge from
+*any* finite Wantable `W` to a GPT *always* produces the classical
+signature `N = K = |W|`. The composition theorems further pin down
+the rule:
+`K(W₁ × W₂) = |W₁| · |W₂|` and `K(W₁ ⊕ W₂) = |W₁| + |W₂|`.
+
+This is a *positive* no-go: it sharply delimits what the bare
+axioms I–IV plus `WantableGPT.gpt` can deliver — only classical GPT
+structure. To derive non-classical structure, one must add at least
+one of:
+- A richer composition rule (Hardy Axiom 4 in tensor-product form),
+- Additional postulates on the agency / continuity structure
+  (Continuity.lean's `HasConnectedAgency`, or a stronger refinement),
+- A different bridge construction (e.g., complex-valued or
+  infinite-dimensional Wantable).
+
+This delimitation is itself a research contribution: it tells the
+program *exactly where* the next bet must be placed.
+
+### 6.2 Continuous setting (toward Lie-group refinement)
+
+(Lean: `Examples.lean :: ContinuousWantable, ContinuousPTrans,
+scaleByPTrans, scaleHom, scaleHom_injective`.)
+
+The `ContinuousWantable` / `ContinuousPTrans` infrastructure
+extends the framework to topological-space Wantables (e.g., `ℝ`
+with `complement := Neg.neg`). In this setting:
+
+- A verified `MonoidHom` `scaleHom : ℝˣ →* PTrans ℝ` is injective
+  (`scaleHom_injective`), embedding the 1-dimensional Lie group
+  `ℝˣ` as a subgroup of `PTrans ℝ`.
+
+- The full `PTrans ℝ` is much larger (includes every odd bijection
+  of ℝ, e.g., `x ↦ x³`). The scalings are the *linear* odd
+  bijections; the connected-identity component naturally has a Lie
+  group structure.
+
+- Translations `x ↦ x + c` do *not* respect complement on ℝ — they
+  are excluded by Z/2-equivariance. PTrans is therefore a *strict*
+  subgroup of the homeomorphism group.
+
+This is the natural mathematical home for the ROADMAP R6/R7 program:
+in continuous Wantable settings, the Lie group structure on PTrans
+is available "for free", and the agency postulate's
+path-connectedness condition becomes a natural topological
+constraint rather than an additional postulate.
+
 ---
 
 ## 7. What this work does NOT establish
