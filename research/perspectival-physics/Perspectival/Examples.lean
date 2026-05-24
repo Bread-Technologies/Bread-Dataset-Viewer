@@ -2596,6 +2596,15 @@ example (φ : PTrans Bool) :
   · right; rw [h]
     apply PTrans.ext; intro i; fin_cases i <;> rfl
 
+/-- The MulEquiv preserves order: an element of order 2 maps to an
+element of order 2. -/
+example : boolEquivFin2.mapPTransMulEquiv boolSwap *
+          boolEquivFin2.mapPTransMulEquiv boolSwap = 1 :=
+  (boolEquivFin2.mapPTransMulEquiv.map_mul boolSwap boolSwap).symm.trans
+    (by rw [show boolSwap * boolSwap = (1 : PTrans Bool) from
+         by apply PTrans.ext; intro b; cases b <;> rfl];
+        exact boolEquivFin2.mapPTransMulEquiv.map_one)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
