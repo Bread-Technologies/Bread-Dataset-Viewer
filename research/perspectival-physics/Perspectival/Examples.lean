@@ -5525,5 +5525,34 @@ example {W : Type u} [Wantable W] [Fintype W] :
     (Perspectival.WantableGPT.gpt W).effects
       = Perspectival.WantableGPT.effects W := rfl
 
+/-- `Pattern.and` is associative (logically). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.and (Pattern.and P Q) R r ↔ Pattern.and P (Pattern.and Q R) r :=
+  and_assoc
+
+/-- `Pattern.or` is associative (logically). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.or (Pattern.or P Q) R r ↔ Pattern.or P (Pattern.or Q R) r :=
+  or_assoc
+
+/-- `Pattern.and` distributes over `Pattern.or` (left). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.and P (Pattern.or Q R) r ↔
+    Pattern.or (Pattern.and P Q) (Pattern.and P R) r :=
+  and_or_left
+
+/-- `Pattern.or` distributes over `Pattern.and` (left). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.or P (Pattern.and Q R) r ↔
+    Pattern.and (Pattern.or P Q) (Pattern.or P R) r :=
+  or_and_left
+
+/-- `Pattern.and` of any pattern with `Pattern.empty` is `Pattern.empty`. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
+    Pattern.and P (Pattern.empty W) r ↔ Pattern.empty W r := by
+  constructor
+  · rintro ⟨_, h⟩; exact h
+  · intro h; exact h.elim
+
 end Examples
 end Perspectival
