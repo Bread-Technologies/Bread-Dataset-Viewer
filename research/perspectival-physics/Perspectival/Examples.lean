@@ -11201,3 +11201,24 @@ example {W : Type u} [Wantable W] [Fintype W] :
 
 /-- Classical.states = stdSimplex ℝ (Fin n). -/
 example (n : ℕ) : Perspectival.Classical.states n = stdSimplex ℝ (Fin n) := rfl
+
+/-- WantableGPT V W = (W → ℝ). -/
+example {W : Type u} [Wantable W] [Fintype W] :
+    Perspectival.WantableGPT.V W = (W → ℝ) := rfl
+
+example : Perspectival.WantableGPT.V Bool = (Bool → ℝ) := rfl
+
+example : Perspectival.WantableGPT.V (Fin 4) = (Fin 4 → ℝ) := rfl
+
+/-- Classical V n = (Fin n → ℝ). -/
+example (n : ℕ) : Perspectival.Classical.V n = (Fin n → ℝ) := rfl
+
+example : Perspectival.Classical.V 5 = (Fin 5 → ℝ) := rfl
+
+/-- WantableGPT.effectVec is the unit hypercube. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.WantableGPT.effectVec W = { g | ∀ w, 0 ≤ g w ∧ g w ≤ 1 } := rfl
+
+/-- Classical.effectVec is the unit hypercube. -/
+example (n : ℕ) :
+    Perspectival.Classical.effectVec n = { f | ∀ i, 0 ≤ f i ∧ f i ≤ 1 } := rfl
