@@ -171,5 +171,16 @@ example : Perspectival.WantableGPT.complementAction Bool
     = Perspectival.WantableGPT.vertex Bool false :=
   Perspectival.WantableGPT.complementAction_vertex Bool true
 
+example : Perspectival.WantableGPT.complementAction Bool
+    (Perspectival.WantableGPT.vertex Bool false)
+    = Perspectival.WantableGPT.vertex Bool true := by
+  have := Perspectival.WantableGPT.complementAction_vertex Bool false
+  -- vertex (complement false) = vertex true since complement = not
+  show Perspectival.WantableGPT.complementAction Bool _
+       = Perspectival.WantableGPT.vertex Bool true
+  rw [this]
+  -- need: vertex (complement false) = vertex true, i.e. vertex (not false) = vertex true = vertex true. Trivial.
+  rfl
+
 end Examples
 end Perspectival
