@@ -13829,6 +13829,22 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   show f p.1 * (c * g p.2) = c * (f p.1 * g p.2)
   ring
 
+/-! ### productState with vertex states is a vertex (factorizes correctly) -/
+
+/-- productState vertex vertex equals vertex on the product. -/
+example (a b : Bool) :
+    productState (Perspectival.WantableGPT.vertex Bool a)
+                 (Perspectival.WantableGPT.vertex Bool b)
+      = Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) := by
+  funext p
+  show Perspectival.WantableGPT.vertex Bool a p.1
+     * Perspectival.WantableGPT.vertex Bool b p.2
+     = Perspectival.WantableGPT.vertex (Bool × Bool) (a, b) p
+  obtain ⟨q₁, q₂⟩ := p
+  show (if a = q₁ then (1 : ℝ) else 0) * (if b = q₂ then (1 : ℝ) else 0)
+     = (if (a, b) = (q₁, q₂) then (1 : ℝ) else 0)
+  cases a <;> cases b <;> cases q₁ <;> cases q₂ <;> simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
