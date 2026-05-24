@@ -2272,6 +2272,18 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
        (Perspectival.Continuity.trivialAgency _) ρ₁ ρ₂) ↔ ρ₁ = ρ₂ :=
   Perspectival.Continuity.trivialAgency_reachable_iff _ _ _
 
+/-- The complement of identity is identity for self-complementary
+Wantables (like Fin 3 with id complement). -/
+example : (PTrans.complement : PTrans (Fin 3)) * (1 : PTrans (Fin 3)) =
+          (PTrans.complement : PTrans (Fin 3)) := by
+  show PTrans.complement * 1 = PTrans.complement
+  exact mul_one _
+
+/-- For Fin 3 with id-complement: `(PTrans.complement)² = 1`. -/
+example : (PTrans.complement : PTrans (Fin 3)) * PTrans.complement =
+          (1 : PTrans (Fin 3)) :=
+  PTrans.complement_sq
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
