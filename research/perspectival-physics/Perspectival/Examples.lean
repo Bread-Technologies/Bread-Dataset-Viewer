@@ -1114,6 +1114,9 @@ example (m n : ℤ) : Wantable.complement (m + n) + (m + n) = 0 := by
   show -(m + n) + (m + n) = 0
   ring
 
+example (n : ℤ) : Wantable.complement n + n = 0 := by show -n + n = 0; ring
+example (n : ℤ) : n + Wantable.complement n = 0 := by show n + -n = 0; ring
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
