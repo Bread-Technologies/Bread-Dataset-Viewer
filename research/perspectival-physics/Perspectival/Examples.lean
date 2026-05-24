@@ -761,6 +761,9 @@ def complementEquiv {W : Type u} [Wantable W] : Equiv.Perm W :=
 example : (complementEquiv : Equiv.Perm Bool).toFun true = false := rfl
 example : (complementEquiv : Equiv.Perm Bool).toFun false = true := rfl
 
+example : (complementEquiv : Equiv.Perm ℤ).toFun 5 = -5 := rfl
+example : (complementEquiv : Equiv.Perm ℤ).invFun (-5) = 5 := by show -(-5 : ℤ) = 5; ring
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
