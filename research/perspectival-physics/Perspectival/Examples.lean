@@ -5331,5 +5331,32 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
       γ 1 ρ₁ = ρ₂ :=
   Perspectival.Continuity.hardy_axiom5_of_agency ρ₁ ρ₂ h
 
+/-- Generic `complementAction_vertex`: the complement action sends
+`vertex w` to `vertex (complement w)`. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.complementAction W (Perspectival.WantableGPT.vertex W w)
+      = Perspectival.WantableGPT.vertex W (Wantable.complement w) :=
+  Perspectival.WantableGPT.complementAction_vertex W w
+
+/-- Generic `vertex_perfectly_distinguishable`: there exists a perfect
+witness (the projections) for the vertex family. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    ∃ e : W → Perspectival.WantableGPT.V W →ₗ[ℝ] ℝ,
+      ∀ i j : W, e i (Perspectival.WantableGPT.vertex W j)
+                  = if i = j then (1 : ℝ) else 0 :=
+  Perspectival.WantableGPT.vertex_perfectly_distinguishable W
+
+/-- Generic `vertex_injective`: distinct elements of W give distinct
+vertices. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Function.Injective (Perspectival.WantableGPT.vertex W) :=
+  Perspectival.WantableGPT.vertex_injective W
+
+/-- Generic `vertex_image_card`: the vertex set has cardinality |W|. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    ((Finset.univ : Finset W).image
+      (Perspectival.WantableGPT.vertex W)).card = Fintype.card W :=
+  Perspectival.WantableGPT.vertex_image_card W
+
 end Examples
 end Perspectival
