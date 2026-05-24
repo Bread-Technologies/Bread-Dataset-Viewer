@@ -2478,6 +2478,13 @@ theorem WantableEquiv.preserves_classical_dichotomy_full {W₁ W₂ : Type u}
       ≠ Fintype.card W₂ * (2 * Fintype.card W₂ - 1) :=
   Perspectival.WantableGPT.wantableGPT_classical_dichotomy W₂ (e.preserves_card ▸ h)
 
+/-- The PTrans Equiv.Perm characterization is preserved under WantableEquiv:
+W-iso induces Perm-iso commuting with their complement permutations. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) (φ : PTrans W₁) :
+    PTrans W₂ :=
+  e.mapPTrans φ
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
