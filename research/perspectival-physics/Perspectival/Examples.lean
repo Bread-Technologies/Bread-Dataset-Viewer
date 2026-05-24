@@ -3093,6 +3093,14 @@ example :
       ≠ Fintype.card Bool * (2 * Fintype.card Bool - 1) :=
   Perspectival.WantableGPT.wantableGPT_classical_dichotomy Bool (by decide)
 
+/-- The vertex map on Bool is injective. -/
+example : Function.Injective (Perspectival.WantableGPT.vertex Bool) :=
+  Perspectival.WantableGPT.vertex_injective Bool
+
+/-- The vertex set on Bool has size 2. -/
+example : ((Finset.univ : Finset Bool).image (Perspectival.WantableGPT.vertex Bool)).card = 2 := by
+  rw [Perspectival.WantableGPT.vertex_image_card]; decide
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
