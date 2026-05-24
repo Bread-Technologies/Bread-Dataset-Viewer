@@ -14894,6 +14894,51 @@ example : rightMarginal antiDiagonalState false = 1/2 := by
   show (1/2 : ℝ) + 0 = 1/2
   norm_num
 
+/-! ### Cross product of marginals — same marginal but different joint -/
+
+/-- diagonalState and productState uniformBool uniformBool have the SAME marginals
+but the joint distributions DIFFER (correlation witnessed). -/
+example :
+    leftMarginal diagonalState = leftMarginal (productState uniformBool uniformBool)
+    ∧ rightMarginal diagonalState = rightMarginal (productState uniformBool uniformBool)
+    ∧ diagonalState ≠ productState uniformBool uniformBool := by
+  refine ⟨?_, ?_, ?_⟩
+  · -- both = uniformBool
+    funext b
+    show (∑ b₂, diagonalState (b, b₂)) = (∑ b₂, productState uniformBool uniformBool (b, b₂))
+    rw [diagonalState_left_marginal b]
+    rw [show (∑ b₂, productState uniformBool uniformBool (b, b₂))
+          = uniformBool b * (uniformBool true + uniformBool false) from by
+      show (∑ b₂, uniformBool b * uniformBool b₂) = uniformBool b * _
+      rw [← Finset.mul_sum]
+      rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+          Finset.sum_insert (by decide), Finset.sum_singleton]]
+    show uniformBool b = uniformBool b * (uniformBool true + uniformBool false)
+    show (1/2 : ℝ) = (1/2 : ℝ) * ((1/2 : ℝ) + (1/2 : ℝ))
+    norm_num
+  · -- both = uniformBool
+    funext b
+    show (∑ b₁, diagonalState (b₁, b)) = (∑ b₁, productState uniformBool uniformBool (b₁, b))
+    rw [diagonalState_right_marginal b]
+    rw [show (∑ b₁, productState uniformBool uniformBool (b₁, b))
+          = (uniformBool true + uniformBool false) * uniformBool b from by
+      show (∑ b₁, uniformBool b₁ * uniformBool b) = _ * uniformBool b
+      rw [← Finset.sum_mul]
+      rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+          Finset.sum_insert (by decide), Finset.sum_singleton]]
+    show uniformBool b = ((1/2 : ℝ) + (1/2 : ℝ)) * uniformBool b
+    show (1/2 : ℝ) = ((1/2 : ℝ) + (1/2 : ℝ)) * (1/2 : ℝ)
+    norm_num
+  · -- they differ at (true, false)
+    intro h
+    have hcol := congr_fun h (true, false)
+    rw [show diagonalState (true, false) = 0 from rfl] at hcol
+    rw [show productState uniformBool uniformBool (true, false)
+          = uniformBool true * uniformBool false from rfl] at hcol
+    show False
+    have : (0 : ℝ) = (1/2 : ℝ) * (1/2 : ℝ) := hcol
+    norm_num at this
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
