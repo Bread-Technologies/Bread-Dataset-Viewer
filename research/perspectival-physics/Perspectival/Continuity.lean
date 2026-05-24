@@ -734,5 +734,23 @@ def StatePreservingPath.const {G : GPT V} (R : Reversible G) :
   finish := rfl
   preserves_states_along := fun _ ρ hρ => R.preserves_states ρ hρ
 
+/-! ### R6: convex state space + affine interpolation gives a SPP
+
+KEY R6 OBSERVATION: if the state space `G.states` is **convex** (which
+it is for any GPT — see `GPT.convex`), then the affine interpolation
+`γ t = (1-t) R₁ + t R₂` between two state-preserving linear maps is
+itself state-preserving at every t.
+
+This shows that for any GPT with convex state space (= every GPT),
+the strengthened R6 condition is *automatically satisfied* by the
+affine interpolation between state-preserving linear maps — so R6
+alone does NOT distinguish quantum from classical.
+
+The substantive R6 content must therefore come from requiring the
+intermediate maps to be REVERSIBLE (continuous *bijections*) rather
+than merely state-preserving linear maps. This refines the R6
+program: the path must consist of `Reversible G`-valued maps, not
+just state-preserving maps. -/
+
 end Continuity
 end Perspectival
