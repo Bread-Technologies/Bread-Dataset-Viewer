@@ -2380,6 +2380,27 @@ example : Wantable.complement ((true, true) : Bool × Bool) = (false, false) := 
 `(false, true)` complementary. -/
 example : Wantable.complement ((true, false) : Bool × Bool) = (false, true) := rfl
 
+/-- Bool ⊕ Bool has exactly 4 elements; both complement-pairs lie within summands. -/
+example : ∀ x : Bool ⊕ Bool,
+    x = Sum.inl true ∨ x = Sum.inl false ∨
+    x = Sum.inr true ∨ x = Sum.inr false := by
+  intro x
+  rcases x with b | b
+  · cases b
+    · exact Or.inr (Or.inl rfl)
+    · exact Or.inl rfl
+  · cases b
+    · exact Or.inr (Or.inr (Or.inr rfl))
+    · exact Or.inr (Or.inr (Or.inl rfl))
+
+/-- Bool × Bool has exactly 4 elements; complement pairs (tt,tt)↔(ff,ff)
+and (tt,ff)↔(ff,tt). -/
+example : ∀ x : Bool × Bool,
+    x = (true, true) ∨ x = (true, false) ∨
+    x = (false, true) ∨ x = (false, false) := by
+  intro ⟨b₁, b₂⟩
+  cases b₁ <;> cases b₂ <;> simp
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
