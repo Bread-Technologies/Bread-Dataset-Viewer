@@ -3517,6 +3517,14 @@ example {V V' V'' : Type u}
     (T' : Perspectival.GPT.Transform G' G'') (T : Perspectival.GPT.Transform G G') :
     Perspectival.GPT.Transform G G'' := Perspectival.GPT.Transform.comp T' T
 
+/-- Transform.prob_invariant: a Transform preserves probabilities via unit. -/
+example {V V' : Type u} [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup V'] [Module ℝ V']
+    {G : Perspectival.GPT V} {G' : Perspectival.GPT V'}
+    (T : Perspectival.GPT.Transform G G') (ρ : V) :
+    G'.unit (T.toLin ρ) = G.unit ρ :=
+  Perspectival.GPT.Transform.prob_invariant T ρ
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
