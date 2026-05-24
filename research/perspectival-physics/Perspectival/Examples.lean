@@ -2759,6 +2759,13 @@ example : Wantable.complement (2 : ℤ) * Wantable.complement (5 : ℤ) = 10 := 
 /-- ℝ-Wantable: complement(π/2) = -π/2. (Just symbolic; concrete value not needed.) -/
 example (x : ℝ) : Wantable.complement x = -x := rfl
 
+/-- ℝ-Wantable involutive (concrete). -/
+example (x : ℝ) : Wantable.complement (Wantable.complement x) = x := neg_neg x
+
+/-- ℝ-Wantable: complement is the same as algebraic negation. -/
+example : (Wantable.complement : ℝ → ℝ) = (· * -1) := by
+  funext x; show -x = x * -1; ring
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
