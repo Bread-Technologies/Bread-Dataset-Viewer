@@ -81,6 +81,14 @@ theorem classicalBroadcaster_basisFun (n : ℕ) (i : Fin n) :
     = Classical.vertex n i ⊗ₜ[ℝ] Classical.vertex n i := by
   simp [classicalBroadcaster]
 
+/-- The classical broadcaster sends each vertex to its diagonal tensor. -/
+theorem classicalBroadcaster_vertex (n : ℕ) (i : Fin n) :
+    classicalBroadcaster n (Classical.vertex n i)
+    = Classical.vertex n i ⊗ₜ[ℝ] Classical.vertex n i := by
+  have h := classicalBroadcaster_basisFun n i
+  rw [basisFun_eq_vertex n i] at h
+  exact h
+
 /-! ## Quantum no-broadcasting — open
 
 The Barnum–Caves–Fuchs–Jozsa–Schumacher result states: in a quantum
