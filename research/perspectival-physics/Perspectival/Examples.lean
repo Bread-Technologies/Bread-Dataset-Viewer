@@ -5815,5 +5815,25 @@ example :
 /-- On Bool ⊕ Bool WantableGPT, |W| = 4. -/
 example : Fintype.card (Bool ⊕ Bool) = 4 := by decide
 
+/-- On Bool ⊕ Bool: WantableGPT dim = 4 via sum composition rule. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 := by
+  rw [Perspectival.WantableGPT.finrank_V_sum_eq_add]
+  decide
+
+/-- On Bool × Bool: WantableGPT dim = 4 via product composition rule. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) = 4 := by
+  rw [Perspectival.WantableGPT.finrank_V_prod_eq_mul]
+  decide
+
+/-- On Bool × Fin 3: WantableGPT dim = 6 via product rule. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Fin 3)) = 6 := by
+  rw [Perspectival.WantableGPT.finrank_V_prod_eq_mul]
+  decide
+
+/-- On Fin 3 ⊕ Bool: WantableGPT dim = 5 via sum rule. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 ⊕ Bool)) = 5 := by
+  rw [Perspectival.WantableGPT.finrank_V_sum_eq_add]
+  decide
+
 end Examples
 end Perspectival
