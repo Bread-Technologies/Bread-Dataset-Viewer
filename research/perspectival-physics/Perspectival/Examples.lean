@@ -12810,3 +12810,45 @@ example {W : Type u} [Wantable W] : (PTrans.complement : PTrans W) ^ 6 = 1 := by
   have h2 : (PTrans.complement : PTrans W) ^ 2 = 1 := by
     rw [sq]; exact PTrans.complement_sq
   rw [show (6 : ℕ) = 2 * 3 from rfl, pow_mul, h2, one_pow]
+
+/-! ### complement-powers as a 2-cycle: even ↦ 1, odd ↦ complement -/
+
+/-- For any n, complement^(2*n) = 1. -/
+theorem complement_pow_even {W : Type u} [Wantable W] (n : ℕ) :
+    (PTrans.complement : PTrans W) ^ (2 * n) = 1 := by
+  have h2 : (PTrans.complement : PTrans W) ^ 2 = 1 := by
+    rw [sq]; exact PTrans.complement_sq
+  rw [pow_mul, h2, one_pow]
+
+/-- For any n, complement^(2*n+1) = complement. -/
+theorem complement_pow_odd {W : Type u} [Wantable W] (n : ℕ) :
+    (PTrans.complement : PTrans W) ^ (2 * n + 1) = PTrans.complement := by
+  rw [pow_add, complement_pow_even, one_mul, pow_one]
+
+/-- Concrete: complement^100 = 1 on Bool. -/
+example : (PTrans.complement : PTrans Bool) ^ 100 = 1 := by
+  have := complement_pow_even (W := Bool) 50
+  show (PTrans.complement : PTrans Bool) ^ 100 = 1
+  rw [show (100 : ℕ) = 2 * 50 from rfl]
+  exact this
+
+/-- Concrete: complement^99 = complement on Bool. -/
+example : (PTrans.complement : PTrans Bool) ^ 99 = PTrans.complement := by
+  have := complement_pow_odd (W := Bool) 49
+  show (PTrans.complement : PTrans Bool) ^ 99 = PTrans.complement
+  rw [show (99 : ℕ) = 2 * 49 + 1 from rfl]
+  exact this
+
+/-- Concrete: complement^1000 = 1 on Fin 4. -/
+example : (PTrans.complement : PTrans (Fin 4)) ^ 1000 = 1 := by
+  have := complement_pow_even (W := Fin 4) 500
+  show (PTrans.complement : PTrans (Fin 4)) ^ 1000 = 1
+  rw [show (1000 : ℕ) = 2 * 500 from rfl]
+  exact this
+
+/-- Concrete: complement^1001 = complement on Fin 4. -/
+example : (PTrans.complement : PTrans (Fin 4)) ^ 1001 = PTrans.complement := by
+  have := complement_pow_odd (W := Fin 4) 500
+  show (PTrans.complement : PTrans (Fin 4)) ^ 1001 = PTrans.complement
+  rw [show (1001 : ℕ) = 2 * 500 + 1 from rfl]
+  exact this
