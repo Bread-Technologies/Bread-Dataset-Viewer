@@ -2398,6 +2398,25 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4 × Bool)) = 8 :=
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 × Fin 3)) = 9 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
 
+/-- WantableEquiv-isomorphic Wantables have the same Fintype.card, hence
+the same WantableGPT dimension. (Statement combines the
+`vertex_image_card` / `finrank_V_eq_card` results.) -/
+theorem WantableEquiv.preserves_card {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    (e : WantableEquiv W₁ W₂) : Fintype.card W₁ = Fintype.card W₂ :=
+  Fintype.card_congr e.toEquiv
+
+/-- Consequently, WantableGPTs of equivalent Wantables have equal finrank. -/
+theorem WantableEquiv.preserves_finrank {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] [Fintype W₁] [Fintype W₂]
+    [DecidableEq W₁] [DecidableEq W₂]
+    (e : WantableEquiv W₁ W₂) :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W₁)
+    = Module.finrank ℝ (Perspectival.WantableGPT.V W₂) := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card,
+      Perspectival.WantableGPT.finrank_V_eq_card,
+      e.preserves_card]
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
