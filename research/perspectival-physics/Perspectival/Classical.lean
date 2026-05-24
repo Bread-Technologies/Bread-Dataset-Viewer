@@ -1189,5 +1189,51 @@ theorem cyclicShiftLin_bijective : Function.Bijective cyclicShiftLin := by
   · intro v
     exact ⟨cyclicShiftLin (cyclicShiftLin v), cyclicShiftLin_third_iter v⟩
 
+/-- cyclicShiftLin is continuous. -/
+theorem cyclicShiftLin_continuous : Continuous cyclicShiftLin := by
+  apply continuous_pi
+  intro j
+  exact continuous_apply ((j - 1 : Fin 3))
+
+/-- cyclicShiftLin as a Reversible on Classical n=3 GPT. -/
+def cyclicShiftReversible : Perspectival.Continuity.Reversible (gpt 3) where
+  toLin := cyclicShiftLin
+  continuous_toLin := cyclicShiftLin_continuous
+  preserves_states := cyclicShiftLin_preserves_states
+  preserves_unit := cyclicShiftLin_preserves_unit
+
+/-- cyclicShiftLin as a StrictReversible. -/
+def cyclicShiftStrictReversible :
+    Perspectival.Continuity.StrictReversible (gpt 3) where
+  toReversible := cyclicShiftReversible
+  isEquiv := cyclicShiftLin_bijective
+
+/-- cyclicShiftStrictReversible ≠ id. -/
+example : cyclicShiftStrictReversible.toLin ≠
+          (Perspectival.Continuity.StrictReversible.id (gpt 3)).toLin := by
+  intro h
+  have h2 : cyclicShiftStrictReversible.toLin (vertex 3 0)
+          = (Perspectival.Continuity.StrictReversible.id (gpt 3)).toLin (vertex 3 0) := by
+    rw [h]
+  show False
+  -- LHS = cyclicShiftLin (vertex 3 0) = vertex 3 1
+  -- RHS = LinearMap.id (vertex 3 0) = vertex 3 0
+  rw [show cyclicShiftStrictReversible.toLin (vertex 3 0) = cyclicShiftLin (vertex 3 0) from rfl] at h2
+  rw [show cyclicShiftLin (vertex 3 0) = vertex 3 1 from by
+    funext j
+    show vertex 3 0 ((j - 1 : Fin 3)) = vertex 3 1 j
+    show (if (0 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+       = (if (1 : Fin 3) = j then (1 : ℝ) else 0)
+    fin_cases j <;> simp <;> decide] at h2
+  rw [show (Perspectival.Continuity.StrictReversible.id (gpt 3)).toLin (vertex 3 0)
+        = vertex 3 0 from rfl] at h2
+  -- h2 : vertex 3 1 = vertex 3 0
+  have h3 : vertex 3 1 0 = vertex 3 0 0 := congr_fun h2 0
+  show False
+  show False
+  rw [show vertex 3 1 0 = (if (1 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl,
+      show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at h3
+  simp at h3
+
 end Classical
 end Perspectival
