@@ -4629,5 +4629,29 @@ example (T₁ T₂ T₃ : Perspectival.GPT.Transform
                      (Perspectival.WantableGPT.gpt Bool)) :
     (T₁ * T₂) * T₃ = T₁ * (T₂ * T₃) := mul_assoc T₁ T₂ T₃
 
+/-- `T^0 = 1` in Transform monoid (pow_zero). -/
+example (T : Perspectival.GPT.Transform
+              (Perspectival.WantableGPT.gpt Bool)
+              (Perspectival.WantableGPT.gpt Bool)) :
+    T ^ 0 = 1 := pow_zero T
+
+/-- `T^1 = T` in Transform monoid (pow_one). -/
+example (T : Perspectival.GPT.Transform
+              (Perspectival.WantableGPT.gpt Bool)
+              (Perspectival.WantableGPT.gpt Bool)) :
+    T ^ 1 = T := pow_one T
+
+/-- `T^(m+n) = T^m * T^n` in Transform monoid (pow_add). -/
+example (T : Perspectival.GPT.Transform
+              (Perspectival.WantableGPT.gpt Bool)
+              (Perspectival.WantableGPT.gpt Bool)) (m n : ℕ) :
+    T ^ (m + n) = T ^ m * T ^ n := pow_add T m n
+
+/-- `1^n = 1` in Transform monoid (one_pow). -/
+example (n : ℕ) :
+    (1 : Perspectival.GPT.Transform
+            (Perspectival.WantableGPT.gpt Bool)
+            (Perspectival.WantableGPT.gpt Bool)) ^ n = 1 := one_pow n
+
 end Examples
 end Perspectival
