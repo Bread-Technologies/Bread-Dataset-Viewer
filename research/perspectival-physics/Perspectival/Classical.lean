@@ -23,6 +23,7 @@ distinguish it from quantum until additional axioms are added.
 -/
 
 import Perspectival.GPT
+import Perspectival.Distinguish
 import Mathlib.Analysis.Convex.Combination
 import Mathlib.Analysis.Convex.Basic
 import Mathlib.Analysis.Convex.StdSimplex
@@ -125,6 +126,33 @@ theorem effects_convex : Convex ℝ (effects n) := by
     simp [Pi.add_apply, Pi.smul_apply, smul_eq_mul, add_mul, Finset.sum_add_distrib,
           Finset.mul_sum, mul_assoc]
 
+/-! ## Vertices of the classical simplex are perfectly distinguishable -/
+
+/-- The i-th vertex of the standard simplex: probability mass 1 at i,
+0 elsewhere. -/
+def vertex (i : Fin n) : V n := fun j => if i = j then 1 else 0
+
+/-- Vertices are states. -/
+theorem vertex_in_states (i : Fin n) : vertex n i ∈ states n := by
+  refine ⟨?_, ?_⟩
+  · intro j; show 0 ≤ (if i = j then (1 : ℝ) else 0); split <;> simp
+  · show ∑ j, (if i = j then (1 : ℝ) else 0) = 1
+    rw [Finset.sum_eq_single i (fun j _ hji => by simp [if_neg hji.symm])
+        (by intro h; exact absurd (Finset.mem_univ i) h)]
+    simp
+
+/-- The i-th coordinate projection as a linear functional. -/
+def proj (i : Fin n) : V n →ₗ[ℝ] ℝ where
+  toFun x := x i
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
+
+/-- Coordinate projections evaluate vertices to Kronecker deltas. -/
+@[simp] theorem proj_vertex (i j : Fin n) :
+    proj n i (vertex n j) = if j = i then 1 else 0 := by
+  show (if j = i then (1 : ℝ) else 0) = if j = i then 1 else 0
+  rfl
+
 /-- The classical n-outcome GPT. -/
 def gpt : Perspectival.GPT (V n) where
   unit := unitFn n
@@ -135,6 +163,25 @@ def gpt : Perspectival.GPT (V n) where
   states_normalized := fun ρ hρ => unit_eq_one_on_states n ρ hρ
   prob_in_unit_interval := prob_in_unit_interval n
   unit_is_effect := unit_in_effects n
+
+/-- The vertices of the classical simplex are perfectly distinguishable
+by the coordinate projections. -/
+def perfectWitness :
+    Perspectival.Distinguish.PerfectWitness (G := gpt n) (vertex n) where
+  e := proj n
+  kronecker i j := by
+    show proj n i (vertex n j) = if i = j then 1 else 0
+    rw [proj_vertex]
+    by_cases h : i = j
+    · simp [h]
+    · simp [h, Ne.symm h]
+
+/-- **Vertices of the n-simplex are linearly independent** — the
+classical-instance corollary of `perfect_distinguishable_imp_linear_independent`. -/
+theorem vertex_linear_independent :
+    LinearIndependent ℝ (vertex n) :=
+  Perspectival.Distinguish.perfect_distinguishable_imp_linear_independent
+    (vertex n) (perfectWitness n)
 
 end Classical
 end Perspectival
