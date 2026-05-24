@@ -3346,6 +3346,16 @@ example : ContinuousWantable ℤ := inferInstance
 example : Continuous (Wantable.complement : ℝ → ℝ) :=
   ContinuousWantable.complement_continuous
 
+/-- The complement is continuous on ℤ (with discrete topology). -/
+example : Continuous (Wantable.complement : ℤ → ℤ) :=
+  ContinuousWantable.complement_continuous
+
+/-- ContinuousPTrans on ℝ contains the identity. -/
+example : ContinuousPTrans ℝ := ContinuousPTrans.id ℝ
+
+/-- ContinuousPTrans on ℝ contains the complement. -/
+example : ContinuousPTrans ℝ := ContinuousPTrans.complement ℝ
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
