@@ -806,6 +806,8 @@ example (b : Bool) : boolEquivFin2.toEquiv.symm (boolEquivFin2.toEquiv b) = b :=
 example (i : Fin 2) : boolEquivFin2.toEquiv (boolEquivFin2.toEquiv.symm i) = i :=
   boolEquivFin2.toEquiv.apply_symm_apply i
 
+-- (mapPTrans examples on boolEquivFin2.symm deferred to after mapPTrans is defined.)
+
 /-- A Wantable isomorphism induces a PTrans isomorphism: conjugate a
 PTrans of W₁ by the equiv to get a PTrans of W₂. -/
 def WantableEquiv.mapPTrans {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
