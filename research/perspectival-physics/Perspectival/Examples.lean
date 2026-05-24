@@ -8338,3 +8338,31 @@ example :
   rw [fromPTrans_prodMap_complement_complement_apply,
       Perspectival.WantableGPT.complementAction_vertex]
   rfl
+
+/-- New theorem: every state on the product Wantable can be decomposed
+into a sum of product-vertex-states (the classical signature
+witnessed by the simplex on the product). -/
+theorem WantableGPT_state_prod_vertex_decomp
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂)) :
+    f = ∑ w₁ : W₁, ∑ w₂ : W₂, f (w₁, w₂)
+      • productState (Perspectival.WantableGPT.vertex W₁ w₁)
+                     (Perspectival.WantableGPT.vertex W₂ w₂) := by
+  rw [show
+    (∑ w₁ : W₁, ∑ w₂ : W₂, f (w₁, w₂)
+      • productState (Perspectival.WantableGPT.vertex W₁ w₁)
+                     (Perspectival.WantableGPT.vertex W₂ w₂))
+    = ∑ w₁ : W₁, ∑ w₂ : W₂, f (w₁, w₂)
+      • Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂)
+    from by
+      apply Finset.sum_congr rfl
+      intro w₁ _
+      apply Finset.sum_congr rfl
+      intro w₂ _
+      rw [productState_vertex]]
+  -- Now reduces to vertex_decomposition on W₁ × W₂
+  rw [← Fintype.sum_prod_type
+        (f := fun p : W₁ × W₂ => f p
+          • Perspectival.WantableGPT.vertex (W₁ × W₂) p)]
+  exact Perspectival.WantableGPT.vertex_decomposition (W₁ × W₂) f
