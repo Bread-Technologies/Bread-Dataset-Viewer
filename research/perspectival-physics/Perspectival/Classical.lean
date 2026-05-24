@@ -658,5 +658,35 @@ theorem classical_n2_image_vertex_one_in_states
     R (vertex 2 1) ∈ states 2 :=
   hR _ (vertex_in_states 2 1)
 
+/-- For Classical n=2: a state ρ on V 2 with ρ 0 + ρ 1 = 1 and ρ i ∈ [0,1]
+is the midpoint of (vertex 0)·(ρ 0) and (vertex 1)·(ρ 1)... actually,
+it's exactly (ρ 0)•vertex 0 + (ρ 1)•vertex 1. -/
+theorem classical_n2_state_eq_combo (ρ : V 2) (hρ : ρ ∈ states 2) :
+    ρ = (ρ 0) • vertex 2 0 + (ρ 1) • vertex 2 1 := by
+  funext j
+  fin_cases j
+  · show ρ 0 = (ρ 0) * vertex 2 0 0 + (ρ 1) * vertex 2 1 0
+    rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
+    ring
+  · show ρ 1 = (ρ 0) * vertex 2 0 1 + (ρ 1) * vertex 2 1 1
+    rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]
+    ring
+
+/-- For a state ρ on V 2, ρ 0 = 0 or ρ 0 = 1 IFF ρ is a vertex. -/
+theorem classical_n2_state_first_coord_eq_zero_or_one_iff
+    (ρ : V 2) (hρ : ρ ∈ states 2) :
+    (ρ 0 = 0 ∨ ρ 0 = 1) ↔ (ρ = vertex 2 0 ∨ ρ = vertex 2 1) := by
+  refine ⟨?_, ?_⟩
+  · rintro (h0 | h0)
+    · right
+      have hsum := classical_n2_state_sum ρ hρ
+      have h1 : ρ 1 = 1 := by linarith
+      exact (classical_n2_second_coord_one_iff ρ hρ).mpr h1
+    · left
+      exact (classical_n2_first_coord_one_iff ρ hρ).mpr h0
+  · rintro (rfl | rfl)
+    · right; exact (vertex_n2_zero_coords).1
+    · left; exact (vertex_n2_one_coords).1
+
 end Classical
 end Perspectival
