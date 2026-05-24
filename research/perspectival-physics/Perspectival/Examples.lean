@@ -5859,5 +5859,33 @@ example :
           ⊗ₜ[ℝ] Perspectival.Classical.vertex 3 1 :=
   Perspectival.NoBroadcasting.classicalBroadcaster_vertex 3 1
 
+/-- The classical broadcaster sends vertex 2 of Fin 4 to its diagonal. -/
+example :
+    Perspectival.NoBroadcasting.classicalBroadcaster 4
+        (Perspectival.Classical.vertex 4 2)
+      = Perspectival.Classical.vertex 4 2
+          ⊗ₜ[ℝ] Perspectival.Classical.vertex 4 2 :=
+  Perspectival.NoBroadcasting.classicalBroadcaster_vertex 4 2
+
+/-- Bool's WantableGPT vertex true is the function `fun v => if true = v then 1 else 0`. -/
+example : Perspectival.WantableGPT.vertex Bool true
+        = (fun v => if true = v then (1 : ℝ) else 0) := rfl
+
+/-- Bool's WantableGPT vertex false is the function `fun v => if false = v then 1 else 0`. -/
+example : Perspectival.WantableGPT.vertex Bool false
+        = (fun v => if false = v then (1 : ℝ) else 0) := rfl
+
+/-- On Bool: proj true at vertex true is 1. -/
+example : Perspectival.WantableGPT.proj Bool true
+            (Perspectival.WantableGPT.vertex Bool true) = 1 := by
+  rw [Perspectival.WantableGPT.proj_vertex]
+  simp
+
+/-- On Bool: proj true at vertex false is 0. -/
+example : Perspectival.WantableGPT.proj Bool true
+            (Perspectival.WantableGPT.vertex Bool false) = 0 := by
+  rw [Perspectival.WantableGPT.proj_vertex]
+  simp
+
 end Examples
 end Perspectival
