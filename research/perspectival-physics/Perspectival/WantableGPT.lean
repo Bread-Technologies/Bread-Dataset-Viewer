@@ -486,6 +486,26 @@ theorem finrank_V_sum_eq_add {W₁ W₂ : Type u}
     Module.finrank ℝ (V (W₁ ⊕ W₂)) = Fintype.card W₁ + Fintype.card W₂ := by
   rw [finrank_V_eq_card (W₁ ⊕ W₂), Fintype.card_sum]
 
+/-- The unit (zero-vector) is in the effect-vector set: the zero
+effect (probability 0 for every state) is a valid effect. -/
+theorem zero_in_effectVec : (0 : V W) ∈ effectVec W := by
+  intro w
+  refine ⟨?_, ?_⟩
+  · show (0 : ℝ) ≤ (0 : V W) w
+    show (0 : ℝ) ≤ (0 : ℝ)
+    exact le_refl 0
+  · show (0 : V W) w ≤ 1
+    show (0 : ℝ) ≤ 1
+    norm_num
+
+/-- The unit-vector (constantly 1) is in the effect-vector set: the
+"sure" effect (probability 1 for every state). -/
+theorem one_in_effectVec [Fintype W] : (fun _ : W => (1 : ℝ)) ∈ effectVec W := by
+  intro w
+  refine ⟨?_, ?_⟩
+  · show (0 : ℝ) ≤ 1; norm_num
+  · show (1 : ℝ) ≤ 1; norm_num
+
 /-- For a non-trivial Wantable (cardinality ≥ 2), the WantableGPT has
 at least two perfectly distinguishable states. -/
 theorem exists_two_distinguishable [Fintype W]
