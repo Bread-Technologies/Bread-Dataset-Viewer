@@ -12732,3 +12732,37 @@ example :
   cases b with
   | true => rfl
   | false => rfl
+
+/-! ### transformAction respects multiplication -/
+
+/-- transformAction (φ * ψ) f = transformAction φ (transformAction ψ f). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (φ ψ : PTrans W) (f : Perspectival.WantableGPT.V W) :
+    Perspectival.WantableGPT.transformAction W (φ * ψ) f =
+    Perspectival.WantableGPT.transformAction W φ
+      (Perspectival.WantableGPT.transformAction W ψ f) := by
+  funext w
+  show f ((φ * ψ).invFun w) = f (ψ.invFun (φ.invFun w))
+  show f ((ψ.inv * φ.inv).toFun w) = f (ψ.invFun (φ.invFun w))
+  rfl
+
+/-- Concrete on Bool. -/
+example (φ ψ : PTrans Bool) (f : Perspectival.WantableGPT.V Bool) :
+    Perspectival.WantableGPT.transformAction Bool (φ * ψ) f =
+    Perspectival.WantableGPT.transformAction Bool φ
+      (Perspectival.WantableGPT.transformAction Bool ψ f) := by
+  funext w
+  show f ((φ * ψ).invFun w) = f (ψ.invFun (φ.invFun w))
+  rfl
+
+/-- complement * 1 = complement on transformAction. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    Perspectival.WantableGPT.transformAction Bool (PTrans.complement * 1) f =
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement f := by
+  rw [mul_one]
+
+/-- 1 * complement = complement on transformAction. -/
+example (f : Perspectival.WantableGPT.V Bool) :
+    Perspectival.WantableGPT.transformAction Bool (1 * PTrans.complement) f =
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement f := by
+  rw [one_mul]
