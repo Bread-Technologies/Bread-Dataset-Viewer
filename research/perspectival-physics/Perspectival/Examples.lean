@@ -725,6 +725,9 @@ non-commuting observable. -/
 example : Wantable.complement (Wantable.complement (7 : ℤ)) = 7 :=
   Wantable.complement_involutive 7
 
+example : Wantable.complement (Wantable.complement (true : Bool)) = true :=
+  Wantable.complement_involutive true
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
