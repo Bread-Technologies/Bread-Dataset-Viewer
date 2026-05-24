@@ -348,8 +348,24 @@ def StrictReversible.id {V : Type u} [AddCommGroup V] [Module ℝ V]
     [TopologicalSpace V] (G : GPT V) :
     (StrictReversible.id G).toLin = LinearMap.id := rfl
 
--- Note: StrictReversible.id_inv = LinearMap.id is true but the proof
--- involves LinearEquiv.ofBijective + symm machinery; deferred.
+/-- The inverse linear map of a StrictReversible composes with the
+forward map to give the identity. -/
+theorem StrictReversible.inv_comp {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] {G : GPT V}
+    (R : StrictReversible G) (v : V) :
+    R.inv (R.toLin v) = v := by
+  show (LinearEquiv.ofBijective R.toLin R.isEquiv).symm
+        ((LinearEquiv.ofBijective R.toLin R.isEquiv) v) = v
+  exact (LinearEquiv.ofBijective R.toLin R.isEquiv).symm_apply_apply v
+
+/-- The forward composed with the inverse is also the identity. -/
+theorem StrictReversible.comp_inv {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] {G : GPT V}
+    (R : StrictReversible G) (v : V) :
+    R.toLin (R.inv v) = v := by
+  show (LinearEquiv.ofBijective R.toLin R.isEquiv)
+        ((LinearEquiv.ofBijective R.toLin R.isEquiv).symm v) = v
+  exact (LinearEquiv.ofBijective R.toLin R.isEquiv).apply_symm_apply v
 
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
