@@ -1030,5 +1030,66 @@ example : n2_uniformMixingLin (vertex 2 0) = n2_midpoint := by
   show (1/2 : ℝ) * 1 + (1/2 : ℝ) * 0 = (1/2 : ℝ)
   norm_num
 
+/-- The 'mostly identity' map (1-ε)·id + ε·swap for small ε. Demonstrates
+that the bijective state-preserving region near id is open. -/
+noncomputable def n2_perturbedIdLin (ε : ℝ) : V 2 →ₗ[ℝ] V 2 :=
+  (1 - ε) • LinearMap.id + ε • swapLin
+
+/-- For ε ∈ (0, 1), n2_perturbedIdLin ε has det = 1 - 2ε ≠ 0. -/
+example (ε : ℝ) :
+    n2_disc_det (n2_perturbedIdLin ε) = 1 - 2 * ε := by
+  show n2_perturbedIdLin ε (vertex 2 0) 0 - n2_perturbedIdLin ε (vertex 2 1) 0
+     = 1 - 2 * ε
+  show ((1 - ε) * vertex 2 0 0 + ε * swapLin (vertex 2 0) 0)
+     - ((1 - ε) * vertex 2 1 0 + ε * swapLin (vertex 2 1) 0)
+     = 1 - 2 * ε
+  rw [swapLin_vertex_zero, swapLin_vertex_one,
+      (vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
+  ring
+
+/-- For ε = 1/2, n2_perturbedIdLin (1/2) has det = 0 (singular boundary). -/
+example : n2_disc_det (n2_perturbedIdLin (1/2)) = 0 := by
+  show n2_perturbedIdLin (1/2 : ℝ) (vertex 2 0) 0
+     - n2_perturbedIdLin (1/2 : ℝ) (vertex 2 1) 0 = 0
+  show ((1 - 1/2 : ℝ) * vertex 2 0 0 + (1/2 : ℝ) * swapLin (vertex 2 0) 0)
+     - ((1 - 1/2 : ℝ) * vertex 2 1 0 + (1/2 : ℝ) * swapLin (vertex 2 1) 0)
+     = 0
+  rw [swapLin_vertex_zero, swapLin_vertex_one,
+      (vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
+  ring
+
+/-- The affine path from id to swap: γ t = (1-t)·id + t·swap. -/
+noncomputable def n2_affinePath : unitInterval → V 2 →ₗ[ℝ] V 2 :=
+  fun t => n2_perturbedIdLin t.val
+
+/-- This affine path has γ 0 = id. -/
+example : n2_affinePath 0 = LinearMap.id := by
+  show (1 - (0 : unitInterval).val) • (LinearMap.id : V 2 →ₗ[ℝ] V 2) + (0 : unitInterval).val • swapLin
+     = LinearMap.id
+  show (1 - (0 : ℝ)) • (LinearMap.id : V 2 →ₗ[ℝ] V 2) + (0 : ℝ) • swapLin
+     = LinearMap.id
+  rw [sub_zero, one_smul, zero_smul, add_zero]
+
+/-- This affine path has γ 1 = swap. -/
+example : n2_affinePath 1 = swapLin := by
+  show (1 - (1 : unitInterval).val) • (LinearMap.id : V 2 →ₗ[ℝ] V 2)
+       + (1 : unitInterval).val • swapLin
+     = swapLin
+  show (1 - (1 : ℝ)) • (LinearMap.id : V 2 →ₗ[ℝ] V 2) + (1 : ℝ) • swapLin
+     = swapLin
+  rw [sub_self, zero_smul, zero_add, one_smul]
+
+/-- The affine path at t = 1/2 hits a singular linear map. -/
+example : n2_disc_det (n2_affinePath ⟨1/2, by norm_num⟩) = 0 := by
+  show n2_disc_det (n2_perturbedIdLin (1/2)) = 0
+  show n2_perturbedIdLin (1/2 : ℝ) (vertex 2 0) 0
+     - n2_perturbedIdLin (1/2 : ℝ) (vertex 2 1) 0 = 0
+  show ((1 - 1/2 : ℝ) * vertex 2 0 0 + (1/2 : ℝ) * swapLin (vertex 2 0) 0)
+     - ((1 - 1/2 : ℝ) * vertex 2 1 0 + (1/2 : ℝ) * swapLin (vertex 2 1) 0)
+     = 0
+  rw [swapLin_vertex_zero, swapLin_vertex_one,
+      (vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
+  ring
+
 end Classical
 end Perspectival
