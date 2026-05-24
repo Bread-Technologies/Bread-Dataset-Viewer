@@ -6798,5 +6798,23 @@ example (f : Perspectival.WantableGPT.V (Bool ⊕ Bool)) :
       = (∑ b : Bool, f (Sum.inl b)) + (∑ b : Bool, f (Sum.inr b)) :=
   WantableGPT_unitFn_sum f
 
+/-- New: the unit functional on a product W₁ × W₂ decomposes as a double
+sum. -/
+theorem WantableGPT_unitFn_prod
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂)) :
+    Perspectival.WantableGPT.unitFn (W₁ × W₂) f
+      = ∑ w₁ : W₁, ∑ w₂ : W₂, f (w₁, w₂) := by
+  show ∑ p : W₁ × W₂, f p
+      = ∑ w₁ : W₁, ∑ w₂ : W₂, f (w₁, w₂)
+  rw [Fintype.sum_prod_type]
+
+/-- Concrete: on Bool × Bool the unit functional decomposes as a double sum. -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool)) :
+    Perspectival.WantableGPT.unitFn (Bool × Bool) f
+      = ∑ b₁ : Bool, ∑ b₂ : Bool, f (b₁, b₂) :=
+  WantableGPT_unitFn_prod f
+
 end Examples
 end Perspectival
