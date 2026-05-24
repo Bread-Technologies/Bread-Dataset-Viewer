@@ -315,6 +315,19 @@ example (W : Type u) [Wantable W] [TopologicalSpace W] [ContinuousWantable W] :
     ((ContinuousPTrans.complement W).comp (ContinuousPTrans.complement W)).toPTrans = 1 :=
   PTrans.complement_sq
 
+/-- Concrete continuous PTrans on ℝ: the identity. -/
+example : (ContinuousPTrans.id ℝ).toPTrans.toFun (3.14 : ℝ) = 3.14 := rfl
+
+/-- Concrete continuous PTrans on ℝ: the negation (complement). -/
+example : (ContinuousPTrans.complement ℝ).toPTrans.toFun (3.14 : ℝ) = -3.14 := rfl
+
+/-- The PTrans group structure restricts to ContinuousPTrans on ℝ:
+the negation has order 2. -/
+example : ((ContinuousPTrans.complement ℝ).comp
+            (ContinuousPTrans.complement ℝ)).toPTrans
+        = (ContinuousPTrans.id ℝ).toPTrans :=
+  PTrans.complement_sq
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
