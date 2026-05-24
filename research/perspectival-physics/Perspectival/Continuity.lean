@@ -507,6 +507,22 @@ theorem Reachable.equivalence [ClosedAgency G]
     symm := fun h => Reachable.symm_of_inv_avail h_inv h
     trans := fun h₁ h₂ => Reachable.trans h₁ h₂ }
 
+/-- The trivial agency satisfies inverse availability vacuously
+(identity is its own inverse, and is the only available element). -/
+theorem trivialAgency_inv_avail (G : GPT V) :
+    ∀ R : Reversible G, R ∈ HasConnectedAgency.avail
+      (G := G) (self := trivialAgency G) →
+    ∃ S : Reversible G, S ∈ HasConnectedAgency.avail
+      (G := G) (self := trivialAgency G) ∧
+      ∀ v : V, S.toLin (R.toLin v) = v := by
+  intro R hR
+  -- hR : R = Reversible.id G (from the avail = {Reversible.id G} setup)
+  have hReq : R = Reversible.id G := hR
+  refine ⟨Reversible.id G, rfl, ?_⟩
+  intro v
+  rw [hReq]
+  rfl
+
 /-- `Reachable` under `ClosedAgency` is preserved under all available
 transformations: if `ρ₁ ~> ρ₂` and `R` is available, then
 `ρ₁ ~> R.toLin ρ₂`. -/
