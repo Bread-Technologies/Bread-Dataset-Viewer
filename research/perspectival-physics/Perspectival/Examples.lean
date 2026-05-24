@@ -1117,6 +1117,10 @@ example (m n : ℤ) : Wantable.complement (m + n) + (m + n) = 0 := by
 example (n : ℤ) : Wantable.complement n + n = 0 := by show -n + n = 0; ring
 example (n : ℤ) : n + Wantable.complement n = 0 := by show n + -n = 0; ring
 
+/-- Sum of n and its complement is 0 in any additive group (special property of ℤ Wantable). -/
+example (n : ℤ) : Wantable.complement n + n = 0 ∧ n + Wantable.complement n = 0 :=
+  ⟨by show -n + n = 0; ring, by show n + -n = 0; ring⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
