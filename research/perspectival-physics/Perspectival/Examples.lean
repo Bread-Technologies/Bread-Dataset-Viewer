@@ -2844,6 +2844,14 @@ example : FixedPointFreeComplement Empty := fun e _ => e.elim
 example : Even (Fintype.card Empty) := by
   rw [show Fintype.card Empty = 0 from by decide]; exact ⟨0, rfl⟩
 
+/-- WantableGPT on Unit has finrank 1. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Unit) = 1 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
+/-- WantableGPT on Empty has finrank 0. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V Empty) = 0 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; rfl
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
