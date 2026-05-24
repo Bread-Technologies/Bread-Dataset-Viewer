@@ -521,6 +521,10 @@ example (n : ℤ) : Wantable.complement (Wantable.complement n) = n :=
 example : Wantable.complement (3 : ℤ) = -3 ∧ Wantable.complement (-3 : ℤ) = 3 :=
   ⟨rfl, by show -(-3 : ℤ) = 3; ring⟩
 
+example : (PTrans.complement : PTrans ℤ).toFun 42 = -42 := rfl
+example : (PTrans.complement : PTrans ℤ).invFun (-42) = 42 := by
+  show -(-42 : ℤ) = 42; ring
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
