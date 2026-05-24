@@ -8706,3 +8706,37 @@ theorem rightMarginal_preserves_states
     show Perspectival.WantableGPT.unitFn W₂ (rightMarginal f) = 1
     rw [hu]
     exact hf.2
+
+/-- leftMarginal of vertex (w₁, w₂) gives vertex w₁. -/
+theorem leftMarginal_vertex
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w₁ : W₁) (w₂ : W₂) :
+    leftMarginal (Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂))
+      = Perspectival.WantableGPT.vertex W₁ w₁ := by
+  rw [← productState_vertex]
+  funext v
+  exact productState_left_marginal_state _ _
+    (Perspectival.WantableGPT.vertex_in_states W₂ w₂) v
+
+/-- rightMarginal of vertex (w₁, w₂) gives vertex w₂. -/
+theorem rightMarginal_vertex
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w₁ : W₁) (w₂ : W₂) :
+    rightMarginal (Perspectival.WantableGPT.vertex (W₁ × W₂) (w₁, w₂))
+      = Perspectival.WantableGPT.vertex W₂ w₂ := by
+  rw [← productState_vertex]
+  funext v
+  exact productState_right_marginal_state _ _
+    (Perspectival.WantableGPT.vertex_in_states W₁ w₁) v
+
+/-- Concrete: leftMarginal of vertex (true, false) on Bool × Bool = vertex true. -/
+example : leftMarginal (Perspectival.WantableGPT.vertex (Bool × Bool) (true, false))
+        = Perspectival.WantableGPT.vertex Bool true :=
+  leftMarginal_vertex true false
+
+/-- Concrete: rightMarginal of vertex (true, false) on Bool × Bool = vertex false. -/
+example : rightMarginal (Perspectival.WantableGPT.vertex (Bool × Bool) (true, false))
+        = Perspectival.WantableGPT.vertex Bool false :=
+  rightMarginal_vertex true false
