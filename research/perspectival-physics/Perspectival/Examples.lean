@@ -6181,5 +6181,15 @@ example : ∑ v, Perspectival.WantableGPT.proj (Fin 4) v
             (Perspectival.WantableGPT.vertex (Fin 4) 2) = 1 :=
   WantableGPT_sum_probs_vertex_eq_one (2 : Fin 4)
 
+/-- New theorem: complementTransform on `W` is bijective via its
+involution property. The inverse is itself. -/
+theorem WantableGPT_complementTransform_invertible
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (f : Perspectival.WantableGPT.V W) :
+    (Perspectival.WantableGPT.complementTransform W).toLin
+      ((Perspectival.WantableGPT.complementTransform W).toLin f) = f := by
+  funext w
+  show f (Wantable.complement (Wantable.complement w)) = f w
+  rw [Wantable.complement_involutive]
+
 end Examples
 end Perspectival
