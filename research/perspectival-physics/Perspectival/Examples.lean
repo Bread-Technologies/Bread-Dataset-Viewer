@@ -8234,3 +8234,31 @@ example : Fintype.card (Bool × Bool) = 4 ∧
   refine ⟨by decide, ?_⟩
   rw [Perspectival.WantableGPT.finrank_V_eq_card]
   decide
+
+/-- The classical signature N = K = 2 for Bool. -/
+example : Fintype.card Bool = 2 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = 2 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- The classical signature N = K = 4 for Fin 4. -/
+example : Fintype.card (Fin 4) = 4 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) = 4 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- The classical signature N = K = |Bool ⊕ Bool| = 4. -/
+example : Fintype.card (Bool ⊕ Bool) = 4 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) = 4 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- The classical signature N = K = 6 for Bool × Fin 3. -/
+example : Fintype.card (Bool × Fin 3) = 6 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Fin 3)) = 6 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
