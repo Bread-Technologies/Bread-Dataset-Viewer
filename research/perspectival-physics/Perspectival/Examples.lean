@@ -11724,3 +11724,78 @@ example :
      + 1 * ((1/2 : ℝ) * (1/2 : ℝ))))
      = 1/2
   norm_num
+
+/-! ### "Left coordinate is true" indicator effect -/
+
+/-- The indicator for "first coordinate is true" on Bool × Bool. -/
+noncomputable def leftTrueIndicator : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p.1 = true then (1 : ℝ) else 0
+
+/-- leftTrueIndicator is in the effectVec. -/
+theorem leftTrueIndicator_in_effectVec :
+    leftTrueIndicator ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p.1 = true then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p.1 = true then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- The linear functional given by leftTrueIndicator. -/
+noncomputable def leftTrueIndicatorLin :
+    Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ] ℝ :=
+  Perspectival.WantableGPT.innerLin (Bool × Bool) leftTrueIndicator
+
+/-- leftTrueIndicatorLin is in WantableGPT.effects. -/
+theorem leftTrueIndicatorLin_in_effects :
+    leftTrueIndicatorLin ∈ Perspectival.WantableGPT.effects (Bool × Bool) :=
+  ⟨leftTrueIndicator, leftTrueIndicator_in_effectVec, rfl⟩
+
+/-- leftTrueIndicatorLin on diagonalState = 1/2 (only (true,true) contributes). -/
+example : leftTrueIndicatorLin diagonalState = (1/2 : ℝ) := by
+  show ∑ p, leftTrueIndicator p * diagonalState p = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show leftTrueIndicator (true, true) * diagonalState (true, true)
+     + (leftTrueIndicator (true, false) * diagonalState (true, false)
+     + (leftTrueIndicator (false, true) * diagonalState (false, true)
+     + leftTrueIndicator (false, false) * diagonalState (false, false)))
+     = 1/2
+  show (1 : ℝ) * (1/2 : ℝ) + (1 * 0 + (0 * 0 + 0 * (1/2 : ℝ))) = 1/2
+  norm_num
+
+/-- leftTrueIndicatorLin on antiDiagonalState = 1/2 (only (true,false) contributes). -/
+example : leftTrueIndicatorLin antiDiagonalState = (1/2 : ℝ) := by
+  show ∑ p, leftTrueIndicator p * antiDiagonalState p = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show leftTrueIndicator (true, true) * antiDiagonalState (true, true)
+     + (leftTrueIndicator (true, false) * antiDiagonalState (true, false)
+     + (leftTrueIndicator (false, true) * antiDiagonalState (false, true)
+     + leftTrueIndicator (false, false) * antiDiagonalState (false, false)))
+     = 1/2
+  show (1 : ℝ) * 0 + (1 * (1/2 : ℝ) + (0 * (1/2 : ℝ) + 0 * 0)) = 1/2
+  norm_num
+
+/-- leftTrueIndicator does NOT distinguish diagonalState from antiDiagonalState. -/
+example : leftTrueIndicatorLin diagonalState = leftTrueIndicatorLin antiDiagonalState := by
+  show ∑ p, leftTrueIndicator p * diagonalState p
+     = ∑ p, leftTrueIndicator p * antiDiagonalState p
+  rw [show ∑ p, leftTrueIndicator p * diagonalState p = (1/2 : ℝ) from by
+    rw [show (Finset.univ : Finset (Bool × Bool))
+          = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    show (1 : ℝ) * (1/2 : ℝ) + (1 * 0 + (0 * 0 + 0 * (1/2 : ℝ))) = 1/2
+    norm_num]
+  rw [show ∑ p, leftTrueIndicator p * antiDiagonalState p = (1/2 : ℝ) from by
+    rw [show (Finset.univ : Finset (Bool × Bool))
+          = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+        Finset.sum_insert (by decide), Finset.sum_singleton]
+    show (1 : ℝ) * 0 + (1 * (1/2 : ℝ) + (0 * (1/2 : ℝ) + 0 * 0)) = 1/2
+    norm_num]
