@@ -254,4 +254,19 @@ theorem PTrans.prodMap_mul {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   intro w
   rfl
 
+/-- Complement on `W₁ × W₂` factors as componentwise complement. -/
+@[simp] theorem Wantable.complement_prod {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (p : W₁ × W₂) :
+    (Wantable.complement p : W₁ × W₂) =
+    (Wantable.complement p.1, Wantable.complement p.2) := rfl
+
+/-- Complement on `W₁ ⊕ W₂` factors through the chosen summand. -/
+@[simp] theorem Wantable.complement_sum_inl {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (w : W₁) :
+    (Wantable.complement (Sum.inl w : W₁ ⊕ W₂)) = Sum.inl (Wantable.complement w) := rfl
+
+@[simp] theorem Wantable.complement_sum_inr {W₁ W₂ : Type u}
+    [Wantable W₁] [Wantable W₂] (w : W₂) :
+    (Wantable.complement (Sum.inr w : W₁ ⊕ W₂)) = Sum.inr (Wantable.complement w) := rfl
+
 end Perspectival
