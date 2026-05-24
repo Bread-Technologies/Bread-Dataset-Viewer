@@ -236,4 +236,22 @@ def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
   intro w
   cases w <;> rfl
 
+/-- `sumMap` distributes over composition. -/
+theorem PTrans.sumMap_mul {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (g₁ f₁ : PTrans W₁) (g₂ f₂ : PTrans W₂) :
+    PTrans.sumMap (g₁ * f₁) (g₂ * f₂) =
+    PTrans.sumMap g₁ g₂ * PTrans.sumMap f₁ f₂ := by
+  apply PTrans.ext
+  intro w
+  cases w <;> rfl
+
+/-- `prodMap` distributes over composition. -/
+theorem PTrans.prodMap_mul {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (g₁ f₁ : PTrans W₁) (g₂ f₂ : PTrans W₂) :
+    PTrans.prodMap (g₁ * f₁) (g₂ * f₂) =
+    PTrans.prodMap g₁ g₂ * PTrans.prodMap f₁ f₂ := by
+  apply PTrans.ext
+  intro w
+  rfl
+
 end Perspectival
