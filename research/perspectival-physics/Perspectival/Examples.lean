@@ -10545,3 +10545,30 @@ example {W : Type u} [Wantable W] :
   apply Equiv.ext
   intro w
   rfl
+
+/-- PTrans.id_comp: id ∘ f = f. -/
+example {W : Type u} [Wantable W] (f : PTrans W) :
+    PTrans.comp PTrans.id f = f := PTrans.id_comp f
+
+/-- PTrans.comp_id: f ∘ id = f. -/
+example {W : Type u} [Wantable W] (f : PTrans W) :
+    PTrans.comp f PTrans.id = f := PTrans.comp_id f
+
+/-- PTrans.comp_assoc: composition is associative. -/
+example {W : Type u} [Wantable W] (h g f : PTrans W) :
+    PTrans.comp (PTrans.comp h g) f = PTrans.comp h (PTrans.comp g f) :=
+  PTrans.comp_assoc h g f
+
+/-- PTrans group: identity left. -/
+example {W : Type u} [Wantable W] (f : PTrans W) : (1 : PTrans W) * f = f :=
+  one_mul f
+
+example {W : Type u} [Wantable W] (f : PTrans W) : f * (1 : PTrans W) = f :=
+  mul_one f
+
+example {W : Type u} [Wantable W] (h g f : PTrans W) :
+    (h * g) * f = h * (g * f) := mul_assoc h g f
+
+example {W : Type u} [Wantable W] (f : PTrans W) : f⁻¹ * f = 1 := inv_mul_cancel f
+
+example {W : Type u} [Wantable W] (f : PTrans W) : f * f⁻¹ = 1 := mul_inv_cancel f
