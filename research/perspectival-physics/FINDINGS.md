@@ -198,6 +198,18 @@ in `HasConnectedAgency` is cheap (always satisfiable for topological
 V); the substantive content of R6 is the *availability set* (which
 transformations are admissible), not the connectedness itself.
 
+**Reachable as equivalence relation.** Under `ClosedAgency` (closure
+under composition) plus per-element inverse availability, the
+`Reachable` relation is formally an `Equivalence`
+(`Reachable.equivalence`). This formally characterizes when the
+"dynamically connected" partition of state space is well-behaved. The
+underlying observation: composition + inverse + identity make the
+available set a group, and orbits under a group action are
+equivalence classes. The R6 program is to identify which
+*physically meaningful* condition justifies inverse availability,
+since `Reversible` itself doesn't currently encode bijectivity (see
+`StrictReversible` for a refinement that does).
+
 ## Structural deflations (clarifying)
 
 Two clarifying deflations have been formally proven:
