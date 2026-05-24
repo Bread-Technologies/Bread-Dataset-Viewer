@@ -65,6 +65,8 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | WantableGPT product-composition dimension: `K(W₁ × W₂) = |W₁| · |W₂|` | `WantableGPT.lean :: finrank_V_prod_eq_mul` | ✓ |
 | WantableGPT sum-composition dimension: `K(W₁ ⊕ W₂) = |W₁| + |W₂|` | `WantableGPT.lean :: finrank_V_sum_eq_add` | ✓ |
 | Concrete classification `PTrans Bool = {1, boolSwap}` | `Examples.lean :: ptrans_bool_classification` | ✓ |
+| `SelfComplementary`, `FixedPointFreeComplement` predicates | `Ontology.lean` | ✓ |
+| **Even-cardinality theorem**: fixed-point-free complement + finite + linear order ⇒ `|W|` even | `Examples.lean :: card_even_of_fixedPointFree` | ✓ |
 | Self-Transforms form a Monoid | `GPT.lean (instance)` | ✓ |
 | Transform composition (`Transform.comp`) | `GPT.lean :: Transform.comp` | ✓ |
 | Reachable is reflexive | `Continuity.lean :: Reachable.refl` | ✓ |
