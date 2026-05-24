@@ -784,6 +784,11 @@ example {W : Type u} [Wantable W] :
   show Wantable.complement (Wantable.complement w) = w
   exact Wantable.complement_involutive w
 
+example : (complementEquiv : Equiv.Perm Bool) * complementEquiv = 1 := by
+  apply Equiv.ext
+  intro b
+  cases b <;> rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
