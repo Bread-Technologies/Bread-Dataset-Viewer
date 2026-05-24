@@ -14020,6 +14020,30 @@ example (φ : PTrans (Fin 3)) :
   show (1 : ℝ) / Fintype.card (Fin 3) = (1 : ℝ) / Fintype.card (Fin 3)
   rfl
 
+/-! ### Generic uniform-state invariance -/
+
+/-- For any φ : PTrans W on finite Wantable W, transformAction φ uniformState
+preserves uniform. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W]
+    (φ : PTrans W) :
+    Perspectival.WantableGPT.transformAction W φ (uniformState W) = uniformState W := by
+  funext w
+  show uniformState W (φ.invFun w) = uniformState W w
+  show (1 : ℝ) / Fintype.card W = (1 : ℝ) / Fintype.card W
+  rfl
+
+/-- For Bool, this says complement preserves uniformBool. -/
+example :
+    Perspectival.WantableGPT.transformAction Bool PTrans.complement uniformBool
+    = uniformBool := by
+  funext b; rfl
+
+/-- For Bool × Bool, swap-style PTrans preserves uniformState. -/
+example :
+    Perspectival.WantableGPT.transformAction (Bool × Bool) PTrans.complement
+      (uniformState (Bool × Bool)) = uniformState (Bool × Bool) := by
+  funext p; rfl
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
