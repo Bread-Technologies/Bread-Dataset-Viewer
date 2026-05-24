@@ -2978,6 +2978,12 @@ example : Perspectival.Hardy.DistinguishabilitySet
               (Perspectival.WantableGPT.vertex (Bool × Bool × Bool × Bool))) :=
   Perspectival.WantableGPT.vertex_distinguishability_set (Bool × Bool × Bool × Bool)
 
+/-- Bool⁴ vertices are linearly independent. -/
+example : LinearIndependent ℝ
+            (fun w : Bool × Bool × Bool × Bool =>
+              Perspectival.WantableGPT.vertex (Bool × Bool × Bool × Bool) w) :=
+  Perspectival.WantableGPT.vertex_linear_independent_of_fintype (Bool × Bool × Bool × Bool)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
