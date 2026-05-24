@@ -3535,6 +3535,15 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
     (Perspectival.GPT.Transform.id G).toLin = LinearMap.id :=
   Perspectival.GPT.Transform.id_toLin G
 
+/-- Transform.comp_toLin: composition's toLin is composition of toLins. -/
+example {V V' V'' : Type u}
+    [AddCommGroup V] [Module ℝ V] [AddCommGroup V'] [Module ℝ V']
+    [AddCommGroup V''] [Module ℝ V'']
+    {G : Perspectival.GPT V} {G' : Perspectival.GPT V'} {G'' : Perspectival.GPT V''}
+    (T' : Perspectival.GPT.Transform G' G'') (T : Perspectival.GPT.Transform G G') :
+    (Perspectival.GPT.Transform.comp T' T).toLin = T'.toLin.comp T.toLin :=
+  Perspectival.GPT.Transform.comp_toLin T' T
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
