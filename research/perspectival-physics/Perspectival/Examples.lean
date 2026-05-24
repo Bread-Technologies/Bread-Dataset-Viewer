@@ -2554,6 +2554,20 @@ example : Perspectival.Distinguish.PerfectWitness
     (Perspectival.WantableGPT.vertex Bool true)
     (Perspectival.WantableGPT.vertex_in_states Bool true)
 
+/-- Identity Transform on the boolean WantableGPT preserves probabilities. -/
+example (ρ : Perspectival.WantableGPT.V Bool) :
+    (Perspectival.WantableGPT.gpt Bool).unit
+      ((Perspectival.GPT.Transform.id (Perspectival.WantableGPT.gpt Bool)).toLin ρ)
+    = (Perspectival.WantableGPT.gpt Bool).unit ρ :=
+  Perspectival.GPT.Transform.prob_invariant _ ρ
+
+/-- complement Transform on the boolean WantableGPT preserves probabilities. -/
+example (ρ : Perspectival.WantableGPT.V Bool) :
+    (Perspectival.WantableGPT.gpt Bool).unit
+      ((Perspectival.WantableGPT.complementTransform Bool).toLin ρ)
+    = (Perspectival.WantableGPT.gpt Bool).unit ρ :=
+  Perspectival.GPT.Transform.prob_invariant _ ρ
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
