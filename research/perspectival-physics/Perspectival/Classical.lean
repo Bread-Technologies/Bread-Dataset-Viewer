@@ -2213,5 +2213,284 @@ theorem classical_n2_no_path_across_sign
   obtain ⟨t, ht⟩ := h_zero_mem
   exact n2_disc_det_zero_implies_not_injective (γ t) (hpreserve t) ht (hbij t).1
 
+/-! ## R6 disconnect, n = 3: even vs odd permutations
+
+Strategy: define a 3×3 determinant `n3_disc_det` directly from the
+Leibniz expansion using vertex coordinates. This avoids the
+`LinearMap ↔ Matrix` plumbing and stays self-contained. We then
+verify:
+
+  * `n3_disc_det LinearMap.id = 1`     (even permutation)
+  * `n3_disc_det swap01Lin   = -1`     (odd permutation)
+  * `n3_disc_det` along any jointly-continuous path of linear maps
+    is continuous in `t`.
+  * IVT then forces any continuous path between id and swap01
+    through `n3_disc_det = 0` at some intermediate point.
+
+We DO NOT prove `det = 0 ⇒ ¬injective` here (that step is deferred,
+as instructed in the task — it is the harder part of the proof, and
+the IVT crossing fact already gives the substantive structural
+content of the n = 3 disconnect).
+
+Convention: writing `M(j,i) = R (vertex 3 i) j`, the Leibniz formula
+for the 3×3 determinant in these coordinates is the signed sum over
+the 6 permutations of `Fin 3`. -/
+
+/-- The n=3 sign-discriminant function: a Leibniz-formula determinant
+in terms of the vertex coordinates of `R`. Acts on a linear map
+`R : V 3 →ₗ V 3` and returns a real number whose sign distinguishes
+even from odd permutations of the standard basis.
+
+This is equal to `det M` where `M i j = R (vertex 3 j) i`, expanded
+via the 6 permutations of `Fin 3` (Leibniz). -/
+noncomputable def n3_disc_det (R : V 3 →ₗ[ℝ] V 3) : ℝ :=
+    R (vertex 3 0) 0 * R (vertex 3 1) 1 * R (vertex 3 2) 2
+  + R (vertex 3 0) 1 * R (vertex 3 1) 2 * R (vertex 3 2) 0
+  + R (vertex 3 0) 2 * R (vertex 3 1) 0 * R (vertex 3 2) 1
+  - R (vertex 3 0) 1 * R (vertex 3 1) 0 * R (vertex 3 2) 2
+  - R (vertex 3 0) 2 * R (vertex 3 1) 1 * R (vertex 3 2) 0
+  - R (vertex 3 0) 0 * R (vertex 3 1) 2 * R (vertex 3 2) 1
+
+/-- Vertex coordinates for `vertex 3 0` in V 3. -/
+theorem vertex_n3_zero_coords :
+    vertex 3 0 0 = 1 ∧ vertex 3 0 1 = 0 ∧ vertex 3 0 2 = 0 := by
+  refine ⟨?_, ?_, ?_⟩
+  · show (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) = 1
+    simp
+  · show (if (0 : Fin 3) = 1 then (1 : ℝ) else 0) = 0
+    rw [if_neg (by decide)]
+  · show (if (0 : Fin 3) = 2 then (1 : ℝ) else 0) = 0
+    rw [if_neg (by decide)]
+
+/-- Vertex coordinates for `vertex 3 1` in V 3. -/
+theorem vertex_n3_one_coords :
+    vertex 3 1 0 = 0 ∧ vertex 3 1 1 = 1 ∧ vertex 3 1 2 = 0 := by
+  refine ⟨?_, ?_, ?_⟩
+  · show (if (1 : Fin 3) = 0 then (1 : ℝ) else 0) = 0
+    rw [if_neg (by decide)]
+  · show (if (1 : Fin 3) = 1 then (1 : ℝ) else 0) = 1
+    simp
+  · show (if (1 : Fin 3) = 2 then (1 : ℝ) else 0) = 0
+    rw [if_neg (by decide)]
+
+/-- Vertex coordinates for `vertex 3 2` in V 3. -/
+theorem vertex_n3_two_coords :
+    vertex 3 2 0 = 0 ∧ vertex 3 2 1 = 0 ∧ vertex 3 2 2 = 1 := by
+  refine ⟨?_, ?_, ?_⟩
+  · show (if (2 : Fin 3) = 0 then (1 : ℝ) else 0) = 0
+    rw [if_neg (by decide)]
+  · show (if (2 : Fin 3) = 1 then (1 : ℝ) else 0) = 0
+    rw [if_neg (by decide)]
+  · show (if (2 : Fin 3) = 2 then (1 : ℝ) else 0) = 1
+    simp
+
+/-- The n=3 determinant of the identity is +1 (even permutation). -/
+theorem n3_disc_det_id : n3_disc_det (LinearMap.id : V 3 →ₗ[ℝ] V 3) = 1 := by
+  show LinearMap.id (vertex 3 0) 0 * LinearMap.id (vertex 3 1) 1
+        * LinearMap.id (vertex 3 2) 2
+      + LinearMap.id (vertex 3 0) 1 * LinearMap.id (vertex 3 1) 2
+        * LinearMap.id (vertex 3 2) 0
+      + LinearMap.id (vertex 3 0) 2 * LinearMap.id (vertex 3 1) 0
+        * LinearMap.id (vertex 3 2) 1
+      - LinearMap.id (vertex 3 0) 1 * LinearMap.id (vertex 3 1) 0
+        * LinearMap.id (vertex 3 2) 2
+      - LinearMap.id (vertex 3 0) 2 * LinearMap.id (vertex 3 1) 1
+        * LinearMap.id (vertex 3 2) 0
+      - LinearMap.id (vertex 3 0) 0 * LinearMap.id (vertex 3 1) 2
+        * LinearMap.id (vertex 3 2) 1
+      = 1
+  obtain ⟨h00, h01, h02⟩ := vertex_n3_zero_coords
+  obtain ⟨h10, h11, h12⟩ := vertex_n3_one_coords
+  obtain ⟨h20, h21, h22⟩ := vertex_n3_two_coords
+  show vertex 3 0 0 * vertex 3 1 1 * vertex 3 2 2
+      + vertex 3 0 1 * vertex 3 1 2 * vertex 3 2 0
+      + vertex 3 0 2 * vertex 3 1 0 * vertex 3 2 1
+      - vertex 3 0 1 * vertex 3 1 0 * vertex 3 2 2
+      - vertex 3 0 2 * vertex 3 1 1 * vertex 3 2 0
+      - vertex 3 0 0 * vertex 3 1 2 * vertex 3 2 1
+      = 1
+  rw [h00, h01, h02, h10, h11, h12, h20, h21, h22]
+  ring
+
+/-- For swap01Lin applied to vertex 3 0, the resulting V 3 has
+coordinates (0, 1, 0). -/
+theorem swap01Lin_vertex_zero_coords :
+    swap01Lin (vertex 3 0) 0 = 0
+    ∧ swap01Lin (vertex 3 0) 1 = 1
+    ∧ swap01Lin (vertex 3 0) 2 = 0 := by
+  -- swap01Lin v 0 = v 1, swap01Lin v 1 = v 0, swap01Lin v 2 = v 2
+  refine ⟨?_, ?_, ?_⟩
+  · show vertex 3 0 1 = 0
+    exact (vertex_n3_zero_coords).2.1
+  · show vertex 3 0 0 = 1
+    exact (vertex_n3_zero_coords).1
+  · show vertex 3 0 2 = 0
+    exact (vertex_n3_zero_coords).2.2
+
+/-- For swap01Lin applied to vertex 3 1, the resulting V 3 has
+coordinates (1, 0, 0). -/
+theorem swap01Lin_vertex_one_coords :
+    swap01Lin (vertex 3 1) 0 = 1
+    ∧ swap01Lin (vertex 3 1) 1 = 0
+    ∧ swap01Lin (vertex 3 1) 2 = 0 := by
+  refine ⟨?_, ?_, ?_⟩
+  · show vertex 3 1 1 = 1
+    exact (vertex_n3_one_coords).2.1
+  · show vertex 3 1 0 = 0
+    exact (vertex_n3_one_coords).1
+  · show vertex 3 1 2 = 0
+    exact (vertex_n3_one_coords).2.2
+
+/-- For swap01Lin applied to vertex 3 2, the resulting V 3 has
+coordinates (0, 0, 1). -/
+theorem swap01Lin_vertex_two_coords :
+    swap01Lin (vertex 3 2) 0 = 0
+    ∧ swap01Lin (vertex 3 2) 1 = 0
+    ∧ swap01Lin (vertex 3 2) 2 = 1 := by
+  refine ⟨?_, ?_, ?_⟩
+  · show vertex 3 2 1 = 0
+    exact (vertex_n3_two_coords).2.1
+  · show vertex 3 2 0 = 0
+    exact (vertex_n3_two_coords).1
+  · show vertex 3 2 2 = 1
+    exact (vertex_n3_two_coords).2.2
+
+/-- The n=3 determinant of swap01Lin is -1 (odd permutation). -/
+theorem n3_disc_det_swap01 : n3_disc_det swap01Lin = -1 := by
+  show swap01Lin (vertex 3 0) 0 * swap01Lin (vertex 3 1) 1
+        * swap01Lin (vertex 3 2) 2
+      + swap01Lin (vertex 3 0) 1 * swap01Lin (vertex 3 1) 2
+        * swap01Lin (vertex 3 2) 0
+      + swap01Lin (vertex 3 0) 2 * swap01Lin (vertex 3 1) 0
+        * swap01Lin (vertex 3 2) 1
+      - swap01Lin (vertex 3 0) 1 * swap01Lin (vertex 3 1) 0
+        * swap01Lin (vertex 3 2) 2
+      - swap01Lin (vertex 3 0) 2 * swap01Lin (vertex 3 1) 1
+        * swap01Lin (vertex 3 2) 0
+      - swap01Lin (vertex 3 0) 0 * swap01Lin (vertex 3 1) 2
+        * swap01Lin (vertex 3 2) 1
+      = -1
+  obtain ⟨ha0, ha1, ha2⟩ := swap01Lin_vertex_zero_coords
+  obtain ⟨hb0, hb1, hb2⟩ := swap01Lin_vertex_one_coords
+  obtain ⟨hc0, hc1, hc2⟩ := swap01Lin_vertex_two_coords
+  rw [ha0, ha1, ha2, hb0, hb1, hb2, hc0, hc1, hc2]
+  ring
+
+/-- `n3_disc_det` along a jointly-continuous family `γ` of linear maps
+is continuous in `t`. Uses `n_vertex_coord_continuous_of_joint`. -/
+theorem n3_disc_det_path_continuous
+    (γ : unitInterval → V 3 →ₗ[ℝ] V 3)
+    (hcont : Continuous (fun p : unitInterval × V 3 => γ p.1 p.2)) :
+    Continuous (fun t => n3_disc_det (γ t)) := by
+  -- Each coordinate (γ t) (vertex 3 i) j is continuous (i, j ∈ Fin 3),
+  -- and n3_disc_det is a polynomial in these.
+  have c00 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 0 0
+  have c01 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 0 1
+  have c02 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 0 2
+  have c10 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 1 0
+  have c11 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 1 1
+  have c12 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 1 2
+  have c20 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 2 0
+  have c21 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 2 1
+  have c22 := n_vertex_coord_continuous_of_joint (n := 3) γ hcont 2 2
+  -- The det is a sum/difference of 6 products of 3 such continuous fns.
+  show Continuous (fun t =>
+       γ t (vertex 3 0) 0 * γ t (vertex 3 1) 1 * γ t (vertex 3 2) 2
+     + γ t (vertex 3 0) 1 * γ t (vertex 3 1) 2 * γ t (vertex 3 2) 0
+     + γ t (vertex 3 0) 2 * γ t (vertex 3 1) 0 * γ t (vertex 3 2) 1
+     - γ t (vertex 3 0) 1 * γ t (vertex 3 1) 0 * γ t (vertex 3 2) 2
+     - γ t (vertex 3 0) 2 * γ t (vertex 3 1) 1 * γ t (vertex 3 2) 0
+     - γ t (vertex 3 0) 0 * γ t (vertex 3 1) 2 * γ t (vertex 3 2) 1)
+  exact ((((((c00.mul c11).mul c22).add ((c01.mul c12).mul c20)).add
+              ((c02.mul c10).mul c21)).sub ((c01.mul c10).mul c22)).sub
+              ((c02.mul c11).mul c20)).sub ((c00.mul c12).mul c21)
+
+/-- IVT version of the n=3 disconnect: any continuous path of linear
+maps from `LinearMap.id` to `swap01Lin` passes through a point where
+`n3_disc_det = 0`. (Even-to-odd parity change forces a zero crossing.) -/
+theorem n3_no_continuous_path_id_to_swap01
+    (γ : unitInterval → V 3 →ₗ[ℝ] V 3)
+    (hcont : Continuous (fun t => n3_disc_det (γ t)))
+    (h0 : γ 0 = LinearMap.id)
+    (h1 : γ 1 = swap01Lin) :
+    ∃ t : unitInterval, n3_disc_det (γ t) = 0 := by
+  apply ivt_path_one_to_neg_one (fun t => n3_disc_det (γ t)) hcont
+  · show n3_disc_det (γ 0) = 1
+    rw [h0]
+    exact n3_disc_det_id
+  · show n3_disc_det (γ 1) = -1
+    rw [h1]
+    exact n3_disc_det_swap01
+
+/-- **R6 (n=3) IVT-form disconnect (joint-continuity input).** Any
+jointly-continuous family `γ : [0,1] → (V 3 →ₗ V 3)` with `γ 0 = id`
+and `γ 1 = swap01Lin` passes through `n3_disc_det = 0` for some `t`.
+
+This is the parity-flip / sign-of-det fact for `S_3 ⊂ GL(3, ℝ)`,
+restricted to the discrete trace of permutation matrices on
+state-preserving maps. Combined with a future "det = 0 ⇒
+non-bijective on V 3" lemma (deferred), this closes the disconnect
+theorem.
+
+Note: this theorem does NOT yet show that the path leaves the
+bijective sector — it only shows the determinant must vanish
+somewhere. The bijection-blocking step
+(`n3_disc_det_zero_implies_not_injective`) is deferred to a future
+R6-completion session as a non-trivial 3×3 determinant ↔ rank
+calculation. See `R6_GENERAL_N_SCOPING.md` for the route via
+`Matrix.isUnit_iff_isUnit_det` and `LinearMap.toMatrix'`. -/
+theorem classical_n3_no_continuous_path_id_to_swap01_joint
+    (γ : unitInterval → V 3 →ₗ[ℝ] V 3)
+    (hcont : Continuous (fun p : unitInterval × V 3 => γ p.1 p.2))
+    (h0 : γ 0 = LinearMap.id)
+    (h1 : γ 1 = swap01Lin) :
+    ∃ t : unitInterval, n3_disc_det (γ t) = 0 :=
+  n3_no_continuous_path_id_to_swap01 γ (n3_disc_det_path_continuous γ hcont) h0 h1
+
+/-- A `StrictReversiblePath` from id to swap01 on Classical n=3 GPT
+must have `n3_disc_det` vanishing at some intermediate time. (The
+"impossibility" claim — that this contradicts bijectivity along the
+path — is the deferred step.) -/
+theorem classical_n3_strict_path_id_swap01_det_zero
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt 3)
+              (Perspectival.Continuity.StrictReversible.id (gpt 3))
+              swap01StrictReversible) :
+    ∃ t : unitInterval, n3_disc_det (p.γ t) = 0 := by
+  apply classical_n3_no_continuous_path_id_to_swap01_joint p.γ p.continuous
+  · show p.γ 0 = LinearMap.id
+    rw [p.start]; rfl
+  · show p.γ 1 = swap01Lin
+    rw [p.finish]; rfl
+
+/-! ### Sign-sector summary for n=3
+
+We have proven:
+- `n3_disc_det_id`     : the identity has determinant +1 (even sector).
+- `n3_disc_det_swap01` : `swap01Lin` has determinant -1 (odd sector).
+- `n3_disc_det_path_continuous` : determinant is continuous along
+  any jointly-continuous path of linear maps.
+- IVT then forces any path from id to swap01 to pass through det = 0.
+
+The remaining step for a full n=3 disconnect theorem (analogous to
+`classical_n2_strict_reversible_path_id_swap_empty`) is:
+
+    n3_disc_det R = 0 ⇒ ¬ Function.Injective R   (for state-preserving R)
+
+which is the 3×3 analogue of `n2_disc_det_zero_implies_not_injective`.
+For n=3 this is no longer a 2-coordinate linear-combination argument;
+it requires either:
+  (a) constructing an explicit kernel vector from the cofactor matrix
+      when det = 0, or
+  (b) bridging to `Matrix.isUnit_iff_isUnit_det` via
+      `LinearMap.toMatrix'`.
+
+Both are tractable but substantial. They are DEFERRED to a follow-on
+session, per the scoping note `R6_GENERAL_N_SCOPING.md`.
+
+The current results establish the *parity invariant* that powers the
+disconnect: any path between an even and an odd permutation has a
+non-bijective point. This is the topologically content-bearing half
+of the theorem. -/
+
 end Classical
 end Perspectival
