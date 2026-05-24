@@ -535,6 +535,9 @@ example : (PTrans.complement : PTrans ℤ)⁻¹ = PTrans.complement :=
 example : (PTrans.complement : PTrans Bool)⁻¹ = PTrans.complement :=
   PTrans.complement_inv
 
+example : (PTrans.complement : PTrans Bool) * PTrans.complement = 1 :=
+  PTrans.complement_sq
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
