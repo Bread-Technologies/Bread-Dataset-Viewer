@@ -8262,3 +8262,29 @@ example : Fintype.card (Bool × Fin 3) = 6 ∧
   refine ⟨by decide, ?_⟩
   rw [Perspectival.WantableGPT.finrank_V_eq_card]
   decide
+
+/-- New theorem: fromPTrans of prodMap commutes with productState
+on the linear-map level. -/
+theorem fromPTrans_prodMap_apply_productState
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (φ₁ : PTrans W₁) (φ₂ : PTrans W₂)
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂) :
+    (Perspectival.WantableGPT.fromPTrans (W₁ × W₂)
+        (PTrans.prodMap φ₁ φ₂)).toLin (productState f₁ f₂)
+      = productState
+          ((Perspectival.WantableGPT.fromPTrans W₁ φ₁).toLin f₁)
+          ((Perspectival.WantableGPT.fromPTrans W₂ φ₂).toLin f₂) :=
+  productState_transform_factor φ₁ φ₂ f₁ f₂
+
+/-- Concrete: fromPTrans of (1, complementPTrans) on Bool × Bool. -/
+example (f₁ f₂ : Perspectival.WantableGPT.V Bool) :
+    (Perspectival.WantableGPT.fromPTrans (Bool × Bool)
+        (PTrans.prodMap (1 : PTrans Bool)
+          (Perspectival.WantableGPT.complementPTrans Bool))).toLin
+      (productState f₁ f₂)
+    = productState
+        ((Perspectival.WantableGPT.fromPTrans Bool 1).toLin f₁)
+        ((Perspectival.WantableGPT.fromPTrans Bool
+          (Perspectival.WantableGPT.complementPTrans Bool)).toLin f₂) :=
+  fromPTrans_prodMap_apply_productState _ _ f₁ f₂
