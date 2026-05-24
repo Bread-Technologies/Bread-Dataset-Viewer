@@ -7625,3 +7625,25 @@ example : Perspectival.WantableGPT.vertex (Fin 4) 0
 example : Perspectival.WantableGPT.vertex (Bool × Bool) (true, true)
         ≠ Perspectival.WantableGPT.vertex (Bool × Bool) (false, true) :=
   WantableGPT_vertex_ne _ _ (by decide)
+
+/-- New theorem: distinct vertices give linearly independent pairs. -/
+theorem WantableGPT_vertex_pair_independent
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (w v : W) (hwv : w ≠ v) :
+    LinearIndependent ℝ ![Perspectival.WantableGPT.vertex W w,
+                           Perspectival.WantableGPT.vertex W v] :=
+  Perspectival.Distinguish.distinguishable_imp_linear_independent
+    (Perspectival.WantableGPT.vertex_in_states W w)
+    (Perspectival.WantableGPT.vertex_in_states W v)
+    (Perspectival.WantableGPT.vertices_distinguishable W w v hwv)
+
+/-- Concrete: vertex true and vertex false form a linearly independent
+pair in V Bool. -/
+example : LinearIndependent ℝ ![Perspectival.WantableGPT.vertex Bool true,
+                                 Perspectival.WantableGPT.vertex Bool false] :=
+  WantableGPT_vertex_pair_independent true false (by decide)
+
+/-- Concrete: vertex 0 and vertex 1 form a linearly independent pair in V (Fin 4). -/
+example : LinearIndependent ℝ ![Perspectival.WantableGPT.vertex (Fin 4) 0,
+                                 Perspectival.WantableGPT.vertex (Fin 4) 1] :=
+  WantableGPT_vertex_pair_independent 0 1 (by decide)
