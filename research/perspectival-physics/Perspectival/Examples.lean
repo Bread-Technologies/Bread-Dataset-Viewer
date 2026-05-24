@@ -6415,5 +6415,20 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
       = R₂.toLin.comp R₁.toLin :=
   Perspectival.Continuity.StrictReversible.comp_toLin R₂ R₁
 
+/-- New theorem: vertex on Bool true equals function `(! ·) ∘ id` after
+swap. More concretely: vertex true = (fun v => v ? 1 : 0). -/
+theorem WantableGPT_vertex_Bool_true_eq :
+    Perspectival.WantableGPT.vertex Bool true
+      = (fun v : Bool => if v then (1 : ℝ) else 0) := by
+  funext v
+  cases v <;> rfl
+
+/-- New theorem: vertex on Bool false equals function `(fun v => if !v then 1 else 0)`. -/
+theorem WantableGPT_vertex_Bool_false_eq :
+    Perspectival.WantableGPT.vertex Bool false
+      = (fun v : Bool => if !v then (1 : ℝ) else 0) := by
+  funext v
+  cases v <;> rfl
+
 end Examples
 end Perspectival
