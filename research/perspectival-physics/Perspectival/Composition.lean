@@ -67,6 +67,23 @@ theorem Meeting.sum_no_cross
 A pair of transformations on the components yields a transformation on
 the disjoint union. -/
 
+/-! ## Product of Wantables
+
+The disjoint-union composition `W₁ ⊕ W₂` forbids cross-system meetings.
+The PRODUCT composition `W₁ × W₂` instead PAIRS the two Wantables —
+each meeting in the composite involves a meeting in W₁ AND a meeting
+in W₂ simultaneously. Different physics: independent sectors vs.
+correlated sectors.
+-/
+
+instance instWantableProd (W₁ W₂ : Type u) [Wantable W₁] [Wantable W₂] :
+    Wantable (W₁ × W₂) where
+  complement p := (Wantable.complement p.1, Wantable.complement p.2)
+  complement_involutive p := by
+    show (Wantable.complement (Wantable.complement p.1),
+          Wantable.complement (Wantable.complement p.2)) = p
+    rw [Wantable.complement_involutive, Wantable.complement_involutive]
+
 def PTrans.sumMap {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (f₁ : PTrans W₁) (f₂ : PTrans W₂) : PTrans (W₁ ⊕ W₂) where
   toFun := fun
