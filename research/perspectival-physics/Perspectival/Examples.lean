@@ -11448,3 +11448,45 @@ example : complementSubgroup Bool ≤ Subgroup.center (PTrans Bool) := by
   show φ * ((PTrans.complement : PTrans Bool) ^ n)
      = ((PTrans.complement : PTrans Bool) ^ n) * φ
   exact (Commute.zpow_right (PTrans_complement_central φ).symm n)
+
+/-! ### Subgroup-theoretic consequences of complement-centrality -/
+
+/-- complement-power commutes with any φ. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (n : ℤ) :
+    Commute φ ((PTrans.complement : PTrans W) ^ n) :=
+  (Commute.zpow_right (PTrans_complement_central φ).symm n)
+
+/-- complement-power commutes with any φ, written with natural exponent. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (n : ℕ) :
+    Commute φ ((PTrans.complement : PTrans W) ^ n) :=
+  (Commute.pow_right (PTrans_complement_central φ).symm n)
+
+/-- complement-power commutes with any φ, multiplied on the left. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (n : ℕ) :
+    φ * ((PTrans.complement : PTrans W) ^ n)
+      = ((PTrans.complement : PTrans W) ^ n) * φ :=
+  (Commute.pow_right (PTrans_complement_central φ).symm n)
+
+/-- complement squared commutes with anything (trivially, since it equals 1). -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    φ * (PTrans.complement * PTrans.complement : PTrans W)
+      = (PTrans.complement * PTrans.complement : PTrans W) * φ := by
+  rw [PTrans.complement_sq, one_mul, mul_one]
+
+/-- Concrete: complement-power commutes on Bool. -/
+example (φ : PTrans Bool) (n : ℕ) :
+    φ * ((PTrans.complement : PTrans Bool) ^ n)
+      = ((PTrans.complement : PTrans Bool) ^ n) * φ :=
+  (Commute.pow_right (PTrans_complement_central φ).symm n)
+
+/-- Concrete: complement-power commutes on Fin 2. -/
+example (φ : PTrans (Fin 2)) (n : ℕ) :
+    φ * ((PTrans.complement : PTrans (Fin 2)) ^ n)
+      = ((PTrans.complement : PTrans (Fin 2)) ^ n) * φ :=
+  (Commute.pow_right (PTrans_complement_central φ).symm n)
+
+/-- Concrete: complement-power commutes on Fin 3. -/
+example (φ : PTrans (Fin 3)) (n : ℕ) :
+    φ * ((PTrans.complement : PTrans (Fin 3)) ^ n)
+      = ((PTrans.complement : PTrans (Fin 3)) ^ n) * φ :=
+  (Commute.pow_right (PTrans_complement_central φ).symm n)
