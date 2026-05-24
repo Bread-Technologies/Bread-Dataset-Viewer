@@ -422,6 +422,13 @@ example (a : ℝˣ) : (scaleHom a)⁻¹ = scaleHom a⁻¹ := by
 -- Conceptually: PTrans ℝ contains many non-linear odd bijections; the
 -- *linear* subgroup is `scaleHom(ℝˣ)`.
 
+/-- Every ℝ-linear map ℝ → ℝ is determined by its value at 1:
+`f x = f 1 * x`. -/
+example (f : ℝ →ₗ[ℝ] ℝ) (x : ℝ) : f x = f 1 * x := by
+  have h := f.map_smul x 1
+  rw [smul_eq_mul, smul_eq_mul, mul_one] at h
+  rw [h, mul_comm]
+
 /-- **Structural observation.** Translations `x ↦ x + c` (for `c ≠ 0`) on ℝ
 do NOT respect the complement structure (= negation). So PTrans ℝ
 contains scalings but not translations — a non-trivial structural
