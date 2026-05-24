@@ -8938,3 +8938,17 @@ example : rightMarginal diagonalState = rightMarginal antiDiagonalState := by
   cases b with
   | true => show uniformBool true = (0 : ℝ) + 1/2; norm_num; rfl
   | false => show uniformBool false = (1/2 : ℝ) + 0; norm_num; rfl
+
+/-- The diagonal and antiDiagonal states are 50/50 mixed to form
+uniformState (Bool × Bool). -/
+example : uniformState (Bool × Bool)
+        = (1/2 : ℝ) • diagonalState + (1/2 : ℝ) • antiDiagonalState := by
+  funext p
+  rcases p with ⟨a, b⟩
+  cases a <;> cases b <;>
+    (show (1 / ((Fintype.card (Bool × Bool) : ℝ)))
+        = (1/2 : ℝ) * diagonalState _ + (1/2 : ℝ) * antiDiagonalState _) <;>
+    (simp only [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_cast]) <;>
+    (show ((1 : ℝ) / 4) = (1/2 : ℝ) * _ + (1/2 : ℝ) * _) <;>
+    (first | (show _ = (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * 0; norm_num)
+           | (show _ = (1/2 : ℝ) * 0 + (1/2 : ℝ) * (1/2 : ℝ); norm_num))
