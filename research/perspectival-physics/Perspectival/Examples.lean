@@ -9805,3 +9805,22 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = Fintype.card Bo
     Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
       ≠ Fintype.card Bool * (2 * Fintype.card Bool - 1) :=
   Perspectival.WantableGPT.wantableGPT_classical_dichotomy Bool (by decide)
+
+/-- Concrete: classical dichotomy on Fin 4. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_dichotomy (Fin 4) (by decide)
+
+/-- Concrete: classical dichotomy on Bool × Bool. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_dichotomy
+  (Bool × Bool) (by decide)
+
+/-- Concrete: classical dichotomy on Bool ⊕ Bool. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_dichotomy
+  (Bool ⊕ Bool) (by decide)
+
+/-- Concrete: classical dichotomy on Bool × Bool × Bool. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_dichotomy
+  (Bool × Bool × Bool) (by decide)
+
+/-- Concrete: classical dichotomy on Bool × Bool × Bool × Bool. -/
+example := Perspectival.WantableGPT.wantableGPT_classical_dichotomy
+  (Bool × Bool × Bool × Bool) (by decide)
