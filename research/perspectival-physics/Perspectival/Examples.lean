@@ -3544,6 +3544,15 @@ example {V V' V'' : Type u}
     (Perspectival.GPT.Transform.comp T' T).toLin = T'.toLin.comp T.toLin :=
   Perspectival.GPT.Transform.comp_toLin T' T
 
+/-- Self-Transforms on a GPT form a Monoid. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    Monoid (Perspectival.GPT.Transform G G) := inferInstance
+
+/-- Concrete: WantableGPT Bool self-Transforms form a Monoid. -/
+example : Monoid (Perspectival.GPT.Transform
+                    (Perspectival.WantableGPT.gpt Bool)
+                    (Perspectival.WantableGPT.gpt Bool)) := inferInstance
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
