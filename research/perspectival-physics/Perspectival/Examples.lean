@@ -10068,3 +10068,34 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
 example {V : Type u} [AddCommGroup V] [Module ℝ V]
     {G : Perspectival.GPT V} (T₁ T₂ : Perspectival.GPT.Transform G G) :
     (T₁ * T₂).toLin = T₁.toLin ∘ₗ T₂.toLin := rfl
+
+/-- The order of complementTransform in the Transform monoid is at most 2. -/
+theorem WantableGPT_complementTransform_order_two
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.complementTransform W) ^ 2
+    = (1 : Perspectival.GPT.Transform
+            (Perspectival.WantableGPT.gpt W)
+            (Perspectival.WantableGPT.gpt W)) := by
+  rw [pow_two]
+  exact Perspectival.WantableGPT.complementTransform_sq W
+
+/-- Concrete: complementTransform Bool has order 2. -/
+example : (Perspectival.WantableGPT.complementTransform Bool) ^ 2
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt Bool)
+                  (Perspectival.WantableGPT.gpt Bool)) :=
+  WantableGPT_complementTransform_order_two
+
+/-- Concrete: complementTransform Fin 4 has order 2. -/
+example : (Perspectival.WantableGPT.complementTransform (Fin 4)) ^ 2
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt (Fin 4))
+                  (Perspectival.WantableGPT.gpt (Fin 4))) :=
+  WantableGPT_complementTransform_order_two
+
+/-- Concrete: complementTransform Bool × Bool has order 2. -/
+example : (Perspectival.WantableGPT.complementTransform (Bool × Bool)) ^ 2
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt (Bool × Bool))
+                  (Perspectival.WantableGPT.gpt (Bool × Bool))) :=
+  WantableGPT_complementTransform_order_two
