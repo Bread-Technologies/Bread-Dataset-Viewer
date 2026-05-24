@@ -2485,6 +2485,16 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     PTrans W₂ :=
   e.mapPTrans φ
 
+/-- mapPTransMulEquiv is a MulEquiv between PTrans groups. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) :
+    PTrans W₁ ≃* PTrans W₂ := e.mapPTransMulEquiv
+
+/-- mapPTransHom is a MonoidHom (forgetful from the MulEquiv). -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) :
+    PTrans W₁ →* PTrans W₂ := e.mapPTransHom
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
