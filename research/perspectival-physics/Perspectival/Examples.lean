@@ -6340,5 +6340,35 @@ example : (∑ w, Perspectival.WantableGPT.vertex (Fin 4) w)
         = fun _ : Fin 4 => (1 : ℝ) :=
   WantableGPT_sum_vertices_eq_one
 
+/-- New theorem: each `proj w` evaluated on the constant-1 function = 1.
+That is, the "unit on the projection" gives 1. -/
+theorem WantableGPT_proj_const_one
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.proj W w (fun _ => (1 : ℝ)) = 1 := rfl
+
+/-- New theorem: each `proj w` evaluated on the constant-0 function = 0. -/
+theorem WantableGPT_proj_const_zero
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.proj W w (fun _ => (0 : ℝ)) = 0 := rfl
+
+/-- New theorem: the unit functional on the constant-1 function gives |W|. -/
+theorem WantableGPT_unit_const_one
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Perspectival.WantableGPT.unitFn W (fun _ : W => (1 : ℝ))
+      = (Fintype.card W : ℝ) := by
+  show ∑ _ : W, (1 : ℝ) = Fintype.card W
+  rw [Finset.sum_const, Finset.card_univ]
+  simp
+
+/-- Concrete: on Bool, the constant-1 function has unit value 2. -/
+example : Perspectival.WantableGPT.unitFn Bool (fun _ : Bool => (1 : ℝ)) = 2 := by
+  rw [WantableGPT_unit_const_one]
+  norm_num
+
+/-- Concrete: on Fin 4, the constant-1 function has unit value 4. -/
+example : Perspectival.WantableGPT.unitFn (Fin 4) (fun _ : Fin 4 => (1 : ℝ)) = 4 := by
+  rw [WantableGPT_unit_const_one]
+  norm_num
+
 end Examples
 end Perspectival
