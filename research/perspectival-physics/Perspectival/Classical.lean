@@ -631,5 +631,32 @@ theorem classical_n2_surjective_vertex_image
     (hsurj : Function.Surjective R) :
     ∃ v, R v = vertex 2 0 := hsurj _
 
+/-! ## R6 n=2: bijection ⇒ permutation theorem
+
+The key claim: a state-preserving BIJECTIVE linear map R : V 2 →ₗ V 2
+either equals id (= sends vertex 0 ↦ vertex 0 and vertex 1 ↦ vertex 1)
+or equals swap (= sends vertex 0 ↦ vertex 1 and vertex 1 ↦ vertex 0).
+
+The proof has two pieces:
+1. R must send vertex 0 to a state ρ_0. By bijectivity, ρ_0 is an
+   extreme point of stdSimplex, i.e., a vertex.
+2. By symmetry, R must send vertex 1 to a different vertex.
+3. So R is determined by which vertex it sends vertex 0 to: id or swap.
+-/
+
+/-- State-preserving image of vertex 0 has first coord between 0 and 1. -/
+theorem classical_n2_image_vertex_zero_in_states
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    R (vertex 2 0) ∈ states 2 :=
+  hR _ (vertex_in_states 2 0)
+
+/-- Image of vertex 1 is a state. -/
+theorem classical_n2_image_vertex_one_in_states
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    R (vertex 2 1) ∈ states 2 :=
+  hR _ (vertex_in_states 2 1)
+
 end Classical
 end Perspectival
