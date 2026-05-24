@@ -2568,6 +2568,22 @@ example (ρ : Perspectival.WantableGPT.V Bool) :
     = (Perspectival.WantableGPT.gpt Bool).unit ρ :=
   Perspectival.GPT.Transform.prob_invariant _ ρ
 
+/-- complementTransform squared equals the identity Transform on WantableGPT Bool. -/
+example :
+    Perspectival.WantableGPT.complementTransform Bool *
+    Perspectival.WantableGPT.complementTransform Bool
+    = Perspectival.GPT.Transform.id (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.WantableGPT.complementTransform_sq Bool
+
+/-- complementTransform²(vertex true) = vertex true (involution recovers). -/
+example :
+    (Perspectival.WantableGPT.complementTransform Bool *
+     Perspectival.WantableGPT.complementTransform Bool).toLin
+       (Perspectival.WantableGPT.vertex Bool true)
+    = Perspectival.WantableGPT.vertex Bool true := by
+  rw [Perspectival.WantableGPT.complementTransform_sq]
+  rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
