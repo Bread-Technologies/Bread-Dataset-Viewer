@@ -10781,3 +10781,30 @@ example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
   constructor
   · intro _; trivial
   · intro _; exact Or.inr trivial
+
+/-- Reality on Bool can be enumerated: there are exactly 2^4 = 16
+realities (since |Meeting Bool| = 2, and a reality is a predicate on
+meetings). -/
+example : Reality Bool := fun _ => True
+
+example : Reality Bool := fun _ => False
+
+example : Reality Bool := fun m => m.side₁ = true
+
+example : Reality Bool := fun m => m.side₁ = false
+
+example : Reality Bool := fun m => m.side₂ = true
+
+example : Reality Bool := fun m => m.side₂ = false
+
+/-- A reality determined by both sides. -/
+example : Reality Bool := fun m => m.side₁ = m.side₂
+
+/-- A reality that's always true. -/
+example : Reality Bool := fun _ => True
+
+/-- A reality on Fin 4 by specifying allowed meetings. -/
+example : Reality (Fin 4) := fun m => m.side₁ ≤ 1
+
+/-- A reality on Bool × Bool. -/
+example : Reality (Bool × Bool) := fun m => m.side₁.1 = m.side₁.2
