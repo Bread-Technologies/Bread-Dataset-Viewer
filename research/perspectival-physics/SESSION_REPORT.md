@@ -5,10 +5,14 @@ A summary of accomplishments from this development session.
 ## Headline numbers
 
 - **13 Lean modules** building cleanly with Mathlib v4.29.1
-- **~10,400 lines of Lean** (excluding Mathlib dependencies) — 10K-line milestone passed
-- **~430+ verified theorems / examples** (no `sorry` outside documented placeholders)
+- **~10,650 lines of Lean** (excluding Mathlib dependencies)
+- **~450+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **940+ commits** to the research branch (extended session — milestone reached)
+- **949+ commits** to the research branch (extended session — 950 milestone approaching)
+- **Marginalization theory**: `leftMarginal` and `rightMarginal` as
+  LinearMaps on the product state space, with marginal-recovery
+  theorems for productState and concrete computations for the
+  diagonal-correlated states (`leftMarginal diagonalState = uniformBool`).
 - **Classical-separability theorem**: every state on a product Wantable is
   a sum of weighted product-vertex states — the framework's "no
   entanglement" no-go theorem made precise
