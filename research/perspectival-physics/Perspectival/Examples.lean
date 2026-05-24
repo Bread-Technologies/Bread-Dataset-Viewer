@@ -2729,6 +2729,17 @@ example : 5 ≤ Module.finrank ℝ (Perspectival.Classical.V 5) :=
     (Perspectival.Classical.vertex 5)
     (Perspectival.Classical.perfectWitness 5)
 
+/-- N ≤ K for WantableGPT Bool — applying the general theorem. -/
+example : Fintype.card Bool ≤ Module.finrank ℝ (Perspectival.WantableGPT.V Bool) := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+
+/-- The classical signature `N = K = |W|` for WantableGPT Bool. -/
+example : Fintype.card Bool = 2 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = 2 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
