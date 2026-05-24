@@ -1043,6 +1043,10 @@ example : (complementEquiv : Equiv.Perm (Fin 4)).toFun 3 = 0 := rfl
 /-- Bool × Bool's complement Equiv on (true, true). -/
 example : (complementEquiv : Equiv.Perm (Bool × Bool)).toFun (true, true) = (false, false) := rfl
 
+example : (complementEquiv : Equiv.Perm (Bool × Bool)).toFun (true, false) = (false, true) := rfl
+example : (complementEquiv : Equiv.Perm (Bool × Bool)).toFun (false, true) = (true, false) := rfl
+example : (complementEquiv : Equiv.Perm (Bool × Bool)).toFun (false, false) = (true, true) := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
