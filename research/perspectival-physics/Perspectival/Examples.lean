@@ -2560,6 +2560,12 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     e.mapPTransMulEquiv (φ * ψ) = e.mapPTransMulEquiv φ * e.mapPTransMulEquiv ψ :=
   e.mapPTransMulEquiv.map_mul φ ψ
 
+/-- mapPTransMulEquiv preserves inverses (from MulEquiv structure). -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    (e : WantableEquiv W₁ W₂) (φ : PTrans W₁) :
+    e.mapPTransMulEquiv φ⁻¹ = (e.mapPTransMulEquiv φ)⁻¹ :=
+  e.mapPTransMulEquiv.map_inv φ
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
