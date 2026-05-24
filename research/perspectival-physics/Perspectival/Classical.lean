@@ -1877,6 +1877,49 @@ theorem classical_n2_det_one_eq_id
   rw [← hv]
   rfl
 
+/-- For state-preserving R on V 2 with det = -1, R must equal swapLin.
+By symmetry with det = 1: det = -1 means R(v0)(0) - R(v1)(0) = -1, so
+R(v0)(0) = 0 and R(v1)(0) = 1. Hence R(v0) = vertex 1, R(v1) = vertex 0,
+so R = swap. -/
+theorem classical_n2_det_neg_one_eq_swap
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2)
+    (hdet : n2_disc_det R = -1) :
+    R = swapLin := by
+  have h := classical_n2_state_preserving_first_coord_bound R hR
+  have h1 := classical_n2_state_preserving_first_coord_bound_v1 R hR
+  -- R(v0)(0) ∈ [0,1], R(v1)(0) ∈ [0,1], diff = -1 ⇒ R(v0)(0) = 0, R(v1)(0) = 1
+  have ha : R (vertex 2 0) 0 = 0 := by
+    have hdet' : R (vertex 2 0) 0 - R (vertex 2 1) 0 = -1 := hdet
+    linarith
+  have hb : R (vertex 2 1) 0 = 1 := by
+    have hdet' : R (vertex 2 0) 0 - R (vertex 2 1) 0 = -1 := hdet
+    linarith
+  -- R(v0) is a state with (R v0)(0) = 0, hence (R v0)(1) = 1, hence R(v0) = vertex 1
+  have hsum0 := classical_n2_state_sum (R (vertex 2 0)) (hR _ (vertex_in_states 2 0))
+  have ha1 : R (vertex 2 0) 1 = 1 := by linarith
+  have hRv0 : R (vertex 2 0) = vertex 2 1 :=
+    (classical_n2_second_coord_one_iff (R (vertex 2 0))
+      (hR _ (vertex_in_states 2 0))).mpr ha1
+  -- R(v1) is a state with (R v1)(0) = 1, hence R(v1) = vertex 0
+  have hRv1 : R (vertex 2 1) = vertex 2 0 :=
+    (classical_n2_first_coord_one_iff (R (vertex 2 1))
+      (hR _ (vertex_in_states 2 1))).mpr hb
+  -- R is determined by R(v0) = vertex 1 and R(v1) = vertex 0
+  apply LinearMap.ext
+  intro v
+  have hv : v = (v 0) • vertex 2 0 + (v 1) • vertex 2 1 := by
+    funext j
+    fin_cases j
+    · show v 0 = (v 0) * vertex 2 0 0 + (v 1) * vertex 2 1 0
+      rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]; ring
+    · show v 1 = (v 0) * vertex 2 0 1 + (v 1) * vertex 2 1 1
+      rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]; ring
+  rw [hv, map_add, map_smul, map_smul, hRv0, hRv1]
+  -- swapLin (v 0 • v0 + v 1 • v1) = v 0 • v1 + v 1 • v0
+  show (v 0) • vertex 2 1 + (v 1) • vertex 2 0 = swapLin _
+  rw [map_add, map_smul, map_smul, swapLin_vertex_zero, swapLin_vertex_one]
+
 /-! ## Cleaner alternative form of R6 n=2 disconnect -/
 
 /-- Cleaner: any bijective state-preserving continuous path on V 2
@@ -1986,6 +2029,66 @@ example : swap01Lin.comp cyclicShiftLin ≠ cyclicShiftLin.comp swap01Lin := by
   rw [show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl,
       show vertex 3 2 0 = (if (2 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at h2
   simp at h2
+
+/-! ## Structural characterization: state-preserving = doubly stochastic
+
+For Classical n=2 GPT, state-preserving linear maps V 2 →ₗ V 2 are
+exactly the "doubly stochastic 2×2 matrices" parametrized by
+(R(v0)(0), R(v1)(0)) ∈ [0,1]², where the entries of the matrix are
+[[a, b], [1-a, 1-b]] with a = R(v0)(0), b = R(v1)(0).
+
+This structurally characterizes the state-preserving R as the BIRKHOFF
+POLYTOPE for n=2. The bijective subset has det = a - b ≠ 0 — which is
+the two-component open set ({a > b} ∪ {a < b}), with id at the corner
+(1, 0) and swap at (0, 1).
+
+This is the FRAMEWORK SUBSTANCE of the R6 disconnect: the bijective
+state-preserving linear maps form a 2-dim manifold with two connected
+components, and the agency postulate (StrictConnectedAgency) forces a
+choice of one component. -/
+
+/-- For state-preserving R on V 2, R is determined by R(v0)(0) and R(v1)(0). -/
+theorem classical_n2_state_preserving_determined
+    (R₁ R₂ : V 2 →ₗ[ℝ] V 2)
+    (hR₁ : ∀ ρ ∈ states 2, R₁ ρ ∈ states 2)
+    (hR₂ : ∀ ρ ∈ states 2, R₂ ρ ∈ states 2)
+    (h0 : R₁ (vertex 2 0) 0 = R₂ (vertex 2 0) 0)
+    (h1 : R₁ (vertex 2 1) 0 = R₂ (vertex 2 1) 0) :
+    R₁ = R₂ := by
+  -- R₁(v0) and R₂(v0) are both states; if their first coords agree, by sum=1, second coords agree, hence the whole vectors agree.
+  have hR1v0 := hR₁ (vertex 2 0) (vertex_in_states 2 0)
+  have hR2v0 := hR₂ (vertex 2 0) (vertex_in_states 2 0)
+  have hR1v1 := hR₁ (vertex 2 1) (vertex_in_states 2 1)
+  have hR2v1 := hR₂ (vertex 2 1) (vertex_in_states 2 1)
+  have hs1v0 := classical_n2_state_sum (R₁ (vertex 2 0)) hR1v0
+  have hs2v0 := classical_n2_state_sum (R₂ (vertex 2 0)) hR2v0
+  have hs1v1 := classical_n2_state_sum (R₁ (vertex 2 1)) hR1v1
+  have hs2v1 := classical_n2_state_sum (R₂ (vertex 2 1)) hR2v1
+  -- Second coords equal too
+  have hv0_1 : R₁ (vertex 2 0) 1 = R₂ (vertex 2 0) 1 := by linarith
+  have hv1_1 : R₁ (vertex 2 1) 1 = R₂ (vertex 2 1) 1 := by linarith
+  -- So R₁(v0) = R₂(v0) and R₁(v1) = R₂(v1) as functions
+  have hRv0 : R₁ (vertex 2 0) = R₂ (vertex 2 0) := by
+    funext j
+    fin_cases j
+    · exact h0
+    · exact hv0_1
+  have hRv1 : R₁ (vertex 2 1) = R₂ (vertex 2 1) := by
+    funext j
+    fin_cases j
+    · exact h1
+    · exact hv1_1
+  -- R₁ and R₂ agree on the basis {v0, v1}, hence on all of V 2 by linearity
+  apply LinearMap.ext
+  intro v
+  have hv : v = (v 0) • vertex 2 0 + (v 1) • vertex 2 1 := by
+    funext j
+    fin_cases j
+    · show v 0 = (v 0) * vertex 2 0 0 + (v 1) * vertex 2 1 0
+      rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]; ring
+    · show v 1 = (v 0) * vertex 2 0 1 + (v 1) * vertex 2 1 1
+      rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]; ring
+  rw [hv, map_add, map_smul, map_smul, map_add, map_smul, map_smul, hRv0, hRv1]
 
 end Classical
 end Perspectival
