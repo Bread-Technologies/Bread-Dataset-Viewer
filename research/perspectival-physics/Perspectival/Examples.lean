@@ -3130,6 +3130,22 @@ example (v : Perspectival.WantableGPT.V Bool) :
     (Perspectival.Continuity.StrictReversible.id
       (Perspectival.WantableGPT.gpt Bool)).toLin v = v := rfl
 
+/-- The id StrictReversible composed with itself has the same toLin. -/
+example : (Perspectival.Continuity.StrictReversible.comp
+            (Perspectival.Continuity.StrictReversible.id
+              (Perspectival.WantableGPT.gpt Bool))
+            (Perspectival.Continuity.StrictReversible.id
+              (Perspectival.WantableGPT.gpt Bool))).toLin
+        = LinearMap.id := by
+  rw [Perspectival.Continuity.StrictReversible.comp_toLin]
+  rfl
+
+/-- The id StrictReversible is bijective. -/
+example : Function.Bijective
+    (Perspectival.Continuity.StrictReversible.id
+      (Perspectival.WantableGPT.gpt Bool)).toLin :=
+  (Perspectival.Continuity.StrictReversible.id _).isEquiv
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
