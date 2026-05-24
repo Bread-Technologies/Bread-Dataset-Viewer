@@ -9042,3 +9042,24 @@ example : Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, t
             (false, false, true) = 0 := by
   show (if (true, false, true) = (false, false, true) then (1 : ℝ) else 0) = 0
   simp
+
+/-- Concrete: triple productState on Bool × Bool × Bool. -/
+example : productState (Perspectival.WantableGPT.vertex Bool true)
+                       (productState (Perspectival.WantableGPT.vertex Bool false)
+                                     (Perspectival.WantableGPT.vertex Bool true))
+        ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool) :=
+  productState_in_states _ _
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+    (productState_in_states _ _
+      (Perspectival.WantableGPT.vertex_in_states Bool false)
+      (Perspectival.WantableGPT.vertex_in_states Bool true))
+
+/-- Concrete: uniformState (Bool × Bool × Bool) factorizes. -/
+example : uniformState (Bool × Bool × Bool)
+        = productState uniformBool (uniformState (Bool × Bool)) :=
+  uniformState_prod_factor
+
+/-- Concrete: uniformState (Bool × Bool × Bool) value at any point = 1/8. -/
+example (p : Bool × Bool × Bool) : uniformState (Bool × Bool × Bool) p = 1/8 := by
+  show (1 : ℝ) / (Fintype.card (Bool × Bool × Bool) : ℝ) = 1/8
+  norm_cast
