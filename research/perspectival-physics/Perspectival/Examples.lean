@@ -13033,6 +13033,48 @@ example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
     0 ≤ f b := hf.1 b
 
+/-! ### Concrete probabilities for important states -/
+
+/-- The vertex true has probability 1 at true, 0 at false. -/
+example : Perspectival.WantableGPT.vertex Bool true true = 1 := by
+  show (if true = true then (1 : ℝ) else 0) = 1
+  simp
+
+/-- The vertex true has probability 0 at false. -/
+example : Perspectival.WantableGPT.vertex Bool true false = 0 := by
+  show (if true = false then (1 : ℝ) else 0) = 0
+  simp
+
+/-- uniformBool true = 1/2. -/
+example : uniformBool true = (1/2 : ℝ) := rfl
+
+/-- uniformBool false = 1/2. -/
+example : uniformBool false = (1/2 : ℝ) := rfl
+
+/-- diagonalState (true, true) = 1/2. -/
+example : diagonalState (true, true) = (1/2 : ℝ) := rfl
+
+/-- diagonalState (true, false) = 0. -/
+example : diagonalState (true, false) = 0 := rfl
+
+/-- antiDiagonalState (true, true) = 0. -/
+example : antiDiagonalState (true, true) = 0 := rfl
+
+/-- antiDiagonalState (true, false) = 1/2. -/
+example : antiDiagonalState (true, false) = (1/2 : ℝ) := rfl
+
+/-- mixedCorrelatedState evaluated at vertex (true, true) is 1/4. -/
+example : mixedCorrelatedState (true, true) = (1/4 : ℝ) := by
+  show (1/2 : ℝ) * diagonalState (true, true) + (1/2 : ℝ) * antiDiagonalState (true, true) = 1/4
+  show (1/2 : ℝ) * (1/2 : ℝ) + (1/2 : ℝ) * 0 = 1/4
+  norm_num
+
+/-- productState uniformBool uniformBool at (true, true) = 1/4. -/
+example : productState uniformBool uniformBool (true, true) = (1/4 : ℝ) := by
+  show uniformBool true * uniformBool true = 1/4
+  show (1/2 : ℝ) * (1/2 : ℝ) = 1/4
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
