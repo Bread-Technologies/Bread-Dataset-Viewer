@@ -310,6 +310,9 @@ example : LinearIndependent ℝ
     (fun b : Bool => Perspectival.WantableGPT.vertex Bool b) :=
   Perspectival.WantableGPT.vertex_linear_independent_of_fintype Bool
 
+-- NOTE: a String Wantable via reversal exists but stating it depends
+-- on Lean's specific representation of String. Skipped for portability.
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
