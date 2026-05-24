@@ -8769,3 +8769,34 @@ example : leftMarginal (fun _ : Bool × Bool => (1 : ℝ))
   rw [leftMarginal_const_one]
   funext _
   norm_cast
+
+/-- Marginalization commutes with complementAction on the product:
+leftMarginal (complementAction f) = complementAction (leftMarginal f). -/
+theorem leftMarginal_complementAction
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂)) :
+    leftMarginal (Perspectival.WantableGPT.complementAction (W₁ × W₂) f)
+      = Perspectival.WantableGPT.complementAction W₁ (leftMarginal f) := by
+  funext w₁
+  show (∑ w₂, f (Wantable.complement w₁, Wantable.complement w₂))
+     = (∑ w₂, f (Wantable.complement w₁, w₂))
+  exact Equiv.sum_comp
+    (⟨Wantable.complement, Wantable.complement,
+      Wantable.complement_involutive, Wantable.complement_involutive⟩ : W₂ ≃ W₂)
+    (fun w₂ => f (Wantable.complement w₁, w₂))
+
+/-- Marginalization on rightMarginal also commutes with complement. -/
+theorem rightMarginal_complementAction
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂)) :
+    rightMarginal (Perspectival.WantableGPT.complementAction (W₁ × W₂) f)
+      = Perspectival.WantableGPT.complementAction W₂ (rightMarginal f) := by
+  funext w₂
+  show (∑ w₁, f (Wantable.complement w₁, Wantable.complement w₂))
+     = (∑ w₁, f (w₁, Wantable.complement w₂))
+  exact Equiv.sum_comp
+    (⟨Wantable.complement, Wantable.complement,
+      Wantable.complement_involutive, Wantable.complement_involutive⟩ : W₁ ≃ W₁)
+    (fun w₁ => f (w₁, Wantable.complement w₂))
