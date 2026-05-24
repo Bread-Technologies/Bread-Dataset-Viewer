@@ -3000,6 +3000,15 @@ example {W : Type u} [Wantable W] :
     PTrans.toEquivPermHom (PTrans.complement : PTrans W) = complementEquiv :=
   rfl
 
+/-- Two pieces fit together: the perspectival complement transformation,
+viewed at the meeting level, equals swap; and viewed at the permutation
+level, equals the complement Equiv. These are different surfaces of the
+same Z/2-action. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    PTrans.actMeeting (PTrans.complement : PTrans W) m = m.swap ∧
+    PTrans.toEquivPermHom (PTrans.complement : PTrans W) = complementEquiv :=
+  ⟨PTrans.actMeeting_complement m, rfl⟩
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
