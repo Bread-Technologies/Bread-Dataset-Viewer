@@ -183,5 +183,11 @@ theorem vertex_linear_independent :
   Perspectival.Distinguish.perfect_distinguishable_imp_linear_independent
     (vertex n) (perfectWitness n)
 
+-- NOTE: A natural follow-up theorem `vertex_is_extreme i : IsExtreme ℝ
+-- (states n) {vertex n i}` (vertices are pure states) would tie this
+-- module to `Continuity.PureState`. The proof requires coordinate-wise
+-- analysis of an open-segment representation and is non-trivial; left
+-- for follow-up. See ROADMAP.md R1.
+
 end Classical
 end Perspectival
