@@ -9675,3 +9675,33 @@ example : (Perspectival.WantableGPT.complementPTrans Bool) *
 example : (Perspectival.WantableGPT.complementPTrans (Fin 4)) *
           (Perspectival.WantableGPT.complementPTrans (Fin 4)) = 1 :=
   Perspectival.WantableGPT.complementPTrans_sq (Fin 4)
+
+/-- WantableGPT.complementPTrans Bool × Bool is its own inverse. -/
+example : (Perspectival.WantableGPT.complementPTrans (Bool × Bool))⁻¹
+        = Perspectival.WantableGPT.complementPTrans (Bool × Bool) :=
+  Perspectival.WantableGPT.complementPTrans_inv (Bool × Bool)
+
+/-- WantableGPT.complementPTrans Bool ⊕ Bool is its own inverse. -/
+example : (Perspectival.WantableGPT.complementPTrans (Bool ⊕ Bool))⁻¹
+        = Perspectival.WantableGPT.complementPTrans (Bool ⊕ Bool) :=
+  Perspectival.WantableGPT.complementPTrans_inv (Bool ⊕ Bool)
+
+/-- complementTransform_eq_fromPTrans_full on Bool. -/
+example : Perspectival.WantableGPT.complementTransform Bool
+        = Perspectival.WantableGPT.fromPTrans Bool
+            (Perspectival.WantableGPT.complementPTrans Bool) :=
+  Perspectival.WantableGPT.complementTransform_eq_fromPTrans_full Bool
+
+/-- complementTransform_eq_fromPTrans_full on Fin 4. -/
+example : Perspectival.WantableGPT.complementTransform (Fin 4)
+        = Perspectival.WantableGPT.fromPTrans (Fin 4)
+            (Perspectival.WantableGPT.complementPTrans (Fin 4)) :=
+  Perspectival.WantableGPT.complementTransform_eq_fromPTrans_full (Fin 4)
+
+/-- complementTransform_sq on Bool. -/
+example : Perspectival.WantableGPT.complementTransform Bool *
+          Perspectival.WantableGPT.complementTransform Bool
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt Bool)
+                  (Perspectival.WantableGPT.gpt Bool)) :=
+  Perspectival.WantableGPT.complementTransform_sq Bool
