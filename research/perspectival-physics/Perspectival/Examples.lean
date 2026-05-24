@@ -4950,5 +4950,32 @@ example (n : ℕ) (i j : Fin n) (hij : i ≠ j) :
       (Perspectival.Classical.vertex n j) :=
   Perspectival.Classical.vertices_distinguishable n i j hij
 
+/-- `WantableGPT.vertex_decomposition`: every WantableGPT state is its
+coordinate-wise vertex combination. -/
+example (W : Type u) [Wantable W] [Fintype W] [DecidableEq W]
+    (f : Perspectival.WantableGPT.V W) :
+    f = ∑ w, f w • Perspectival.WantableGPT.vertex W w :=
+  Perspectival.WantableGPT.vertex_decomposition W f
+
+/-- `WantableGPT.vertices_span`: WantableGPT vertices span `V W`. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Submodule.span ℝ (Set.range (Perspectival.WantableGPT.vertex W)) = ⊤ :=
+  Perspectival.WantableGPT.vertices_span W
+
+/-- `WantableGPT.vertex_linear_independent_of_fintype`: WantableGPT
+vertices are linearly independent. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    LinearIndependent ℝ (Perspectival.WantableGPT.vertex W) :=
+  Perspectival.WantableGPT.vertex_linear_independent_of_fintype W
+
+/-- `WantableGPT.vertices_distinguishable`: distinct vertices are
+distinguishable. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (w v : W) (hwv : w ≠ v) :
+    Perspectival.Hardy.Distinguishable (Perspectival.WantableGPT.gpt W)
+      (Perspectival.WantableGPT.vertex W w)
+      (Perspectival.WantableGPT.vertex W v) :=
+  Perspectival.WantableGPT.vertices_distinguishable W w v hwv
+
 end Examples
 end Perspectival
