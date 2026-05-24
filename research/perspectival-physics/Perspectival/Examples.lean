@@ -9619,3 +9619,25 @@ example : Perspectival.GPT.Transform
             (Perspectival.WantableGPT.gpt (Fin 4)) :=
   Perspectival.WantableGPT.fromPTrans (Fin 4)
     (Perspectival.WantableGPT.complementPTrans (Fin 4))
+
+/-- fromPTransHom Bool is a MonoidHom. -/
+example : (PTrans Bool) →* (Perspectival.WantableGPT.V Bool →ₗ[ℝ]
+                            Perspectival.WantableGPT.V Bool) :=
+  Perspectival.WantableGPT.fromPTransHom Bool
+
+/-- fromPTransTransformHom Bool is a MonoidHom into Transform monoid. -/
+example : (PTrans Bool) →* Perspectival.GPT.Transform
+                            (Perspectival.WantableGPT.gpt Bool)
+                            (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.WantableGPT.fromPTransTransformHom Bool
+
+/-- fromPTransHom Fin 4 is a MonoidHom. -/
+example : (PTrans (Fin 4)) →* (Perspectival.WantableGPT.V (Fin 4) →ₗ[ℝ]
+                            Perspectival.WantableGPT.V (Fin 4)) :=
+  Perspectival.WantableGPT.fromPTransHom (Fin 4)
+
+/-- complementPTrans on Bool is a PTrans. -/
+example : PTrans Bool := Perspectival.WantableGPT.complementPTrans Bool
+
+/-- complementPTrans on Fin 4 is a PTrans. -/
+example : PTrans (Fin 4) := Perspectival.WantableGPT.complementPTrans (Fin 4)
