@@ -991,6 +991,9 @@ example : (complementEquiv : Equiv.Perm (List Bool)) ^ 2 = 1 := by
   show Wantable.complement (Wantable.complement l) = l
   exact Wantable.complement_involutive l
 
+-- orderOf complementEquiv divides 2 — skipped, requires more Mathlib
+-- setup for orderOf.
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
