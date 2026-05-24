@@ -52,6 +52,14 @@ instance : Wantable (Fin 2) where
     | 0 => rfl
     | 1 => rfl
 
+/-- The trivial Wantable: `Unit` with `complement := id`. The
+"existence-without-direction" degenerate case. -/
+instance : Wantable Unit where
+  complement := id
+  complement_involutive _ := rfl
+
+example : (Wantable.complement () = ()) := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
