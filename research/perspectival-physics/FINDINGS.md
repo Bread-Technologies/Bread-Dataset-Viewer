@@ -108,7 +108,38 @@ and `PAPER_DRAFT.md` (writeup form).
   standard formulation (linear independence ⇒ no cloner) is verified
   via dual-functional extraction.
 
-## The framework's two levels — and the gap between them
+## The metaphysical→operational bridge (significant progress)
+
+The `WantableGPT.lean` module formalizes a bridge between the two
+structural levels. **The bridge is no longer just a partial action —
+it's a verified injective MonoidHom.**
+
+Specifically:
+
+  ✓ Given a finite Wantable W, `gpt W` constructs a full GPT.
+  ✓ `complementAction W` is a verified linear involution on the
+    state space.
+  ✓ `complementTransform`: the complement-action lifts to a full
+    GPT.Transform automorphism.
+  ✓ `fromPTrans φ`: every PTrans (metaphysical transformation)
+    induces a GPT.Transform (operational transformation).
+  ✓ `fromPTransHom`: the lifted map PTrans W → (V W →ₗ V W) is a
+    Mathlib MonoidHom (identity preserved, multiplication preserved).
+  ✓ `fromPTransHom_injective`: the MonoidHom is injective; distinct
+    metaphysical transformations give distinct operational ones.
+
+Together these show: **the metaphysical group PTrans W is faithfully
+embedded in the operational monoid of linear maps on the state space.**
+The metaphysical structure is not just *connected to* the operational
+structure but *fully recoverable from it* via the injection.
+
+This closes a substantial portion of the framework's central
+technical claim. The remaining gap: showing the operational structure
+*uniquely determines* the choice of GPT (rather than admitting many
+GPTs consistent with a given Wantable), which is the OPEN question
+about determinism vs. permissiveness of the bridge.
+
+## The framework's two levels — and the gap between them (qualified)
 
 The codebase has *two structurally distinct levels* that the framework
 claims should be unified:
