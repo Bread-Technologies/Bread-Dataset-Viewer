@@ -2426,6 +2426,17 @@ example : ∀ f : PTrans Bool, f = 1 ∨ f = boolSwap :=
 example : ∀ f : PTrans (Fin 2), f = 1 ∨ f = fin2Swap :=
   ptrans_fin2_classification
 
+/-- WantableGPT state space is nonempty (has the vertex states). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Inhabited W] :
+    ∃ ρ : Perspectival.WantableGPT.V W, ρ ∈ Perspectival.WantableGPT.states W :=
+  ⟨Perspectival.WantableGPT.vertex W default,
+   Perspectival.WantableGPT.vertex_in_states W default⟩
+
+/-- The WantableGPT on Bool has at least the vertex `true` as a state. -/
+example : Perspectival.WantableGPT.vertex Bool true ∈
+          Perspectival.WantableGPT.states Bool :=
+  Perspectival.WantableGPT.vertex_in_states Bool true
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
