@@ -6528,5 +6528,28 @@ theorem uniformBool_decomp :
                   + (1/2 : ℝ) * (if false = false then 1 else 0)
     simp
 
+/-- New: Existent.mk is injective in the `want` field. -/
+theorem Existent_mk_injective {W : Type u} :
+    Function.Injective (Existent.mk : W → Existent W) := by
+  intro a b h
+  injection h
+
+/-- Concrete: Existent.mk on Bool injective. -/
+example : Function.Injective (Existent.mk : Bool → Existent Bool) :=
+  Existent_mk_injective
+
+/-- Existent is essentially a wrapper around `W`: there's a bijection. -/
+def existentEquiv (W : Type u) : Existent W ≃ W where
+  toFun e := e.want
+  invFun w := ⟨w⟩
+  left_inv _ := rfl
+  right_inv _ := rfl
+
+/-- Concrete: existentEquiv Bool has the right action. -/
+example (b : Bool) : (existentEquiv Bool).symm b = ⟨b⟩ := rfl
+
+/-- Concrete: existentEquiv Bool inverse. -/
+example (e : Existent Bool) : (existentEquiv Bool) e = e.want := rfl
+
 end Examples
 end Perspectival
