@@ -1476,6 +1476,13 @@ def intComplementEquiv : ℤ ≃+ ℤ where
 
 example : intComplementEquiv (5 : ℤ) = -5 := rfl
 example : intComplementEquiv.symm (5 : ℤ) = -5 := rfl
+example : intComplementEquiv (0 : ℤ) = 0 := by show -(0 : ℤ) = 0; ring
+example : intComplementEquiv (-7 : ℤ) = 7 := by show -(-7 : ℤ) = 7; ring
+example (m n : ℤ) : intComplementEquiv (m + n) = intComplementEquiv m + intComplementEquiv n :=
+  intComplementEquiv.map_add m n
+
+example (n : ℤ) : intComplementEquiv (intComplementEquiv n) = n := by
+  show -(-n) = n; ring
 
 /-! ## Meeting extensionality
 
