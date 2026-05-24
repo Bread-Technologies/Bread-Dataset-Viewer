@@ -9893,3 +9893,39 @@ example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
     Pattern.and P (Pattern.or Q R) r ↔
     Pattern.or (Pattern.and P Q) (Pattern.and P R) r :=
   and_or_left
+
+/-- Pattern.or distributes over Pattern.and (left). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.or P (Pattern.and Q R) r ↔
+    Pattern.and (Pattern.or P Q) (Pattern.or P R) r :=
+  or_and_left
+
+/-- Pattern.and with Pattern.trivial gives the original. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
+    Pattern.and P (Pattern.trivial W) r ↔ P r := by
+  constructor
+  · intro ⟨h, _⟩; exact h
+  · intro h; exact ⟨h, trivial⟩
+
+/-- Pattern.or with Pattern.empty gives the original. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
+    Pattern.or P (Pattern.empty W) r ↔ P r := by
+  constructor
+  · intro h; rcases h with h | h
+    · exact h
+    · exact h.elim
+  · intro h; exact Or.inl h
+
+/-- Pattern.and with Pattern.empty gives Pattern.empty. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
+    Pattern.and P (Pattern.empty W) r ↔ Pattern.empty W r := by
+  constructor
+  · intro ⟨_, h⟩; exact h
+  · intro h; exact h.elim
+
+/-- Pattern.or with Pattern.trivial gives Pattern.trivial. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (r : Reality W) :
+    Pattern.or P (Pattern.trivial W) r ↔ Pattern.trivial W r := by
+  constructor
+  · intro _; trivial
+  · intro _; exact Or.inr trivial
