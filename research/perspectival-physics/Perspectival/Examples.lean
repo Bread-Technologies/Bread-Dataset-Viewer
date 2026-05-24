@@ -3082,6 +3082,17 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Bool)) * 2
         ≠ Fintype.card (Bool ⊕ Bool) * (Fintype.card (Bool ⊕ Bool) + 1) :=
   Perspectival.WantableGPT.wantableGPT_not_realQM (Bool ⊕ Bool) (by decide)
 
+/-- The bundled classical dichotomy on Bool. -/
+example :
+    Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = Fintype.card Bool ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+      ≠ Fintype.card Bool * Fintype.card Bool ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V Bool) * 2
+      ≠ Fintype.card Bool * (Fintype.card Bool + 1) ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V Bool)
+      ≠ Fintype.card Bool * (2 * Fintype.card Bool - 1) :=
+  Perspectival.WantableGPT.wantableGPT_classical_dichotomy Bool (by decide)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
