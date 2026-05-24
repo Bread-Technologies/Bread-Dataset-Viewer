@@ -2951,6 +2951,16 @@ example {W : Type u} [Wantable W] (σ : Equiv.Perm W) :
     (∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) :=
   PTrans.mem_range_toEquivPermHom_iff σ
 
+/-- Equiv.refl Bool (the identity perm) is in the centralizer of complement. -/
+example : ∀ w : Bool, (Equiv.refl Bool) (Wantable.complement w) =
+                       Wantable.complement ((Equiv.refl Bool) w) :=
+  fun _ => rfl
+
+/-- Equiv.refl ℤ is in the centralizer of negation. -/
+example : ∀ n : ℤ, (Equiv.refl ℤ) (Wantable.complement n) =
+                    Wantable.complement ((Equiv.refl ℤ) n) :=
+  fun _ => rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
