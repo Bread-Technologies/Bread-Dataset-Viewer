@@ -7563,3 +7563,41 @@ example : uniformBool = ∑ b, (1 / (Fintype.card Bool : ℝ)) •
                               Perspectival.WantableGPT.vertex Bool b := by
   rw [show uniformBool = uniformState Bool from by funext b; show (1/2 : ℝ) = 1 / (Fintype.card Bool : ℝ); norm_cast]
   exact uniformState_eq_vertex_combo
+
+/-- New: vertices on Bool are pure states (extremal). The vertex true
+state cannot be written as a non-trivial convex combination of two
+distinct states. We prove a weak version: vertex true ≠ uniformBool. -/
+example : Perspectival.WantableGPT.vertex Bool true ≠ uniformBool := by
+  intro h
+  have h_true : Perspectival.WantableGPT.vertex Bool true true = 1 := by
+    show (if true = true then (1 : ℝ) else 0) = 1
+    simp
+  have h_unif : uniformBool true = (1/2 : ℝ) := rfl
+  rw [h] at h_true
+  rw [h_unif] at h_true
+  norm_num at h_true
+
+/-- New: similarly, vertex false ≠ uniformBool. -/
+example : Perspectival.WantableGPT.vertex Bool false ≠ uniformBool := by
+  intro h
+  have h_false : Perspectival.WantableGPT.vertex Bool false false = 1 := by
+    show (if false = false then (1 : ℝ) else 0) = 1
+    simp
+  have h_unif : uniformBool false = (1/2 : ℝ) := rfl
+  rw [h] at h_false
+  rw [h_unif] at h_false
+  norm_num at h_false
+
+/-- New: vertex true ≠ vertex false (they're genuinely distinct states). -/
+example : Perspectival.WantableGPT.vertex Bool true
+        ≠ Perspectival.WantableGPT.vertex Bool false := by
+  intro h
+  have : Perspectival.WantableGPT.vertex Bool true true
+       = Perspectival.WantableGPT.vertex Bool false true := by rw [h]
+  show False
+  have h1 : Perspectival.WantableGPT.vertex Bool true true = 1 := by
+    show (if true = true then (1 : ℝ) else 0) = 1; simp
+  have h2 : Perspectival.WantableGPT.vertex Bool false true = 0 := by
+    show (if false = true then (1 : ℝ) else 0) = 0; simp
+  rw [h1, h2] at this
+  exact one_ne_zero this
