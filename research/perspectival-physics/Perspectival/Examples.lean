@@ -6755,5 +6755,31 @@ theorem WantableGPT_Fin4_six_distinguishable :
    Perspectival.WantableGPT.vertices_distinguishable (Fin 4) 1 3 (by decide),
    Perspectival.WantableGPT.vertices_distinguishable (Fin 4) 2 3 (by decide)⟩
 
+/-- Symmetric companion of vertex_sum_inl: vertex at inr w is W₂-valued
+on inr side, 0 on inl side. -/
+theorem WantableGPT_vertex_sum_inr
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (w : W₂) (q : W₁ ⊕ W₂) :
+    Perspectival.WantableGPT.vertex (W₁ ⊕ W₂) (Sum.inr w) q
+      = match q with
+        | .inl _ => (0 : ℝ)
+        | .inr v => Perspectival.WantableGPT.vertex W₂ w v := by
+  rcases q with v | v
+  · show (if (Sum.inr w : W₁ ⊕ W₂) = Sum.inl v then (1 : ℝ) else 0) = 0
+    simp
+  · show (if (Sum.inr w : W₁ ⊕ W₂) = Sum.inr v then (1 : ℝ) else 0)
+        = (if w = v then 1 else 0)
+    by_cases h : w = v
+    · simp [h]
+    · have hne : (Sum.inr w : W₁ ⊕ W₂) ≠ Sum.inr v := by
+        intro he; exact h (Sum.inr.inj he)
+      simp [hne, h]
+
+/-- Concrete: vertex inr true on Bool ⊕ Bool at inl true gives 0. -/
+example : Perspectival.WantableGPT.vertex (Bool ⊕ Bool) (Sum.inr true)
+            (Sum.inl true) = 0 := by
+  rw [WantableGPT_vertex_sum_inr]
+
 end Examples
 end Perspectival
