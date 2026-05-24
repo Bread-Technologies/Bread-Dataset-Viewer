@@ -3137,6 +3137,19 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool �
         = Fintype.card (Bool × Bool × Bool × Bool) :=
   WantableGPT_classical_K_eq_N
 
+/-- For any non-empty Wantable, the WantableGPT has at least one state. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Inhabited W] :
+    ∃ ρ : Perspectival.WantableGPT.V W, ρ ∈ Perspectival.WantableGPT.states W :=
+  ⟨Perspectival.WantableGPT.vertex W default,
+   Perspectival.WantableGPT.vertex_in_states W default⟩
+
+/-- For any non-empty Wantable, the WantableGPT has at least one effect. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Inhabited W] :
+    ∃ e : Perspectival.WantableGPT.V W →ₗ[ℝ] ℝ,
+      e ∈ Perspectival.WantableGPT.effects W :=
+  ⟨Perspectival.WantableGPT.proj W default,
+   Perspectival.WantableGPT.proj_in_effects W default⟩
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
