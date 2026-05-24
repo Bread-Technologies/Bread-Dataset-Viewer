@@ -8652,3 +8652,57 @@ example (f g : Perspectival.WantableGPT.V (Bool × Bool)) :
 example (c : ℝ) (f : Perspectival.WantableGPT.V (Bool × Bool)) :
     rightMarginal (c • f) = c • rightMarginal f := by
   rw [map_smul]
+
+/-- New: leftMarginal preserves unit (unitFn after marginal = unitFn of original). -/
+theorem leftMarginal_unitFn
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂)) :
+    Perspectival.WantableGPT.unitFn W₁ (leftMarginal f)
+      = Perspectival.WantableGPT.unitFn (W₁ × W₂) f := by
+  show (∑ w₁, leftMarginal f w₁) = ∑ p : W₁ × W₂, f p
+  show (∑ w₁, ∑ w₂, f (w₁, w₂)) = ∑ p : W₁ × W₂, f p
+  rw [← Fintype.sum_prod_type]
+
+/-- New: rightMarginal preserves unit. -/
+theorem rightMarginal_unitFn
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂)) :
+    Perspectival.WantableGPT.unitFn W₂ (rightMarginal f)
+      = Perspectival.WantableGPT.unitFn (W₁ × W₂) f := by
+  show (∑ w₂, rightMarginal f w₂) = ∑ p : W₁ × W₂, f p
+  show (∑ w₂, ∑ w₁, f (w₁, w₂)) = ∑ p : W₁ × W₂, f p
+  rw [Finset.sum_comm, ← Fintype.sum_prod_type]
+
+/-- leftMarginal preserves states (normalized stays normalized). -/
+theorem leftMarginal_preserves_states
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂))
+    (hf : f ∈ Perspectival.WantableGPT.states (W₁ × W₂)) :
+    leftMarginal f ∈ Perspectival.WantableGPT.states W₁ := by
+  refine ⟨?_, ?_⟩
+  · intro w₁
+    show 0 ≤ ∑ w₂, f (w₁, w₂)
+    exact Finset.sum_nonneg fun w₂ _ => hf.1 (w₁, w₂)
+  · have hu := leftMarginal_unitFn f
+    show Perspectival.WantableGPT.unitFn W₁ (leftMarginal f) = 1
+    rw [hu]
+    exact hf.2
+
+/-- rightMarginal preserves states. -/
+theorem rightMarginal_preserves_states
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V (W₁ × W₂))
+    (hf : f ∈ Perspectival.WantableGPT.states (W₁ × W₂)) :
+    rightMarginal f ∈ Perspectival.WantableGPT.states W₂ := by
+  refine ⟨?_, ?_⟩
+  · intro w₂
+    show 0 ≤ ∑ w₁, f (w₁, w₂)
+    exact Finset.sum_nonneg fun w₁ _ => hf.1 (w₁, w₂)
+  · have hu := rightMarginal_unitFn f
+    show Perspectival.WantableGPT.unitFn W₂ (rightMarginal f) = 1
+    rw [hu]
+    exact hf.2
