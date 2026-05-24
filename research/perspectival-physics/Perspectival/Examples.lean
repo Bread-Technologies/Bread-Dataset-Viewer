@@ -14866,6 +14866,34 @@ example :
      = (if true = q₁ then (1 : ℝ) else 0) * (if false = q₂ then (1 : ℝ) else 0)
   cases q₁ <;> cases q₂ <;> simp
 
+/-! ### Marginalization of diagonalState/antiDiagonalState (recomputed) -/
+
+/-- Marginal of diagonalState at left position true gives uniformBool true. -/
+example : leftMarginal diagonalState true = uniformBool true :=
+  diagonalState_left_marginal true
+
+/-- Marginal of diagonalState at left position false gives uniformBool false. -/
+example : leftMarginal diagonalState false = uniformBool false :=
+  diagonalState_left_marginal false
+
+/-- Marginal of antiDiagonalState at right position true gives uniformBool true. -/
+example : rightMarginal antiDiagonalState true = 1/2 := by
+  show (∑ b₁, antiDiagonalState (b₁, true)) = 1/2
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show antiDiagonalState (true, true) + antiDiagonalState (false, true) = 1/2
+  show (0 : ℝ) + 1/2 = 1/2
+  norm_num
+
+/-- Marginal of antiDiagonalState at right position false gives 1/2. -/
+example : rightMarginal antiDiagonalState false = 1/2 := by
+  show (∑ b₁, antiDiagonalState (b₁, false)) = 1/2
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show antiDiagonalState (true, false) + antiDiagonalState (false, false) = 1/2
+  show (1/2 : ℝ) + 0 = 1/2
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
