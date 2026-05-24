@@ -7960,3 +7960,21 @@ example (w v : Bool) (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1)
     (Perspectival.WantableGPT.vertex_in_states Bool w)
     (Perspectival.WantableGPT.vertex_in_states Bool v)
     ha hb hab
+
+/-- Concrete: uniformBool (= 1/2 vertex true + 1/2 vertex false) is a state. -/
+example : uniformBool ∈ Perspectival.WantableGPT.states Bool := by
+  rw [uniformBool_decomp]
+  exact WantableGPT_convex_combo_in_states _ _ (1/2) (1/2)
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+    (Perspectival.WantableGPT.vertex_in_states Bool false)
+    (by norm_num) (by norm_num) (by norm_num)
+
+/-- Concrete: 1/3 vertex true + 2/3 vertex false is a state. -/
+example :
+    (1/3 : ℝ) • Perspectival.WantableGPT.vertex Bool true
+    + (2/3 : ℝ) • Perspectival.WantableGPT.vertex Bool false
+    ∈ Perspectival.WantableGPT.states Bool :=
+  WantableGPT_convex_combo_in_states _ _ (1/3) (2/3)
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+    (Perspectival.WantableGPT.vertex_in_states Bool false)
+    (by norm_num) (by norm_num) (by norm_num)
