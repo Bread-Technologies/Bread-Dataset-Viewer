@@ -11940,3 +11940,61 @@ example : rightTrueIndicatorLin diagonalState = (1/2 : ℝ) := by
      = 1/2
   show (1 : ℝ) * (1/2 : ℝ) + (0 * 0 + (1 * 0 + 0 * (1/2 : ℝ))) = 1/2
   norm_num
+
+/-! ### Joint product effects form a complete measurement on Bool × Bool -/
+
+/-- The 4 product-pair indicators sum to the unit (constant 1). -/
+example :
+    (fun p : Bool × Bool => (if p.1 = true then (1 : ℝ) else 0)
+                          * (if p.2 = true then (1 : ℝ) else 0))
+    + (fun p : Bool × Bool => (if p.1 = true then (1 : ℝ) else 0)
+                            * (if p.2 = false then (1 : ℝ) else 0))
+    + (fun p : Bool × Bool => (if p.1 = false then (1 : ℝ) else 0)
+                            * (if p.2 = true then (1 : ℝ) else 0))
+    + (fun p : Bool × Bool => (if p.1 = false then (1 : ℝ) else 0)
+                            * (if p.2 = false then (1 : ℝ) else 0))
+    = (fun _ => (1 : ℝ)) := by
+  funext p
+  show (if p.1 = true then (1 : ℝ) else 0) * (if p.2 = true then (1 : ℝ) else 0)
+     + (if p.1 = true then (1 : ℝ) else 0) * (if p.2 = false then (1 : ℝ) else 0)
+     + (if p.1 = false then (1 : ℝ) else 0) * (if p.2 = true then (1 : ℝ) else 0)
+     + (if p.1 = false then (1 : ℝ) else 0) * (if p.2 = false then (1 : ℝ) else 0)
+     = 1
+  cases p.1 with
+  | true => cases p.2 with
+    | true => simp
+    | false => simp
+  | false => cases p.2 with
+    | true => simp
+    | false => simp
+
+/-- The single-point indicator `(true,true)`. -/
+noncomputable def pointIndicatorTT : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p = (true, true) then (1 : ℝ) else 0
+
+/-- pointIndicatorTT is in the effectVec. -/
+theorem pointIndicatorTT_in_effectVec :
+    pointIndicatorTT ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p = (true, true) then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p = (true, true) then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- pointIndicatorTT applied to diagonalState = 1/2. -/
+example :
+    Perspectival.WantableGPT.innerLin (Bool × Bool) pointIndicatorTT diagonalState
+      = (1/2 : ℝ) := by
+  show ∑ p, pointIndicatorTT p * diagonalState p = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show pointIndicatorTT (true, true) * diagonalState (true, true)
+     + (pointIndicatorTT (true, false) * diagonalState (true, false)
+     + (pointIndicatorTT (false, true) * diagonalState (false, true)
+     + pointIndicatorTT (false, false) * diagonalState (false, false)))
+     = 1/2
+  show (1 : ℝ) * (1/2 : ℝ) + (0 * 0 + (0 * 0 + 0 * (1/2 : ℝ))) = 1/2
+  norm_num
