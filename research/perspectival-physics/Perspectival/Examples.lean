@@ -6224,5 +6224,22 @@ theorem WantableGPT_complementTransform_bijective
     refine ⟨(Perspectival.WantableGPT.complementTransform W).toLin f, ?_⟩
     exact WantableGPT_complementTransform_invertible f
 
+/-- New theorem: the unit functional evaluated on a vertex equals 1. -/
+theorem WantableGPT_unit_vertex_eq_one
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    Perspectival.WantableGPT.unitFn W
+      (Perspectival.WantableGPT.vertex W w) = 1 :=
+  (Perspectival.WantableGPT.vertex_in_states W w).2
+
+/-- Concrete: unit applied to Bool vertex true is 1. -/
+example : Perspectival.WantableGPT.unitFn Bool
+            (Perspectival.WantableGPT.vertex Bool true) = 1 :=
+  WantableGPT_unit_vertex_eq_one true
+
+/-- Concrete: unit applied to Fin 4 vertex 2 is 1. -/
+example : Perspectival.WantableGPT.unitFn (Fin 4)
+            (Perspectival.WantableGPT.vertex (Fin 4) 2) = 1 :=
+  WantableGPT_unit_vertex_eq_one (2 : Fin 4)
+
 end Examples
 end Perspectival
