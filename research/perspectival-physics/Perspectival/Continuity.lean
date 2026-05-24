@@ -232,6 +232,46 @@ theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
   · rintro rfl
     exact @Reachable.refl V _ _ _ G (trivialAgency G) ρ₁
 
+/-! ## Composition-closed agency
+
+The current `HasConnectedAgency` class does NOT require that the
+available-transformation set is closed under composition. Without
+closure, `Reachable` is only reflexive — not transitive. We package
+the closure conditions as a refinement; under it, `Reachable`
+becomes an equivalence relation. This is a strengthening of the
+agency postulate, not a theorem about it. -/
+
+/-- Composition of two `Reversible` transformations as a `Reversible`. -/
+def Reversible.comp {G : GPT V} (R₂ R₁ : Reversible G) : Reversible G where
+  toLin := R₂.toLin.comp R₁.toLin
+  continuous_toLin := R₂.continuous_toLin.comp R₁.continuous_toLin
+  preserves_states := fun ρ hρ => R₂.preserves_states _ (R₁.preserves_states _ hρ)
+  preserves_unit := by
+    have h₁ := R₁.preserves_unit
+    have h₂ := R₂.preserves_unit
+    calc G.unit.comp (R₂.toLin.comp R₁.toLin)
+        = (G.unit.comp R₂.toLin).comp R₁.toLin := by rfl
+      _ = G.unit.comp R₁.toLin := by rw [h₂]
+      _ = G.unit := h₁
+
+/-- Agency refinement: the available-transformation set is closed
+under composition. -/
+class ClosedAgency (G : GPT V) extends HasConnectedAgency G where
+  comp_avail : ∀ R₁ R₂ : Reversible G,
+    R₁ ∈ HasConnectedAgency.avail (G := G) →
+    R₂ ∈ HasConnectedAgency.avail (G := G) →
+    Reversible.comp R₂ R₁ ∈ HasConnectedAgency.avail (G := G)
+
+/-- Under `ClosedAgency`, `Reachable` is transitive. -/
+theorem Reachable.trans [ClosedAgency G] {ρ₁ ρ₂ ρ₃ : V}
+    (h₁₂ : Reachable (G := G) ρ₁ ρ₂) (h₂₃ : Reachable (G := G) ρ₂ ρ₃) :
+    Reachable (G := G) ρ₁ ρ₃ := by
+  obtain ⟨R₁, hR₁_avail, hR₁eq⟩ := h₁₂
+  obtain ⟨R₂, hR₂_avail, hR₂eq⟩ := h₂₃
+  refine ⟨Reversible.comp R₂ R₁, ClosedAgency.comp_avail R₁ R₂ hR₁_avail hR₂_avail, ?_⟩
+  show R₂.toLin (R₁.toLin ρ₁) = ρ₃
+  rw [hR₁eq, hR₂eq]
+
 /-! ## Honest framing
 
 What `continuous_path_of_reachable` shows: if the agency postulate is
