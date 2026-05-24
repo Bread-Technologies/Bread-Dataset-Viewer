@@ -557,5 +557,30 @@ theorem swapReversible_ne_id :
   rw [(vertex_n2_one_coords).1, (vertex_n2_zero_coords).1] at h3
   norm_num at h3
 
+/-! ## R6 n=2: state-preserving linear maps form a 1-parameter family -/
+
+/-! Any state-preserving linear R : V 2 →ₗ V 2 is determined by
+where it sends vertex 0 (and by linearity + state preservation, where
+it sends vertex 1 = something with sum 1). Specifically:
+  R (vertex 2 0) is a state in V 2.
+We can write R (vertex 2 0) = (a, 1-a) for some a ∈ [0,1].
+Similarly R (vertex 2 1) = (b, 1-b) for some b ∈ [0,1].
+By linearity of R, R (vertex 2 0) + R (vertex 2 1) = R (1, 1).
+But (1, 1) is NOT a state. However the unit-preservation gives:
+∑ R(v) = ∑ v, so the second coords of R(v0) and R(v1) sum to 1.
+-/
+
+/-- For any state-preserving linear map R : V 2 →ₗ V 2 preserving the
+unit, the first coordinate of R (vertex 2 0) is in [0, 1]. -/
+theorem classical_n2_state_preserving_first_coord_bound
+    (R : V 2 →ₗ[ℝ] V 2)
+    (hR : ∀ ρ ∈ states 2, R ρ ∈ states 2) :
+    0 ≤ R (vertex 2 0) 0 ∧ R (vertex 2 0) 0 ≤ 1 := by
+  have hRv := hR (vertex 2 0) (vertex_in_states 2 0)
+  refine ⟨hRv.1 0, ?_⟩
+  have hsum := classical_n2_state_sum (R (vertex 2 0)) hRv
+  have hnn1 := hRv.1 1
+  linarith
+
 end Classical
 end Perspectival
