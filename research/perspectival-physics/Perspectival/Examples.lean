@@ -8017,3 +8017,22 @@ example : Perspectival.WantableGPT.vertex Bool true
         = (1 : ℝ) • Perspectival.WantableGPT.vertex Bool true
         + (0 : ℝ) • Perspectival.WantableGPT.vertex Bool false := by
   rw [one_smul, zero_smul, add_zero]
+
+/-- New theorem: a state is in the span of the vertex set. -/
+theorem WantableGPT_states_in_vertex_span
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ : Perspectival.WantableGPT.V W) :
+    ρ ∈ Submodule.span ℝ (Set.range (Perspectival.WantableGPT.vertex W)) := by
+  have h := Perspectival.WantableGPT.vertices_span W
+  rw [h]
+  exact Submodule.mem_top
+
+/-- Concrete: uniformBool is in the span of {vertex true, vertex false}. -/
+example : uniformBool ∈ Submodule.span ℝ
+            (Set.range (Perspectival.WantableGPT.vertex Bool)) :=
+  WantableGPT_states_in_vertex_span uniformBool
+
+/-- Concrete: diagonalState is in the span of vertex-set of Bool × Bool. -/
+example : diagonalState ∈ Submodule.span ℝ
+            (Set.range (Perspectival.WantableGPT.vertex (Bool × Bool))) :=
+  WantableGPT_states_in_vertex_span diagonalState
