@@ -11424,3 +11424,27 @@ example {W : Type u} [Wantable W] :
 example {W : Type u} [Wantable W] (n : ℤ) :
     (PTrans.complement : PTrans W) ^ n ∈ complementSubgroup W :=
   Subgroup.zpow_mem _ (Subgroup.mem_zpowers _) n
+
+/-- complementSubgroup is contained in the center of PTrans. -/
+example {W : Type u} [Wantable W] :
+    complementSubgroup W ≤ Subgroup.center (PTrans W) := by
+  intro g hg
+  -- g ∈ ⟨complement⟩, so g = complement^n for some n
+  rcases hg with ⟨n, rfl⟩
+  -- need: complement^n is central
+  rw [Subgroup.mem_center_iff]
+  intro φ
+  -- (complement^n) * φ = φ * (complement^n)
+  show φ * ((PTrans.complement : PTrans W) ^ n)
+     = ((PTrans.complement : PTrans W) ^ n) * φ
+  exact (Commute.zpow_right (PTrans_complement_central φ).symm n)
+
+/-- Concrete: complementSubgroup Bool ≤ center. -/
+example : complementSubgroup Bool ≤ Subgroup.center (PTrans Bool) := by
+  intro g hg
+  rcases hg with ⟨n, rfl⟩
+  rw [Subgroup.mem_center_iff]
+  intro φ
+  show φ * ((PTrans.complement : PTrans Bool) ^ n)
+     = ((PTrans.complement : PTrans Bool) ^ n) * φ
+  exact (Commute.zpow_right (PTrans_complement_central φ).symm n)
