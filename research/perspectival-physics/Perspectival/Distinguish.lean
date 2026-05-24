@@ -47,6 +47,50 @@ theorem state_ne_zero {G : GPT V} {ρ : V} (h : ρ ∈ G.states) : ρ ≠ 0 := b
   rw [hunit_zero] at hunit_one
   exact one_ne_zero hunit_one.symm
 
+/-- **Linearly dependent states are equal.**
+
+In a GPT, if `ρ₁, ρ₂` are both states and the pair is linearly
+dependent, then `ρ₁ = ρ₂`. (Equivalently: distinct states are
+linearly independent.)
+
+Proof: linear dependence means some nontrivial relation
+`a • ρ₁ + b • ρ₂ = 0`. Applying the unit functional gives
+`a + b = 0`. If `a ≠ 0`, then `ρ₂ = -(b/a) ρ₁ = ρ₁` (since b = -a).
+If `a = 0`, then `b ≠ 0` and `b • ρ₂ = 0` forces `ρ₂ = 0`, contradicting
+`state_ne_zero`. -/
+theorem linear_dependent_states_eq
+    {G : GPT V} {ρ₁ ρ₂ : V}
+    (h₁ : ρ₁ ∈ G.states) (h₂ : ρ₂ ∈ G.states)
+    (hdep : ¬ LinearIndependent ℝ ![ρ₁, ρ₂]) :
+    ρ₁ = ρ₂ := by
+  -- Negation of `LinearIndependent.pair_iff`: some (a, b) ≠ (0, 0) with
+  -- a • ρ₁ + b • ρ₂ = 0.
+  rw [LinearIndependent.pair_iff] at hdep
+  push_neg at hdep
+  obtain ⟨a, b, hcomb, hne⟩ := hdep
+  -- Apply unit: a * 1 + b * 1 = 0, i.e. a + b = 0.
+  have hunit : G.unit (a • ρ₁ + b • ρ₂) = 0 := by rw [hcomb]; exact map_zero _
+  rw [map_add, map_smul, map_smul, smul_eq_mul, smul_eq_mul,
+      G.states_normalized ρ₁ h₁, G.states_normalized ρ₂ h₂, mul_one, mul_one] at hunit
+  -- hunit : a + b = 0, so b = -a
+  have hb : b = -a := by linarith
+  -- Now a • ρ₁ + (-a) • ρ₂ = 0, i.e. a • (ρ₁ - ρ₂) = 0.
+  have hcombrw : a • ρ₁ + b • ρ₂ = a • (ρ₁ - ρ₂) := by
+    rw [hb, smul_sub, neg_smul]; abel
+  rw [hcombrw] at hcomb
+  -- hcomb : a • (ρ₁ - ρ₂) = 0
+  by_cases ha : a = 0
+  · -- a = 0, hb gives b = 0, contradicting hne.
+    exfalso
+    apply hne ha
+    rw [hb, ha, neg_zero]
+  · -- a ≠ 0, so ρ₁ - ρ₂ = 0, hence ρ₁ = ρ₂.
+    have hzero : ρ₁ - ρ₂ = 0 := by
+      rcases smul_eq_zero.mp hcomb with h | h
+      · exact absurd h ha
+      · exact h
+    exact sub_eq_zero.mp hzero
+
 /-- **Distinguishable states are linearly independent.**
 
 The proof is structural: a linear-dependence relation on the pair
