@@ -7246,5 +7246,24 @@ example : Perspectival.WantableGPT.proj (Fin 4) 0 (uniformState (Fin 4))
   rw [uniformState_proj_eq]
   norm_cast
 
+/-- Uniform state's unitFn = 1 (normalization). -/
+theorem uniformState_unitFn
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W] :
+    Perspectival.WantableGPT.unitFn W (uniformState W) = 1 :=
+  uniformState_in_states.2
+
+/-- Concrete: uniformState on Fin 4 has unitFn = 1. -/
+example : Perspectival.WantableGPT.unitFn (Fin 4) (uniformState (Fin 4)) = 1 :=
+  uniformState_unitFn
+
+/-- New: uniformState on Bool is in WantableGPT.gpt Bool's states (full
+GPT-level). -/
+example : uniformState Bool ∈ (Perspectival.WantableGPT.gpt Bool).states :=
+  uniformState_in_states
+
+/-- New: uniformState on Fin 4 is in states. -/
+example : uniformState (Fin 4) ∈ (Perspectival.WantableGPT.gpt (Fin 4)).states :=
+  uniformState_in_states
+
 end Examples
 end Perspectival
