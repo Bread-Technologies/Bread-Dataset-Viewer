@@ -8361,8 +8361,23 @@ theorem WantableGPT_state_prod_vertex_decomp
       apply Finset.sum_congr rfl
       intro w₂ _
       rw [productState_vertex]]
-  -- Now reduces to vertex_decomposition on W₁ × W₂
   rw [← Fintype.sum_prod_type
         (f := fun p : W₁ × W₂ => f p
           • Perspectival.WantableGPT.vertex (W₁ × W₂) p)]
   exact Perspectival.WantableGPT.vertex_decomposition (W₁ × W₂) f
+
+/-- Concrete: diagonalState decomposes as ½•(vertex (true,true) ⊗ ...)
++ ½•(vertex (false,false) ⊗ ...) — a classical mixture of product states. -/
+example : diagonalState
+        = ∑ b₁ : Bool, ∑ b₂ : Bool, diagonalState (b₁, b₂)
+          • productState (Perspectival.WantableGPT.vertex Bool b₁)
+                         (Perspectival.WantableGPT.vertex Bool b₂) :=
+  WantableGPT_state_prod_vertex_decomp _
+
+/-- Concrete: any state on Bool × Bool decomposes into product vertex
+states (classical separability — no quantum entanglement). -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool)) :
+    f = ∑ b₁ : Bool, ∑ b₂ : Bool, f (b₁, b₂)
+      • productState (Perspectival.WantableGPT.vertex Bool b₁)
+                     (Perspectival.WantableGPT.vertex Bool b₂) :=
+  WantableGPT_state_prod_vertex_decomp f
