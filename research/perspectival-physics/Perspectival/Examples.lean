@@ -3120,6 +3120,16 @@ example : Perspectival.Continuity.StrictReversible (Perspectival.WantableGPT.gpt
     (Perspectival.Continuity.StrictReversible.id _)
     (Perspectival.Continuity.StrictReversible.id _)
 
+/-- The StrictReversible.id on Bool's underlying toLin is LinearMap.id. -/
+example : (Perspectival.Continuity.StrictReversible.id
+            (Perspectival.WantableGPT.gpt Bool)).toLin = LinearMap.id :=
+  Perspectival.Continuity.StrictReversible.id_toLin _
+
+/-- StrictReversible.id satisfies the id_avail-style identity condition. -/
+example (v : Perspectival.WantableGPT.V Bool) :
+    (Perspectival.Continuity.StrictReversible.id
+      (Perspectival.WantableGPT.gpt Bool)).toLin v = v := rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
