@@ -285,9 +285,9 @@ theorem complementAction_vertex (w : W) :
   show (if w = Wantable.complement v then (1 : ℝ) else 0)
        = (if Wantable.complement w = v then (1 : ℝ) else 0)
   by_cases h : w = Wantable.complement v
-  · have : Wantable.complement w = v := by
+  · have hw : Wantable.complement w = v := by
       rw [h, Wantable.complement_involutive]
-    simp [h, this]
+    simp [h, hw]
   · have : Wantable.complement w ≠ v := by
       intro h'
       apply h
