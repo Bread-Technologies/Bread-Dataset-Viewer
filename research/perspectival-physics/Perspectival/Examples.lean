@@ -613,6 +613,11 @@ example {W : Type u} [Wantable W] (w : W) :
 -- NOTE: complement preserves pairs (unordered) — proof omitted for
 -- brevity; the structure is parallel to singleton case.
 
+/-- Complement is a bijection on its image, since it's involutive. -/
+example {W : Type u} [Wantable W] :
+    Function.LeftInverse (Wantable.complement : W → W) Wantable.complement :=
+  Wantable.complement_involutive
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
