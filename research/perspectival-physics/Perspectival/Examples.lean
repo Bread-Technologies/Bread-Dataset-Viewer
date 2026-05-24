@@ -338,6 +338,11 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V Unit) = 1 := by
   rw [Module.finrank_pi]
   simp
 
+/-- WantableGPT(Fin 3) has 3-dimensional carrier. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) = 3 := by
+  show Module.finrank ℝ (Fin 3 → ℝ) = 3
+  simp
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
