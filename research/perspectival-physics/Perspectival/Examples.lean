@@ -372,6 +372,17 @@ example {W₁ W₂ : Type u} [Fintype W₁] [Fintype W₂] :
   rw [Module.finrank_pi, Module.finrank_pi, Module.finrank_pi]
   exact Fintype.card_sum
 
+/-- The product Wantable admits component-wise complement-PTrans that
+are non-trivial. -/
+example : PTrans.prodMap (PTrans.complement : PTrans Bool) (1 : PTrans Bool) ≠ 1 := by
+  intro h
+  have hap : (PTrans.prodMap (PTrans.complement : PTrans Bool) (1 : PTrans Bool)).toFun
+              (true, true) = (1 : PTrans (Bool × Bool)).toFun (true, true) := by rw [h]
+  -- LHS = (false, true), RHS = (true, true) — first components differ.
+  have heq : ((false, true) : Bool × Bool) = (true, true) := hap
+  have : false = true := (Prod.mk.injEq _ _ _ _).mp heq |>.1
+  exact Bool.false_ne_true this
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
