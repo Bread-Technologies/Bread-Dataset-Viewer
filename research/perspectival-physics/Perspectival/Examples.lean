@@ -9207,3 +9207,37 @@ example : productState (Perspectival.WantableGPT.vertex Bool false)
                        (Perspectival.WantableGPT.vertex Bool false)
         = Perspectival.WantableGPT.vertex (Bool × Bool) (false, false) :=
   productState_vertex false false
+
+/-- Sum of all 4 product-vertex-states on Bool × Bool = const 1. -/
+example : (∑ p : Bool × Bool,
+    productState (Perspectival.WantableGPT.vertex Bool p.1)
+                 (Perspectival.WantableGPT.vertex Bool p.2))
+    = (fun _ : Bool × Bool => (1 : ℝ)) := by
+  rw [show (fun (p : Bool × Bool) =>
+            productState (Perspectival.WantableGPT.vertex Bool p.1)
+                         (Perspectival.WantableGPT.vertex Bool p.2))
+        = (fun p => Perspectival.WantableGPT.vertex (Bool × Bool) p) from by
+      funext p; rcases p with ⟨a, b⟩; exact productState_vertex a b]
+  exact WantableGPT_sum_vertices_eq_one
+
+/-- Sum over all vertices of Bool×Bool×Bool = const 1. -/
+example : (∑ p : Bool × Bool × Bool,
+            Perspectival.WantableGPT.vertex (Bool × Bool × Bool) p)
+        = (fun _ : Bool × Bool × Bool => (1 : ℝ)) :=
+  WantableGPT_sum_vertices_eq_one
+
+/-- Sum over all vertices of Fin 5 = const 1 (no Wantable instance, just
+shows the underlying vertex_decomposition theorem applies). -/
+example (n : ℕ) : (∑ i, Perspectival.Classical.vertex n i)
+                = (fun _ : Fin n => (1 : ℝ)) := by
+  funext j
+  rw [Finset.sum_apply]
+  rw [Finset.sum_eq_single j
+    (fun i _ hij => by
+      show Perspectival.Classical.vertex n i j = 0
+      show (if i = j then (1 : ℝ) else 0) = 0
+      simp [hij])
+    (fun h => absurd (Finset.mem_univ j) h)]
+  show Perspectival.Classical.vertex n j j = 1
+  show (if j = j then (1 : ℝ) else 0) = 1
+  simp
