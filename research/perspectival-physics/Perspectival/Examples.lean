@@ -5790,5 +5790,30 @@ example : Perspectival.WantableGPT.complementAction Bool
   rw [Perspectival.WantableGPT.complementAction_vertex]
   rfl
 
+/-- On Fin 4 WantableGPT, the dim is 4. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) = 4 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
+
+/-- On Fin 4 WantableGPT, the dim equals card. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4))
+        = Fintype.card (Fin 4) :=
+  Perspectival.WantableGPT.finrank_V_eq_card (Fin 4)
+
+/-- On Fin 4 WantableGPT, |W| ≥ 2 so the triple no-go applies. -/
+example :
+    Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4))
+      ≠ Fintype.card (Fin 4) * Fintype.card (Fin 4) :=
+  Perspectival.WantableGPT.wantableGPT_not_quantum (Fin 4) (by decide)
+
+/-- On Bool × Bool WantableGPT, |W| = 4 ≥ 2, triple no-go applies. -/
+example :
+    Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) * 2
+      ≠ Fintype.card (Bool × Bool) * (Fintype.card (Bool × Bool) + 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_realQM (Bool × Bool) (by decide)
+
+/-- On Bool ⊕ Bool WantableGPT, |W| = 4. -/
+example : Fintype.card (Bool ⊕ Bool) = 4 := by decide
+
 end Examples
 end Perspectival
