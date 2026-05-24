@@ -254,6 +254,19 @@ example (σ : Equiv.Perm (Fin 3)) :
     ∃ φ : PTrans (Fin 3), PTrans.toEquivPerm φ = σ :=
   ⟨PTrans.ofPermWithIdComplement (fun _ => rfl) σ, rfl⟩
 
+/-- A *continuous* Wantable: a topological space whose Wantable
+complement is continuous. Refinement of Wantable for cases where the
+outcome set has natural topology (e.g., ℝ, S¹). The PTrans group
+naturally restricts to continuous self-homeomorphisms — a much richer
+structure than the discrete case. This is the natural setting for
+non-trivial agency / Lie-group refinement (see ROADMAP R6/R7). -/
+class ContinuousWantable (W : Type u) [Wantable W] [TopologicalSpace W] : Prop where
+  complement_continuous : Continuous (Wantable.complement : W → W)
+
+/-- `ℤ` with the discrete topology is a continuous Wantable. -/
+instance : ContinuousWantable ℤ where
+  complement_continuous := continuous_neg
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
