@@ -34,6 +34,7 @@ import Perspectival.Ontology
 import Perspectival.Transformations
 import Perspectival.GPT
 import Perspectival.Hardy
+import Perspectival.Distinguish
 import Mathlib.Analysis.Convex.StdSimplex
 import Mathlib.Data.Real.Basic
 
@@ -318,6 +319,31 @@ theorem vertices_distinguishable (w v : W) (hwv : w ≠ v) :
   · show proj W w (vertex W v) = 0
     rw [proj_vertex]
     simp [Ne.symm hwv]
+
+/-- The perfect-witness for vertices: each vertex `v` is picked out
+by the projection `proj v`. -/
+def perfectWitness : Perspectival.Distinguish.PerfectWitness (G := gpt W) (vertex W) where
+  e := proj W
+  kronecker i j := by
+    show proj W i (vertex W j) = if i = j then (1 : ℝ) else 0
+    rw [proj_vertex]
+    by_cases h : i = j
+    · simp [h]
+    · simp [h, Ne.symm h]
+
+/-- **Vertices of the WantableGPT are linearly independent**, derived
+from the perfect-distinguishability witness. -/
+theorem vertex_linear_independent_of_fintype [Fintype W] :
+    LinearIndependent ℝ (fun w : W => vertex W w) := by
+  -- Reindex via an equivalence to Fin (Fintype.card W) and use the
+  -- perfect-distinguishability theorem.
+  exact LinearIndependent.of_pairwise_dual_eq_zero_one (vertex W) (proj W)
+    (fun {i j} hij => by
+      show proj W i (vertex W j) = 0
+      rw [proj_vertex]; simp [Ne.symm hij])
+    (fun i => by
+      show proj W i (vertex W i) = 1
+      rw [proj_vertex]; simp)
 
 /-- `fromPTransHom` is INJECTIVE: distinct perspectival transformations
 give distinct linear maps on the state space.
