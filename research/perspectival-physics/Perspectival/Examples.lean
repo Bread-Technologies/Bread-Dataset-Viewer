@@ -12852,3 +12852,25 @@ example : (PTrans.complement : PTrans (Fin 4)) ^ 1001 = PTrans.complement := by
   show (PTrans.complement : PTrans (Fin 4)) ^ 1001 = PTrans.complement
   rw [show (1001 : ℕ) = 2 * 500 + 1 from rfl]
   exact this
+
+/-! ### Inverse of complement is itself -/
+
+/-- complement⁻¹ = complement (since complement² = 1). -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W)⁻¹ = PTrans.complement := by
+  rw [inv_eq_iff_mul_eq_one]
+  exact PTrans.complement_sq
+
+/-- complement * complement = 1 (named). -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * PTrans.complement = 1 := PTrans.complement_sq
+
+/-- complement is its own inverse (alternative formulation). -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * (PTrans.complement : PTrans W)⁻¹ = 1 :=
+  mul_inv_cancel _
+
+/-- complement⁻¹ * complement = 1 (alternative). -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W)⁻¹ * (PTrans.complement : PTrans W) = 1 :=
+  inv_mul_cancel _
