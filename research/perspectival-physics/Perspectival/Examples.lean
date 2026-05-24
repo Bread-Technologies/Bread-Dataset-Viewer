@@ -10524,3 +10524,24 @@ example {W : Type u} [Wantable W] :
   apply PTrans.ext
   intro w
   rfl
+
+/-- toEquivPerm_ofEquivPerm: round-trip recovers the permutation. -/
+example {W : Type u} [Wantable W] (σ : Equiv.Perm W)
+    (h : ∀ w, σ (Wantable.complement w) = Wantable.complement (σ w)) :
+    PTrans.toEquivPerm (PTrans.ofEquivPerm σ h) = σ :=
+  PTrans.toEquivPerm_ofEquivPerm σ h
+
+/-- ofEquivPerm_toEquivPerm: round-trip recovers the PTrans. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    PTrans.ofEquivPerm (PTrans.toEquivPerm φ) φ.resp_complement = φ :=
+  PTrans.ofEquivPerm_toEquivPerm φ
+
+/-- toEquivPerm of complement = the complement equivalence. -/
+example {W : Type u} [Wantable W] :
+    PTrans.toEquivPerm (PTrans.complement : PTrans W)
+      = (⟨Wantable.complement, Wantable.complement,
+          Wantable.complement_involutive,
+          Wantable.complement_involutive⟩ : Equiv.Perm W) := by
+  apply Equiv.ext
+  intro w
+  rfl
