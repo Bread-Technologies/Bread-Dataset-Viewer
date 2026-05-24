@@ -1030,6 +1030,10 @@ example : (complementEquiv : Equiv.Perm Unit).toFun = id := rfl
 /-- Fin 3's complement Equiv is the identity function (id complement). -/
 example : (complementEquiv : Equiv.Perm (Fin 3)).toFun = id := rfl
 
+/-- Fin 2's complement Equiv: 0 ↦ 1, 1 ↦ 0. -/
+example : (complementEquiv : Equiv.Perm (Fin 2)).toFun 0 = 1 := rfl
+example : (complementEquiv : Equiv.Perm (Fin 2)).toFun 1 = 0 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
