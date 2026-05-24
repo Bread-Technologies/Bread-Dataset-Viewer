@@ -7329,6 +7329,36 @@ example : diagonalState (false, false) = (1/2 : ℝ) := by
         then (1/2 : ℝ) else 0) = 1/2
   simp
 
+/-- diagonalState's left marginal (sum over right) is uniformBool. -/
+theorem diagonalState_left_marginal (b : Bool) :
+    (∑ b₂, diagonalState (b, b₂)) = uniformBool b := by
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  cases b with
+  | true =>
+    show diagonalState (true, true) + diagonalState (true, false) = uniformBool true
+    show (1/2 : ℝ) + 0 = 1/2
+    norm_num
+  | false =>
+    show diagonalState (false, true) + diagonalState (false, false) = uniformBool false
+    show (0 : ℝ) + 1/2 = 1/2
+    norm_num
+
+/-- diagonalState's right marginal (sum over left) is uniformBool. -/
+theorem diagonalState_right_marginal (b : Bool) :
+    (∑ b₁, diagonalState (b₁, b)) = uniformBool b := by
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  cases b with
+  | true =>
+    show diagonalState (true, true) + diagonalState (false, true) = uniformBool true
+    show (1/2 : ℝ) + 0 = 1/2
+    norm_num
+  | false =>
+    show diagonalState (true, false) + diagonalState (false, false) = uniformBool false
+    show (0 : ℝ) + 1/2 = 1/2
+    norm_num
+
 /-- The diagonal state is in WantableGPT.states. -/
 theorem diagonalState_in_states :
     diagonalState ∈ Perspectival.WantableGPT.states (Bool × Bool) := by
