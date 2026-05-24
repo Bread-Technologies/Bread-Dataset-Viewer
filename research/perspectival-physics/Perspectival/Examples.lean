@@ -2839,6 +2839,21 @@ example {W : Type u} [Wantable W] (m : Meeting W) :
     Wantable.complement m.side₂ = m.side₁ :=
   m.complementary_symm
 
+/-- Meeting.swap is an involution on meetings. -/
+example {W : Type u} [Wantable W] (m : Meeting W) :
+    m.swap.swap = m :=
+  Meeting.swap_swap m
+
+/-- mk_fromSide w gives a meeting with side₁ = w. -/
+example {W : Type u} [Wantable W] (w : W) :
+    (Meeting.mk_fromSide W w).side₁ = w :=
+  Meeting.mk_fromSide_side₁ w
+
+/-- mk_fromSide w gives a meeting with side₂ = complement w. -/
+example {W : Type u} [Wantable W] (w : W) :
+    (Meeting.mk_fromSide W w).side₂ = Wantable.complement w :=
+  Meeting.mk_fromSide_side₂ w
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
