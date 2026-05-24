@@ -8543,3 +8543,30 @@ example (b : Bool) :
     (∑ b₂, productState uniformBool uniformBool (b, b₂))
     = uniformBool b :=
   productState_left_marginal_state _ _ uniformBool_in_states b
+
+/-- New theorem: marginalization is a linear operation (LeftMarginal
+is a LinearMap). -/
+noncomputable def leftMarginal
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    Perspectival.WantableGPT.V (W₁ × W₂) →ₗ[ℝ] Perspectival.WantableGPT.V W₁ where
+  toFun f := fun w₁ => ∑ w₂, f (w₁, w₂)
+  map_add' f g := by
+    funext w₁
+    show ∑ w₂, (f (w₁, w₂) + g (w₁, w₂))
+       = (∑ w₂, f (w₁, w₂)) + (∑ w₂, g (w₁, w₂))
+    rw [Finset.sum_add_distrib]
+  map_smul' c f := by
+    funext w₁
+    show ∑ w₂, c * f (w₁, w₂)
+       = c * ∑ w₂, f (w₁, w₂)
+    rw [← Finset.mul_sum]
+
+/-- leftMarginal applied to productState gives f₁ (up to unit on f₂). -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁) (f₂ : Perspectival.WantableGPT.V W₂)
+    (h₂ : f₂ ∈ Perspectival.WantableGPT.states W₂) :
+    leftMarginal (productState f₁ f₂) = f₁ := by
+  funext w₁
+  exact productState_left_marginal_state f₁ f₂ h₂ w₁
