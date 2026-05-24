@@ -115,6 +115,22 @@ def Transform.comp {V V' V'' : Type u}
     --                                 = G'.unit ∘ T.toLin = G.unit.
     rw [← LinearMap.comp_assoc, T'.preserves_unit, T.preserves_unit]
 
+/-- Two GPT transformations are equal iff their underlying linear maps agree. -/
+theorem Transform.ext {V V' : Type u} [AddCommGroup V] [Module ℝ V]
+    [AddCommGroup V'] [Module ℝ V']
+    {G : GPT V} {G' : GPT V'} {T T' : Transform G G'}
+    (h : T.toLin = T'.toLin) : T = T' := by
+  cases T; cases T'; congr
+
+/-- Self-transformations on a GPT form a Monoid under composition. -/
+instance {V : Type u} [AddCommGroup V] [Module ℝ V] (G : GPT V) :
+    Monoid (Transform G G) where
+  mul := Transform.comp
+  one := Transform.id G
+  mul_assoc T₁ T₂ T₃ := Transform.ext (LinearMap.comp_assoc _ _ _).symm
+  one_mul T := Transform.ext (LinearMap.id_comp _)
+  mul_one T := Transform.ext (LinearMap.comp_id _)
+
 end GPT
 
 end Perspectival
