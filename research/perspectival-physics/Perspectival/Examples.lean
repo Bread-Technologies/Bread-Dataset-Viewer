@@ -8160,3 +8160,17 @@ example : diagonalIndicatorLin antiDiagonalState
   rw [diagonalIndicatorLin_on_antiDiagonalState,
       antiDiagonalIndicatorLin_on_antiDiagonalState]
   norm_num
+
+/-- Concrete: uniformState (Bool × Bool) gives 1/2 + 1/2 = 1 for the
+indicator measurement (50/50 outcomes). -/
+example : diagonalIndicatorLin (uniformState (Bool × Bool))
+        + antiDiagonalIndicatorLin (uniformState (Bool × Bool)) = 1 := by
+  rw [diagonalIndicatorLin_on_uniformBoolBool,
+      antiDiagonalIndicatorLin_on_uniformBoolBool]
+  norm_num
+
+/-- Concrete: productState uniformBool uniformBool gives the same as
+uniformState (Bool × Bool). -/
+example : productState uniformBool uniformBool = uniformState (Bool × Bool) := by
+  rw [uniformState_prod_factor]
+  congr 1 <;> (funext _; rfl)
