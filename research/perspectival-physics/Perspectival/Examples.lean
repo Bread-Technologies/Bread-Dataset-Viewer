@@ -10401,3 +10401,25 @@ example : Function.Bijective (Wantable.complement : Bool ⊕ Bool → Bool ⊕ B
 example : Function.Bijective
     (Wantable.complement : Bool × Bool × Bool → Bool × Bool × Bool) :=
   ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
+
+/-- complement_complement_eq_id specialized. -/
+example : (Wantable.complement ∘ Wantable.complement : Bool → Bool) = id :=
+  Wantable.complement_complement_eq_id
+
+example : (Wantable.complement ∘ Wantable.complement : Fin 4 → Fin 4) = id :=
+  Wantable.complement_complement_eq_id
+
+example : (Wantable.complement ∘ Wantable.complement
+            : Bool × Bool → Bool × Bool) = id :=
+  Wantable.complement_complement_eq_id
+
+example : (Wantable.complement ∘ Wantable.complement
+            : Bool ⊕ Bool → Bool ⊕ Bool) = id :=
+  Wantable.complement_complement_eq_id
+
+/-- The complement function as an equivalence. -/
+example {W : Type u} [Wantable W] : W ≃ W where
+  toFun := Wantable.complement
+  invFun := Wantable.complement
+  left_inv := Wantable.complement_involutive
+  right_inv := Wantable.complement_involutive
