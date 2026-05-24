@@ -2726,6 +2726,11 @@ example : (fun _ : Bool × Bool × Bool => (1 : ℝ))
         ∈ Perspectival.WantableGPT.effectVec (Bool × Bool × Bool) :=
   Perspectival.WantableGPT.one_in_effectVec (Bool × Bool × Bool)
 
+/-- For any state in Bool³, sum = 1 (normalization). -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool × Bool))
+    (hf : f ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool)) :
+    ∑ w, f w = 1 := hf.2
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
