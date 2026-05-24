@@ -239,6 +239,34 @@ example (n : ℤ) (h : SelfComplementary n) : n = 0 := by
   have : -n = n := h
   linarith
 
+/-- `Wantable Bool` has fixed-point-free complement. -/
+example : FixedPointFreeComplement Bool := by
+  intro b h
+  cases b
+  · exact Bool.false_ne_true h.symm
+  · exact Bool.false_ne_true h
+
+/-- `Wantable (Fin 2)` (with complement = swap) has fixed-point-free complement. -/
+example : FixedPointFreeComplement (Fin 2) := by
+  intro i h
+  fin_cases i <;> (simp [SelfComplementary, Wantable.complement] at h)
+
+/-- `Wantable (Fin 3)` (with complement = id) has NON-fixed-point-free complement. -/
+example : ¬ FixedPointFreeComplement (Fin 3) := by
+  intro h
+  exact h 0 rfl
+
+/-- `Wantable Unit` (with complement = id) has NON-fixed-point-free complement. -/
+example : ¬ FixedPointFreeComplement Unit := by
+  intro h
+  exact h () rfl
+
+/-- `Wantable ℤ` (with complement = neg) has NON-fixed-point-free complement
+(since 0 is its own complement). -/
+example : ¬ FixedPointFreeComplement ℤ := by
+  intro h
+  exact h 0 (by show -(0 : ℤ) = 0; ring)
+
 /-- The `Option` type lifts a Wantable structure: `none` is its own
 complement, `some w` complements to `some (complement w)`. -/
 instance {W : Type u} [Wantable W] : Wantable (Option W) where
