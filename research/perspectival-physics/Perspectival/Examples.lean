@@ -13456,6 +13456,26 @@ example :
   rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
   norm_num
 
+/-! ### Born rule probabilities on uniform-style states -/
+
+/-- For uniformState (Bool × Bool), the probability of any outcome = 1/4. -/
+example (p : Bool × Bool) : uniformState (Bool × Bool) p = (1/4 : ℝ) := by
+  show (1 : ℝ) / Fintype.card (Bool × Bool) = 1/4
+  rw [show (Fintype.card (Bool × Bool) : ℝ) = 4 from by norm_num]
+
+/-- uniformBool has probability 1/2 at every outcome. -/
+example (b : Bool) : uniformBool b = (1/2 : ℝ) := rfl
+
+/-- uniformState (Fin 3) has probability 1/3 at every outcome. -/
+example (j : Fin 3) : uniformState (Fin 3) j = (1/3 : ℝ) := by
+  show (1 : ℝ) / Fintype.card (Fin 3) = 1/3
+  rw [show (Fintype.card (Fin 3) : ℝ) = 3 from by norm_num]
+
+/-- uniformState (Fin 4) has probability 1/4 at every outcome. -/
+example (j : Fin 4) : uniformState (Fin 4) j = (1/4 : ℝ) := by
+  show (1 : ℝ) / Fintype.card (Fin 4) = 1/4
+  rw [show (Fintype.card (Fin 4) : ℝ) = 4 from by norm_num]
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
