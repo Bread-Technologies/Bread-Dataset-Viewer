@@ -7148,5 +7148,20 @@ example : Perspectival.Distinguish.PerfectWitness
   Perspectival.Distinguish.perfectWitness_singleton _
     (Perspectival.WantableGPT.vertex_in_states (Fin 4) 0)
 
+/-- New: small concrete arithmetic check: |Bool| is even. -/
+example : Even (Fintype.card Bool) := by decide
+
+/-- New: small concrete check: |Bool × Bool| is even. -/
+example : Even (Fintype.card (Bool × Bool)) := by decide
+
+/-- New: small concrete check: |Bool ⊕ Bool| is even. -/
+example : Even (Fintype.card (Bool ⊕ Bool)) := by decide
+
+/-- New: |Fin 4| is even. -/
+example : Even (Fintype.card (Fin 4)) := by decide
+
+/-- New: |Bool ⊕ Fin 4| = 6 is even. -/
+example : Even (Fintype.card (Bool ⊕ Fin 4)) := by decide
+
 end Examples
 end Perspectival
