@@ -6506,5 +6506,27 @@ theorem uniformBool_in_states :
 example : Perspectival.WantableGPT.unitFn Bool uniformBool = 1 :=
   (uniformBool_in_states).2
 
+/-- The uniform Bool state is fixed by the complement action. -/
+theorem uniformBool_complement_invariant :
+    Perspectival.WantableGPT.complementAction Bool uniformBool = uniformBool := by
+  funext b
+  show uniformBool (Wantable.complement b) = uniformBool b
+  rfl
+
+/-- The uniform Bool state equals (1/2) • vertex true + (1/2) • vertex false. -/
+theorem uniformBool_decomp :
+    uniformBool = (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool true
+                + (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool false := by
+  funext v
+  cases v with
+  | true =>
+    show (1/2 : ℝ) = (1/2 : ℝ) * (if true = true then 1 else 0)
+                  + (1/2 : ℝ) * (if false = true then 1 else 0)
+    simp
+  | false =>
+    show (1/2 : ℝ) = (1/2 : ℝ) * (if true = false then 1 else 0)
+                  + (1/2 : ℝ) * (if false = false then 1 else 0)
+    simp
+
 end Examples
 end Perspectival
