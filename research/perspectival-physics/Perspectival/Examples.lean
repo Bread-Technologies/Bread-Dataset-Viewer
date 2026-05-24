@@ -7279,5 +7279,28 @@ example : uniformState (Fin 4) 0 = uniformState (Fin 4) 1 := rfl
 example : uniformState (Fin 4) 1 = uniformState (Fin 4) 2 := rfl
 example : uniformState (Fin 4) 2 = uniformState (Fin 4) 3 := rfl
 
+/-- New theorem: uniformState on a product factors as productState of
+the component uniform states. -/
+theorem uniformState_prod_factor
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    [Nonempty W₁] [Nonempty W₂] :
+    uniformState (W₁ × W₂)
+      = productState (uniformState W₁) (uniformState W₂) := by
+  funext p
+  show 1 / (Fintype.card (W₁ × W₂) : ℝ)
+      = uniformState W₁ p.1 * uniformState W₂ p.2
+  show 1 / (Fintype.card (W₁ × W₂) : ℝ)
+      = (1 / (Fintype.card W₁ : ℝ)) * (1 / (Fintype.card W₂ : ℝ))
+  rw [Fintype.card_prod]
+  push_cast
+  ring
+
+/-- Concrete: uniformState (Bool × Bool) factorises through uniformState
+on each Bool. -/
+example : uniformState (Bool × Bool)
+        = productState (uniformState Bool) (uniformState Bool) :=
+  uniformState_prod_factor
+
 end Examples
 end Perspectival
