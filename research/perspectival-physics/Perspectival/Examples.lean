@@ -2717,6 +2717,18 @@ example (i : Fin 5) : (Perspectival.Classical.perfectWitness 5).e i
                        (Perspectival.Classical.vertex 5 i) = 1 :=
   (Perspectival.Classical.perfectWitness 5).diag i
 
+/-- N ≤ K for Classical 3 (concrete instance). -/
+example : 3 ≤ Module.finrank ℝ (Perspectival.Classical.V 3) :=
+  Perspectival.Distinguish.operational_dim_le_state_dim
+    (Perspectival.Classical.vertex 3)
+    (Perspectival.Classical.perfectWitness 3)
+
+/-- N ≤ K for Classical 5 (concrete instance). -/
+example : 5 ≤ Module.finrank ℝ (Perspectival.Classical.V 5) :=
+  Perspectival.Distinguish.operational_dim_le_state_dim
+    (Perspectival.Classical.vertex 5)
+    (Perspectival.Classical.perfectWitness 5)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
