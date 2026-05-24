@@ -654,6 +654,11 @@ example {W : Type u} [Wantable W] : Nonempty (Meeting W → Meeting W) := ⟨id�
 example {W : Type u} [Wantable W] : Nonempty (W → W) := ⟨id⟩
 example {W : Type u} [Wantable W] : Nonempty (W → W) := ⟨Wantable.complement⟩
 
+example : Nonempty (Wantable Bool) := ⟨inferInstance⟩
+example : Nonempty (Wantable Unit) := ⟨inferInstance⟩
+example : Nonempty (Wantable Empty) := ⟨inferInstance⟩
+example : Nonempty (Wantable ℤ) := ⟨inferInstance⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
