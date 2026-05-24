@@ -12925,3 +12925,26 @@ example : (PTrans.complement : PTrans Bool) ≠ 1 := by
   -- So false = true → False
   show False
   exact Bool.false_ne_true h2
+
+/-- PTrans Bool is non-trivial as a Group. -/
+example : ∃ φ : PTrans Bool, φ ≠ 1 :=
+  ⟨PTrans.complement, by
+    intro h
+    have h2 : (PTrans.complement : PTrans Bool).toFun true
+            = (1 : PTrans Bool).toFun true := by
+      rw [h]
+    exact Bool.false_ne_true h2⟩
+
+/-- complement on Bool is its own inverse (concrete instance). -/
+example : (PTrans.complement : PTrans Bool)⁻¹ = PTrans.complement := by
+  rw [inv_eq_iff_mul_eq_one]
+  exact PTrans.complement_sq
+
+/-- PTrans Bool has at least two elements. -/
+example : ∃ φ₁ φ₂ : PTrans Bool, φ₁ ≠ φ₂ :=
+  ⟨1, PTrans.complement, by
+    intro h
+    have h2 : (1 : PTrans Bool).toFun true
+            = (PTrans.complement : PTrans Bool).toFun true := by
+      rw [h]
+    exact absurd h2 (by decide)⟩
