@@ -2891,6 +2891,14 @@ example : SelfComplementary (Sum.inl () : Unit ⊕ Unit) := rfl
 /-- Sum.inr () is self-complementary. -/
 example : SelfComplementary (Sum.inr () : Unit ⊕ Unit) := rfl
 
+/-- WantableGPT (Unit × Bool) has finrank 2. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Unit × Bool)) = 2 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
+/-- WantableGPT (Unit ⊕ Bool) has finrank 3. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Unit ⊕ Bool)) = 3 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
