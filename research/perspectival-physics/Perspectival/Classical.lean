@@ -1531,5 +1531,52 @@ example : cyclicShiftLin (cyclicShiftLin (vertex 3 0)) ≠ vertex 3 0 := by
       show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at hcol
   simp at hcol
 
+/-! ## R6 n=3: simplified swap (01) on V 3 -/
+
+/-- swap01 swaps coords 0 and 1 of V 3, fixes coord 2. -/
+def swap01Lin : V 3 →ₗ[ℝ] V 3 where
+  toFun v := fun j => match j with
+    | ⟨0, _⟩ => v 1
+    | ⟨1, _⟩ => v 0
+    | ⟨2, _⟩ => v 2
+  map_add' u v := by
+    funext j
+    fin_cases j <;> rfl
+  map_smul' c v := by
+    funext j
+    fin_cases j <;> rfl
+
+/-- swap01Lin sends vertex 0 to vertex 1. -/
+example : swap01Lin (vertex 3 0) = vertex 3 1 := by
+  funext j
+  fin_cases j
+  · show vertex 3 0 1 = vertex 3 1 0
+    show (if (0 : Fin 3) = 1 then (1 : ℝ) else 0)
+       = (if (1 : Fin 3) = 0 then (1 : ℝ) else 0)
+    simp
+  · show vertex 3 0 0 = vertex 3 1 1
+    show (if (0 : Fin 3) = 0 then (1 : ℝ) else 0)
+       = (if (1 : Fin 3) = 1 then (1 : ℝ) else 0)
+    simp
+  · show vertex 3 0 2 = vertex 3 1 2
+    show (if (0 : Fin 3) = 2 then (1 : ℝ) else 0)
+       = (if (1 : Fin 3) = 2 then (1 : ℝ) else 0)
+    rw [if_neg (by decide), if_neg (by decide)]
+
+/-- swap01Lin sends vertex 2 to vertex 2 (fixed). -/
+example : swap01Lin (vertex 3 2) = vertex 3 2 := by
+  funext j
+  fin_cases j
+  · show vertex 3 2 1 = vertex 3 2 0
+    show (if (2 : Fin 3) = 1 then (1 : ℝ) else 0)
+       = (if (2 : Fin 3) = 0 then (1 : ℝ) else 0)
+    rw [if_neg (by decide), if_neg (by decide)]
+  · show vertex 3 2 0 = vertex 3 2 1
+    show (if (2 : Fin 3) = 0 then (1 : ℝ) else 0)
+       = (if (2 : Fin 3) = 1 then (1 : ℝ) else 0)
+    rw [if_neg (by decide), if_neg (by decide)]
+  · show vertex 3 2 2 = vertex 3 2 2
+    rfl
+
 end Classical
 end Perspectival
