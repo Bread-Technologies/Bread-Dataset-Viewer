@@ -523,6 +523,12 @@ theorem trivialAgency_inv_avail (G : GPT V) :
   rw [hReq]
   rfl
 
+/-- A simple corollary: under trivialAgency, Reachable is reflexive
+(and trivially symmetric & transitive via the inv_avail hypothesis). -/
+theorem trivialAgency_reachable_refl (G : GPT V) (ρ : V) :
+    @Reachable V _ _ _ G (trivialAgency G) ρ ρ :=
+  @Reachable.refl _ _ _ _ G (trivialAgency G) ρ
+
 /-- `Reachable` under `ClosedAgency` is preserved under all available
 transformations: if `ρ₁ ~> ρ₂` and `R` is available, then
 `ρ₁ ~> R.toLin ρ₂`. -/
