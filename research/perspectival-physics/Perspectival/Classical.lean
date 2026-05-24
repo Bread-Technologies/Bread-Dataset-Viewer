@@ -2090,5 +2090,31 @@ theorem classical_n2_state_preserving_determined
       rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]; ring
   rw [hv, map_add, map_smul, map_smul, map_add, map_smul, map_smul, hRv0, hRv1]
 
+/-! ## Framework's main R6 result for Classical n=2 (consolidated statement)
+
+A single citation-friendly form of the R6 framework-distinctive contribution:
+on Classical Bool, no `StrictConnectedAgency` can include BOTH id and swap. -/
+
+/-- **THEOREM (framework R6 main result, n=2).** For the Classical n=2 GPT,
+any `StrictConnectedAgency A` satisfying both `id ∈ A.avail` and
+`swap ∈ A.avail` is logically impossible. Therefore the framework's
+strict-paths agency postulate is non-trivially constrained — it FORCES
+a choice of connected component on the bijective state-preserving manifold. -/
+theorem R6_framework_main_classical_n2
+    (A : Perspectival.Continuity.StrictConnectedAgency (gpt 2))
+    (h_id : Perspectival.Continuity.StrictReversible.id (gpt 2) ∈ A.avail)
+    (h_swap : swapStrictReversible ∈ A.avail) :
+    False :=
+  classical_n2_no_two_element_strict_agency A h_id h_swap
+
+/-- **Companion theorem**: the available set has at most one of {id, swap}. -/
+theorem R6_framework_classical_n2_avail_choice
+    (A : Perspectival.Continuity.StrictConnectedAgency (gpt 2)) :
+    Perspectival.Continuity.StrictReversible.id (gpt 2) ∉ A.avail
+    ∨ swapStrictReversible ∉ A.avail := by
+  by_contra h
+  push_neg at h
+  exact R6_framework_main_classical_n2 A h.1 h.2
+
 end Classical
 end Perspectival

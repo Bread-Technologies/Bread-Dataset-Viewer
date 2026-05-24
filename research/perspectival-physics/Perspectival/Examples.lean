@@ -16152,3 +16152,189 @@ instance instPatternStableProd {W₁ W₂ : Type u} [Wantable W₁] [Wantable W�
     [Nonempty W₁] [Nonempty W₂] :
     PatternStableWantable (W₁ × W₂) :=
   PatternStableWantable.trivialOfNonempty (W₁ × W₂)
+
+/-! ## Formulation (b) — reachable closure (PATTERN_STABLE_WANTABLE.md §3.b)
+
+A second concrete `PatternStableWantable` construction: a want is
+"reachable-closure stable" iff its orbit under perspectival
+transformations is a finite closed pattern. On `[Fintype W]` every
+orbit is automatically finite, so the *closure* condition holds
+vacuously; the predicate `Stable := True` discharges
+`stable_complement` and `stable_nonempty` for any `[Nonempty W]`.
+
+The substantive content comes from the *companion* predicate
+`Stable_nontrivial` which strengthens the bare reachable-closure
+formulation to require the orbit under the two-element subgroup
+`{1, PTrans.complement}` to have cardinality > 1. This is a
+*discriminator*: it separates Wantables whose complement is
+fixed-point-free (every want has a genuine partner — orbit of size 2)
+from Wantables whose complement is identity (every want is its own
+partner — orbit of size 1, degenerate "monad-meeting" only).
+
+This is the framework's structural reading of Whitehead's
+"actual occasions" reaching satisfaction: a want is part of a real
+pattern iff there is somewhere for it to go under the framework's
+permitted dynamics. A pure fixed point of complement is the
+degenerate case — Axiom IV's "particular" with no genuine
+relational content. -/
+
+namespace PatternStableWantable
+
+/-- The two-element orbit of `w` under `{1, PTrans.complement}` viewed
+as a `Finset`: it is `{w, Wantable.complement w}`. On `[Fintype W]
+[DecidableEq W]` this is always at most 2 elements. -/
+def complementOrbit {W : Type u} [Wantable W] [DecidableEq W] (w : W) :
+    Finset W :=
+  {w, Wantable.complement w}
+
+@[simp] theorem mem_complementOrbit {W : Type u} [Wantable W] [DecidableEq W]
+    (w v : W) : v ∈ complementOrbit w ↔ v = w ∨ v = Wantable.complement w := by
+  unfold complementOrbit
+  simp [Finset.mem_insert, Finset.mem_singleton]
+
+/-- `w` is in its own complement-orbit. -/
+theorem self_mem_complementOrbit {W : Type u} [Wantable W] [DecidableEq W]
+    (w : W) : w ∈ complementOrbit w := by
+  rw [mem_complementOrbit]; left; rfl
+
+/-- The complement-orbit is closed under complementation. -/
+theorem complementOrbit_closed {W : Type u} [Wantable W] [DecidableEq W]
+    (w v : W) (hv : v ∈ complementOrbit w) :
+    Wantable.complement v ∈ complementOrbit w := by
+  rw [mem_complementOrbit] at hv ⊢
+  rcases hv with rfl | rfl
+  · right; rfl
+  · left; exact Wantable.complement_involutive w
+
+/-- The non-trivial stability predicate: the complement-orbit of `w`
+has more than one element. Equivalent to `w ≠ Wantable.complement w`
+(complement is fixed-point-free at `w`). -/
+def Stable_nontrivial {W : Type u} [Wantable W] [DecidableEq W] (w : W) : Prop :=
+  (complementOrbit w).card > 1
+
+/-- Characterization: `Stable_nontrivial w` iff `w ≠ complement w`. -/
+theorem stable_nontrivial_iff {W : Type u} [Wantable W] [DecidableEq W]
+    (w : W) : Stable_nontrivial w ↔ w ≠ Wantable.complement w := by
+  unfold Stable_nontrivial complementOrbit
+  constructor
+  · intro h hcomp
+    -- If w = complement w, then {w, complement w} = {w}, card 1, not > 1.
+    have : ({w, Wantable.complement w} : Finset W).card = 1 := by
+      rw [← hcomp]
+      simp
+    omega
+  · intro hne
+    -- complementOrbit w = {w, complement w} = insert w {complement w}
+    -- if w ≠ complement w, w ∉ {complement w}, so card = 2
+    have hnotmem : w ∉ ({Wantable.complement w} : Finset W) := by
+      simp [hne]
+    rw [show ({w, Wantable.complement w} : Finset W)
+          = insert w {Wantable.complement w} from rfl,
+        Finset.card_insert_of_notMem hnotmem, Finset.card_singleton]
+    norm_num
+
+/-- On a Wantable whose complement is fixed-point-free, every want has
+non-trivial stability. -/
+theorem stable_nontrivial_of_fixedPointFree {W : Type u} [Wantable W] [DecidableEq W]
+    (h : FixedPointFreeComplement W) (w : W) : Stable_nontrivial w := by
+  rw [stable_nontrivial_iff]
+  intro hcomp
+  exact h w hcomp.symm
+
+/-- `Stable_nontrivial` is preserved by complement: if `w` is non-trivially
+stable, so is its complement. (Both have the same orbit.) -/
+theorem stable_nontrivial_complement {W : Type u} [Wantable W] [DecidableEq W]
+    (w : W) (h : Stable_nontrivial w) :
+    Stable_nontrivial (Wantable.complement w) := by
+  rw [stable_nontrivial_iff] at h ⊢
+  intro hbad
+  rw [Wantable.complement_involutive] at hbad
+  exact h hbad.symm
+
+/-- The reachable-closure `PatternStableWantable` construction, with the
+trivial `Stable := True` predicate. On finite Wantables the orbit
+under all `PTrans W` is automatically finite (a subset of `W`), so the
+*closure* condition is vacuous; the typeclass content is just
+witnessing one stable want. This is the (b)-formulation collapsed to
+its minimum content on finite types.
+
+The interesting discriminator content lives in `Stable_nontrivial`
+above, which is NOT used as the `Stable` field because it would fail
+`stable_nonempty` precisely for those Wantables where complement is
+identity (e.g. `Wantable (Fin 3)` here). -/
+@[reducible] def reachable_closure (W : Type u) [Wantable W] [Fintype W] [Nonempty W] :
+    PatternStableWantable W where
+  toWantable := inferInstance
+  Stable := fun _ => True
+  stable_complement := fun _ _ => trivial
+  stable_nonempty := by
+    obtain ⟨w⟩ := ‹Nonempty W›
+    exact ⟨w, trivial⟩
+
+end PatternStableWantable
+
+/-! ### Discriminator demonstrations: Bool vs Fin 3 -/
+
+/-- On `Bool`, complement is fixed-point-free (`not` swaps `true` and
+`false`). So every Bool element has non-trivial stability. -/
+example (b : Bool) : PatternStableWantable.Stable_nontrivial b := by
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  cases b <;> decide
+
+/-- Concrete: `true` is non-trivially stable on Bool. -/
+example : PatternStableWantable.Stable_nontrivial (true : Bool) := by
+  rw [PatternStableWantable.stable_nontrivial_iff]; decide
+
+/-- Concrete: `false` is non-trivially stable on Bool. -/
+example : PatternStableWantable.Stable_nontrivial (false : Bool) := by
+  rw [PatternStableWantable.stable_nontrivial_iff]; decide
+
+/-- The complement-orbit of `true : Bool` is `{true, false}` — two
+elements, exhibiting the genuine relational pair. -/
+example : (PatternStableWantable.complementOrbit (true : Bool)).card = 2 := by
+  unfold PatternStableWantable.complementOrbit
+  decide
+
+/-- On `Fin 3` (with `complement := id`), NO element is non-trivially
+stable: every want is its own complement, the orbit is a singleton. -/
+example (i : Fin 3) : ¬ PatternStableWantable.Stable_nontrivial i := by
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  intro h
+  exact h rfl
+
+/-- The complement-orbit of `0 : Fin 3` is just `{0}` — singleton,
+no genuine relational partner. -/
+example : (PatternStableWantable.complementOrbit (0 : Fin 3)).card = 1 := by
+  unfold PatternStableWantable.complementOrbit
+  decide
+
+/-- The reachable-closure instance on Bool. (Provides the trivial
+`Stable := True` half of the construction.) -/
+@[reducible] def boolReachableClosure : PatternStableWantable Bool :=
+  PatternStableWantable.reachable_closure Bool
+
+/-- The reachable-closure instance on `Fin 3`. The construction still
+works — orbits are auto-finite — but it provides no discriminating
+information; `Stable_nontrivial` is where the discrimination lives. -/
+@[reducible] def fin3ReachableClosure : PatternStableWantable (Fin 3) :=
+  PatternStableWantable.reachable_closure (Fin 3)
+
+/-- **Discriminator theorem.** Bool is "more pattern-stable" than
+Fin 3 (with id-complement) in the formulation-(b) sense: every Bool
+element has non-trivial complement-orbit, while no Fin 3 element does.
+This is the formal content of Axiom IV's "particulars are stable
+patterns, not substances behind them" — a Wantable in which every want
+is its own complement (Fin 3 with id) has no genuine relational
+pattern to be stable about; the would-be particular is a degenerate
+fixed point, not a clearing of complementary directednesses. -/
+theorem bool_more_stable_than_fin3 :
+    (∀ b : Bool, PatternStableWantable.Stable_nontrivial b) ∧
+    (∀ i : Fin 3, ¬ PatternStableWantable.Stable_nontrivial i) := by
+  refine ⟨?_, ?_⟩
+  · intro b
+    rw [PatternStableWantable.stable_nontrivial_iff]
+    cases b <;> decide
+  · intro i
+    rw [PatternStableWantable.stable_nontrivial_iff]
+    intro h
+    exact h rfl
