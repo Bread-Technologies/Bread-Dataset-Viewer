@@ -3081,6 +3081,18 @@ example : Function.Injective (Perspectival.WantableGPT.vertex (Fin 4)) :=
 example : Function.Injective (Perspectival.WantableGPT.vertex (Fin 3)) :=
   Perspectival.WantableGPT.vertex_injective (Fin 3)
 
+/-- Fin 4 wantableGPT has positive dim. -/
+example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) :=
+  Perspectival.WantableGPT.wantableGPT_dim_pos (Fin 4)
+
+/-- Bool × Bool wantableGPT has positive dim. -/
+example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) :=
+  Perspectival.WantableGPT.wantableGPT_dim_pos (Bool × Bool)
+
+/-- Unit wantableGPT has positive dim. -/
+example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V Unit) :=
+  Perspectival.WantableGPT.wantableGPT_dim_pos Unit
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
