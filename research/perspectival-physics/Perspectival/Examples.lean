@@ -9729,3 +9729,25 @@ example : Perspectival.WantableGPT.complementTransform (Bool ⊕ Bool) *
                   (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))
                   (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))) :=
   Perspectival.WantableGPT.complementTransform_sq (Bool ⊕ Bool)
+
+/-- fromPTransHom on complementPTrans = complementAction (PTrans→V W →ₗ V W form). -/
+example : Perspectival.WantableGPT.fromPTransHom Bool
+            (Perspectival.WantableGPT.complementPTrans Bool)
+        = Perspectival.WantableGPT.complementAction Bool :=
+  Perspectival.WantableGPT.fromPTransHom_complementPTrans Bool
+
+example : Perspectival.WantableGPT.fromPTransHom (Fin 4)
+            (Perspectival.WantableGPT.complementPTrans (Fin 4))
+        = Perspectival.WantableGPT.complementAction (Fin 4) :=
+  Perspectival.WantableGPT.fromPTransHom_complementPTrans (Fin 4)
+
+/-- fromPTransTransformHom on complementPTrans = complementTransform. -/
+example : Perspectival.WantableGPT.fromPTransTransformHom Bool
+            (Perspectival.WantableGPT.complementPTrans Bool)
+        = Perspectival.WantableGPT.complementTransform Bool :=
+  Perspectival.WantableGPT.fromPTransTransformHom_complementPTrans Bool
+
+example : Perspectival.WantableGPT.fromPTransTransformHom (Fin 4)
+            (Perspectival.WantableGPT.complementPTrans (Fin 4))
+        = Perspectival.WantableGPT.complementTransform (Fin 4) :=
+  Perspectival.WantableGPT.fromPTransTransformHom_complementPTrans (Fin 4)
