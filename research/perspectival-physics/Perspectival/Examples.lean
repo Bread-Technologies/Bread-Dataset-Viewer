@@ -2893,6 +2893,19 @@ example (m : Meeting Bool) :
     refine ⟨rfl, ?_⟩
     rw [h] at hcomp; exact hcomp.symm
 
+/-- Meeting Bool is in bijection with Bool (via side₁): two elements total. -/
+example : ∀ m : Meeting Bool, m = Meeting.mk_fromSide Bool m.side₁ :=
+  fun m => (Meeting.mk_fromSide_side₁_inv Bool m).symm
+
+/-- The two distinct meetings on Bool: trueMeetsFalse and its swap. -/
+example : trueMeetsFalse ≠ trueMeetsFalse.swap := by
+  intro h
+  have h1 : trueMeetsFalse.side₁ = trueMeetsFalse.side₂ :=
+    congrArg Meeting.side₁ h
+  -- trueMeetsFalse.side₁ = true, trueMeetsFalse.side₂ = false
+  have : true = false := h1
+  exact Bool.false_ne_true this.symm
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
