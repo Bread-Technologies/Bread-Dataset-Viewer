@@ -79,6 +79,12 @@ def boolBoolMeeting : Meeting (Bool × Bool) where
   side₂ := (false, true)
   complementary := rfl
 
+/-- The product Wantable structure is consistent with the component
+Wantable structure. -/
+example (b₁ b₂ : Bool) :
+    Wantable.complement ((b₁, b₂) : Bool × Bool)
+    = (Wantable.complement b₁, Wantable.complement b₂) := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
