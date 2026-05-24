@@ -11405,3 +11405,22 @@ example {W : Type u} [Wantable W] :
   rw [Subgroup.mem_center_iff]
   intro φ
   rw [one_mul, mul_one]
+
+/-- The subgroup ZComm = {1, complement} in PTrans W. -/
+noncomputable def complementSubgroup (W : Type u) [Wantable W] : Subgroup (PTrans W) :=
+  Subgroup.zpowers (PTrans.complement : PTrans W)
+
+/-- complementSubgroup contains complement. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) ∈ complementSubgroup W :=
+  Subgroup.mem_zpowers _
+
+/-- complementSubgroup contains identity. -/
+example {W : Type u} [Wantable W] :
+    (1 : PTrans W) ∈ complementSubgroup W :=
+  Subgroup.one_mem _
+
+/-- Powers of complement are in complementSubgroup. -/
+example {W : Type u} [Wantable W] (n : ℤ) :
+    (PTrans.complement : PTrans W) ^ n ∈ complementSubgroup W :=
+  Subgroup.zpow_mem _ (Subgroup.mem_zpowers _) n
