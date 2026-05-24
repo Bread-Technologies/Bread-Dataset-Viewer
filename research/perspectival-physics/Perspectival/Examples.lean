@@ -304,6 +304,17 @@ def ContinuousPTrans.complement (W : Type u) [Wantable W] [TopologicalSpace W]
 example : ContinuousPTrans ℝ := ContinuousPTrans.complement ℝ
 example : ContinuousPTrans ℝ := ContinuousPTrans.id ℝ
 
+/-- Composition of continuous PTrans is continuous. -/
+def ContinuousPTrans.comp {W : Type u} [Wantable W] [TopologicalSpace W]
+    (g f : ContinuousPTrans W) : ContinuousPTrans W where
+  toPTrans := g.toPTrans * f.toPTrans
+  toFun_continuous := g.toFun_continuous.comp f.toFun_continuous
+
+/-- Composition of complement with itself = identity (as ContinuousPTrans). -/
+example (W : Type u) [Wantable W] [TopologicalSpace W] [ContinuousWantable W] :
+    ((ContinuousPTrans.complement W).comp (ContinuousPTrans.complement W)).toPTrans = 1 :=
+  PTrans.complement_sq
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
