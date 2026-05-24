@@ -420,6 +420,17 @@ example : Wantable.complement (none : Option (Fin 2)) = none := rfl
 /-- The complement of `some 0 : Option (Fin 2)` is `some 1`. -/
 example : Wantable.complement (some 0 : Option (Fin 2)) = some 1 := rfl
 
+/-- For ℤ, the complement of 0 is 0 (fixed point). -/
+example : Wantable.complement (0 : ℤ) = 0 := neg_zero
+
+/-- For ℤ, no positive integer is its own complement (no fixed points
+of negation among positives). -/
+example (n : ℤ) (h : 0 < n) : Wantable.complement n ≠ n := by
+  intro heq
+  -- heq : -n = n
+  have : -n = n := heq
+  linarith
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
