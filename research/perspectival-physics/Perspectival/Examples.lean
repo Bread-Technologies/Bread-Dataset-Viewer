@@ -11799,3 +11799,70 @@ example : leftTrueIndicatorLin diagonalState = leftTrueIndicatorLin antiDiagonal
         Finset.sum_insert (by decide), Finset.sum_singleton]
     show (1 : ℝ) * 0 + (1 * (1/2 : ℝ) + (0 * (1/2 : ℝ) + 0 * 0)) = 1/2
     norm_num]
+
+/-! ### Complete measurement: "first coordinate is true" / "first is false" -/
+
+/-- "First coordinate is false" indicator. -/
+noncomputable def leftFalseIndicator : Perspectival.WantableGPT.V (Bool × Bool) :=
+  fun p => if p.1 = false then (1 : ℝ) else 0
+
+/-- leftFalseIndicator is in effectVec. -/
+theorem leftFalseIndicator_in_effectVec :
+    leftFalseIndicator ∈ Perspectival.WantableGPT.effectVec (Bool × Bool) := by
+  intro p
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (if p.1 = false then (1 : ℝ) else 0)
+    split <;> norm_num
+  · show (if p.1 = false then (1 : ℝ) else 0) ≤ 1
+    split <;> norm_num
+
+/-- The linear functional given by leftFalseIndicator. -/
+noncomputable def leftFalseIndicatorLin :
+    Perspectival.WantableGPT.V (Bool × Bool) →ₗ[ℝ] ℝ :=
+  Perspectival.WantableGPT.innerLin (Bool × Bool) leftFalseIndicator
+
+/-- leftFalseIndicatorLin is in WantableGPT.effects. -/
+theorem leftFalseIndicatorLin_in_effects :
+    leftFalseIndicatorLin ∈ Perspectival.WantableGPT.effects (Bool × Bool) :=
+  ⟨leftFalseIndicator, leftFalseIndicator_in_effectVec, rfl⟩
+
+/-- "first is true" + "first is false" = constant 1 (a complete measurement). -/
+example :
+    leftTrueIndicator + leftFalseIndicator = (fun _ => (1 : ℝ)) := by
+  funext p
+  show (if p.1 = true then (1 : ℝ) else 0) + (if p.1 = false then (1 : ℝ) else 0) = 1
+  cases p.1 with
+  | true => simp
+  | false => simp
+
+/-- "first is true" + "first is false" sum to unit functional (pointwise). -/
+example (f : Perspectival.WantableGPT.V (Bool × Bool)) :
+    leftTrueIndicatorLin f + leftFalseIndicatorLin f
+      = Perspectival.WantableGPT.unitFn (Bool × Bool) f := by
+  show ∑ p, leftTrueIndicator p * f p
+     + ∑ p, leftFalseIndicator p * f p
+     = ∑ p, f p
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro p _
+  show (if p.1 = true then (1 : ℝ) else 0) * f p
+     + (if p.1 = false then (1 : ℝ) else 0) * f p
+     = f p
+  cases p.1 with
+  | true => simp
+  | false => simp
+
+/-- leftFalseIndicatorLin on diagonalState = 1/2. -/
+example : leftFalseIndicatorLin diagonalState = (1/2 : ℝ) := by
+  show ∑ p, leftFalseIndicator p * diagonalState p = 1/2
+  rw [show (Finset.univ : Finset (Bool × Bool))
+        = {(true, true), (true, false), (false, true), (false, false)} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show leftFalseIndicator (true, true) * diagonalState (true, true)
+     + (leftFalseIndicator (true, false) * diagonalState (true, false)
+     + (leftFalseIndicator (false, true) * diagonalState (false, true)
+     + leftFalseIndicator (false, false) * diagonalState (false, false)))
+     = 1/2
+  show (0 : ℝ) * (1/2 : ℝ) + (0 * 0 + (1 * 0 + 1 * (1/2 : ℝ))) = 1/2
+  norm_num
