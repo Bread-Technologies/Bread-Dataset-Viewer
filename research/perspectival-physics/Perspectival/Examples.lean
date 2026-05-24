@@ -5569,5 +5569,21 @@ example {W : Type u} [Wantable W] :
 example {W : Type u} [Wantable W] :
     Reality W = (Meeting W → Prop) := rfl
 
+/-- Generic `wantableGPT_is_classical`: the classical signature N = K
+holds — N ≤ K AND K = N (both are |W|). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Fintype.card W ≤ Module.finrank ℝ (Perspectival.WantableGPT.V W) ∧
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
+  Perspectival.WantableGPT.wantableGPT_is_classical W
+
+/-- Generic `instModuleFinite`: `V W` is a finite ℝ-module. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Module.Finite ℝ (Perspectival.WantableGPT.V W) := inferInstance
+
+/-- Generic `finrank_V_eq_card`: WantableGPT dimension equals |W|. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    Module.finrank ℝ (Perspectival.WantableGPT.V W) = Fintype.card W :=
+  Perspectival.WantableGPT.finrank_V_eq_card W
+
 end Examples
 end Perspectival
