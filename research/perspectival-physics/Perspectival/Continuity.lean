@@ -932,5 +932,70 @@ together they form the R6 substantive payoff.
 This file lays the categorical groundwork. Concrete classical-side
 proofs go in `Classical.lean`. -/
 
+/-! ## R7: Toward Lie-group reversible dynamics
+
+The next refinement beyond `StrictConnectedAgency` is to require that
+the path γ from R₁ to R₂ be SMOOTH (`C^∞`), not merely continuous.
+Smoothness on a Banach space (which V is for finite-dimensional GPTs)
+combined with state-preservation and bijectivity gives the
+transformation set the structure of a Lie group acting smoothly on V.
+
+For Classical n GPT: the discrete permutation group has no smooth
+structure beyond the finite (0-dimensional) Lie group. So any
+SmoothConnectedAgency on Classical n must have `avail` equal to a
+single Lie-group component — i.e. it's either trivial or has all of
+S_n inside a single connected component, which is only possible for
+n = 1 (where S_1 = trivial).
+
+For Quantum n: U(n) IS a connected compact Lie group, so the
+analogous SmoothConnectedAgency is naturally non-trivial.
+
+This is the framework's conjectured route to deriving that "QM is the
+unique non-classical GPT with non-trivial smooth reversible dynamics."
+A full proof requires Mathlib's Lie-group infrastructure and is left
+as future work (per ORIGINAL_PROMPT §6 Tier 2). -/
+
+/-- The R7 scaffold: a `LieGroupReversiblePath` packages the
+StrictReversiblePath data together with an ADDITIONAL group-structure
+witness — every pair of γ(t) values lies in a common Lie-group orbit.
+We do not yet require differentiability (which needs Mathlib's Lie-group
+machinery), but we DO require that the avail set is closed under
+composition with itself, which is the algebraic precursor of Lie-group
+structure.
+
+This is groundwork for R7. The full Lie-group condition (smoothness,
+differential structure, Lie algebra) is deferred until Mathlib's
+`LieGroup` infrastructure can be wired up to `Reversible G`. -/
+structure GroupClosedReversiblePath
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) (R₁ R₂ : StrictReversible G)
+    extends StrictReversiblePath G R₁ R₂ where
+  /-- The endpoints can be composed: γ 1 ∘ (γ 0).inv lies in the
+  StrictReversible space, so the "displacement" R₂ ∘ R₁⁻¹ is itself
+  reversible. This is the algebraic precondition for Lie-group structure
+  on the available transformations. -/
+  composition_in_strict :
+    ∃ R : StrictReversible G, R.toLin.comp R₁.toLin = R₂.toLin
+
+/-- The R7-style agency: every pair of avail StrictReversibles is
+connected by a GroupClosedReversiblePath. -/
+class GroupClosedAgency {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] (G : GPT V) where
+  avail : Set (StrictReversible G)
+  id_avail : StrictReversible.id G ∈ avail
+  group_closed_paths :
+    ∀ R₁ R₂ : StrictReversible G, R₁ ∈ avail → R₂ ∈ avail →
+      Nonempty (GroupClosedReversiblePath G R₁ R₂)
+
+/-- GroupClosedAgency strengthens StrictConnectedAgency. -/
+instance (priority := 100) StrictConnectedAgency.ofGroupClosedAgency
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V] {G : GPT V}
+    [GCA : GroupClosedAgency G] : StrictConnectedAgency G where
+  avail := GCA.avail
+  id_avail := GCA.id_avail
+  strict_paths R₁ R₂ h₁ h₂ := by
+    obtain ⟨p⟩ := GCA.group_closed_paths R₁ R₂ h₁ h₂
+    exact ⟨p.toStrictReversiblePath⟩
+
 end Continuity
 end Perspectival
