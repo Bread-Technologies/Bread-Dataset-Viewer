@@ -2913,6 +2913,12 @@ example : Fintype.card (Empty × Bool) = 0 := by decide
 /-- |Empty| + |Bool| = 2 (additive identity of empty). -/
 example : Fintype.card (Empty ⊕ Bool) = 2 := by decide
 
+/-- |Unit| × |Bool| = 2 (Unit is multiplicative identity). -/
+example : Fintype.card (Unit × Bool) = 2 := by decide
+
+/-- |Unit| + |Bool| = 3. -/
+example : Fintype.card (Unit ⊕ Bool) = 3 := by decide
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
