@@ -1578,5 +1578,67 @@ example : swap01Lin (vertex 3 2) = vertex 3 2 := by
   · show vertex 3 2 2 = vertex 3 2 2
     rfl
 
+/-- swap01Lin is involutive. -/
+theorem swap01Lin_swap01Lin (v : V 3) : swap01Lin (swap01Lin v) = v := by
+  funext j
+  fin_cases j <;> rfl
+
+/-- swap01Lin preserves states. -/
+theorem swap01Lin_preserves_states (v : V 3) (hv : v ∈ states 3) :
+    swap01Lin v ∈ states 3 := by
+  refine ⟨?_, ?_⟩
+  · intro j
+    fin_cases j
+    · show 0 ≤ v 1; exact hv.1 _
+    · show 0 ≤ v 0; exact hv.1 _
+    · show 0 ≤ v 2; exact hv.1 _
+  · show ∑ j, swap01Lin v j = 1
+    have hsum := hv.2
+    rw [show (Finset.univ : Finset (Fin 3)) = {0, 1, 2} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+        Finset.sum_singleton] at hsum
+    have univ3 : (Finset.univ : Finset (Fin 3)) = {0, 1, 2} := by decide
+    rw [univ3,
+        Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+        Finset.sum_singleton]
+    show swap01Lin v 0 + (swap01Lin v 1 + swap01Lin v 2) = 1
+    show v 1 + (v 0 + v 2) = 1
+    linarith
+
+/-- swap01Lin preserves the unit. -/
+theorem swap01Lin_preserves_unit :
+    (unitFn 3).comp swap01Lin = unitFn 3 := by
+  apply LinearMap.ext
+  intro v
+  show ∑ j, swap01Lin v j = ∑ j, v j
+  have univ3 : (Finset.univ : Finset (Fin 3)) = {0, 1, 2} := by decide
+  rw [univ3]
+  rw [Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  rw [Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show swap01Lin v 0 + (swap01Lin v 1 + swap01Lin v 2) = v 0 + (v 1 + v 2)
+  show v 1 + (v 0 + v 2) = v 0 + (v 1 + v 2)
+  ring
+
+/-- swap01Lin is bijective. -/
+theorem swap01Lin_bijective : Function.Bijective swap01Lin := by
+  refine ⟨?_, ?_⟩
+  · intro u v h
+    have h2 : swap01Lin (swap01Lin u) = swap01Lin (swap01Lin v) := by rw [h]
+    rw [swap01Lin_swap01Lin, swap01Lin_swap01Lin] at h2
+    exact h2
+  · intro v
+    exact ⟨swap01Lin v, swap01Lin_swap01Lin v⟩
+
+/-- swap01Lin is continuous. -/
+theorem swap01Lin_continuous : Continuous swap01Lin := by
+  apply continuous_pi
+  intro j
+  fin_cases j
+  · exact continuous_apply 1
+  · exact continuous_apply 0
+  · exact continuous_apply 2
+
 end Classical
 end Perspectival
