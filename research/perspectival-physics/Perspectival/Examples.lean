@@ -5887,5 +5887,30 @@ example : Perspectival.WantableGPT.proj Bool true
   rw [Perspectival.WantableGPT.proj_vertex]
   simp
 
+/-- The perfectWitness on Fin 3 picks out vertex 1 at index 1. -/
+example : (Perspectival.WantableGPT.perfectWitness (Fin 3)).e 1
+            (Perspectival.WantableGPT.vertex (Fin 3) 1) = 1 := by
+  have := (Perspectival.WantableGPT.perfectWitness (Fin 3)).kronecker 1 1
+  simpa using this
+
+/-- The perfectWitness on Fin 3 sends vertex 2 to 0 under e 1. -/
+example : (Perspectival.WantableGPT.perfectWitness (Fin 3)).e 1
+            (Perspectival.WantableGPT.vertex (Fin 3) 2) = 0 := by
+  have := (Perspectival.WantableGPT.perfectWitness (Fin 3)).kronecker 1 2
+  simpa using this
+
+/-- The perfectWitness on Fin 4 picks out vertex 0 at index 0. -/
+example : (Perspectival.WantableGPT.perfectWitness (Fin 4)).e 0
+            (Perspectival.WantableGPT.vertex (Fin 4) 0) = 1 := by
+  have := (Perspectival.WantableGPT.perfectWitness (Fin 4)).kronecker 0 0
+  simpa using this
+
+/-- On Bool × Bool: perfectWitness picks out (true, true) at (true, true). -/
+example : (Perspectival.WantableGPT.perfectWitness (Bool × Bool)).e (true, true)
+            (Perspectival.WantableGPT.vertex (Bool × Bool) (true, true)) = 1 := by
+  have := (Perspectival.WantableGPT.perfectWitness (Bool × Bool)).kronecker
+    (true, true) (true, true)
+  simpa using this
+
 end Examples
 end Perspectival
