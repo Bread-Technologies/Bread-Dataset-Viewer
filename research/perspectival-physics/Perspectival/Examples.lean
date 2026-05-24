@@ -9705,3 +9705,27 @@ example : Perspectival.WantableGPT.complementTransform Bool *
                   (Perspectival.WantableGPT.gpt Bool)
                   (Perspectival.WantableGPT.gpt Bool)) :=
   Perspectival.WantableGPT.complementTransform_sq Bool
+
+/-- complementTransform_sq on Fin 4. -/
+example : Perspectival.WantableGPT.complementTransform (Fin 4) *
+          Perspectival.WantableGPT.complementTransform (Fin 4)
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt (Fin 4))
+                  (Perspectival.WantableGPT.gpt (Fin 4))) :=
+  Perspectival.WantableGPT.complementTransform_sq (Fin 4)
+
+/-- complementTransform_sq on Bool × Bool. -/
+example : Perspectival.WantableGPT.complementTransform (Bool × Bool) *
+          Perspectival.WantableGPT.complementTransform (Bool × Bool)
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt (Bool × Bool))
+                  (Perspectival.WantableGPT.gpt (Bool × Bool))) :=
+  Perspectival.WantableGPT.complementTransform_sq (Bool × Bool)
+
+/-- complementTransform_sq on Bool ⊕ Bool. -/
+example : Perspectival.WantableGPT.complementTransform (Bool ⊕ Bool) *
+          Perspectival.WantableGPT.complementTransform (Bool ⊕ Bool)
+        = (1 : Perspectival.GPT.Transform
+                  (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))
+                  (Perspectival.WantableGPT.gpt (Bool ⊕ Bool))) :=
+  Perspectival.WantableGPT.complementTransform_sq (Bool ⊕ Bool)
