@@ -10007,3 +10007,22 @@ example : PTrans (Bool × Bool) := 1
 /-- The PTrans complement element. -/
 example : PTrans Bool := PTrans.complement
 example : PTrans (Fin 4) := PTrans.complement
+
+/-- PTrans group structure verifications. -/
+example : Group (PTrans Bool) := inferInstance
+example : Group (PTrans (Fin 4)) := inferInstance
+example : Group (PTrans (Bool × Bool)) := inferInstance
+example : Group (PTrans (Bool ⊕ Bool)) := inferInstance
+example : Group (PTrans (Bool × Bool × Bool)) := inferInstance
+
+/-- PTrans is inhabited. -/
+example : Inhabited (PTrans Bool) := inferInstance
+example : Inhabited (PTrans (Fin 4)) := inferInstance
+
+/-- PTrans acts on Meeting (MulAction). -/
+example : MulAction (PTrans Bool) (Meeting Bool) := inferInstance
+example : MulAction (PTrans (Fin 4)) (Meeting (Fin 4)) := inferInstance
+
+/-- PTrans acts on Reality (MulAction). -/
+example : MulAction (PTrans Bool) (Reality Bool) := inferInstance
+example : MulAction (PTrans (Fin 4)) (Reality (Fin 4)) := inferInstance
