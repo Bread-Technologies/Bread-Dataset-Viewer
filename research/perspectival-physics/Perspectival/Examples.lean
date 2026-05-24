@@ -408,6 +408,12 @@ example : Wantable.complement (not : Bool → Bool) = id := by
   funext b
   cases b <;> rfl
 
+/-- The empty list is its own complement. -/
+example : Wantable.complement ([] : List Bool) = [] := rfl
+
+/-- A singleton list complements its single element. -/
+example : Wantable.complement ([true] : List Bool) = [false] := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
