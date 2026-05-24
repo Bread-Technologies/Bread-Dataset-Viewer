@@ -2740,6 +2740,18 @@ example : Fintype.card Bool = 2 ∧
   rw [Perspectival.WantableGPT.finrank_V_eq_card]
   decide
 
+/-- Wantable on Bool × Bool × Bool with id-complement (constructed by
+componentwise complement on Bool). The Wantable instance is automatic
+via the product instance. -/
+example : (Wantable.complement ((true, true, true) : Bool × Bool × Bool)) =
+          (false, false, false) := rfl
+
+/-- Composition of double-product complements. -/
+example : (Wantable.complement (Wantable.complement
+            ((true, false, true) : Bool × Bool × Bool))) =
+          (true, false, true) :=
+  Wantable.complement_involutive _
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
