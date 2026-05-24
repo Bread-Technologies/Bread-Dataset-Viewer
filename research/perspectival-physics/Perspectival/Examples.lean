@@ -2584,6 +2584,16 @@ example :
   rw [Perspectival.WantableGPT.complementTransform_sq]
   rfl
 
+/-- The fromPTransHom: bridge sends boolSwap to complementTransform on Bool
+(via the bridge homomorphism). -/
+example : Perspectival.WantableGPT.fromPTransHom Bool boolSwap =
+          Perspectival.WantableGPT.complementAction Bool := by
+  apply LinearMap.ext
+  intro f
+  funext b
+  show f (boolSwap.invFun b) = f (Wantable.complement b)
+  cases b <;> rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
