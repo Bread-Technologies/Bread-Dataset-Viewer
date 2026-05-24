@@ -7996,3 +7996,24 @@ theorem WantableGPT_Bool_state_is_convex_combo
     (hρ : ρ ∈ Perspectival.WantableGPT.states Bool) :
     0 ≤ ρ true ∧ 0 ≤ ρ false ∧ ρ true + ρ false = 1 :=
   (WantableGPT_Bool_states_iff ρ).mp hρ
+
+/-- New theorem: every classical state can be written as a sum of
+weighted vertex states (vertex decomposition). -/
+theorem WantableGPT_classical_state_decomposition
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (ρ : Perspectival.WantableGPT.V W) :
+    ρ = ∑ w, ρ w • Perspectival.WantableGPT.vertex W w :=
+  Perspectival.WantableGPT.vertex_decomposition W ρ
+
+/-- Concrete: any uniformBool state has the explicit decomposition
+1/2 • vertex true + 1/2 • vertex false. -/
+example : uniformBool
+        = uniformBool true • Perspectival.WantableGPT.vertex Bool true
+        + uniformBool false • Perspectival.WantableGPT.vertex Bool false :=
+  WantableGPT_Bool_state_decomp _
+
+/-- Concrete: vertex true has decomposition 1 • vertex true + 0 • vertex false. -/
+example : Perspectival.WantableGPT.vertex Bool true
+        = (1 : ℝ) • Perspectival.WantableGPT.vertex Bool true
+        + (0 : ℝ) • Perspectival.WantableGPT.vertex Bool false := by
+  rw [one_smul, zero_smul, add_zero]
