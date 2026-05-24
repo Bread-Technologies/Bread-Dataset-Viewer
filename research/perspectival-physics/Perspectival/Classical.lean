@@ -1133,5 +1133,61 @@ example : cyclicShiftLin (vertex 3 2) = vertex 3 0 := by
      = (if (0 : Fin 3) = j then (1 : ℝ) else 0)
   fin_cases j <;> simp <;> decide
 
+/-- cyclicShiftLin preserves the unit (sum). -/
+theorem cyclicShiftLin_preserves_unit :
+    (unitFn 3).comp cyclicShiftLin = unitFn 3 := by
+  apply LinearMap.ext
+  intro v
+  show ∑ j, v ((j - 1 : Fin 3)) = ∑ j, v j
+  have univ_eq : (Finset.univ : Finset (Fin 3)) = {0, 1, 2} := by decide
+  rw [univ_eq]
+  rw [Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  rw [Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show v (((0 : Fin 3) - 1 : Fin 3)) + (v (((1 : Fin 3) - 1 : Fin 3))
+       + v (((2 : Fin 3) - 1 : Fin 3)))
+     = v 0 + (v 1 + v 2)
+  rw [show ((0 : Fin 3) - 1) = 2 from by decide,
+      show ((1 : Fin 3) - 1) = 0 from by decide,
+      show ((2 : Fin 3) - 1) = 1 from by decide]
+  ring
+
+/-- cyclicShiftLin preserves states (probabilities). -/
+theorem cyclicShiftLin_preserves_states (v : V 3) (hv : v ∈ states 3) :
+    cyclicShiftLin v ∈ states 3 := by
+  refine ⟨?_, ?_⟩
+  · intro j
+    show 0 ≤ v ((j - 1 : Fin 3))
+    exact hv.1 _
+  · show ∑ j, v ((j - 1 : Fin 3)) = 1
+    have h := cyclicShiftLin_preserves_unit
+    have : ∑ j, v ((j - 1 : Fin 3)) = ∑ j, v j := by
+      have := congr_arg (fun L : V 3 →ₗ[ℝ] ℝ => L v) h
+      simp at this
+      exact this
+    rw [this]
+    exact hv.2
+
+/-- cyclicShiftLin^3 = id. -/
+theorem cyclicShiftLin_third_iter (v : V 3) :
+    cyclicShiftLin (cyclicShiftLin (cyclicShiftLin v)) = v := by
+  funext j
+  show v ((((j - 1 : Fin 3) - 1 : Fin 3) - 1 : Fin 3)) = v j
+  congr 1
+  fin_cases j <;> decide
+
+/-- cyclicShiftLin is bijective (since it has order 3). -/
+theorem cyclicShiftLin_bijective : Function.Bijective cyclicShiftLin := by
+  refine ⟨?_, ?_⟩
+  · intro u v h
+    have h3 : cyclicShiftLin (cyclicShiftLin (cyclicShiftLin u))
+            = cyclicShiftLin (cyclicShiftLin (cyclicShiftLin v)) := by
+      rw [h]
+    rw [cyclicShiftLin_third_iter, cyclicShiftLin_third_iter] at h3
+    exact h3
+  · intro v
+    exact ⟨cyclicShiftLin (cyclicShiftLin v), cyclicShiftLin_third_iter v⟩
+
 end Classical
 end Perspectival
