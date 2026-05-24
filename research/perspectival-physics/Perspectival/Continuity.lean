@@ -283,6 +283,14 @@ theorem pairAgency_reaches_R₁ {V : Type u} [AddCommGroup V] [Module ℝ V]
     @Reachable V _ _ _ G (pairAgency G R₀ R₁ hR₀_id) ρ (R₁.toLin ρ) :=
   ⟨R₁, Or.inr rfl, rfl⟩
 
+/-- And every state is reachable from itself in a pairAgency (via R₀ = id). -/
+theorem pairAgency_reaches_self {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] [ContinuousAdd V] [ContinuousSMul ℝ V]
+    (G : GPT V) (R₀ R₁ : Reversible G)
+    (hR₀_id : ∀ v : V, R₀.toLin v = v) (ρ : V) :
+    @Reachable V _ _ _ G (pairAgency G R₀ R₁ hR₀_id) ρ ρ :=
+  ⟨R₀, Or.inl rfl, hR₀_id ρ⟩
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
