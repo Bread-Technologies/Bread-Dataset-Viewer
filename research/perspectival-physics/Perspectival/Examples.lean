@@ -13270,6 +13270,40 @@ example :
       show Perspectival.WantableGPT.vertex Bool true false = (0 : ℝ) from by simp [Perspectival.WantableGPT.vertex]] at hcol
   norm_num at hcol
 
+/-- mixedCorrelatedState ≠ vertex (true, true). -/
+example : mixedCorrelatedState ≠ Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) := by
+  intro h
+  have hcol := congr_fun h (true, false)
+  -- LHS = 1/4, RHS = 0
+  rw [show mixedCorrelatedState (true, false) = (1/4 : ℝ) from by
+    show ((1/2 : ℝ) * diagonalState (true, false)) + ((1/2 : ℝ) * antiDiagonalState (true, false)) = 1/4
+    show ((1/2 : ℝ) * 0) + ((1/2 : ℝ) * (1/2 : ℝ)) = 1/4
+    norm_num] at hcol
+  rw [show Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) (true, false) = 0 from by
+    show (if (true, true) = (true, false) then (1 : ℝ) else 0) = 0
+    simp] at hcol
+  norm_num at hcol
+
+/-- diagonalState ≠ vertex (true, true). -/
+example : diagonalState ≠ Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) := by
+  intro h
+  have hcol := congr_fun h (false, false)
+  rw [show diagonalState (false, false) = (1/2 : ℝ) from rfl] at hcol
+  rw [show Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) (false, false) = 0 from by
+    show (if (true, true) = (false, false) then (1 : ℝ) else 0) = 0
+    simp] at hcol
+  norm_num at hcol
+
+/-- antiDiagonalState ≠ vertex (true, false). -/
+example : antiDiagonalState ≠ Perspectival.WantableGPT.vertex (Bool × Bool) (true, false) := by
+  intro h
+  have hcol := congr_fun h (false, true)
+  rw [show antiDiagonalState (false, true) = (1/2 : ℝ) from rfl] at hcol
+  rw [show Perspectival.WantableGPT.vertex (Bool × Bool) (true, false) (false, true) = 0 from by
+    show (if (true, false) = (false, true) then (1 : ℝ) else 0) = 0
+    simp] at hcol
+  norm_num at hcol
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
