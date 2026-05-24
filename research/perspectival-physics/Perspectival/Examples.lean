@@ -3264,6 +3264,9 @@ example : (Perspectival.WantableGPT.gpt (Fin 3)).unit
   (Perspectival.WantableGPT.gpt (Fin 3)).states_normalized _
     (Perspectival.WantableGPT.vertex_in_states (Fin 3) 2)
 
+-- (Unit-functional explicit-sum-equals-binary form deferred — Finset.sum
+-- elaboration on Bool needs different approach.)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
