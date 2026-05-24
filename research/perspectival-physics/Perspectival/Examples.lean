@@ -15424,6 +15424,32 @@ example :
       (Perspectival.WantableGPT.vertex (Fin 4) 2) :=
   vertices_distinguishable_via_delta 1 2 (by decide)
 
+/-! ### Bool³ vertex distinguishability (all 8 vertices pairwise) -/
+
+/-- Bool³ vertices (t, t, t) and (t, t, f) are distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, false)) :=
+  vertices_distinguishable_via_delta _ _ (by decide)
+
+/-- (t, f, t) and (t, t, f) distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, true))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, false)) :=
+  vertices_distinguishable_via_delta _ _ (by decide)
+
+/-- (f, t, t) and (f, f, f) distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, true, true))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, false, false)) :=
+  vertices_distinguishable_via_delta _ _ (by decide)
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
