@@ -8216,3 +8216,21 @@ of states. -/
 example : LinearIndependent ℝ ![diagonalState, antiDiagonalState] :=
   Perspectival.Distinguish.perfect_distinguishable_imp_linear_independent
     ![diagonalState, antiDiagonalState] diagAntiDiagWitness
+
+/-- The diagonal/antiDiagonal witness gives the inequality 2 ≤ dim V (B×B) = 4. -/
+example : (2 : ℕ) ≤ Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) :=
+  Perspectival.Distinguish.operational_dim_le_state_dim
+    ![diagonalState, antiDiagonalState] diagAntiDiagWitness
+
+/-- The full perfect-witness on Bool × Bool vertices gives the
+inequality 4 ≤ dim V (B×B) = 4 (tight bound). -/
+example : Fintype.card (Bool × Bool)
+        ≤ Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) :=
+  (Perspectival.WantableGPT.wantableGPT_is_classical (Bool × Bool)).1
+
+/-- The classical signature N = K = 4 for Bool × Bool. -/
+example : Fintype.card (Bool × Bool) = 4 ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool)) = 4 := by
+  refine ⟨by decide, ?_⟩
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]
+  decide
