@@ -13511,6 +13511,39 @@ example :
       (Perspectival.WantableGPT.vertex (Fin 4) 3) :=
   vertices_distinguishable_via_delta 2 3 (by decide)
 
+/-! ### Bool × Bool × Bool (3-particle) checks -/
+
+/-- vertex (true, true, true) on Bool³ is a state. -/
+example :
+    Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true)
+    ∈ Perspectival.WantableGPT.states (Bool × Bool × Bool) :=
+  Perspectival.WantableGPT.vertex_in_states _ _
+
+/-- All 8 vertices of Bool³ are pairwise distinguishable. -/
+example :
+    Perspectival.Hardy.Distinguishable
+      (Perspectival.WantableGPT.gpt (Bool × Bool × Bool))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true))
+      (Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, false, false)) :=
+  vertices_distinguishable_via_delta (true, true, true) (false, false, false) (by decide)
+
+/-- vertex (true, false, true) ≠ vertex (false, true, false). -/
+example :
+    Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, true) ≠
+    Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, true, false) := by
+  intro h
+  have hcol := congr_fun h (true, false, true)
+  show False
+  rw [show Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, false, true) (true, false, true)
+        = (1 : ℝ) from by
+    show (if (true, false, true) = (true, false, true) then (1 : ℝ) else 0) = 1
+    simp,
+      show Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (false, true, false) (true, false, true)
+        = (0 : ℝ) from by
+    show (if (false, true, false) = (true, false, true) then (1 : ℝ) else 0) = 0
+    simp] at hcol
+  norm_num at hcol
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
