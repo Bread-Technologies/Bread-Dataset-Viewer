@@ -164,6 +164,14 @@ example : (PTrans.complement : PTrans ℤ) ≠ 1 := by
 example : (PTrans.complement : PTrans ℤ) * PTrans.complement = 1 :=
   PTrans.complement_sq
 
+/-- The disjoint union `Bool ⊕ Empty` inherits a Wantable structure.
+Effectively isomorphic to Bool (Empty contributes nothing). -/
+example : Wantable (Bool ⊕ Empty) := inferInstance
+
+/-- The product `Bool × Unit` inherits Wantable. Effectively
+isomorphic to Bool. -/
+example : Wantable (Bool × Unit) := inferInstance
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
