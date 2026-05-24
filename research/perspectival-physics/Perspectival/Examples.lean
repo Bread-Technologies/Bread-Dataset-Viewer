@@ -11020,3 +11020,25 @@ example {W : Type u} [Wantable W] (φ : PTrans W) (R₁ R₂ : Reality W) :
     PTrans.actReality φ (fun m => R₁ m ∧ R₂ m)
       = fun m => PTrans.actReality φ R₁ m ∧ PTrans.actReality φ R₂ m :=
   PTrans.actReality_and φ R₁ R₂
+
+/-- actReality_or: distributes over disjunction. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (R₁ R₂ : Reality W) :
+    PTrans.actReality φ (fun m => R₁ m ∨ R₂ m)
+      = fun m => PTrans.actReality φ R₁ m ∨ PTrans.actReality φ R₂ m :=
+  PTrans.actReality_or φ R₁ R₂
+
+/-- actReality_empty: action on false predicate is false predicate. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    PTrans.actReality φ (fun _ : Meeting W => False) = fun _ => False :=
+  PTrans.actReality_empty φ
+
+/-- actReality_full: action on true predicate is true predicate. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    PTrans.actReality φ (fun _ : Meeting W => True) = fun _ => True :=
+  PTrans.actReality_full φ
+
+/-- actReality_singleton: action on a singleton reality. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) (m : Meeting W) :
+    PTrans.actReality φ (fun m' => m' = m)
+      = (fun m' => m' = PTrans.actMeeting φ m) :=
+  PTrans.actReality_singleton φ m
