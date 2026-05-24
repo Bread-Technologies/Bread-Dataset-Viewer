@@ -33,6 +33,16 @@ instance : Wantable Bool where
   complement := not
   complement_involutive := by intro b; cases b <;> rfl
 
+/-- The integers form a Wantable with `complement := Neg.neg`
+(signed-wanting; positive wants meet their negation). -/
+instance : Wantable ℤ where
+  complement := Neg.neg
+  complement_involutive := neg_neg
+
+example : (Wantable.complement (3 : ℤ)) = -3 := rfl
+example : Wantable.complement (Wantable.complement (5 : ℤ)) = 5 := by
+  exact neg_neg 5
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
