@@ -3009,6 +3009,18 @@ example {W : Type u} [Wantable W] (m : Meeting W) :
     PTrans.toEquivPermHom (PTrans.complement : PTrans W) = complementEquiv :=
   ⟨PTrans.actMeeting_complement m, rfl⟩
 
+/-- The Wantable structure on `Bool`: complement is `not`. -/
+example : (Wantable.complement : Bool → Bool) = Bool.not := rfl
+
+/-- The Wantable structure on `ℤ`: complement is `Neg.neg`. -/
+example : (Wantable.complement : ℤ → ℤ) = Neg.neg := rfl
+
+/-- The Wantable structure on `Unit`: complement is `id`. -/
+example : (Wantable.complement : Unit → Unit) = id := rfl
+
+/-- The Wantable structure on `ℝ`: complement is `Neg.neg`. -/
+example : (Wantable.complement : ℝ → ℝ) = Neg.neg := rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
