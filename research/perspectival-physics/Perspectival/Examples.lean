@@ -269,6 +269,21 @@ example (f : PTrans Empty) : f = 1 := by
   intro e
   exact e.elim
 
+/-- `PTrans Unit` is a subsingleton. -/
+instance : Subsingleton (PTrans Unit) := ⟨by
+  intro f g
+  apply PTrans.ext
+  intro u
+  cases u
+  rfl⟩
+
+/-- `PTrans Empty` is a subsingleton. -/
+instance : Subsingleton (PTrans Empty) := ⟨by
+  intro f g
+  apply PTrans.ext
+  intro e
+  exact e.elim⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
