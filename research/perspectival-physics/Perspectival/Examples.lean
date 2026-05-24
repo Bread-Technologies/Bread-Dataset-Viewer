@@ -3218,6 +3218,16 @@ example : ¬ SelfComplementary (some true : Option Bool) := by
   injection hh with hh
   exact Bool.false_ne_true hh
 
+/-- The Wantable structure on List Bool: complement is pointwise complement on elements. -/
+example : Wantable.complement ([true, false, true] : List Bool)
+        = [false, true, false] := rfl
+
+/-- Empty list is its own complement (trivially self-complementary). -/
+example : SelfComplementary ([] : List Bool) := rfl
+
+/-- Single-element list complement applied to [true] gives [false]. -/
+example : Wantable.complement ([true] : List Bool) = [false] := rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
