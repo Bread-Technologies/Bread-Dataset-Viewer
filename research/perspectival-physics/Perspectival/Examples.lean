@@ -2807,6 +2807,12 @@ example : ¬ FixedPointFreeComplement ℤ := by
 example : ¬ FixedPointFreeComplement ℝ := by
   intro h; exact h 0 (by show -(0 : ℝ) = 0; ring)
 
+/-- The 0-vector on Bool³ is in the effect-vector hypercube [0,1]^W. -/
+example : (0 : Perspectival.WantableGPT.V (Bool × Bool × Bool))
+        ∈ { g | ∀ w, g w ∈ Set.Icc (0 : ℝ) 1 } := by
+  rw [← Perspectival.WantableGPT.effectVec_eq_hypercube]
+  exact Perspectival.WantableGPT.zero_in_effectVec _
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
