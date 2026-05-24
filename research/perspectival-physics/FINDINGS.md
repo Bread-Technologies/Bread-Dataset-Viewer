@@ -181,14 +181,22 @@ machine-verified GPT instance whose vertices, distinguishability set,
 and PTrans-induced automorphisms are all formally derived. So the
 "strong-bridge" question has *partial* affirmative resolution.
 
-But the same module now also contains a **no-go theorem**
-(`wantableGPT_is_classical`): the bridge always lands on classical
-structure — `N = K = |W|`, with `K = K_A · K_B` for product
-composition and `K = K_A + K_B` for sum composition. So the bridge
-exists, but it cannot, by itself, deliver quantum structure. The
-ROADMAP R6/R7 program — strengthening the agency postulate to force
-quantum-like path-connectedness — is the next bet *precisely
+But the same module now also contains a **triple no-go theorem**
+(`wantableGPT_classical_dichotomy`): the bridge always lands on
+classical structure — `N = K = |W|`, with `K = K_A · K_B` for product
+composition and `K = K_A + K_B` for sum composition; and the three
+canonical non-classical Hardy signatures (quantum `K=N²`, real-QM
+`2K=N(N+1)`, quaternionic-QM `K=N(2N-1)`) are *each* formally ruled
+out for `|W| ≥ 2`. So the bridge exists, but it cannot, by itself,
+deliver any non-classical structure.
+
+The ROADMAP R6/R7 program — strengthening the agency postulate to
+force quantum-like path-connectedness — is the next bet *precisely
 because* the bare ontology has been shown to be insufficient.
+Furthermore, `path_via_affineLine` reveals that "path-connectedness"
+in `HasConnectedAgency` is cheap (always satisfiable for topological
+V); the substantive content of R6 is the *availability set* (which
+transformations are admissible), not the connectedness itself.
 
 ## Structural deflations (clarifying)
 
