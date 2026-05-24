@@ -5311,5 +5311,25 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
       γ 1 ρ₁ = ρ₂ :=
   Perspectival.Continuity.hardy_axiom5_transitive h_transitive ρ₁ ρ₂ hp₁ hp₂
 
+/-- `continuous_path_of_reachable`: from reachability, a continuous
+path between states (the V-valued form of Hardy Axiom 5). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.HasConnectedAgency G]
+    (ρ₁ ρ₂ : V) (hρ₁ : ρ₁ ∈ G.states)
+    (h : Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂) :
+    ∃ p : unitInterval → V, Continuous p ∧ p 0 = ρ₁ ∧ p 1 = ρ₂ :=
+  Perspectival.Continuity.continuous_path_of_reachable ρ₁ ρ₂ hρ₁ h
+
+/-- `hardy_axiom5_of_agency`: from reachability + agency, a continuous
+path of linear maps (no pure-state restriction). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : Perspectival.GPT V} [Perspectival.Continuity.HasConnectedAgency G]
+    (ρ₁ ρ₂ : V) (h : Perspectival.Continuity.Reachable (G := G) ρ₁ ρ₂) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      (∀ v, γ 0 v = v) ∧
+      γ 1 ρ₁ = ρ₂ :=
+  Perspectival.Continuity.hardy_axiom5_of_agency ρ₁ ρ₂ h
+
 end Examples
 end Perspectival
