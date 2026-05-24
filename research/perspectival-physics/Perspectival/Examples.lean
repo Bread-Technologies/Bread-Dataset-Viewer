@@ -9472,3 +9472,23 @@ example : Perspectival.WantableGPT.vertex (Fin 4) 2
 example : Perspectival.WantableGPT.vertex (Bool × Bool × Bool) (true, true, true)
         ∈ (Perspectival.WantableGPT.gpt (Bool × Bool × Bool)).states :=
   Perspectival.WantableGPT.vertex_in_states (Bool × Bool × Bool) (true, true, true)
+
+/-- Concrete: classical vertex 0 on Fin 5 is in states. -/
+example : Perspectival.Classical.vertex 5 0 ∈ (Perspectival.Classical.gpt 5).states :=
+  Perspectival.Classical.vertex_in_states 5 0
+
+/-- Concrete: classical vertex 4 on Fin 5 is in states. -/
+example : Perspectival.Classical.vertex 5 4 ∈ (Perspectival.Classical.gpt 5).states :=
+  Perspectival.Classical.vertex_in_states 5 4
+
+/-- Concrete: classical vertex distinguishability on Fin 5. -/
+example : Perspectival.Hardy.Distinguishable (Perspectival.Classical.gpt 5)
+            (Perspectival.Classical.vertex 5 0)
+            (Perspectival.Classical.vertex 5 3) :=
+  Perspectival.Classical.vertices_distinguishable 5 0 3 (by decide)
+
+/-- Concrete: classical vertex distinguishability on Fin 10. -/
+example : Perspectival.Hardy.Distinguishable (Perspectival.Classical.gpt 10)
+            (Perspectival.Classical.vertex 10 5)
+            (Perspectival.Classical.vertex 10 9) :=
+  Perspectival.Classical.vertices_distinguishable 10 5 9 (by decide)
