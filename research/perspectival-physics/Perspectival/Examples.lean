@@ -5708,5 +5708,25 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     (hLI : LinearIndependent ℝ ![v₁, v₂]) : False :=
   Perspectival.no_cloning_of_linear_independent hC h₁ h₂ h_sum hLI
 
+/-- Generic `distinguishable_ne`: distinguishable states are unequal. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ρ₁ ρ₂ : V}
+    (h : Perspectival.Hardy.Distinguishable G ρ₁ ρ₂) : ρ₁ ≠ ρ₂ :=
+  Perspectival.Distinguish.distinguishable_ne h
+
+/-- Generic `state_ne_zero`: states are nonzero. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ρ : V} (h : ρ ∈ G.states) : ρ ≠ 0 :=
+  Perspectival.Distinguish.state_ne_zero h
+
+/-- Generic `linear_dependent_states_eq`: linearly dependent states
+must be equal. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    {G : Perspectival.GPT V} {ρ₁ ρ₂ : V}
+    (h₁ : ρ₁ ∈ G.states) (h₂ : ρ₂ ∈ G.states)
+    (hdep : ¬ LinearIndependent ℝ ![ρ₁, ρ₂]) :
+    ρ₁ = ρ₂ :=
+  Perspectival.Distinguish.linear_dependent_states_eq h₁ h₂ hdep
+
 end Examples
 end Perspectival
