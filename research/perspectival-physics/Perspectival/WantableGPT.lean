@@ -618,6 +618,16 @@ theorem wantableGPT_nontrivial_classical [Fintype W] (h : 2 ≤ Fintype.card W) 
     Module.finrank ℝ (V W) = Fintype.card W :=
   ⟨exists_two_distinguishable W h, finrank_V_eq_card W⟩
 
+/-- For |W| = 1, the WantableGPT has dimension 1 (trivial GPT). -/
+theorem wantableGPT_trivial_dim [Fintype W] (h : Fintype.card W = 1) :
+    Module.finrank ℝ (V W) = 1 := by
+  rw [finrank_V_eq_card, h]
+
+/-- For |W| = 0, the WantableGPT has dimension 0 (vacuous). -/
+theorem wantableGPT_empty_dim [Fintype W] (h : Fintype.card W = 0) :
+    Module.finrank ℝ (V W) = 0 := by
+  rw [finrank_V_eq_card, h]
+
 /-- **Hardy-signature dichotomy.** For finite Wantable W with `|W| ≥ 2`,
 the WantableGPT satisfies the classical signature `K = N = |W|` and
 *does not* satisfy any of the standard non-classical signatures
