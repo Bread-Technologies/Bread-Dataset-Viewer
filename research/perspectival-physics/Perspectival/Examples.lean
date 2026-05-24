@@ -7229,5 +7229,22 @@ theorem uniformState_complement_invariant
   show uniformState W (Wantable.complement w) = uniformState W w
   rfl
 
+/-- Born-rule for the uniform state: probability of vertex w under
+uniformState is 1/|W|. -/
+theorem uniformState_proj_eq
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W]
+    (w : W) :
+    Perspectival.WantableGPT.proj W w (uniformState W)
+      = 1 / (Fintype.card W : ℝ) := rfl
+
+/-- Concrete: probability of vertex true under uniformBool = 1/2. -/
+example : Perspectival.WantableGPT.proj Bool true uniformBool = 1/2 := rfl
+
+/-- Concrete: probability of vertex 0 under uniformState (Fin 4) = 1/4. -/
+example : Perspectival.WantableGPT.proj (Fin 4) 0 (uniformState (Fin 4))
+        = 1 / 4 := by
+  rw [uniformState_proj_eq]
+  norm_cast
+
 end Examples
 end Perspectival
