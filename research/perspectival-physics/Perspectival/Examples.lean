@@ -2329,6 +2329,16 @@ example : (∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
           Module.finrank ℝ (Perspectival.WantableGPT.V Bool) = Fintype.card Bool :=
   Perspectival.WantableGPT.wantableGPT_nontrivial_classical Bool (by decide)
 
+/-- WantableGPT non-trivial classical instance on Fin 4 (|W|=4). -/
+example : (∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V (Fin 4),
+            ρ₁ ∈ Perspectival.WantableGPT.states (Fin 4) ∧
+            ρ₂ ∈ Perspectival.WantableGPT.states (Fin 4) ∧
+            Perspectival.Hardy.Distinguishable
+              (Perspectival.WantableGPT.gpt (Fin 4)) ρ₁ ρ₂) ∧
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4))
+            = Fintype.card (Fin 4) :=
+  Perspectival.WantableGPT.wantableGPT_nontrivial_classical (Fin 4) (by decide)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
