@@ -752,5 +752,38 @@ theorem n2_disc_det_continuous_in_R
      = _
   ring
 
+/-- IVT setup: for any γ : [0,1] → ℝ continuous with γ 0 = 1 and γ 1 = -1,
+there exists t with γ t = 0. -/
+theorem ivt_path_one_to_neg_one
+    (f : unitInterval → ℝ) (hf : Continuous f)
+    (h0 : f 0 = 1) (h1 : f 1 = -1) :
+    ∃ t : unitInterval, f t = 0 := by
+  -- Apply IVT on the continuous map f : [0,1] → ℝ which takes value 1 at 0
+  -- and -1 at 1. The value 0 is between -1 and 1, so it's attained.
+  have : Set.OrdConnected (Set.range f) := by
+    apply (isPreconnected_range hf).ordConnected
+  have h0_in : (1 : ℝ) ∈ Set.range f := ⟨0, h0⟩
+  have h1_in : (-1 : ℝ) ∈ Set.range f := ⟨1, h1⟩
+  have : (0 : ℝ) ∈ Set.range f := by
+    have hmem : (0 : ℝ) ∈ Set.Icc (-1 : ℝ) 1 := by constructor <;> norm_num
+    exact this.out h1_in h0_in hmem
+  exact this
+
+/-- Concrete form: if γ : [0,1] → (V 2 →ₗ V 2) is a continuous path with
+γ 0 = id and γ 1 = swap, then there exists t with n2_disc_det (γ t) = 0. -/
+theorem n2_no_continuous_path_id_to_swap_through_bijections
+    (γ : unitInterval → V 2 →ₗ[ℝ] V 2)
+    (hcont : Continuous (fun t => n2_disc_det (γ t)))
+    (h0 : γ 0 = LinearMap.id)
+    (h1 : γ 1 = swapLin) :
+    ∃ t : unitInterval, n2_disc_det (γ t) = 0 := by
+  apply ivt_path_one_to_neg_one (fun t => n2_disc_det (γ t)) hcont
+  · show n2_disc_det (γ 0) = 1
+    rw [h0]
+    exact n2_disc_det_id
+  · show n2_disc_det (γ 1) = -1
+    rw [h1]
+    exact n2_disc_det_swap
+
 end Classical
 end Perspectival
