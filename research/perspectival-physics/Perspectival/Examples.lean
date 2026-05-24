@@ -394,6 +394,17 @@ theorem scaleHom_injective : Function.Injective scaleHom := by
   rw [ha, hb] at h1
   exact Units.ext h1
 
+/-- The scaling PTrans for `-1` equals the complement PTrans on ℝ.
+This is a concrete `scaleHom` identity that ties scaling to complement. -/
+example : scaleHom (-1 : ℝˣ) = (PTrans.complement : PTrans ℝ) := by
+  apply PTrans.ext
+  intro x
+  show (-1 : ℝ) * x = -x
+  ring
+
+/-- The scaling PTrans for `1` is the identity PTrans on ℝ. -/
+example : scaleHom (1 : ℝˣ) = (1 : PTrans ℝ) := scaleHom.map_one
+
 /-- In `Wantable (Fin 3)` (with complement := id), every element is
 self-complementary. -/
 example (i : Fin 3) : SelfComplementary i := rfl
