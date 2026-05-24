@@ -547,6 +547,10 @@ example : ((PTrans.complement : PTrans Bool) * PTrans.complement).toFun false = 
 example : (1 : PTrans Bool).toFun true = true := rfl
 example : (1 : PTrans Bool).toFun false = false := rfl
 
+example : (1 : PTrans (Fin 4)).toFun 0 = 0 := rfl
+example : (1 : PTrans Unit).toFun () = () := rfl
+example : (1 : PTrans ℤ).toFun 42 = 42 := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
