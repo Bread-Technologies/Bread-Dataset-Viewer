@@ -559,6 +559,8 @@ example : (1 : PTrans (Option Bool)).toFun none = none := rfl
 
 example : (1 : PTrans (List Bool)).toFun [true, false] = [true, false] := rfl
 
+example : (1 : PTrans (List Bool)).toFun [] = [] := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
