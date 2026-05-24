@@ -5071,5 +5071,27 @@ example {W : Type u} [Wantable W] (φ : PTrans W) :
     PTrans.ofEquivPerm (PTrans.toEquivPerm φ) φ.resp_complement = φ :=
   PTrans.ofEquivPerm_toEquivPerm φ
 
+/-- `toEquivPerm_commutes_complement`: PTrans permutations commute with
+the complement permutation (centralizer property). -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    PTrans.toEquivPerm φ * PTrans.toEquivPerm (PTrans.complement : PTrans W)
+    = PTrans.toEquivPerm (PTrans.complement : PTrans W) * PTrans.toEquivPerm φ :=
+  PTrans.toEquivPerm_commutes_complement φ
+
+/-- `PTrans.id_comp`: identity composed with f gives f. -/
+example {W : Type u} [Wantable W] (f : PTrans W) :
+    PTrans.comp PTrans.id f = f :=
+  PTrans.id_comp f
+
+/-- `PTrans.comp_id`: f composed with identity gives f. -/
+example {W : Type u} [Wantable W] (f : PTrans W) :
+    PTrans.comp f PTrans.id = f :=
+  PTrans.comp_id f
+
+/-- `PTrans.comp_assoc`: composition is associative. -/
+example {W : Type u} [Wantable W] (h g f : PTrans W) :
+    PTrans.comp (PTrans.comp h g) f = PTrans.comp h (PTrans.comp g f) :=
+  PTrans.comp_assoc h g f
+
 end Examples
 end Perspectival
