@@ -10951,3 +10951,26 @@ theorem complement_pow_two_n_succ_smul_meeting
 example (m : Meeting Bool) :
     ((PTrans.complement : PTrans Bool) ^ 999) • m = m.swap :=
   complement_pow_two_n_succ_smul_meeting m 499
+
+/-- complement^2 on Meeting via actMeeting. -/
+example (m : Meeting Bool) :
+    PTrans.actMeeting (PTrans.complement : PTrans Bool)
+      (PTrans.actMeeting PTrans.complement m) = m := by
+  rw [PTrans.actMeeting_complement, PTrans.actMeeting_complement,
+      Meeting.swap_swap]
+
+/-- complement on actMeeting on Fin 4 Meeting. -/
+example (m : Meeting (Fin 4)) :
+    PTrans.actMeeting (PTrans.complement : PTrans (Fin 4)) m = m.swap :=
+  PTrans.actMeeting_complement m
+
+/-- complement on actMeeting on Bool × Bool Meeting. -/
+example (m : Meeting (Bool × Bool)) :
+    PTrans.actMeeting (PTrans.complement : PTrans (Bool × Bool)) m = m.swap :=
+  PTrans.actMeeting_complement m
+
+/-- complement^2 on actMeeting Bool × Bool Meeting. -/
+example (m : Meeting (Bool × Bool)) :
+    PTrans.actMeeting (PTrans.complement : PTrans (Bool × Bool))
+      (PTrans.actMeeting PTrans.complement m) = m :=
+  PTrans.actMeeting_complement_sq m
