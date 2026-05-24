@@ -8606,3 +8606,30 @@ example : leftMarginal diagonalState = uniformBool := by
 example : rightMarginal diagonalState = uniformBool := by
   funext b
   exact diagonalState_right_marginal b
+
+/-- Both marginals of diagonalState are uniformBool (despite the
+correlation between factors!). -/
+example : leftMarginal diagonalState = uniformBool ∧
+          rightMarginal diagonalState = uniformBool := by
+  refine ⟨?_, ?_⟩
+  · funext b; exact diagonalState_left_marginal b
+  · funext b; exact diagonalState_right_marginal b
+
+/-- New theorem: diagonalState marginals = antiDiagonalState marginals (both uniform). -/
+example : leftMarginal diagonalState = leftMarginal antiDiagonalState := by
+  funext b
+  show (∑ b₂, diagonalState (b, b₂)) = (∑ b₂, antiDiagonalState (b, b₂))
+  rw [diagonalState_left_marginal b]
+  rw [show (∑ b₂, antiDiagonalState (b, b₂))
+        = antiDiagonalState (b, true) + antiDiagonalState (b, false) from by
+      rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+          Finset.sum_insert (by decide), Finset.sum_singleton]]
+  cases b with
+  | true =>
+    show uniformBool true = antiDiagonalState (true, true) + antiDiagonalState (true, false)
+    show (1/2 : ℝ) = 0 + 1/2
+    norm_num
+  | false =>
+    show uniformBool false = antiDiagonalState (false, true) + antiDiagonalState (false, false)
+    show (1/2 : ℝ) = 1/2 + 0
+    norm_num
