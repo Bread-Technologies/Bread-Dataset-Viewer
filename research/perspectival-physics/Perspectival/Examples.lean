@@ -7522,3 +7522,17 @@ theorem diagonalState_distinguishable_antiDiagonalState :
   ⟨diagonalIndicatorLin, diagonalIndicatorLin_in_effects,
    diagonalIndicatorLin_on_diagonalState,
    diagonalIndicatorLin_on_antiDiagonalState⟩
+
+/-- New theorem: uniformBool is a 50/50 mixture of vertex true and vertex false. -/
+theorem uniformBool_eq_mixture :
+    uniformBool = (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool true
+                + (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool false :=
+  uniformBool_decomp
+
+/-- New theorem: uniformBool is a convex combination of the two vertices,
+showing that the framework supports "mixed states" naturally. -/
+theorem uniformBool_convex_combo :
+    uniformBool = (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool true
+                + (1 - 1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool false := by
+  rw [uniformBool_decomp]
+  ring_nf
