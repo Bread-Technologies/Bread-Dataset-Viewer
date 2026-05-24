@@ -119,6 +119,14 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4)) = 4 := by
   show Module.finrank ℝ (Fin 4 → ℝ) = 4
   simp
 
+/-- The operational dimension of `Classical.gpt n` is bounded by its
+linear dimension. Combined with the vertex distinguishability set, this
+gives the framework's verified N ≤ K direction in concrete form. -/
+example (n : ℕ) {S : Fin n → Perspectival.Classical.V n}
+    (w : Perspectival.Distinguish.PerfectWitness (G := Perspectival.Classical.gpt n) S) :
+    n ≤ Module.finrank ℝ (Perspectival.Classical.V n) :=
+  Perspectival.Distinguish.operational_dim_le_state_dim S w
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
