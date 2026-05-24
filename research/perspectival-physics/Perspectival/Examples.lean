@@ -2655,6 +2655,11 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool))
         ≠ Fintype.card (Bool × Bool × Bool) * (Fintype.card (Bool × Bool × Bool) + 1) :=
   Perspectival.WantableGPT.wantableGPT_not_realQM (Bool × Bool × Bool) (by decide)
 
+/-- Bool³ WantableGPT does not have quaternionic-QM signature. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Bool × Bool))
+        ≠ Fintype.card (Bool × Bool × Bool) * (2 * Fintype.card (Bool × Bool × Bool) - 1) :=
+  Perspectival.WantableGPT.wantableGPT_not_quaternionicQM (Bool × Bool × Bool) (by decide)
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
