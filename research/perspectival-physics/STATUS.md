@@ -63,6 +63,9 @@ These are inputs, not results. See `Perspectival/Ontology.lean`.
 | WantableGPT vertices form a basis; `finrank (V W) = |W|` | `WantableGPT.lean :: vertexBasis, finrank_V_eq_card` | ✓ |
 | **No-go: WantableGPT-from-finite-Wantable is always classical** (`N = K`) | `WantableGPT.lean :: wantableGPT_is_classical` | ✓ |
 | **Classical signature explicit**: PerfectWitness family of size `|W|` with `n = finrank V W` | `WantableGPT.lean :: wantableGPT_classical_signature` | ✓ |
+| **Quantum signature ruled out**: K ≠ N² for `|W|≥2` | `WantableGPT.lean :: wantableGPT_not_quantum` | ✓ |
+| **Real-QM signature ruled out**: 2K ≠ N(N+1) for `|W|≥2` | `WantableGPT.lean :: wantableGPT_not_realQM` | ✓ |
+| **Quaternionic-QM signature ruled out**: K ≠ N(2N-1) for `|W|≥2` | `WantableGPT.lean :: wantableGPT_not_quaternionicQM` | ✓ |
 | WantableGPT product-composition dimension: `K(W₁ × W₂) = |W₁| · |W₂|` | `WantableGPT.lean :: finrank_V_prod_eq_mul` | ✓ |
 | WantableGPT sum-composition dimension: `K(W₁ ⊕ W₂) = |W₁| + |W₂|` | `WantableGPT.lean :: finrank_V_sum_eq_add` | ✓ |
 | Concrete classification `PTrans Bool = {1, boolSwap}` | `Examples.lean :: ptrans_bool_classification` | ✓ |
