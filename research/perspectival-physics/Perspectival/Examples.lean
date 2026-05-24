@@ -696,6 +696,10 @@ example (e : Existent Bool) : ∃ e' : Existent Bool, e'.want = Wantable.complem
 example (e : Existent ℤ) : ∃ e' : Existent ℤ, e'.want = Wantable.complement e.want :=
   ⟨⟨Wantable.complement e.want⟩, rfl⟩
 
+example {W : Type u} [Wantable W] (e : Existent W) :
+    ∃ e' : Existent W, e'.want = Wantable.complement e.want :=
+  ⟨⟨Wantable.complement e.want⟩, rfl⟩
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
