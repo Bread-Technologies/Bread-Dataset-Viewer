@@ -73,6 +73,21 @@ theorem Wantable.exists_complement {W : Type u} [Wantable W] (w : W) :
     ∃ v, Wantable.complement w = v :=
   ⟨Wantable.complement w, rfl⟩
 
+/-- Two wants are complementary iff one is the complement of the other. -/
+theorem Wantable.complement_eq_iff {W : Type u} [Wantable W] (a b : W) :
+    Wantable.complement a = b ↔ a = Wantable.complement b := by
+  constructor
+  · intro h
+    have : Wantable.complement b = Wantable.complement (Wantable.complement a) :=
+      congrArg Wantable.complement h.symm
+    rw [Wantable.complement_involutive] at this
+    exact this.symm
+  · intro h
+    have : Wantable.complement a = Wantable.complement (Wantable.complement b) :=
+      congrArg Wantable.complement h
+    rw [Wantable.complement_involutive] at this
+    exact this
+
 /-! ## Axiom III: reality is the structure of meetings
 
 A meeting is a pair of complementary wants. Reality is a collection
