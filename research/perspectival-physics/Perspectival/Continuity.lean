@@ -665,5 +665,37 @@ theorem continuous_state_preserving_path
   · intro t
     exact path.state_trajectory ρ₁ hρ₁ t
 
+/-! ### R6: identity StatePreservingPath -/
+
+/-- The constant identity path is a StatePreservingPath. -/
+def StatePreservingPath.id (G : GPT V) : StatePreservingPath G LinearMap.id LinearMap.id where
+  γ := fun _ => LinearMap.id
+  continuous := by
+    show Continuous (fun p : unitInterval × V => LinearMap.id p.2)
+    show Continuous (fun p : unitInterval × V => p.2)
+    exact continuous_snd
+  start := rfl
+  finish := rfl
+  preserves_states_along := fun _ ρ hρ => hρ
+
+/-- The reverse path (reading γ backwards). -/
+def StatePreservingPath.reverse {G : GPT V} {R₁ R₂ : V →ₗ[ℝ] V}
+    (p : StatePreservingPath G R₁ R₂) :
+    StatePreservingPath G R₂ R₁ where
+  γ := fun t => p.γ (unitInterval.symm t)
+  continuous := by
+    have h1 : Continuous (fun t : unitInterval => unitInterval.symm t) :=
+      unitInterval.continuous_symm
+    have h2 : Continuous (fun pair : unitInterval × V => (unitInterval.symm pair.1, pair.2)) :=
+      Continuous.prodMk (h1.comp continuous_fst) continuous_snd
+    exact p.continuous.comp h2
+  start := by
+    show p.γ (unitInterval.symm 0) = R₂
+    rw [unitInterval.symm_zero, p.finish]
+  finish := by
+    show p.γ (unitInterval.symm 1) = R₁
+    rw [unitInterval.symm_one, p.start]
+  preserves_states_along := fun t ρ hρ => p.preserves_states_along _ ρ hρ
+
 end Continuity
 end Perspectival
