@@ -236,5 +236,10 @@ example : Perspectival.Hardy.Distinguishable
     (Perspectival.WantableGPT.vertex Bool false) :=
   Perspectival.WantableGPT.vertices_distinguishable Bool true false (by decide)
 
+/-- The vertices of the boolean WantableGPT are linearly independent. -/
+example : LinearIndependent ℝ
+    (fun b : Bool => Perspectival.WantableGPT.vertex Bool b) :=
+  Perspectival.WantableGPT.vertex_linear_independent_of_fintype Bool
+
 end Examples
 end Perspectival
