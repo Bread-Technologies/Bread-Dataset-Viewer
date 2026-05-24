@@ -9,7 +9,7 @@ A summary of accomplishments from this development session.
   alone past 12,800 lines
 - **~900+ verified theorems / examples** (no `sorry` outside documented placeholders)
 - **14 documentation files** (~75 KB of structured exposition)
-- **1195+ commits** to the research branch
+- **1200+ commits** to the research branch (milestone reached)
 - **Classical.lean grew from 261 to ~1900 lines (+1640)** with the R6 work
 - **R6 generalization**: `classical_vertex_collision_implies_not_injective`
   and `classical_bijective_distinct_vertex_images` for any n.
