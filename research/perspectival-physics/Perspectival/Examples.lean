@@ -2542,6 +2542,18 @@ example : ∀ i : Fin 3, Wantable.complement (Wantable.complement i) = i :=
 example : ∀ n : ℤ, Wantable.complement (Wantable.complement n) = n :=
   Wantable.complement_involutive
 
+/-- The complement operation on ℝ (with neg-complement) is self-inverse. -/
+example : ∀ x : ℝ, Wantable.complement (Wantable.complement x) = x :=
+  Wantable.complement_involutive
+
+/-- A single Wantable Bool state has a trivial PerfectWitness. -/
+example : Perspectival.Distinguish.PerfectWitness
+            (G := Perspectival.WantableGPT.gpt Bool)
+            (fun _ : Fin 1 => Perspectival.WantableGPT.vertex Bool true) :=
+  Perspectival.Distinguish.perfectWitness_singleton
+    (Perspectival.WantableGPT.vertex Bool true)
+    (Perspectival.WantableGPT.vertex_in_states Bool true)
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
