@@ -13173,6 +13173,37 @@ example :
   show (if true = false then (1 : ℝ) else 0) * (if false = false then (1 : ℝ) else 0) = 0
   simp
 
+/-! ### Vertex-state probabilities -/
+
+/-- For Bool, vertex true sums to 1 (probability normalization). -/
+example : ∑ b, Perspectival.WantableGPT.vertex Bool true b = 1 := by
+  rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show (if true = true then (1 : ℝ) else 0)
+     + (if true = false then (1 : ℝ) else 0) = 1
+  simp
+
+/-- For Fin 3, vertex 1 sums to 1. -/
+example : ∑ j, Perspectival.WantableGPT.vertex (Fin 3) 1 j = 1 := by
+  rw [show (Finset.univ : Finset (Fin 3)) = {0, 1, 2} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_singleton]
+  show (if (1 : Fin 3) = 0 then (1 : ℝ) else 0)
+     + ((if (1 : Fin 3) = 1 then (1 : ℝ) else 0)
+     + (if (1 : Fin 3) = 2 then (1 : ℝ) else 0)) = 1
+  simp
+
+/-- For Fin 4, vertex 2 sums to 1. -/
+example : ∑ j, Perspectival.WantableGPT.vertex (Fin 4) 2 j = 1 := by
+  rw [show (Finset.univ : Finset (Fin 4)) = {0, 1, 2, 3} from by decide,
+      Finset.sum_insert (by decide), Finset.sum_insert (by decide),
+      Finset.sum_insert (by decide), Finset.sum_singleton]
+  show (if (2 : Fin 4) = 0 then (1 : ℝ) else 0)
+     + ((if (2 : Fin 4) = 1 then (1 : ℝ) else 0)
+     + ((if (2 : Fin 4) = 2 then (1 : ℝ) else 0)
+     + (if (2 : Fin 4) = 3 then (1 : ℝ) else 0))) = 1
+  simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
