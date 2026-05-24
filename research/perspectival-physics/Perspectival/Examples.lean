@@ -10165,3 +10165,21 @@ example : (PTrans.complement : PTrans (Bool × Bool)) ^ 2 = 1 := by
 example {W : Type u} [Wantable W] : (PTrans.complement : PTrans W) ^ 2 = 1 := by
   rw [pow_two]
   exact PTrans.complement_sq
+
+/-- PTrans.complement is its own inverse. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W)⁻¹ = PTrans.complement :=
+  PTrans.complement_inv
+
+/-- PTrans.complement * PTrans.complement = 1. -/
+example {W : Type u} [Wantable W] :
+    (PTrans.complement : PTrans W) * PTrans.complement = 1 :=
+  PTrans.complement_sq
+
+/-- The PTrans complement on Bool×Bool is its own inverse. -/
+example : (PTrans.complement : PTrans (Bool × Bool))⁻¹ = PTrans.complement :=
+  PTrans.complement_inv
+
+/-- The PTrans complement on Bool⊕Bool is its own inverse. -/
+example : (PTrans.complement : PTrans (Bool ⊕ Bool))⁻¹ = PTrans.complement :=
+  PTrans.complement_inv
