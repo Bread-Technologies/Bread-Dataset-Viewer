@@ -3395,6 +3395,14 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     n ≤ Module.finrank ℝ V :=
   Perspectival.Distinguish.operational_dim_le_state_dim ρ w
 
+/-- No oversized perfect distinguishability set. -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [Module.Finite ℝ V] {G : Perspectival.GPT V}
+    {n : ℕ} (h : n > Module.finrank ℝ V)
+    (ρ : Fin n → V)
+    (w : Perspectival.Distinguish.PerfectWitness (G := G) ρ) : False :=
+  Perspectival.Distinguish.no_oversized_perfect_distinguishability h ρ w
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
