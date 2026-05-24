@@ -192,6 +192,22 @@ example : (PTrans.complement : PTrans (Bool ⊕ Bool))
   intro p
   cases p <;> rfl
 
+/-- `Fin 3` with `complement := id` — every want is its own complement.
+The "self-meeting" Wantable: an odd-cardinality finite set forced to
+use identity-complement. -/
+instance : Wantable (Fin 3) where
+  complement := id
+  complement_involutive _ := rfl
+
+example : Wantable.complement (1 : Fin 3) = 1 := rfl
+
+/-- In a self-meeting Wantable, every meeting has both sides equal. -/
+example (m : Meeting (Fin 3)) : m.side₁ = m.side₂ := by
+  have := m.complementary
+  show m.side₁ = m.side₂
+  rw [← this]
+  rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
