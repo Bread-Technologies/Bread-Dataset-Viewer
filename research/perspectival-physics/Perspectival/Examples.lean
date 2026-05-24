@@ -800,6 +800,12 @@ example : (complementEquiv : Equiv.Perm (Fin 4)) * complementEquiv = 1 := by
   show Wantable.complement (Wantable.complement i) = i
   exact Wantable.complement_involutive i
 
+example : (complementEquiv : Equiv.Perm ℤ) * complementEquiv = 1 := by
+  apply Equiv.ext
+  intro n
+  show Wantable.complement (Wantable.complement n) = n
+  exact Wantable.complement_involutive n
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
