@@ -3323,6 +3323,19 @@ example : Perspectival.GPT.Transform (Perspectival.WantableGPT.gpt Bool)
 example : (Perspectival.WantableGPT.complementTransform Bool).toLin
         = Perspectival.WantableGPT.complementAction Bool := rfl
 
+/-- complementTransform preserves the unit. -/
+example : (Perspectival.WantableGPT.gpt Bool).unit.comp
+            (Perspectival.WantableGPT.complementTransform Bool).toLin
+        = (Perspectival.WantableGPT.gpt Bool).unit :=
+  (Perspectival.WantableGPT.complementTransform Bool).preserves_unit
+
+/-- complementTransform preserves states. -/
+example (ρ : Perspectival.WantableGPT.V Bool)
+    (hρ : ρ ∈ (Perspectival.WantableGPT.gpt Bool).states) :
+    (Perspectival.WantableGPT.complementTransform Bool).toLin ρ
+      ∈ (Perspectival.WantableGPT.gpt Bool).states :=
+  (Perspectival.WantableGPT.complementTransform Bool).preserves_states ρ hρ
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
