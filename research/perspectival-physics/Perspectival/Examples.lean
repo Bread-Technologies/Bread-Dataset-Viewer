@@ -12948,3 +12948,11 @@ example : ∃ φ₁ φ₂ : PTrans Bool, φ₁ ≠ φ₂ :=
             = (PTrans.complement : PTrans Bool).toFun true := by
       rw [h]
     exact absurd h2 (by decide)⟩
+
+/-- complement and identity differ at the Bool element `true`. -/
+example : (1 : PTrans Bool).toFun true ≠ (PTrans.complement : PTrans Bool).toFun true := by
+  decide
+
+/-- complement and identity differ at the Bool element `false`. -/
+example : (1 : PTrans Bool).toFun false ≠ (PTrans.complement : PTrans Bool).toFun false := by
+  decide
