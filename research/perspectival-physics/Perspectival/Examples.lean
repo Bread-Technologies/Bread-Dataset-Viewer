@@ -9265,3 +9265,33 @@ example : Module.finrank ℝ (Perspectival.Classical.V 2) = 2 := by
 example : Module.finrank ℝ (Perspectival.Classical.V 3) = 3 := by
   show Module.finrank ℝ (Fin 3 → ℝ) = 3
   simp
+
+/-- Concrete: classical N-outcome GPT has dim N. -/
+example (n : ℕ) : Module.finrank ℝ (Perspectival.Classical.V n) = n := by
+  show Module.finrank ℝ (Fin n → ℝ) = n
+  simp
+
+/-- GPT.unit is the same as the WantableGPT.unitFn at the structure level. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.gpt W).unit = Perspectival.WantableGPT.unitFn W :=
+  rfl
+
+/-- GPT.states is the same as the WantableGPT.states. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+    (Perspectival.WantableGPT.gpt W).states = Perspectival.WantableGPT.states W :=
+  rfl
+
+/-- GPT.unit on Classical.gpt is Classical.unitFn. -/
+example (n : ℕ) :
+    (Perspectival.Classical.gpt n).unit = Perspectival.Classical.unitFn n :=
+  rfl
+
+/-- GPT.states on Classical.gpt is Classical.states. -/
+example (n : ℕ) :
+    (Perspectival.Classical.gpt n).states = Perspectival.Classical.states n :=
+  rfl
+
+/-- GPT.effects on Classical.gpt is Classical.effects. -/
+example (n : ℕ) :
+    (Perspectival.Classical.gpt n).effects = Perspectival.Classical.effects n :=
+  rfl
