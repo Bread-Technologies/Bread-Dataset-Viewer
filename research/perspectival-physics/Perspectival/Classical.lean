@@ -520,5 +520,42 @@ theorem swapLin_bijective : Function.Bijective swapLin := by
   · intro v
     exact ⟨swapLin v, swapLin_swapLin v⟩
 
+/-- swapLin is continuous (finite-dimensional linear map). -/
+theorem swapLin_continuous : Continuous swapLin := by
+  -- A linear map on Pi-spaces of ℝ is continuous when each
+  -- coordinate map is. swapLin v j = v (1 - j), which is continuous in v.
+  apply continuous_pi
+  intro j
+  -- coord j of swapLin v is v (1 - j); this is continuous in v
+  exact continuous_apply (1 - j)
+
+/-- swapLin as a Reversible. -/
+def swapReversible : Perspectival.Continuity.Reversible (gpt 2) where
+  toLin := swapLin
+  continuous_toLin := swapLin_continuous
+  preserves_states := swapLin_preserves_states
+  preserves_unit := swapLin_preserves_unit
+
+/-- swapLin as a StrictReversible. -/
+def swapStrictReversible : Perspectival.Continuity.StrictReversible (gpt 2) where
+  toReversible := swapReversible
+  isEquiv := swapLin_bijective
+
+/-- swapReversible and Reversible.id are distinct (different toLin). -/
+theorem swapReversible_ne_id :
+    swapReversible.toLin ≠ (Perspectival.Continuity.Reversible.id (gpt 2)).toLin := by
+  intro h
+  have h2 : swapReversible.toLin (vertex 2 0)
+          = (Perspectival.Continuity.Reversible.id (gpt 2)).toLin (vertex 2 0) := by
+    rw [h]
+  rw [show swapReversible.toLin (vertex 2 0) = swapLin (vertex 2 0) from rfl] at h2
+  rw [swapLin_vertex_zero] at h2
+  rw [show (Perspectival.Continuity.Reversible.id (gpt 2)).toLin (vertex 2 0)
+          = vertex 2 0 from rfl] at h2
+  -- h2 : vertex 2 1 = vertex 2 0
+  have h3 : vertex 2 1 0 = vertex 2 0 0 := congr_fun h2 0
+  rw [(vertex_n2_one_coords).1, (vertex_n2_zero_coords).1] at h3
+  norm_num at h3
+
 end Classical
 end Perspectival
