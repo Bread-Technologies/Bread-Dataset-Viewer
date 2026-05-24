@@ -2318,6 +2318,15 @@ example (f : PTrans Bool) : f * f = (1 : PTrans Bool) := by
     intro b
     cases b <;> rfl
 
+/-- Similarly, PTrans (Fin 2) is cyclic of order 2. -/
+example (f : PTrans (Fin 2)) : f * f = (1 : PTrans (Fin 2)) := by
+  rcases ptrans_fin2_classification f with h | h
+  · rw [h]; exact one_mul _
+  · rw [h]
+    apply PTrans.ext
+    intro i
+    fin_cases i <;> rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
