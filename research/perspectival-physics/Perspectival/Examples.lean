@@ -475,6 +475,11 @@ example {W : Type u} [Wantable W] (w : W) :
     show w = Wantable.complement w
     exact h.symm
 
+/-- On Unit, every meeting is a self-meeting (complement = id). -/
+example (m : Meeting Unit) : m.side₁ = m.side₂ := by
+  have := m.complementary
+  exact this.symm  -- complement m.side₁ = m.side₂, i.e. m.side₁ = m.side₂ since complement = id
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
