@@ -1285,5 +1285,49 @@ For now, recording the structural prediction without a separate
 Lean theorem (since the n=2 case already established the
 framework's R6 framework-distinctive content). -/
 
+/-! ## Explicit witness: the n=2 swap-then-state-of-affairs -/
+
+/-- For Classical n=2, the IVT path from id to swap *applied to a state*
+gives a state-path that passes through the maximally-mixed n2_midpoint
+at t = 1/2 -- but this is a feature, not a bug, of state-preserving
+linear maps. The bug is the LOSS of bijectivity. -/
+example :
+    n2_affinePath ⟨1/2, by norm_num⟩ (vertex 2 0) = n2_midpoint := by
+  show n2_perturbedIdLin (1/2 : ℝ) (vertex 2 0) = n2_midpoint
+  funext j
+  show ((1 - 1/2 : ℝ) • LinearMap.id (vertex 2 0)
+       + (1/2 : ℝ) • swapLin (vertex 2 0)) j
+     = n2_midpoint j
+  show (1 - 1/2 : ℝ) * vertex 2 0 j + (1/2 : ℝ) * swapLin (vertex 2 0) j
+     = (1/2 : ℝ)
+  rw [swapLin_vertex_zero]
+  fin_cases j
+  · show (1 - 1/2 : ℝ) * vertex 2 0 0 + (1/2 : ℝ) * vertex 2 1 0 = 1/2
+    rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1]
+    norm_num
+  · show (1 - 1/2 : ℝ) * vertex 2 0 1 + (1/2 : ℝ) * vertex 2 1 1 = 1/2
+    rw [(vertex_n2_zero_coords).2, (vertex_n2_one_coords).2]
+    norm_num
+
+/-- The same conclusion via the linearity of n2_perturbedIdLin (1/2):
+the maximally-mixed midpoint is the image of EVERY vertex. -/
+example :
+    n2_affinePath ⟨1/2, by norm_num⟩ (vertex 2 1) = n2_midpoint := by
+  show n2_perturbedIdLin (1/2 : ℝ) (vertex 2 1) = n2_midpoint
+  funext j
+  show ((1 - 1/2 : ℝ) • LinearMap.id (vertex 2 1)
+       + (1/2 : ℝ) • swapLin (vertex 2 1)) j
+     = n2_midpoint j
+  show (1 - 1/2 : ℝ) * vertex 2 1 j + (1/2 : ℝ) * swapLin (vertex 2 1) j
+     = (1/2 : ℝ)
+  rw [swapLin_vertex_one]
+  fin_cases j
+  · show (1 - 1/2 : ℝ) * vertex 2 1 0 + (1/2 : ℝ) * vertex 2 0 0 = 1/2
+    rw [(vertex_n2_one_coords).1, (vertex_n2_zero_coords).1]
+    norm_num
+  · show (1 - 1/2 : ℝ) * vertex 2 1 1 + (1/2 : ℝ) * vertex 2 0 1 = 1/2
+    rw [(vertex_n2_one_coords).2, (vertex_n2_zero_coords).2]
+    norm_num
+
 end Classical
 end Perspectival
