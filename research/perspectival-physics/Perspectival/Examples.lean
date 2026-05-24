@@ -718,6 +718,13 @@ example {W : Type u} [Wantable W] (e₁ e₂ : Existent W)
     (h : e₂.want = Wantable.complement e₁.want) :
     Meeting W := ⟨e₁.want, e₂.want, h.symm⟩
 
+/-- Quine–Rovelli parallel demonstrated: complementing the Wantable
+on ℤ gives a non-trivial 'reframing' that preserves no fixed point
+(except 0) — semantically inscrutable reference, physically
+non-commuting observable. -/
+example : Wantable.complement (Wantable.complement (7 : ℤ)) = 7 :=
+  Wantable.complement_involutive 7
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
