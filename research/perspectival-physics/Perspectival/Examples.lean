@@ -2707,6 +2707,16 @@ example : (Perspectival.WantableGPT.perfectWitness Bool).e true
             (Perspectival.WantableGPT.vertex Bool false) = 0 :=
   (Perspectival.WantableGPT.perfectWitness Bool).offdiag (by decide)
 
+/-- PerfectWitness.diag for Classical 3-outcome. -/
+example (i : Fin 3) : (Perspectival.Classical.perfectWitness 3).e i
+                       (Perspectival.Classical.vertex 3 i) = 1 :=
+  (Perspectival.Classical.perfectWitness 3).diag i
+
+/-- PerfectWitness.diag for Classical 5-outcome. -/
+example (i : Fin 5) : (Perspectival.Classical.perfectWitness 5).e i
+                       (Perspectival.Classical.vertex 5 i) = 1 :=
+  (Perspectival.Classical.perfectWitness 5).diag i
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
