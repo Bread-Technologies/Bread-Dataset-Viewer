@@ -13204,6 +13204,44 @@ example : ∑ j, Perspectival.WantableGPT.vertex (Fin 4) 2 j = 1 := by
      + (if (2 : Fin 4) = 3 then (1 : ℝ) else 0))) = 1
   simp
 
+/-! ### Bool vertex / uniformBool relationships -/
+
+/-- uniformBool = (1/2) • vertex true + (1/2) • vertex false (pointwise). -/
+example : uniformBool true =
+    (1/2 : ℝ) * Perspectival.WantableGPT.vertex Bool true true
+    + (1/2 : ℝ) * Perspectival.WantableGPT.vertex Bool false true := by
+  show (1/2 : ℝ) = (1/2 : ℝ) * (if true = true then (1 : ℝ) else 0)
+                 + (1/2 : ℝ) * (if false = true then (1 : ℝ) else 0)
+  simp
+
+/-- uniformBool is a convex combination of the two vertices. -/
+example :
+    uniformBool = (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool true
+                + (1/2 : ℝ) • Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  cases b with
+  | true =>
+    show (1/2 : ℝ) = (1/2 : ℝ) * (if true = true then (1 : ℝ) else 0)
+                   + (1/2 : ℝ) * (if false = true then (1 : ℝ) else 0)
+    simp
+  | false =>
+    show (1/2 : ℝ) = (1/2 : ℝ) * (if true = false then (1 : ℝ) else 0)
+                   + (1/2 : ℝ) * (if false = false then (1 : ℝ) else 0)
+    simp
+
+/-- Sum of all states in Bool stdSimplex (vertex + vertex) = unit. -/
+example :
+    Perspectival.WantableGPT.vertex Bool true
+    + Perspectival.WantableGPT.vertex Bool false = (fun _ => (1 : ℝ)) := by
+  funext b
+  cases b with
+  | true =>
+    show (if true = true then (1 : ℝ) else 0) + (if false = true then (1 : ℝ) else 0) = 1
+    simp
+  | false =>
+    show (if true = false then (1 : ℝ) else 0) + (if false = false then (1 : ℝ) else 0) = 1
+    simp
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
