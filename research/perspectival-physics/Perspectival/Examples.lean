@@ -2977,6 +2977,12 @@ example : ∃ φ : PTrans Bool, PTrans.toEquivPermHom φ
   apply (PTrans.mem_range_toEquivPermHom_iff _).mpr
   intro b; cases b <;> rfl
 
+/-- The identity permutation always lifts to the identity PTrans. -/
+example {W : Type u} [Wantable W] :
+    ∃ φ : PTrans W, PTrans.toEquivPermHom φ = Equiv.refl W := by
+  apply (PTrans.mem_range_toEquivPermHom_iff _).mpr
+  intro _; rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
