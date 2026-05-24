@@ -9867,3 +9867,29 @@ example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
   constructor
   · intro h; rcases h with h | ⟨h, _⟩ <;> exact h
   · intro h; exact Or.inl h
+
+/-- Pattern.and is commutative. -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
+    Pattern.and P Q R ↔ Pattern.and Q P R :=
+  And.comm
+
+/-- Pattern.or is commutative. -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
+    Pattern.or P Q R ↔ Pattern.or Q P R :=
+  Or.comm
+
+/-- Pattern.and is associative (logically). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.and (Pattern.and P Q) R r ↔ Pattern.and P (Pattern.and Q R) r :=
+  and_assoc
+
+/-- Pattern.or is associative (logically). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.or (Pattern.or P Q) R r ↔ Pattern.or P (Pattern.or Q R) r :=
+  or_assoc
+
+/-- Pattern.and distributes over Pattern.or (left). -/
+example {W : Type u} [Wantable W] (P Q R : Pattern W) (r : Reality W) :
+    Pattern.and P (Pattern.or Q R) r ↔
+    Pattern.or (Pattern.and P Q) (Pattern.and P R) r :=
+  and_or_left
