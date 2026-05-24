@@ -2390,6 +2390,14 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Fin 3)) = 6 :=
 example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3)) = 5 := by
   rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
 
+/-- WantableGPT (Fin 4 × Bool) has finrank 8. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 4 × Bool)) = 8 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
+/-- WantableGPT (Fin 3 × Fin 3) has finrank 9. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3 × Fin 3)) = 9 := by
+  rw [Perspectival.WantableGPT.finrank_V_eq_card]; decide
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
