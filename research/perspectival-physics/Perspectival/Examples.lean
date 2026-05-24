@@ -2796,6 +2796,22 @@ example {W : Type u} [Wantable W] (P : Pattern W) (R : Reality W) :
   show ¬ ¬ P R ↔ P R
   exact ⟨Classical.not_not.mp, Classical.not_not.mpr⟩
 
+/-- A Pattern can be lifted from a single Meeting via its singleton reality. -/
+def patternOfMeeting {W : Type u} [Wantable W] (m : Meeting W) : Pattern W :=
+  singletonPattern (fun m' => m' = m)
+
+/-- The pattern for trueMeetsFalse is satisfied by the singleton reality
+{trueMeetsFalse}. -/
+example : (patternOfMeeting trueMeetsFalse)
+            (fun m' => m' = trueMeetsFalse) := rfl
+
+/-- DeMorgan-style relationship: complementPattern of (P ∧ Q) ↔ (¬P ∨ ¬Q). -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
+    complementPattern (Pattern.and P Q) R ↔
+    Pattern.or (complementPattern P) (complementPattern Q) R := by
+  show ¬ (P R ∧ Q R) ↔ (¬ P R) ∨ (¬ Q R)
+  tauto
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
