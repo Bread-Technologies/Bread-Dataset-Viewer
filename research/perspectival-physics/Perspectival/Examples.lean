@@ -263,6 +263,12 @@ example (f : PTrans Unit) : f = 1 := by
   -- f.toFun () = () (only one possible value for Unit)
   rfl
 
+/-- The PTrans group on Empty is also trivial (vacuously: no elements). -/
+example (f : PTrans Empty) : f = 1 := by
+  apply PTrans.ext
+  intro e
+  exact e.elim
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
