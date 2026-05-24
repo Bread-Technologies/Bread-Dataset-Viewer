@@ -967,6 +967,12 @@ example : (complementEquiv : Equiv.Perm (Fin 3)) ^ 2 = 1 := by
 -- complementEquiv ^ 2 on Bool × Bool — proof omitted (cases p; rfl fails
 -- due to how product Wantable's complement is set up).
 
+example : (complementEquiv : Equiv.Perm (Bool × Bool)) ^ 2 = 1 := by
+  apply Equiv.ext
+  intro p
+  show Wantable.complement (Wantable.complement p) = p
+  exact Wantable.complement_involutive p
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
