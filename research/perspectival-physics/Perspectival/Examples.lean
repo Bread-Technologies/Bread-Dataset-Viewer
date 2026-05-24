@@ -5093,5 +5093,29 @@ example {W : Type u} [Wantable W] (h g f : PTrans W) :
     PTrans.comp (PTrans.comp h g) f = PTrans.comp h (PTrans.comp g f) :=
   PTrans.comp_assoc h g f
 
+/-- `NoBroadcasting.classicalBroadcaster_vertex`: the classical
+broadcaster sends each vertex to its diagonal tensor. -/
+example (n : ℕ) (i : Fin n) :
+    Perspectival.NoBroadcasting.classicalBroadcaster n
+        (Perspectival.Classical.vertex n i)
+      = Perspectival.Classical.vertex n i
+          ⊗ₜ[ℝ] Perspectival.Classical.vertex n i :=
+  Perspectival.NoBroadcasting.classicalBroadcaster_vertex n i
+
+/-- `NoBroadcasting.basisFun_eq_vertex`: the standard basis vector
+equals the classical vertex. -/
+example (n : ℕ) (i : Fin n) :
+    (Pi.basisFun ℝ (Fin n)) i = Perspectival.Classical.vertex n i :=
+  Perspectival.NoBroadcasting.basisFun_eq_vertex n i
+
+/-- `NoBroadcasting.classicalBroadcaster_basisFun`: action on standard
+basis vectors of `Fin n → ℝ`. -/
+example (n : ℕ) (i : Fin n) :
+    Perspectival.NoBroadcasting.classicalBroadcaster n
+        ((Pi.basisFun ℝ (Fin n)) i)
+      = Perspectival.Classical.vertex n i
+          ⊗ₜ[ℝ] Perspectival.Classical.vertex n i :=
+  Perspectival.NoBroadcasting.classicalBroadcaster_basisFun n i
+
 end Examples
 end Perspectival
