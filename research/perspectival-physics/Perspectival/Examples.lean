@@ -510,6 +510,13 @@ example : Wantable.complement (5 : ℤ) = -5 := rfl
 /-- ℤ-meetings: -7 and 7 are complementary. -/
 example : Wantable.complement (-7 : ℤ) = 7 := by show -(-7 : ℤ) = 7; ring
 
+/-- ℤ-meetings: 1000 and -1000. -/
+example : Wantable.complement (1000 : ℤ) = -1000 := rfl
+
+/-- ℤ self-inverse: complement of complement is identity. -/
+example (n : ℤ) : Wantable.complement (Wantable.complement n) = n :=
+  Wantable.complement_involutive n
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
