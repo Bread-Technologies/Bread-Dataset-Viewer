@@ -10,4 +10,5 @@ import Perspectival.NoBroadcasting
 import Perspectival.Classical
 import Perspectival.Continuity
 import Perspectival.Distinguish
+import Perspectival.WantableGPT
 import Perspectival.Examples
