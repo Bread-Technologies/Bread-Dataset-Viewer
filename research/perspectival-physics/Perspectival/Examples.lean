@@ -12570,3 +12570,48 @@ example :
      + (if (3 : Fin 4) = i then (1 : ℝ) else 0)
      = 1
   fin_cases i <;> simp
+
+/-! ### deltaIndicator on vertex states is the Kronecker delta -/
+
+/-- For any w v: deltaIndicatorLin w (vertex v) = (Kronecker δ_{w,v}). -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w v : W) :
+    deltaIndicatorLin w (Perspectival.WantableGPT.vertex W v)
+      = (if v = w then (1 : ℝ) else 0) := by
+  rw [deltaIndicatorLin_eq_apply]
+  show Perspectival.WantableGPT.vertex W v w = (if v = w then (1 : ℝ) else 0)
+  show (if v = w then (1 : ℝ) else 0) = (if v = w then (1 : ℝ) else 0)
+  rfl
+
+/-- Convex-combination interpretation: every Bool state is a 1-parameter
+combination of vertex true and vertex false. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) :
+    f = (f true) • Perspectival.WantableGPT.vertex Bool true
+      + (f false) • Perspectival.WantableGPT.vertex Bool false := by
+  funext b
+  cases b with
+  | true =>
+    show f true = (f true) * (if true = true then (1 : ℝ) else 0)
+                + (f false) * (if false = true then (1 : ℝ) else 0)
+    simp
+  | false =>
+    show f false = (f true) * (if true = false then (1 : ℝ) else 0)
+                 + (f false) * (if false = false then (1 : ℝ) else 0)
+    simp
+
+/-- Born rule on Bool states is just `f w`. -/
+example (f : Perspectival.WantableGPT.V Bool) (w : Bool) :
+    Perspectival.WantableGPT.innerLin Bool (deltaIndicator w) f = f w :=
+  deltaIndicatorLin_eq_apply w f
+
+/-- For Bool states, the two delta-effects are complementary effects. -/
+example (f : Perspectival.WantableGPT.V Bool)
+    (hf : f ∈ Perspectival.WantableGPT.states Bool) :
+    deltaIndicatorLin true f + deltaIndicatorLin false f = 1 := by
+  rw [deltaIndicatorLin_eq_apply, deltaIndicatorLin_eq_apply]
+  have h := hf.2
+  show f true + f false = 1
+  rw [show f true + f false = ∑ b, f b from by
+    rw [show (Finset.univ : Finset Bool) = {true, false} from by decide,
+        Finset.sum_insert (by decide), Finset.sum_singleton]]
+  exact h
