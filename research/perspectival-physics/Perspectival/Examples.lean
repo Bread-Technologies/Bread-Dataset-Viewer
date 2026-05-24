@@ -13584,6 +13584,54 @@ example : deltaIndicatorLin (true, false) antiDiagonalState = (1/2 : ℝ) := by
   rw [deltaIndicatorLin_eq_apply]
   rfl
 
+/-! ### Born rule on diagonalState gives 1/2 at all four points -/
+
+/-- diagonalState at (true, true): 1/2. -/
+example : deltaIndicatorLin (true, true) diagonalState = (1/2 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]; rfl
+
+/-- diagonalState at (false, false): 1/2. -/
+example : deltaIndicatorLin (false, false) diagonalState = (1/2 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]; rfl
+
+/-- diagonalState at (false, true): 0. -/
+example : deltaIndicatorLin (false, true) diagonalState = 0 := by
+  rw [deltaIndicatorLin_eq_apply]; rfl
+
+/-- antiDiagonalState at (false, true): 1/2. -/
+example : deltaIndicatorLin (false, true) antiDiagonalState = (1/2 : ℝ) := by
+  rw [deltaIndicatorLin_eq_apply]; rfl
+
+/-- antiDiagonalState at (false, false): 0. -/
+example : deltaIndicatorLin (false, false) antiDiagonalState = 0 := by
+  rw [deltaIndicatorLin_eq_apply]; rfl
+
+/-- Sum of 4 delta probabilities on diagonalState = 1. -/
+example :
+    deltaIndicatorLin (true, true) diagonalState
+    + deltaIndicatorLin (true, false) diagonalState
+    + deltaIndicatorLin (false, true) diagonalState
+    + deltaIndicatorLin (false, false) diagonalState = 1 := by
+  rw [deltaIndicatorLin_eq_apply, deltaIndicatorLin_eq_apply,
+      deltaIndicatorLin_eq_apply, deltaIndicatorLin_eq_apply]
+  show diagonalState (true, true) + diagonalState (true, false)
+     + diagonalState (false, true) + diagonalState (false, false) = 1
+  show (1/2 : ℝ) + 0 + 0 + 1/2 = 1
+  norm_num
+
+/-- Sum of 4 delta probabilities on antiDiagonalState = 1. -/
+example :
+    deltaIndicatorLin (true, true) antiDiagonalState
+    + deltaIndicatorLin (true, false) antiDiagonalState
+    + deltaIndicatorLin (false, true) antiDiagonalState
+    + deltaIndicatorLin (false, false) antiDiagonalState = 1 := by
+  rw [deltaIndicatorLin_eq_apply, deltaIndicatorLin_eq_apply,
+      deltaIndicatorLin_eq_apply, deltaIndicatorLin_eq_apply]
+  show antiDiagonalState (true, true) + antiDiagonalState (true, false)
+     + antiDiagonalState (false, true) + antiDiagonalState (false, false) = 1
+  show (0 : ℝ) + 1/2 + 1/2 + 0 = 1
+  norm_num
+
 /-- For any state on Bool, the two probabilities are in [0,1]. -/
 example (f : Perspectival.WantableGPT.V Bool)
     (hf : f ∈ Perspectival.WantableGPT.states Bool) (b : Bool) :
