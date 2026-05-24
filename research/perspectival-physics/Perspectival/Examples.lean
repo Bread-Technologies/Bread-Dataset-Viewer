@@ -3251,6 +3251,19 @@ example : (Perspectival.WantableGPT.proj Bool false)
 
 -- (Sum-of-probabilities example over Bool deferred — Finset.sum_eq_add syntax fiddly.)
 
+/-- The unit functional of WantableGPT applied to a vertex gives 1. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] (w : W) :
+    (Perspectival.WantableGPT.gpt W).unit
+      (Perspectival.WantableGPT.vertex W w) = 1 :=
+  (Perspectival.WantableGPT.gpt W).states_normalized _
+    (Perspectival.WantableGPT.vertex_in_states W w)
+
+/-- Concrete: unit (vertex (Fin 3) 2) = 1. -/
+example : (Perspectival.WantableGPT.gpt (Fin 3)).unit
+            (Perspectival.WantableGPT.vertex (Fin 3) 2) = 1 :=
+  (Perspectival.WantableGPT.gpt (Fin 3)).states_normalized _
+    (Perspectival.WantableGPT.vertex_in_states (Fin 3) 2)
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
