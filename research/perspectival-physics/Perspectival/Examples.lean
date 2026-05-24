@@ -2495,6 +2495,24 @@ example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
     (e : WantableEquiv W₁ W₂) :
     PTrans W₁ →* PTrans W₂ := e.mapPTransHom
 
+/-- The reflexive WantableEquiv induces the identity MulEquiv. -/
+example {W : Type u} [Wantable W] (φ : PTrans W) :
+    (WantableEquiv.refl W).mapPTransMulEquiv φ = φ := by
+  apply PTrans.ext
+  intro w
+  rfl
+
+/-- Concrete: boolEquivFin2.symm.mapPTransMulEquiv inverts boolEquivFin2.mapPTransMulEquiv. -/
+example (φ : PTrans Bool) :
+    boolEquivFin2.symm.mapPTransMulEquiv (boolEquivFin2.mapPTransMulEquiv φ) = φ := by
+  apply PTrans.ext
+  intro b
+  show (boolEquivFin2.toEquiv).symm
+        ((boolEquivFin2.toEquiv) (φ.toFun
+          ((boolEquivFin2.toEquiv).symm ((boolEquivFin2.toEquiv) b)))) = φ.toFun b
+  rw [(boolEquivFin2.toEquiv).symm_apply_apply,
+      (boolEquivFin2.toEquiv).symm_apply_apply]
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
