@@ -9183,3 +9183,27 @@ example : Fintype.card (Fin 4 ⊕ Bool) = 6 ∧
   refine ⟨by decide, ?_⟩
   rw [Perspectival.WantableGPT.finrank_V_eq_card]
   decide
+
+/-- productState of vertex true and vertex true = vertex (true, true) on Bool × Bool. -/
+example : productState (Perspectival.WantableGPT.vertex Bool true)
+                       (Perspectival.WantableGPT.vertex Bool true)
+        = Perspectival.WantableGPT.vertex (Bool × Bool) (true, true) :=
+  productState_vertex true true
+
+/-- productState of vertex true and vertex false = vertex (true, false). -/
+example : productState (Perspectival.WantableGPT.vertex Bool true)
+                       (Perspectival.WantableGPT.vertex Bool false)
+        = Perspectival.WantableGPT.vertex (Bool × Bool) (true, false) :=
+  productState_vertex true false
+
+/-- productState of vertex false and vertex true = vertex (false, true). -/
+example : productState (Perspectival.WantableGPT.vertex Bool false)
+                       (Perspectival.WantableGPT.vertex Bool true)
+        = Perspectival.WantableGPT.vertex (Bool × Bool) (false, true) :=
+  productState_vertex false true
+
+/-- productState of vertex false and vertex false = vertex (false, false). -/
+example : productState (Perspectival.WantableGPT.vertex Bool false)
+                       (Perspectival.WantableGPT.vertex Bool false)
+        = Perspectival.WantableGPT.vertex (Bool × Bool) (false, false) :=
+  productState_vertex false false
