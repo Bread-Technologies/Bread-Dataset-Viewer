@@ -7006,5 +7006,55 @@ example :
       Perspectival.WantableGPT.complementAction_vertex]
   rfl
 
+/-- New: productState is left-homogeneous: scaling f₁ by c scales the
+product by c. -/
+theorem productState_smul_left
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (c : ℝ) (f₁ : Perspectival.WantableGPT.V W₁)
+    (f₂ : Perspectival.WantableGPT.V W₂) :
+    productState (c • f₁) f₂ = c • productState f₁ f₂ := by
+  funext p
+  show (c • f₁) p.1 * f₂ p.2 = c • (productState f₁ f₂ p)
+  show c * f₁ p.1 * f₂ p.2 = c * (f₁ p.1 * f₂ p.2)
+  ring
+
+/-- New: productState is right-homogeneous: scaling f₂ by c scales the
+product by c. -/
+theorem productState_smul_right
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (c : ℝ) (f₁ : Perspectival.WantableGPT.V W₁)
+    (f₂ : Perspectival.WantableGPT.V W₂) :
+    productState f₁ (c • f₂) = c • productState f₁ f₂ := by
+  funext p
+  show f₁ p.1 * (c • f₂) p.2 = c • (productState f₁ f₂ p)
+  show f₁ p.1 * (c * f₂ p.2) = c * (f₁ p.1 * f₂ p.2)
+  ring
+
+/-- New: productState is left-additive in the first factor. -/
+theorem productState_add_left
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ f₁' : Perspectival.WantableGPT.V W₁)
+    (f₂ : Perspectival.WantableGPT.V W₂) :
+    productState (f₁ + f₁') f₂ = productState f₁ f₂ + productState f₁' f₂ := by
+  funext p
+  show (f₁ + f₁') p.1 * f₂ p.2 = productState f₁ f₂ p + productState f₁' f₂ p
+  show (f₁ p.1 + f₁' p.1) * f₂ p.2 = f₁ p.1 * f₂ p.2 + f₁' p.1 * f₂ p.2
+  ring
+
+/-- New: productState is right-additive in the second factor. -/
+theorem productState_add_right
+    {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f₁ : Perspectival.WantableGPT.V W₁)
+    (f₂ f₂' : Perspectival.WantableGPT.V W₂) :
+    productState f₁ (f₂ + f₂') = productState f₁ f₂ + productState f₁ f₂' := by
+  funext p
+  show f₁ p.1 * (f₂ + f₂') p.2 = productState f₁ f₂ p + productState f₁ f₂' p
+  show f₁ p.1 * (f₂ p.2 + f₂' p.2) = f₁ p.1 * f₂ p.2 + f₁ p.1 * f₂' p.2
+  ring
+
 end Examples
 end Perspectival
