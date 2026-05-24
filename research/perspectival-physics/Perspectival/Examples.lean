@@ -8036,3 +8036,27 @@ example : uniformBool ∈ Submodule.span ℝ
 example : diagonalState ∈ Submodule.span ℝ
             (Set.range (Perspectival.WantableGPT.vertex (Bool × Bool))) :=
   WantableGPT_states_in_vertex_span diagonalState
+
+/-- New: uniformBool is preserved by fromPTrans of any PTrans. -/
+theorem fromPTrans_uniformBool_invariant (φ : PTrans Bool) :
+    (Perspectival.WantableGPT.fromPTrans Bool φ).toLin uniformBool = uniformBool := by
+  funext b
+  show uniformBool (φ.invFun b) = uniformBool b
+  rfl
+
+/-- New: complementTransform on uniformBool is uniformBool. -/
+example : (Perspectival.WantableGPT.complementTransform Bool).toLin uniformBool
+        = uniformBool := by
+  rw [Perspectival.WantableGPT.complementTransform_eq_fromPTrans_full]
+  exact fromPTrans_uniformBool_invariant _
+
+/-- New: the uniform state is the "maximally mixed" state on any
+finite Wantable — it's invariant under the PTrans-fromPTrans bridge. -/
+theorem fromPTrans_uniformState_invariant
+    {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] [Nonempty W]
+    (φ : PTrans W) :
+    (Perspectival.WantableGPT.fromPTrans W φ).toLin (uniformState W)
+      = uniformState W := by
+  funext w
+  show uniformState W (φ.invFun w) = uniformState W w
+  rfl
