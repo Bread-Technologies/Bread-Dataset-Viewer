@@ -11307,14 +11307,28 @@ example : ([(PTrans.complement : PTrans Bool),
 group of order 2 - both ⟨id, complement⟩ commute trivially). -/
 example (φ : PTrans Bool) : (PTrans.complement : PTrans Bool) * φ
                           = φ * PTrans.complement := by
-  -- For Bool, PTrans Bool has 2 elements: id and complement.
-  -- These commute trivially since one is the identity.
-  -- The general theorem PTrans.toEquivPerm_commutes_complement says:
-  --   toEquivPerm φ * complement_equiv = complement_equiv * toEquivPerm φ
-  -- which in this 2-element abelian case means actual commutativity.
-  -- This uses the injection of toEquivPermHom.
   apply PTrans.toEquivPermHom_injective
   show PTrans.toEquivPerm (PTrans.complement * φ)
      = PTrans.toEquivPerm (φ * PTrans.complement)
   rw [PTrans.toEquivPerm_mul, PTrans.toEquivPerm_mul]
   exact (PTrans.toEquivPerm_commutes_complement φ).symm
+
+/-- Generic complement-centralizer for any Wantable type: complement
+commutes with every PTrans. -/
+theorem PTrans_complement_central {W : Type u} [Wantable W] (φ : PTrans W) :
+    (PTrans.complement : PTrans W) * φ = φ * PTrans.complement := by
+  apply PTrans.toEquivPermHom_injective
+  show PTrans.toEquivPerm (PTrans.complement * φ)
+     = PTrans.toEquivPerm (φ * PTrans.complement)
+  rw [PTrans.toEquivPerm_mul, PTrans.toEquivPerm_mul]
+  exact (PTrans.toEquivPerm_commutes_complement φ).symm
+
+/-- Concrete: complement_central on Fin 4. -/
+example (φ : PTrans (Fin 4)) :
+    (PTrans.complement : PTrans (Fin 4)) * φ = φ * PTrans.complement :=
+  PTrans_complement_central φ
+
+/-- Concrete: complement_central on Bool × Bool. -/
+example (φ : PTrans (Bool × Bool)) :
+    (PTrans.complement : PTrans (Bool × Bool)) * φ = φ * PTrans.complement :=
+  PTrans_complement_central φ
