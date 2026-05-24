@@ -3277,6 +3277,15 @@ example : (Perspectival.WantableGPT.complementAction Bool)
         = Perspectival.WantableGPT.vertex Bool false :=
   Perspectival.WantableGPT.complementAction_vertex Bool true
 
+/-- The complement Transform on Bool sends vertex false to vertex true. -/
+example : (Perspectival.WantableGPT.complementAction Bool)
+            (Perspectival.WantableGPT.vertex Bool false)
+        = Perspectival.WantableGPT.vertex Bool true := by
+  have := Perspectival.WantableGPT.complementAction_vertex Bool false
+  show _ = Perspectival.WantableGPT.vertex Bool true
+  rw [this]
+  rfl
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
