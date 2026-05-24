@@ -2352,6 +2352,18 @@ example : Perspectival.GPT (Perspectival.WantableGPT.V Bool) :=
 example : Perspectival.GPT (Perspectival.WantableGPT.V Unit) :=
   Perspectival.WantableGPT.gpt Unit
 
+/-- WantableGPT.gpt on Bool ⊕ Bool gives a Perspectival.GPT (sum composition). -/
+example : Perspectival.GPT (Perspectival.WantableGPT.V (Bool ⊕ Bool)) :=
+  Perspectival.WantableGPT.gpt (Bool ⊕ Bool)
+
+/-- WantableGPT.gpt on Bool × Bool gives a Perspectival.GPT (product composition). -/
+example : Perspectival.GPT (Perspectival.WantableGPT.V (Bool × Bool)) :=
+  Perspectival.WantableGPT.gpt (Bool × Bool)
+
+/-- Classical.gpt construction is type-correct for any n. -/
+example (n : ℕ) : Perspectival.GPT (Perspectival.Classical.V n) :=
+  Perspectival.Classical.gpt n
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
