@@ -3039,6 +3039,18 @@ example {W : Type u} [Wantable W] :
     Function.RightInverse (Wantable.complement : W → W) Wantable.complement :=
   Wantable.complement_involutive
 
+/-- The complement function is bijective (since it's its own inverse). -/
+example {W : Type u} [Wantable W] : Function.Bijective (Wantable.complement : W → W) :=
+  ⟨Wantable.complement_injective, Wantable.complement_surjective⟩
+
+/-- The complement function is injective. -/
+example {W : Type u} [Wantable W] : Function.Injective (Wantable.complement : W → W) :=
+  Wantable.complement_injective
+
+/-- The complement function is surjective. -/
+example {W : Type u} [Wantable W] : Function.Surjective (Wantable.complement : W → W) :=
+  Wantable.complement_surjective
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
