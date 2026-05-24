@@ -552,6 +552,19 @@ theorem wantableGPT_not_quantum [Fintype W] (h : 2 ≤ Fintype.card W) :
     · exact Or.inr h
   omega
 
+/-- **Real-QM signature ruled out.** Real quantum mechanics has the
+Hardy signature K = N(N+1)/2 (i.e., 2K = N(N+1)). For the WantableGPT
+with `|W| ≥ 2`, this fails: K = N = |W|, but then 2N = N(N+1) ⇒ N = 1. -/
+theorem wantableGPT_not_realQM [Fintype W] (h : 2 ≤ Fintype.card W) :
+    Module.finrank ℝ (V W) * 2 ≠ Fintype.card W * (Fintype.card W + 1) := by
+  rw [finrank_V_eq_card]
+  set n := Fintype.card W
+  intro heq
+  have hpos : 0 < n := by omega
+  have hmul : n * 2 = n * (n + 1) := heq
+  have : 2 = n + 1 := Nat.eq_of_mul_eq_mul_left hpos hmul
+  omega
+
 /-- **Hardy's "classical signature" `N = K` is satisfied for the
 WantableGPT bridge.** The maximal perfectly-distinguishable family is
 the vertex family (size `|W|`), and the state-space dimension is also
