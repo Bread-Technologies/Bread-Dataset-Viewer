@@ -383,6 +383,12 @@ def StrictReversible.comp {V : Type u} [AddCommGroup V] [Module ℝ V]
       _ = G.unit := h₁
   isEquiv := R₂.isEquiv.comp R₁.isEquiv
 
+/-- The composition's toLin is the obvious composition. -/
+@[simp] theorem StrictReversible.comp_toLin {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] {G : GPT V}
+    (R₂ R₁ : StrictReversible G) :
+    (StrictReversible.comp R₂ R₁).toLin = R₂.toLin.comp R₁.toLin := rfl
+
 /-- Under trivial agency, only equal states are reachable from each
 other (since the only available transformation is the identity). -/
 theorem trivialAgency_reachable_iff (G : GPT V) (ρ₁ ρ₂ : V) :
