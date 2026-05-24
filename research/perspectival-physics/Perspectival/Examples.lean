@@ -3216,6 +3216,15 @@ example : (Perspectival.WantableGPT.gpt Bool).unit
   (Perspectival.WantableGPT.gpt Bool).states_normalized _
     (Perspectival.WantableGPT.vertex_in_states Bool true)
 
+/-- For any state and any effect, the probability is in [0,1]. -/
+example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+    (e : Perspectival.WantableGPT.V W →ₗ[ℝ] ℝ)
+    (he : e ∈ (Perspectival.WantableGPT.gpt W).effects)
+    (ρ : Perspectival.WantableGPT.V W)
+    (hρ : ρ ∈ (Perspectival.WantableGPT.gpt W).states) :
+    0 ≤ e ρ ∧ e ρ ≤ 1 :=
+  (Perspectival.WantableGPT.gpt W).prob_in_unit_interval e he ρ hρ
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
