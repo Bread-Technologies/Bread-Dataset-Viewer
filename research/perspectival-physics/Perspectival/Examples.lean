@@ -2327,6 +2327,16 @@ example (f : PTrans (Fin 2)) : f * f = (1 : PTrans (Fin 2)) := by
     intro i
     fin_cases i <;> rfl
 
+/-- The Wantable iso `boolEquivFin2` induces a MulEquiv `PTrans Bool ≃* PTrans (Fin 2)`
+witnessing the structural isomorphism of their PTrans groups. -/
+example : PTrans Bool ≃* PTrans (Fin 2) := boolEquivFin2.mapPTransMulEquiv
+
+/-- Concrete: the MulEquiv sends boolSwap to a PTrans (Fin 2) equal to fin2Swap. -/
+example : boolEquivFin2.mapPTransMulEquiv boolSwap = fin2Swap := by
+  apply PTrans.ext
+  intro i
+  fin_cases i <;> rfl
+
 /-- Concrete instance of `exists_two_distinguishable` for Bool. -/
 example : ∃ ρ₁ ρ₂ : Perspectival.WantableGPT.V Bool,
     ρ₁ ∈ Perspectival.WantableGPT.states Bool ∧
