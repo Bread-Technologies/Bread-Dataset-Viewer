@@ -2364,6 +2364,18 @@ example : Perspectival.GPT (Perspectival.WantableGPT.V (Bool × Bool)) :=
 example (n : ℕ) : Perspectival.GPT (Perspectival.Classical.V n) :=
   Perspectival.Classical.gpt n
 
+/-- Classical 0-outcome (vacuous) is type-correct. -/
+example : Perspectival.GPT (Perspectival.Classical.V 0) :=
+  Perspectival.Classical.gpt 0
+
+/-- Classical 1-outcome (trivial) is type-correct. -/
+example : Perspectival.GPT (Perspectival.Classical.V 1) :=
+  Perspectival.Classical.gpt 1
+
+/-- Classical 100-outcome is type-correct. -/
+example : Perspectival.GPT (Perspectival.Classical.V 100) :=
+  Perspectival.Classical.gpt 100
+
 /-- The MulEquiv version sends 1 to 1. -/
 example : boolEquivFin2.mapPTransMulEquiv (1 : PTrans Bool) = (1 : PTrans (Fin 2)) := by
   exact boolEquivFin2.mapPTransMulEquiv.map_one
