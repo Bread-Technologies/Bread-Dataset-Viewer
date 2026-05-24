@@ -3370,6 +3370,23 @@ noncomputable example (a : ℝ) (ha : a ≠ 0) : ContinuousPTrans ℝ where
 
 -- (scaleHom ℝˣ-literal example deferred — Unit ℝˣ literal needs explicit construction.)
 
+/-- Hardy Axiom 1 holds for any GPT (general theorem). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    Perspectival.Hardy.Axiom1_Probabilities G :=
+  Perspectival.Hardy.axiom1_holds G
+
+/-- Hardy Axiom 3 holds for any GPT (general theorem). -/
+example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
+    Perspectival.Hardy.Axiom3_Subspaces G :=
+  Perspectival.Hardy.axiom3_holds G
+
+/-- Hardy Axiom 4 (placeholder) holds. -/
+example {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
+    [AddCommGroup VB] [Module ℝ VB]
+    (GA : Perspectival.GPT VA) (GB : Perspectival.GPT VB) (nA nB : ℕ) :
+    Perspectival.Hardy.Axiom4_Composite_States_Multiply GA GB nA nB :=
+  Perspectival.Hardy.axiom4_holds_placeholder GA GB nA nB
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
