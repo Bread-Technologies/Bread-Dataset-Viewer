@@ -618,6 +618,11 @@ example {W : Type u} [Wantable W] :
     Function.LeftInverse (Wantable.complement : W → W) Wantable.complement :=
   Wantable.complement_involutive
 
+/-- Complement is RightInverse too. -/
+example {W : Type u} [Wantable W] :
+    Function.RightInverse (Wantable.complement : W → W) Wantable.complement :=
+  Wantable.complement_involutive
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
