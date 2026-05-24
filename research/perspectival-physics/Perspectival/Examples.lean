@@ -334,6 +334,13 @@ theorem ptrans_unit_classification (f : PTrans Unit) : f = (1 : PTrans Unit) := 
   intro u
   cases u; cases f.toFun (); rfl
 
+/-- **Concrete classification of `PTrans Empty`.** Vacuously, all
+functions on `Empty` are equal. -/
+theorem ptrans_empty_classification (f : PTrans Empty) : f = (1 : PTrans Empty) := by
+  apply PTrans.ext
+  intro w
+  exact w.elim
+
 /-- The `Option` type lifts a Wantable structure: `none` is its own
 complement, `some w` complements to `some (complement w)`. -/
 instance {W : Type u} [Wantable W] : Wantable (Option W) where
