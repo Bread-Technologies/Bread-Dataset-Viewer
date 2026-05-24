@@ -127,6 +127,11 @@ example (n : ℕ) {S : Fin n → Perspectival.Classical.V n}
     n ≤ Module.finrank ℝ (Perspectival.Classical.V n) :=
   Perspectival.Distinguish.operational_dim_le_state_dim S w
 
+/-- The unit Wantable's only meeting. -/
+example (m : Meeting Unit) : m.side₁ = () := rfl
+
+example (m : Meeting Unit) : m.side₂ = () := rfl
+
 example : (Wantable.complement true : Bool) = false := rfl
 example : Wantable.complement (Wantable.complement true : Bool) = true := by
   exact (Wantable.complement_involutive true)
