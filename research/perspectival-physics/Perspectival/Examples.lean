@@ -9839,3 +9839,31 @@ example := Perspectival.WantableGPT.wantableGPT_classical_signature (Bool ⊕ Bo
 
 /-- WantableGPT classical_signature on Bool³. -/
 example := Perspectival.WantableGPT.wantableGPT_classical_signature (Bool × Bool × Bool)
+
+/-- Pattern.and is idempotent: P.and P ↔ P. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (R : Reality W) :
+    Pattern.and P P R ↔ P R := by
+  constructor
+  · intro ⟨h, _⟩; exact h
+  · intro h; exact ⟨h, h⟩
+
+/-- Pattern.or is idempotent: P.or P ↔ P. -/
+example {W : Type u} [Wantable W] (P : Pattern W) (R : Reality W) :
+    Pattern.or P P R ↔ P R := by
+  constructor
+  · intro h; rcases h with h | h <;> exact h
+  · intro h; exact Or.inl h
+
+/-- Pattern.and absorbs Pattern.or: P.and (P.or Q) ↔ P. -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
+    Pattern.and P (Pattern.or P Q) R ↔ P R := by
+  constructor
+  · intro ⟨h, _⟩; exact h
+  · intro h; exact ⟨h, Or.inl h⟩
+
+/-- Pattern.or absorbs Pattern.and: P.or (P.and Q) ↔ P. -/
+example {W : Type u} [Wantable W] (P Q : Pattern W) (R : Reality W) :
+    Pattern.or P (Pattern.and P Q) R ↔ P R := by
+  constructor
+  · intro h; rcases h with h | ⟨h, _⟩ <;> exact h
+  · intro h; exact Or.inl h
