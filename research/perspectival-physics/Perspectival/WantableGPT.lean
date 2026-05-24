@@ -203,5 +203,16 @@ def fromPTrans (φ : PTrans W) : Perspectival.GPT.Transform (gpt W) (gpt W) wher
     show unitFn W (transformAction W φ f) = unitFn W f
     exact unitFn_transformAction W φ f
 
+/-- `fromPTrans` sends the identity perspectival transformation to
+the identity GPT-transformation (at the level of underlying linear
+maps). -/
+theorem fromPTrans_one_toLin :
+    (fromPTrans W (1 : PTrans W)).toLin = LinearMap.id := by
+  apply LinearMap.ext
+  intro f
+  funext w
+  show f ((1 : PTrans W).invFun w) = f w
+  rfl
+
 end WantableGPT
 end Perspectival
