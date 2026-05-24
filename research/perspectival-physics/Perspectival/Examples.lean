@@ -16053,3 +16053,68 @@ example (n : ℕ) : Nonempty (Wantable (Σ _ : Fin n, Bool)) :=
 -- follow-up work. The cardinality and existence examples above are the
 -- concrete witnesses available at the level of formalization currently
 -- in this file.
+
+/-! ## Tier 1 #5 ingredient: productState as a bilinear map
+
+Substantive next step toward Hardy Axiom 4 STATE-half (currently only
+the dimension half is proven via `Hardy_Axiom4_WantableGPT_dimension`):
+package the productState as a bilinear map
+  V W₁ →ₗ[ℝ] V W₂ →ₗ[ℝ] V (W₁ × W₂)
+This formalizes the "states multiply" tensor-like content of Hardy A4
+for the WantableGPT bridge, and is the (S1) tomographic-locality
+ingredient identified in TIER1_5_HILBERT.md. -/
+
+/-- productState as a bilinear map: V W₁ →ₗ V W₂ →ₗ V (W₁ × W₂). -/
+noncomputable def productStateBilin {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂] :
+    Perspectival.WantableGPT.V W₁ →ₗ[ℝ]
+    Perspectival.WantableGPT.V W₂ →ₗ[ℝ]
+    Perspectival.WantableGPT.V (W₁ × W₂) where
+  toFun f := {
+    toFun := fun g => productState f g
+    map_add' := by
+      intro g h
+      funext p
+      show f p.1 * (g + h) p.2 = f p.1 * g p.2 + f p.1 * h p.2
+      show f p.1 * (g p.2 + h p.2) = f p.1 * g p.2 + f p.1 * h p.2
+      ring
+    map_smul' := by
+      intro c g
+      funext p
+      show f p.1 * (c • g) p.2 = c * (f p.1 * g p.2)
+      show f p.1 * (c * g p.2) = c * (f p.1 * g p.2)
+      ring
+  }
+  map_add' := by
+    intro f₁ f₂
+    apply LinearMap.ext
+    intro g
+    funext p
+    show (f₁ + f₂) p.1 * g p.2 = f₁ p.1 * g p.2 + f₂ p.1 * g p.2
+    show (f₁ p.1 + f₂ p.1) * g p.2 = f₁ p.1 * g p.2 + f₂ p.1 * g p.2
+    ring
+  map_smul' := by
+    intro c f
+    apply LinearMap.ext
+    intro g
+    funext p
+    show (c • f) p.1 * g p.2 = c * (f p.1 * g p.2)
+    show (c * f p.1) * g p.2 = c * (f p.1 * g p.2)
+    ring
+
+/-- productStateBilin applied to f, g recovers productState f g. -/
+theorem productStateBilin_apply {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V W₁) (g : Perspectival.WantableGPT.V W₂) :
+    productStateBilin f g = productState f g := rfl
+
+/-- productStateBilin preserves the unit functional multiplicatively. -/
+example {W₁ W₂ : Type u} [Wantable W₁] [Wantable W₂]
+    [Fintype W₁] [Fintype W₂] [DecidableEq W₁] [DecidableEq W₂]
+    (f : Perspectival.WantableGPT.V W₁) (g : Perspectival.WantableGPT.V W₂) :
+    Perspectival.WantableGPT.unitFn (W₁ × W₂) (productStateBilin f g)
+    = Perspectival.WantableGPT.unitFn W₁ f * Perspectival.WantableGPT.unitFn W₂ g := by
+  show (∑ p : W₁ × W₂, productState f g p) = (∑ w₁, f w₁) * (∑ w₂, g w₂)
+  rw [Fintype.sum_prod_type]
+  show (∑ w₁, ∑ w₂, f w₁ * g w₂) = (∑ w₁, f w₁) * (∑ w₂, g w₂)
+  rw [← Finset.sum_mul_sum]
