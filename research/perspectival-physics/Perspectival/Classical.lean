@@ -1823,5 +1823,97 @@ theorem classical_n2_no_bijective_state_pres_joint_path
      (n_vertex_coord_continuous_of_joint (n := 2) γ hcont 1 0))
     hpreserve hbij h0 h1
 
+/-! ## Vertex permutations as group of strict reversibles -/
+
+/-- For Classical n=2, swapLin composed with itself = id (involutive). -/
+example : swapLin.comp swapLin = LinearMap.id := by
+  apply LinearMap.ext
+  intro v
+  show swapLin (swapLin v) = LinearMap.id v
+  rw [swapLin_swapLin]
+  rfl
+
+/-- For Classical n=3, swap01Lin composed with itself = id (involutive). -/
+example : swap01Lin.comp swap01Lin = LinearMap.id := by
+  apply LinearMap.ext
+  intro v
+  show swap01Lin (swap01Lin v) = LinearMap.id v
+  rw [swap01Lin_swap01Lin]
+  rfl
+
+/-- For Classical n=3, cyclicShiftLin composed 3 times = id. -/
+example : cyclicShiftLin.comp (cyclicShiftLin.comp cyclicShiftLin) = LinearMap.id := by
+  apply LinearMap.ext
+  intro v
+  show cyclicShiftLin (cyclicShiftLin (cyclicShiftLin v)) = LinearMap.id v
+  rw [cyclicShiftLin_third_iter]
+  rfl
+
+/-- swap01Lin and cyclicShiftLin do not commute (S_3 is nonabelian). -/
+example : swap01Lin.comp cyclicShiftLin ≠ cyclicShiftLin.comp swap01Lin := by
+  intro h
+  -- Apply to vertex 0:
+  -- swap01 ∘ cyclic (vertex 0) = swap01 (vertex 1) = vertex 0
+  -- cyclic ∘ swap01 (vertex 0) = cyclic (vertex 1) = vertex 2
+  have hcol : (swap01Lin.comp cyclicShiftLin) (vertex 3 0)
+            = (cyclicShiftLin.comp swap01Lin) (vertex 3 0) := by rw [h]
+  -- Compute LHS: swap01 (cyclic (vertex 0))
+  have hcyc : cyclicShiftLin (vertex 3 0) = vertex 3 1 := by
+    funext j
+    show vertex 3 0 ((j - 1 : Fin 3)) = vertex 3 1 j
+    show (if (0 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+       = (if (1 : Fin 3) = j then (1 : ℝ) else 0)
+    fin_cases j <;> simp <;> decide
+  have hsw01 : swap01Lin (vertex 3 1) = vertex 3 0 := by
+    funext j
+    fin_cases j
+    · show vertex 3 1 1 = vertex 3 0 0
+      show (if (1 : Fin 3) = 1 then (1 : ℝ) else 0)
+         = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0)
+      simp
+    · show vertex 3 1 0 = vertex 3 0 1
+      show (if (1 : Fin 3) = 0 then (1 : ℝ) else 0)
+         = (if (0 : Fin 3) = 1 then (1 : ℝ) else 0)
+      simp
+    · show vertex 3 1 2 = vertex 3 0 2
+      show (if (1 : Fin 3) = 2 then (1 : ℝ) else 0)
+         = (if (0 : Fin 3) = 2 then (1 : ℝ) else 0)
+      rw [if_neg (by decide), if_neg (by decide)]
+  -- swap01 (vertex 0) = vertex 1
+  have hsw0 : swap01Lin (vertex 3 0) = vertex 3 1 := by
+    funext j
+    fin_cases j
+    · show vertex 3 0 1 = vertex 3 1 0
+      show (if (0 : Fin 3) = 1 then (1 : ℝ) else 0)
+         = (if (1 : Fin 3) = 0 then (1 : ℝ) else 0)
+      simp
+    · show vertex 3 0 0 = vertex 3 1 1
+      show (if (0 : Fin 3) = 0 then (1 : ℝ) else 0)
+         = (if (1 : Fin 3) = 1 then (1 : ℝ) else 0)
+      simp
+    · show vertex 3 0 2 = vertex 3 1 2
+      show (if (0 : Fin 3) = 2 then (1 : ℝ) else 0)
+         = (if (1 : Fin 3) = 2 then (1 : ℝ) else 0)
+      rw [if_neg (by decide), if_neg (by decide)]
+  -- cyclic (vertex 1) = vertex 2
+  have hcyc1 : cyclicShiftLin (vertex 3 1) = vertex 3 2 := by
+    funext j
+    show vertex 3 1 ((j - 1 : Fin 3)) = vertex 3 2 j
+    show (if (1 : Fin 3) = (j - 1 : Fin 3) then (1 : ℝ) else 0)
+       = (if (2 : Fin 3) = j then (1 : ℝ) else 0)
+    fin_cases j <;> simp <;> decide
+  show False
+  -- hcol : swap01 (cyclic v0) = cyclic (swap01 v0)
+  -- = swap01 v1 = v0 vs cyclic v1 = v2
+  -- so v0 = v2
+  rw [show (swap01Lin.comp cyclicShiftLin) (vertex 3 0) = swap01Lin (cyclicShiftLin (vertex 3 0)) from rfl] at hcol
+  rw [show (cyclicShiftLin.comp swap01Lin) (vertex 3 0) = cyclicShiftLin (swap01Lin (vertex 3 0)) from rfl] at hcol
+  rw [hcyc, hsw01, hsw0, hcyc1] at hcol
+  -- hcol : vertex 3 0 = vertex 3 2
+  have h2 : vertex 3 0 0 = vertex 3 2 0 := congr_fun hcol 0
+  rw [show vertex 3 0 0 = (if (0 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl,
+      show vertex 3 2 0 = (if (2 : Fin 3) = 0 then (1 : ℝ) else 0) from rfl] at h2
+  simp at h2
+
 end Classical
 end Perspectival
