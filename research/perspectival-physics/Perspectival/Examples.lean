@@ -3012,6 +3012,18 @@ example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V Bool) :=
 example : 0 < Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) :=
   Perspectival.WantableGPT.wantableGPT_dim_pos (Fin 3)
 
+/-- WantableGPT dim is multiplicative on products. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool × Fin 3))
+        = Module.finrank ℝ (Perspectival.WantableGPT.V Bool) *
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) :=
+  Perspectival.WantableGPT.wantableGPT_dim_prod
+
+/-- WantableGPT dim is additive on sums. -/
+example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3))
+        = Module.finrank ℝ (Perspectival.WantableGPT.V Bool) +
+          Module.finrank ℝ (Perspectival.WantableGPT.V (Fin 3)) :=
+  Perspectival.WantableGPT.wantableGPT_dim_sum
+
 -- (Fin 4 concrete complement values — instance definition different; skip.)
 
 /-- The MulEquiv version sends 1 to 1. -/
