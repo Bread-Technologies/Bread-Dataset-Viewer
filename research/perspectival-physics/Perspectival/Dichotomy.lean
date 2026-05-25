@@ -905,6 +905,14 @@ theorem R7_Conjecture_holds_on_qubitGPT :
     Continuity.R7_Conjecture QubitGPT.qubitGPT :=
   Continuity.R7_Conjecture_of_strict QubitGPT.qubitStrictConnectedAgency_full
 
+/-- **QubitGPT's 3-axis agency specializes to a 1-parameter agency.**
+Application of `HasOneParameterAgency.ofMultiAxis` to the SO(3)
+3-axis structure on QubitGPT. -/
+@[reducible] noncomputable def qubit_one_parameter_from_multi_axis :
+    Continuity.HasOneParameterAgency QubitGPT.qubitGPT :=
+  Continuity.HasOneParameterAgency.ofMultiAxis (by omega : 1 ≤ 3)
+    QubitGPT.qubitMultiAxisAgency
+
 /-- **Extended v2 certificate** — consolidates all major v2
 architectural facts, including the elementary Tier A → Tier B bridge
 through `actualizeAt`. This is the v2-progressive end-state summary. -/
