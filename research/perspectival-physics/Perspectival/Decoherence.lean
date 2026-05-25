@@ -258,6 +258,20 @@ theorem actualizationRatePlain_append {P : Type u} {C : Type v}
   · show (ch₁.append ch₂).length = ch₁.length + ch₂.length
     exact RealityChain.append_length ch₁ ch₂
 
+/-- **Rate of an empty trajectory.** -/
+@[simp] theorem actualizationRate_nil {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    actualizationRate (RealityChain'.nil (P := P) (C := C) R) = (0, 0) := by
+  show (RealityChain'.actualizationCount _, RealityChain'.length _) = (0, 0)
+  refine Prod.ext ?_ ?_
+  · exact RealityChain'.nil_actualizationCount R
+  · exact RealityChain'.nil_length R
+
+/-- **Plain-chain rate of an empty trajectory.** -/
+@[simp] theorem actualizationRatePlain_nil {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    actualizationRatePlain (RealityChain.nil (P := P) (C := C) R) = (0, 0) := rfl
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
