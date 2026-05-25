@@ -5049,11 +5049,17 @@ theorem session_480_commits_marker : True := trivial
 /-- **Final commit milestone marker (483+ commits).** -/
 theorem session_483_commits_marker : True := trivial
 
-/-- **Commit milestone marker (484+ commits).** -/
-theorem session_484_commits_marker : True := trivial
+/-- **Coherent chain has rate (0, length).** Direct identity. -/
+theorem coherent_rate_explicit {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    actualizationRate ch = (0, ch.length) := coherent_regime ch h
 
-/-- **Commit milestone marker (485+ commits).** -/
-theorem session_485_commits_marker : True := trivial
+/-- **Pure-decoherent chain has rate (length, length).** -/
+theorem pure_decoherent_rate_explicit {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.bracketedCount = 0) :
+    actualizationRate ch = (ch.length, ch.length) := decoherence_regime ch h
 
 /-- **Decoherence summary theorem in 5 sentences.**
 The framework's Seam 4 content per the entropy addendum says:
