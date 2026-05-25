@@ -3813,6 +3813,14 @@ theorem loop_swap_equivalent {P : Type u} {C : Type v}
     DecoherenceEquivalent (ch₁ * ch₂) (ch₂ * ch₁) :=
   loop_count_abelian ch₁ ch₂
 
+/-- **Loop quotient is abelian (trivially, since it's a Subsingleton).**
+Any two products `Quotient.mk _ (ch₁ * ch₂)` and `Quotient.mk _ (ch₂ * ch₁)`
+are equal in the loop decoherence quotient. -/
+theorem loop_quotient_commutes {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    toDecoherenceClass (ch₁ * ch₂) = toDecoherenceClass (ch₂ * ch₁) :=
+  toDecoherenceClass_equivalent (loop_swap_equivalent ch₁ ch₂)
+
 /-- **Decoherence framework MASTER certificate.** A single Lean
 theorem bundling EVERY major structural result of the Decoherence
 module's loop submonoid + quotient algebra into one referenceable
