@@ -403,6 +403,35 @@ theorem rotL3_continuous (θ : ℝ) : Continuous (rotL3 θ) := by
       rw [h]
       exact continuous_apply i
 
+/-- `rotL3` is JOINTLY continuous in `(θ, ρ)`. -/
+theorem rotL3_continuous_pair :
+    Continuous (fun p : ℝ × V => rotL3 p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  have hp1 : Continuous (fun p : ℝ × V => p.1) := continuous_fst
+  have hcos : Continuous (fun p : ℝ × V => Real.cos p.1) :=
+    Real.continuous_cos.comp hp1
+  have hsin : Continuous (fun p : ℝ × V => Real.sin p.1) :=
+    Real.continuous_sin.comp hp1
+  have h0c : Continuous (fun p : ℝ × V => p.2 0) :=
+    (continuous_apply 0).comp continuous_snd
+  have h1c : Continuous (fun p : ℝ × V => p.2 1) :=
+    (continuous_apply 1).comp continuous_snd
+  by_cases h0 : i = 0
+  · subst h0
+    show Continuous (fun p : ℝ × V => p.2 0 * Real.cos p.1 - p.2 1 * Real.sin p.1)
+    exact (h0c.mul hcos).sub (h1c.mul hsin)
+  · by_cases h1 : i = 1
+    · subst h1
+      show Continuous (fun p : ℝ × V => p.2 0 * Real.sin p.1 + p.2 1 * Real.cos p.1)
+      exact (h0c.mul hsin).add (h1c.mul hcos)
+    · -- Fixed coordinate.
+      have h : (fun p : ℝ × V => rotL3 p.1 p.2 i)
+             = fun p : ℝ × V => p.2 i := by
+        funext p; exact rotL3_apply_other p.1 p.2 i h0 h1
+      rw [h]
+      exact (continuous_apply i).comp continuous_snd
+
 /-- Composition law: `rotL3 θ₁ ∘ rotL3 θ₂ = rotL3 (θ₁ + θ₂)`. -/
 theorem rotL3_comp (θ₁ θ₂ : ℝ) :
     (rotL3 θ₁).comp (rotL3 θ₂) = rotL3 (θ₁ + θ₂) := by
@@ -925,6 +954,27 @@ noncomputable def rotL2StrictReversible (θ : ℝ) :
 
 @[simp] theorem rotL2StrictReversible_toLin (θ : ℝ) :
     (rotL2StrictReversible θ).toLin = rotL2 θ := rfl
+
+/-- The qutrit's λ₃-style rotation family packaged as a
+`OneParameterFamily` — the framework's SU(3)-toehold lifted to the
+agency hierarchy. -/
+noncomputable def rotL3OneParameterFamily :
+    Perspectival.Continuity.OneParameterFamily qutritGPT where
+  f := rotL3StrictReversible
+  continuous := rotL3_continuous_pair
+  zero := by
+    show (rotL3StrictReversible 0).toLin = LinearMap.id
+    rw [rotL3StrictReversible_toLin, rotL3_zero]
+  add θ₁ θ₂ := by
+    show (rotL3StrictReversible (θ₁ + θ₂)).toLin
+        = (rotL3StrictReversible θ₁).toLin.comp (rotL3StrictReversible θ₂).toLin
+    rw [rotL3StrictReversible_toLin, rotL3StrictReversible_toLin,
+        rotL3StrictReversible_toLin, ← rotL3_comp]
+
+/-- QutritGPT satisfies `HasOneParameterAgency`. -/
+noncomputable instance qutritHasOneParameterAgency :
+    Perspectival.Continuity.HasOneParameterAgency qutritGPT where
+  family := rotL3OneParameterFamily
 
 end QutritGPT
 end Perspectival
