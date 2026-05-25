@@ -5564,6 +5564,16 @@ theorem quick_ref_pure_decoherent_rate {P : Type u} {C : Type v}
     actualizationRate ch = (ch.length, ch.length) :=
   decoherence_regime ch h
 
+/-- **Quick reference: rate count component is count.** -/
+theorem quick_ref_rate_first {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 = ch.actualizationCount := rfl
+
+/-- **Quick reference: rate length component is length.** -/
+theorem quick_ref_rate_second {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).2 = ch.length := rfl
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
