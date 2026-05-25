@@ -4212,6 +4212,20 @@ theorem length_is_grading {P : Type u} {C : Type v}
 theorem nil_grade_zero {P : Type u} {C : Type v} (R : Reality P C) :
     (RealityChain'.nil (P := P) (C := C) R).length = 0 := rfl
 
+/-- **Length is bounded below by count.** This says: the discrete
+time-coordinate of a trajectory is at least its irreversible content. -/
+theorem length_ge_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount ≤ ch.length :=
+  ch.actualizationCount_le_length
+
+/-- **Length is bounded below by bracketed.** Similar dual bound. -/
+theorem length_ge_bracketed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.bracketedCount ≤ ch.length := by
+  have h := ch.counts_sum
+  omega
+
 /-- **Grading certificate.** Length is a ℕ-valued grading function
 on the chain monoid, with composition increasing additively and
 nil being the unit. -/
