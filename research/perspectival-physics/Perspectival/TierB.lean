@@ -679,6 +679,23 @@ def RealityChain'.toRealityChain {P : Type u} {C : Type v} :
   | _, _, RealityChain'.cons step rest =>
       RealityChain.cons step.step rest.toRealityChain
 
+/-- **Length of a `RealityChain'`.** -/
+def RealityChain'.length {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C}, RealityChain' P C R₁ R₂ → ℕ
+  | _, _, RealityChain'.nil _ => 0
+  | _, _, RealityChain'.cons _ rest => 1 + RealityChain'.length rest
+
+/-- **Length is preserved by the forgetful map.** -/
+theorem RealityChain'.toRealityChain_length {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂),
+      ch.toRealityChain.length = ch.length
+  | _, _, RealityChain'.nil _ => rfl
+  | _, _, RealityChain'.cons _ rest => by
+      show RealityChain.length _ = RealityChain'.length _
+      simp only [RealityChain'.toRealityChain, RealityChain.length,
+                 RealityChain'.length]
+      rw [RealityChain'.toRealityChain_length rest]
+
 /-- **A bracketed step preserves both potential and actualized status
 of every meeting.** Restated: the entire meeting-status function is
 unchanged across a bracketed step. -/
