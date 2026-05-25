@@ -756,6 +756,23 @@ theorem RealityChain.single_step_count_zero_iff_bracketed
     rw [h_eq]
     simp [RealityChain.singleton, RealityChain.actualizationCount]
 
+/-- **TrajectoryStep is a RealityChain (canonical embedding).** -/
+@[simp] theorem RealityChain.singleton_actualizationCount_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep P C R₁ R₂) :
+    (RealityChain.singleton step).actualizationCount
+      = (match step with
+         | TrajectoryStep.bracketed _ => 0
+         | TrajectoryStep.actualization _ => 1) := by
+  cases step <;> rfl
+
+@[simp] theorem RealityChain.singleton_bracketedCount_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep P C R₁ R₂) :
+    (RealityChain.singleton step).bracketedCount
+      = (match step with
+         | TrajectoryStep.bracketed _ => 1
+         | TrajectoryStep.actualization _ => 0) := by
+  cases step <;> rfl
+
 /-- **`RealityChain.singleton` of a bracketed step has count = 0.** A
 single-step chain consisting of a bracketed step has zero
 actualization count and bracketedCount = 1. -/
