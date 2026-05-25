@@ -801,12 +801,40 @@ theorem RealityChain'.distinct_endpoints_implies_actualization
   have h_zero : ch.actualizationCount = 0 := Nat.le_zero.mp h_le
   exact h_ne (RealityChain'.zero_actualization_implies_eq ch h_zero)
 
--- (A potential iff `R₁ ≠ R₂ ↔ count > 0` would require the reverse
--- direction `count > 0 → R₁ ≠ R₂`, which threads past-growth through
--- the strict-chain. The strict-chain `is_successor` evidence means
--- once a meeting is actualized in an early step, no_return_along_chain
--- preserves it to the endpoint — making R₂ differ from R₁ at that
--- actualized meeting. Full formalization deferred to future work.)
+/-- **Strict chains: positive actualizationCount means R₁ ≠ R₂.** The
+reverse direction of the distinct-endpoints theorem. Proved by
+induction on the chain: when we encounter an actualization step, the
+seam witness gives a meeting m with R₁ m = Potential, R_intermediate m
+= Actualized; by `no_return_along_chain` on the rest, R₂ m = Actualized;
+so R₁ ≠ R₂ at m. -/
+theorem RealityChain'.pos_count_implies_ne {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂),
+      0 < ch.actualizationCount → R₁ ≠ R₂
+  | _, _, RealityChain'.nil _ => fun h => absurd h (by simp [RealityChain'.actualizationCount])
+  | _, _, RealityChain'.cons step rest => by
+      intro h_pos
+      match h_step : step.step with
+      | TrajectoryStep.bracketed h_br =>
+          -- This step contributes 0 to count; positivity comes from rest.
+          have h_rest_pos : 0 < rest.actualizationCount := by
+            simp [RealityChain'.actualizationCount, h_step] at h_pos
+            exact h_pos
+          -- By bracketed_iff_eq, R₁ = R_intermediate; recurse on rest.
+          have h_step_eq := (bracketed_iff_eq _ _).mp h_br
+          have h_rest_ne := RealityChain'.pos_count_implies_ne rest h_rest_pos
+          intro h_eq
+          apply h_rest_ne
+          rw [← h_step_eq]; exact h_eq
+      | TrajectoryStep.actualization h_seam =>
+          -- Get the seam witness m.
+          obtain ⟨m, h_pot, h_act⟩ := h_seam
+          -- By no_return_along_chain on rest, m stays actualized at R₂.
+          have h_end_act := RealityChain'.no_return_along_chain rest h_act
+          -- So R₁ m = Potential, R₂ m = Actualized → R₁ ≠ R₂.
+          intro h_eq
+          rw [h_eq] at h_pot
+          rw [h_pot] at h_end_act
+          exact MeetingStatus.noConfusion h_end_act
 
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
