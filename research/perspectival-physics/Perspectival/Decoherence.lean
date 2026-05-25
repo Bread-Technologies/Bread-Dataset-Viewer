@@ -1205,6 +1205,34 @@ theorem trajectory_monoid_morphism_certificate :
    fun ch₁ ch₂ => trajectoryComplexity_monoid_morphism ch₁ ch₂,
    fun R => trajectoryComplexity_unit R⟩
 
+/-! ## RealitySuccessor as preorder
+
+The chain's `implies_successor` shows that strict chains witness
+RealitySuccessor. Since RealitySuccessor is a preorder
+(reflexive + transitive, per TierA), strict chains constitute
+"witnesses" of this preorder. -/
+
+/-- **Strict chains preserve the RealitySuccessor preorder.** Existence
+of a strict chain ⟨R₁, R₂⟩ implies R₁ ≤_succ R₂ (in the preorder
+sense). -/
+theorem chain_witness_preorder {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (_ch : RealityChain' P C R₁ R₂) :
+    RealitySuccessor R₁ R₂ := _ch.implies_successor
+
+/-- **Trivial chain witnesses RealitySuccessor.refl.** The nil chain
+gives `RealitySuccessor R R`. -/
+theorem nil_witness_refl {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    RealitySuccessor R R := (RealityChain'.nil R).implies_successor
+
+/-- **Chain composition witnesses RealitySuccessor.trans.** Append-
+composing two chain witnesses gives a chain witness of the composed
+successor relation. -/
+theorem chain_compose_witnesses_trans {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    RealitySuccessor R₁ R₃ := (ch₁.append ch₂).implies_successor
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
