@@ -5512,6 +5512,20 @@ theorem quick_ref_loops_all_DE {P : Type u} {C : Type v}
     DecoherenceEquivalent ch₁ ch₂ :=
   loop_class_concentration ch₁ ch₂
 
+/-- **Quick reference: count = 0 implies endpoints equal.** -/
+theorem quick_ref_count_zero_endpoints_equal {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    R₁ = R₂ :=
+  ch.zero_actualization_implies_eq h
+
+/-- **Quick reference: distinct endpoints implies positive count.** -/
+theorem quick_ref_distinct_endpoints_pos_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : R₁ ≠ R₂) :
+    0 < ch.actualizationCount :=
+  ch.distinct_endpoints_implies_actualization h
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
