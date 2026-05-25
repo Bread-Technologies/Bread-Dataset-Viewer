@@ -556,6 +556,25 @@ theorem complexity_eq_twice_length_iff_pure_decoherent {P : Type u} {C : Type v}
   · intro h; omega
   · intro h; omega
 
+/-! ### Summary
+
+This module formalizes the framework's reading of decoherence as
+the Tier B-visible accumulation of Tier A actualization content.
+
+The key formal results: (i) the (count, length) rate measure with
+its compositional + regime-characterization theorems; (ii) the
+trajectory-complexity measure with its compositional + iff-bound
+theorems; (iii) `path_independent_coherence` showing coherence is
+endpoint-determined; (iv) `decoherence_certificate` as the bundled
+expression of the four core facts.
+
+Open: continuous-time exponential-suppression dynamics, operational
+environment-density definition, quantitative decoherence-time
+predictions. See `SEAMS.md` Seam 4 for the empirical-signature
+framing and `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` for the
+addendum's positioning of decoherence as accumulated actualization.
+-/
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
