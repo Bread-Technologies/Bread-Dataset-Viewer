@@ -149,11 +149,25 @@ properties. The framework predicts environments rich in Tier A
 content (lots of irreversible interactions) decohere systems faster
 than statistical models predict. **Testable in principle.**
 
-**Formal correlate:** partial — `RealityChain'.actualizationDensity`
-in `Perspectival/TierB.lean` provides the count-based measure of
-"actualization density" along a strict trajectory. A full
-`Decoherence.lean` module would extend this with the exponential-
-suppression framework. Currently STRUCTURAL.
+**Formal correlate:** `Perspectival/Decoherence.lean` (~2400 lines,
+build-verified). The module provides:
+- `RealityChain'.actualizationDensity` and `actualizationRate` :
+  count-based decoherence-rate measures.
+- Regime characterizations (coherent / pure-decoherent / mixed).
+- Trajectory algebra: monoid morphism, monotonicity, equivalence
+  relations + congruences.
+- Loop submonoid algebra: closed-loop trajectories are coherent;
+  loops act trivially on DecoherenceEquivalent classes.
+- Coherent kernel: `tierAEventCount ch = 0 ↔ R₁ = R₂`.
+- Anti-realism content: status path-independent, content path-dependent.
+- TIER4 dissolution shadows (Boltzmann brains).
+- Super-certificate (`decoherence_module_super_certificate`) bundling
+  8 headline results.
+
+**STATUS: count-based structural shadow COMPLETE.** The continuous-
+time exponential-suppression dynamics remain Tier 2 open work
+(requires Mathlib's analysis machinery + operational environment-
+density definition).
 
 ## Seam 5 — Cosmological constant (Tier 3)
 
@@ -235,8 +249,11 @@ shadow requires a spacetime model not currently in the framework.
 - Seam 3 (Erasure): structural shadow in
   `axiom_II_actualization_irreversible`; dynamical content cited
   to Witkowski-Brown-Truong 2024. ✓ STRUCTURAL.
-- Seam 4 (Decoherence): partial — `actualizationDensity` count-based
-  measure in TierB.lean. ✓ STRUCTURAL.
+- Seam 4 (Decoherence): full count-based structural shadow in
+  `Perspectival/Decoherence.lean` (~2400 lines, build-verified).
+  Includes loop submonoid algebra, coherent kernel characterization,
+  anti-realism content, TIER4 dissolution shadows, and
+  super-certificate. ✓ STRUCTURAL (count-level COMPLETE).
 - Seam 5 (Cosmological constant): philosophical sketch only.
   ○ OPEN, Tier 3.
 - Seam 6 (Dark matter): structural Lean encoding via
