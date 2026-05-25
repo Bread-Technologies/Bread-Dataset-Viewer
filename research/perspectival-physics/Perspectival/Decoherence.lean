@@ -4851,14 +4851,22 @@ example (R : Reality Bool Bool) :
   rw [RealityChain'.singleton_length]
 
 /-- **Decoherence module's complete content** in one umbrella theorem.
-This is the framework's "everything" statement for Seam 4. It says
-that the trajectory algebra, regime characterization, anti-realism,
-loop submonoid, coherent kernel, no-Maxwell-demon, Boltzmann shadow,
-Tier B reversibility, and all other content are simultaneously
-formalized. -/
+This is the framework's "everything" statement for Seam 4. -/
 theorem decoherence_complete_content :
-    -- The module contains all the structural content needed.
-    True := trivial
+    -- Loop algebra exists.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R), tierAEventCount ch = 0) ∧
+    -- Kernel characterization holds.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch = 0 ↔ R₁ = R₂) ∧
+    -- No Maxwell demon.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂)) :=
+  ⟨fun ch => loop_is_coherent ch,
+   fun ch => coherent_kernel_iff_endpoints_eq ch,
+   fun ch₁ ch₂ => no_maxwell_demon ch₁ ch₂⟩
 
 /-- **Rate at fixed length certificate.** Combines fixed-length
 characterization with extremal cases. -/
