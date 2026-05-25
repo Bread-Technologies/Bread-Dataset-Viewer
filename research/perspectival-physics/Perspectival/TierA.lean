@@ -269,30 +269,28 @@ theorem past_monotone {P : Type u} {C : Type v} {R₁ R₂ : Reality P C}
 
 /-- **`actualizeAt` extends the past by exactly the new meeting.** When
 m was potential in R, the past of `actualizeAt R m` is the past of R
-union {m}. This is the elementary "past-growth" content of an
-actualization event. -/
-theorem past_actualizeAt {P : Type u} {C : Type v}
+together with the meeting m. -/
+theorem past_actualizeAt_disjunction {P : Type u} {C : Type v}
     [DecidableEq (Meeting P C)]
-    (R : Reality P C) (m : Meeting P C)
-    (h_pot : R m = MeetingStatus.Potential) :
-    past (actualizeAt R m) = past R ∪ {m} := by
-  ext m'
-  simp only [past, Set.mem_setOf_eq, Set.mem_union, Set.mem_singleton_iff]
+    (R : Reality P C) (m m' : Meeting P C) :
+    m' ∈ past (actualizeAt R m)
+      ↔ (R m' = MeetingStatus.Actualized ∨ m' = m) := by
   constructor
   · intro h_m'
+    have h_eq_a : actualizeAt R m m' = MeetingStatus.Actualized := h_m'
     by_cases h_eq : m' = m
     · exact Or.inr h_eq
     · left
-      rw [actualizeAt_other R h_eq] at h_m'
-      exact h_m'
+      rw [actualizeAt_other R h_eq] at h_eq_a
+      exact h_eq_a
   · intro h
+    show actualizeAt R m m' = MeetingStatus.Actualized
     rcases h with h_past | h_eq
     · by_cases h_em : m' = m
       · rw [h_em, actualizeAt_self]
       · rw [actualizeAt_other R h_em]
         exact h_past
-    · subst h_eq
-      rw [actualizeAt_self]
+    · rw [h_eq, actualizeAt_self]
 
 /-- **`actualizeAt` does not modify the past when m was already
 actualized.** If m is already in the past of R, then `actualizeAt R m`
@@ -304,12 +302,12 @@ theorem past_actualizeAt_already_act {P : Type u} {C : Type v}
     (h_act : R m = MeetingStatus.Actualized) :
     past (actualizeAt R m) = past R := by
   ext m'
-  simp only [past, Set.mem_setOf_eq]
+  show actualizeAt R m m' = MeetingStatus.Actualized
+      ↔ R m' = MeetingStatus.Actualized
   by_cases h_eq : m' = m
-  · subst h_eq
-    constructor
-    · intro _; exact h_act
-    · intro _; exact actualizeAt_self R m
+  · rw [h_eq]
+    rw [actualizeAt_self]
+    exact ⟨fun _ => h_act, fun _ => rfl⟩
   · rw [actualizeAt_other R h_eq]
 
 /-! ## Witkowski-Brown-Truong 2024: mechanical content of Axiom II
