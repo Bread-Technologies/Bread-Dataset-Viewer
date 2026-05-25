@@ -11,6 +11,7 @@ import Perspectival.Continuity
 import Perspectival.Distinguish
 import Perspectival.WantableGPT
 import Perspectival.Examples
+import Perspectival.CircleGPT
 
 /-!
 # Perspectival Physics
