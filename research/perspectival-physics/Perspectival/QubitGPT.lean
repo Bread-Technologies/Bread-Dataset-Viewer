@@ -351,6 +351,43 @@ theorem rotX_continuous (θ : ℝ) : Continuous (rotX θ) := by
         show Continuous (fun ρ : V => ρ 3)
         exact continuous_apply 3
 
+/-- `rotX θ` is JOINTLY continuous in `(θ, ρ)`. -/
+theorem rotX_continuous_pair :
+    Continuous (fun p : ℝ × V => rotX p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  have hp1_cont : Continuous (fun p : ℝ × V => p.1) := continuous_fst
+  have hcos : Continuous (fun p : ℝ × V => Real.cos p.1) :=
+    Real.continuous_cos.comp hp1_cont
+  have hsin : Continuous (fun p : ℝ × V => Real.sin p.1) :=
+    Real.continuous_sin.comp hp1_cont
+  have h0c : Continuous (fun p : ℝ × V => p.2 0) :=
+    (continuous_apply 0).comp continuous_snd
+  have h1c : Continuous (fun p : ℝ × V => p.2 1) :=
+    (continuous_apply 1).comp continuous_snd
+  have h2c : Continuous (fun p : ℝ × V => p.2 2) :=
+    (continuous_apply 2).comp continuous_snd
+  have h3c : Continuous (fun p : ℝ × V => p.2 3) :=
+    (continuous_apply 3).comp continuous_snd
+  by_cases h0 : i = 0
+  · subst h0
+    show Continuous (fun p : ℝ × V => p.2 0)
+    exact h0c
+  · by_cases h1 : i = 1
+    · subst h1
+      show Continuous (fun p : ℝ × V =>
+        p.2 1 * Real.cos p.1 - p.2 2 * Real.sin p.1)
+      exact (h1c.mul hcos).sub (h2c.mul hsin)
+    · by_cases h2 : i = 2
+      · subst h2
+        show Continuous (fun p : ℝ × V =>
+          p.2 1 * Real.sin p.1 + p.2 2 * Real.cos p.1)
+        exact (h1c.mul hsin).add (h2c.mul hcos)
+      · have hi3 : i = 3 := fin4_is_three i h0 h1 h2
+        subst hi3
+        show Continuous (fun p : ℝ × V => p.2 3)
+        exact h3c
+
 /-- Composition law: `rotX θ₁ ∘ rotX θ₂ = rotX (θ₁ + θ₂)`. -/
 theorem rotX_comp (θ₁ θ₂ : ℝ) :
     (rotX θ₁).comp (rotX θ₂) = rotX (θ₁ + θ₂) := by
@@ -526,6 +563,43 @@ theorem rotY_continuous (θ : ℝ) : Continuous (rotY θ) := by
         subst hi3
         show Continuous (fun ρ : V => ρ 3)
         exact continuous_apply 3
+
+/-- `rotY θ` is JOINTLY continuous in `(θ, ρ)`. -/
+theorem rotY_continuous_pair :
+    Continuous (fun p : ℝ × V => rotY p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  have hp1_cont : Continuous (fun p : ℝ × V => p.1) := continuous_fst
+  have hcos : Continuous (fun p : ℝ × V => Real.cos p.1) :=
+    Real.continuous_cos.comp hp1_cont
+  have hsin : Continuous (fun p : ℝ × V => Real.sin p.1) :=
+    Real.continuous_sin.comp hp1_cont
+  have h0c : Continuous (fun p : ℝ × V => p.2 0) :=
+    (continuous_apply 0).comp continuous_snd
+  have h1c : Continuous (fun p : ℝ × V => p.2 1) :=
+    (continuous_apply 1).comp continuous_snd
+  have h2c : Continuous (fun p : ℝ × V => p.2 2) :=
+    (continuous_apply 2).comp continuous_snd
+  have h3c : Continuous (fun p : ℝ × V => p.2 3) :=
+    (continuous_apply 3).comp continuous_snd
+  by_cases h0 : i = 0
+  · subst h0
+    show Continuous (fun p : ℝ × V =>
+      p.2 0 * Real.cos p.1 + p.2 2 * Real.sin p.1)
+    exact (h0c.mul hcos).add (h2c.mul hsin)
+  · by_cases h1 : i = 1
+    · subst h1
+      show Continuous (fun p : ℝ × V => p.2 1)
+      exact h1c
+    · by_cases h2 : i = 2
+      · subst h2
+        show Continuous (fun p : ℝ × V =>
+          -p.2 0 * Real.sin p.1 + p.2 2 * Real.cos p.1)
+        exact (h0c.neg.mul hsin).add (h2c.mul hcos)
+      · have hi3 : i = 3 := fin4_is_three i h0 h1 h2
+        subst hi3
+        show Continuous (fun p : ℝ × V => p.2 3)
+        exact h3c
 
 theorem rotY_comp (θ₁ θ₂ : ℝ) :
     (rotY θ₁).comp (rotY θ₂) = rotY (θ₁ + θ₂) := by
@@ -1445,7 +1519,8 @@ theorem qubit_pure_state_classification :
     qubit_pure_state_classification_statement :=
   pure_state_implies_blochSphere
 
-/-! ## OneParameterFamily instance: the rotZ 1-parameter subgroup -/
+/-! ## OneParameterFamily instances: rotX, rotY, rotZ — three independent
+    SO(3)-axis 1-parameter subgroups -/
 
 /-- The qubit's `rotZ` family packaged as a `OneParameterFamily` —
 the framework's first non-trivial continuous-symmetry instance on a
@@ -1462,6 +1537,34 @@ noncomputable def rotZOneParameterFamily :
         = (rotZStrictReversible θ₁).toLin.comp (rotZStrictReversible θ₂).toLin
     rw [rotZStrictReversible_toLin, rotZStrictReversible_toLin,
         rotZStrictReversible_toLin, ← rotZ_comp]
+
+/-- The qubit's `rotX` family packaged as a `OneParameterFamily`. -/
+noncomputable def rotXOneParameterFamily :
+    Perspectival.Continuity.OneParameterFamily qubitGPT where
+  f := rotXStrictReversible
+  continuous := rotX_continuous_pair
+  zero := by
+    show (rotXStrictReversible 0).toLin = LinearMap.id
+    rw [rotXStrictReversible_toLin, rotX_zero]
+  add θ₁ θ₂ := by
+    show (rotXStrictReversible (θ₁ + θ₂)).toLin
+        = (rotXStrictReversible θ₁).toLin.comp (rotXStrictReversible θ₂).toLin
+    rw [rotXStrictReversible_toLin, rotXStrictReversible_toLin,
+        rotXStrictReversible_toLin, ← rotX_comp]
+
+/-- The qubit's `rotY` family packaged as a `OneParameterFamily`. -/
+noncomputable def rotYOneParameterFamily :
+    Perspectival.Continuity.OneParameterFamily qubitGPT where
+  f := rotYStrictReversible
+  continuous := rotY_continuous_pair
+  zero := by
+    show (rotYStrictReversible 0).toLin = LinearMap.id
+    rw [rotYStrictReversible_toLin, rotY_zero]
+  add θ₁ θ₂ := by
+    show (rotYStrictReversible (θ₁ + θ₂)).toLin
+        = (rotYStrictReversible θ₁).toLin.comp (rotYStrictReversible θ₂).toLin
+    rw [rotYStrictReversible_toLin, rotYStrictReversible_toLin,
+        rotYStrictReversible_toLin, ← rotY_comp]
 
 /-- QubitGPT satisfies `HasOneParameterAgency`. -/
 noncomputable instance qubitHasOneParameterAgency :
