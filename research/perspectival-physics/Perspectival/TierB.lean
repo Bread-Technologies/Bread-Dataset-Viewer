@@ -771,6 +771,34 @@ theorem RealityChain.append_length {P : Type u} {C : Type v} :
       rw [RealityChain.append_length rest ch₂]
       omega
 
+/-- **Pointwise actualization as a single-step actualization chain.**
+The pointwise event `actualizeAt R m` (when m was potential)
+instantiates a 1-step actualization trajectory: a RealityChain of
+length 1 with actualizationCount 1 and bracketedCount 0. -/
+def actualizeAt_chain {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    RealityChain P C R (actualizeAt R m) :=
+  RealityChain.singleton
+    (TrajectoryStep.actualization (actualizeAt_atSeam R m h_pot))
+
+@[simp] theorem actualizeAt_chain_actualizationCount {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    (actualizeAt_chain R m h_pot).actualizationCount = 1 :=
+  (RealityChain.singleton_actualization_count
+    (actualizeAt_atSeam R m h_pot)).1
+
+@[simp] theorem actualizeAt_chain_bracketedCount {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    (actualizeAt_chain R m h_pot).bracketedCount = 0 :=
+  (RealityChain.singleton_actualization_count
+    (actualizeAt_atSeam R m h_pot)).2
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
