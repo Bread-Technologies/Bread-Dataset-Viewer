@@ -4459,6 +4459,19 @@ example (R : Reality Bool Bool) :
   show tierAEventCount loop3 = 0
   exact loopPower_tierAEventCount base 3
 
+/-- **Worked example: composite chain Boltzmann shadow.** A 7-fold
+loop power has count 0 (Boltzmann brain shadow). -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    tierAEventCount (loopPower base 7) = 0
+      ∧ (actualizationRate (loopPower base 7)).1 = 0 := by
+  intro base
+  refine ⟨loopPower_tierAEventCount base 7, ?_⟩
+  show (loopPower base 7).actualizationCount = 0
+  exact loopPower_tierAEventCount base 7
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
