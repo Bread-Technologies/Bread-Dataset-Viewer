@@ -4739,6 +4739,20 @@ theorem rate_x_axis_iff_coherent {P : Type u} {C : Type v}
     (actualizationRate ch).1 = 0 ↔ ch.actualizationCount = 0 :=
   rate_count_eq_zero_iff_coherent ch
 
+/-- **Rate corner: (0, 0) iff nil chain.** -/
+theorem rate_origin_iff_length_zero {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    actualizationRate ch = (0, 0) ↔ ch.length = 0 := by
+  show ((ch.actualizationCount, ch.length) : ℕ × ℕ) = (0, 0) ↔ ch.length = 0
+  constructor
+  · intro h
+    have h_len := congrArg Prod.snd h
+    exact h_len
+  · intro h
+    rw [h]
+    have h_count := length_zero_count_zero ch h
+    rw [h_count]
+
 /-- **Rate region characterization certificate.** -/
 theorem rate_region_characterization_certificate :
     -- Diagonal (k = n) is pure-decoherent region.
