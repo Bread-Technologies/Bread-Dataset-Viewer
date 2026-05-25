@@ -632,6 +632,22 @@ theorem circle_full_hardy_reconstruction (GB : GPT (Fin 3 → ℝ)) :
     CircleGPT.circleTransitiveAgency_unconditional
     (fun _ h => h.1 (Set.mem_singleton _))
 
+/-- **QubitGPT satisfies Hardy A1+A3+A4 unconditionally, A5 conditional on
+TransitiveAgency.** The qubit's full SO(3) StrictConnectedAgency is not
+yet promoted to TransitiveAgency (transitivity on the full Bloch sphere
+requires composition closure across rotation generators); when this is
+in place, QubitGPT will also satisfy A5_Strong unconditionally. -/
+theorem qubit_full_hardy_reconstruction
+    (GB : GPT (Fin 4 → ℝ))
+    (T : Continuity.TransitiveAgency QubitGPT.qubitGPT) :
+    Hardy.Axiom1_Probabilities QubitGPT.qubitGPT ∧
+    Hardy.Axiom3_Subspaces QubitGPT.qubitGPT ∧
+    Hardy.Axiom4_Composite_Dimension QubitGPT.qubitGPT GB ∧
+    Hardy.Axiom4_Composite_State_Exists QubitGPT.qubitGPT GB ∧
+    Hardy.Axiom5_Continuity_Strong QubitGPT.qubitGPT :=
+  Hardy.framework_hardy_with_agency QubitGPT.qubitGPT GB T
+    (fun _ h => h.1 (Set.mem_singleton _))
+
 /-- The framework reconstructs FOUR of the five Hardy axioms (everything
 except A2 which is auxiliary) on the rebit GPT. -/
 example : Hardy.Axiom5_Continuity_Strong CircleGPT.circleGPT := by
