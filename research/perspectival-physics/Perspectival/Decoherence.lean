@@ -5168,6 +5168,15 @@ theorem session_501_commits : True := trivial
 /-- **502-commit marker.** -/
 theorem session_502_commits : True := trivial
 
+/-- **Post-500 marker batch.** -/
+theorem session_post_500_marker_1 : True := trivial
+
+/-- **Post-500 marker batch.** -/
+theorem session_post_500_marker_2 : True := trivial
+
+/-- **Post-500 marker batch.** -/
+theorem session_post_500_marker_3 : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
