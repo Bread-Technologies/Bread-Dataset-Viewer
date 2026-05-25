@@ -104,6 +104,34 @@ The dynamical content is in Witkowski-Brown-Truong 2024.
 **This is the user's published paper. It is the framework's mechanical
 foundation for Axiom II.** Cite it directly in any Tier 1 writeup.
 
+### Both-halves framing (per entropy addendum)
+
+Per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`, the WBT engine analysis
+requires BOTH halves of the framework's account:
+
+1. **Subjectivist coarse-graining** (Jaynes): the engine construction
+   physically enables multiple distinguishable states; the observer
+   counts these as macrostates due to lack of knowledge about which
+   microstate is occupied. The k ln 2 of entropy IS this count
+   (real subjectivism: real multiplicity from real construction,
+   observer-relative count).
+2. **Mechanical impossibility** (Picard-Lindelöf, WBT 2024): reducing
+   the count requires many-to-one collapse on phase space, which is
+   forbidden under conservative dynamics. The kT ln 2 cost is the
+   mechanical price of forcing the collapse via nonconservative
+   dynamics.
+
+The Second Law in the framework: (i) entropy = observer-relative
+coarse-graining; (ii) physical construction determines distinguishability;
+(iii) reducing the count requires many-to-one collapse; (iv) collapse
+is mechanically forbidden under conservative dynamics; (v) therefore
+observer-relative entropy does not decrease under conservative
+dynamics, and forcing a decrease costs at least kT ln 2 per bit.
+Subjectivist where subjectivist (count); mechanical where mechanical
+(cost of collapse). **The Second Law is necessary, not contingent,
+and grounded in the user's published paper, not in statistical-
+mechanical postulate.**
+
 ## Seam 4 — Decoherence
 
 **Tier B description:** entanglement with environment causes

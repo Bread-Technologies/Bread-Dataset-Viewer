@@ -1,4 +1,10 @@
-# Tier 4 Dissolutions — Three Philosophical Targets
+# Tier 4 Dissolutions — Philosophical Targets
+
+Per the v2 prompt + entropy addendum
+(`ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`), the framework's
+metaphysical commitments dissolve a family of canonical puzzles in
+philosophy of physics and consciousness. The original three (#14-#16)
+remain central; the entropy addendum adds #17-#22 below.
 
 *Calibration up front.* This document is **philosophical argument**,
 not mathematical derivation. The Tier 4 targets — the hard problem of
@@ -213,6 +219,92 @@ events — which is what permits the dissolution to bite without
 invoking either substantival time or a substantival void.
 
 ---
+
+## Entropy-driven dissolutions (per addendum)
+
+Per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`, the framework's
+anti-realism extends from information-as-substance to
+entropy-as-substance. Entropy is subjectivist coarse-graining
+(Jaynes); the framework extends Jaynes from inference to structural
+anti-realism. This dissolves several long-standing puzzles:
+
+### #17. Past Hypothesis (Albert / Carroll)
+
+**Canonical puzzle:** the universe began in an exceptionally
+low-entropy state. Why? Statistical mechanics provides no answer;
+the Past Hypothesis is bolted on as a contingent fact.
+
+**Framework dissolution:** "low entropy in past direction"
+presupposes entropy as a substantial property of the universe.
+Framework reading: "low entropy in past direction" = "from this
+coarse-graining, past-direction configurations are fewer." This is
+constitutive of "past" (past = monotone-growth direction of
+actualized meetings; under any sensible coarse-graining, the count
+of actualized configurations is fewer in past direction), not a
+contingent fact to explain. The puzzle dissolves.
+
+### #18. Penrose's Weyl curvature puzzle
+
+**Canonical puzzle:** the universe began with a special Weyl
+curvature value (≈ 0), and we need an explanation for this
+fine-tuning.
+
+**Framework dissolution:** no special initial state with definite
+curvature value awaiting explanation. The Weyl asymmetry is the
+Tier B shadow of Tier A's asymmetric actualization-flow.
+Cosmological asymmetry and thermodynamic asymmetry have the same
+root: Axiom II's irreversible actualization. Their alignment is
+automatic, not a separate puzzle.
+
+### #19. Boltzmann brains
+
+**Canonical puzzle:** in a high-entropy state-space, fluctuations
+should produce vastly more "Boltzmann brain" observers than full
+observable universes; we shouldn't be the kind of observer we are.
+
+**Framework dissolution:** the framing presupposes a substantial
+high-entropy state-space from which fluctuations occur. The
+framework rejects substantial state-space — what exists is the
+relational meeting-structure of actualized perspectives. There is
+no "high-entropy substrate" to fluctuate; Boltzmann brain reasoning
+is built on a category error. (Müller's algorithmic-idealism move
+makes a similar deflation; the framework deepens it by tying the
+deflation to Axiom II's actualization-flow.)
+
+### #20. Black hole entropy
+
+**Canonical puzzle:** S = A/4 means information is stored on the
+horizon as a substance; the information paradox asks what happens
+to this substance.
+
+**Framework reframing:** S = A/4 is the dimensionality of
+distinguishable-from-outside structure under the outside-observer's
+coarse-graining; not substance stored on the horizon. The
+information paradox reframes as a structural relation between
+inside and outside coarse-grainings — not as "where did the
+substance go." This is the v2 + entropy-addendum reading of
+Bekenstein-Hawking.
+
+### #21. Verlinde's entropic gravity / holographic principle / Bekenstein bound
+
+**Canonical reading:** gravity emerges from entropy gradients;
+spacetime is fundamentally informational.
+
+**Framework reframing:** same math, different ontology. The
+"entropy" in Verlinde's account is a coarse-graining structure
+relating different observer perspectives; the "informational
+spacetime" is relational meeting-structure. The Bekenstein bound
+bounds the dimensionality of distinguishable structures under a
+boundary observer's coarse-graining. None of this requires
+treating entropy or information as a substance.
+
+### #22. Cosmological and thermodynamic arrows unify
+
+Both are Tier B coarse-graining shadows of Axiom II's asymmetric
+actualization-flow. Their alignment is automatic per the framework's
+Tier A foundation. The puzzle "why are they aligned?" presupposes
+they could fail to align; under v2 + entropy-addendum, they have
+the same root and the alignment is *necessary*.
 
 ## What the three dissolutions share
 

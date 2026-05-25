@@ -95,8 +95,34 @@ are different surfaces of the same underlying structure.
 - **Existential/relational ethics**: Buber, Levinas, Heidegger.
 - **Economic/Austrian**: Hayek (spontaneous order, distributed
   knowledge), Mises, Smith, Kirzner.
-- **Information-theoretic**: Jaynes, Friston.
+- **Information-theoretic**: Jaynes (**LOAD-BEARING** per entropy
+  addendum — anti-substantialist on entropy; framework extends Jaynes
+  from inference to structural anti-realism), Friston.
+- **QBism (load-bearing per v2)**: Fuchs, Schack, DeBrota, Mermin —
+  personal Bayesian credences for quantum states; Born rule as
+  Dutch-book coherence. QM analog of Jaynesian subjectivism.
 - **Continental wild card**: Deleuze & Guattari (use sparingly).
+
+## Anti-realism about entropy and coarse-graining (per addendum)
+
+Per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`, the framework adopts an
+explicit anti-realist position on entropy: entropy is not a property
+the universe has; it is subjectivist coarse-graining (Jaynes). The
+framework extends Jaynes from inference to structural anti-realism.
+
+**Real subjectivism, not bad subjectivism:** values are
+perspective-relative; perspectives are real; relations between
+perspectives and systems are real; structural constraints on
+consistent value-assignments are real. Multiple coarse-grainings
+exist objectively as different real relations; none privileged; the
+multiplicity does not collapse into arbitrariness.
+
+QBism's Dutch-book coherence is the QM analog of the
+consistency-across-coarse-grainings requirement for entropy: same
+shape; structurally constrained subjectivism in both cases.
+
+The framework owns the word "subjectivism" — realist-respectability
+relabelings ("structural realism, not subjectivism") are drift.
 
 ## Positions confronted and rejected
 
