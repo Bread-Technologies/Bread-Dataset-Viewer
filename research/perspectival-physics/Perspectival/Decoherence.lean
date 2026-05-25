@@ -398,6 +398,35 @@ theorem trajectory_trichotomy_at_positive_length {P : Type u} {C : Type v}
     (0 < ch.actualizationCount ∧ 0 < ch.bracketedCount) :=
   trajectory_trichotomy ch
 
+/-! ### Decoherence as Tier A irreversibility accumulation
+
+The framework's prediction (per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`):
+decoherence is the Tier B observable signature of Tier A actualization
+content. The framework reads decoherence rate as the rate at which
+seam crossings accumulate at the system-environment interface.
+
+The Lean machinery below records the formal correlate: -/
+
+/-- **Tier-A-irreversibility content of a trajectory.** Defined as
+the actualizationCount alone (not normalized to length). This is the
+"raw count" of seam crossings — the framework's analog of "amount of
+irreversible Tier A event content" along the trajectory. -/
+def tierAEventCount {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) : ℕ :=
+  ch.actualizationCount
+
+/-- **tierAEventCount is compositional under append.** -/
+theorem tierAEventCount_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount (ch₁.append ch₂) = tierAEventCount ch₁ + tierAEventCount ch₂ :=
+  RealityChain'.append_actualizationCount ch₁ ch₂
+
+/-- **Coherent trajectories carry zero Tier A event content.** -/
+theorem coherent_zero_tier_A_content {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount = 0 ↔ tierAEventCount ch = 0 := Iff.rfl
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
