@@ -1608,6 +1608,39 @@ theorem counts_image_contains_zero :
       tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0 :=
   fun _ _ R => coherent_kernel_nil R
 
+/-! ## Past functor restricts to identity on the loop submonoid
+
+Since loop chains have R₁ = R₂, the past-as-functor restricts to the
+identity functor on the loop submonoid. Combined with
+`coherent_kernel_iff_endpoints_eq`, this gives: chains with zero
+count are exactly the chains under which past is invariant. -/
+
+/-- **Coherent chains have invariant past.** If `tierAEventCount ch = 0`
+along a strict chain, then `past R₁ = past R₂`. This generalizes
+the loop result (R₁ = R₂) to the kernel of the counts homomorphism. -/
+theorem coherent_chain_invariant_past {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : tierAEventCount ch = 0) :
+    past R₁ = past R₂ := by
+  have h_eq : R₁ = R₂ := (coherent_kernel_iff_endpoints_eq ch).mp h
+  rw [h_eq]
+
+/-- **Loops preserve past (corollary).** -/
+theorem loop_preserves_past {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    past R = past R :=
+  coherent_chain_invariant_past ch (loop_is_coherent ch)
+
+/-- **Coherent-invariant-past certificate.** -/
+theorem coherent_invariant_past_certificate :
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch = 0 → past R₁ = past R₂) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R), past R = past R) :=
+  ⟨fun ch h => coherent_chain_invariant_past ch h,
+   fun ch => loop_preserves_past ch⟩
+
 /-! ## Loop insertion preserves Tier A content
 
 A key structural fact about the loop submonoid: inserting a loop
