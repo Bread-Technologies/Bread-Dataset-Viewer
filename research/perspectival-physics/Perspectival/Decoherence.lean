@@ -204,6 +204,12 @@ theorem rate_count_le_length {P : Type u} {C : Type v}
   show ch.actualizationCount ≤ ch.length
   exact ch.actualizationCount_le_length
 
+-- (Concrete two-actualization Bool example deferred — the strict
+-- chain construction works but the proof had subtle goal-reduction
+-- issues. The abstract `concatenated_decoherence` + `coherent_plus_decoherent`
+-- + `decoherent_plus_coherent` theorems above provide the composable
+-- machinery; instantiating on concrete types is a downstream exercise.)
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
