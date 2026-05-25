@@ -336,6 +336,23 @@ theorem path_independent_coherence {P : Type u} {C : Type v}
     ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0 := by
   rw [← ch₁.eq_iff_zero_count, ← ch₂.eq_iff_zero_count]
 
+/-- **Pure-Tier-A trajectories: all steps actualize.** A strict chain
+with `bracketedCount = 0` has every step as an actualization. -/
+theorem pure_tier_A_no_bracketed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.bracketedCount = 0) :
+    ch.actualizationCount = ch.length := by
+  have h_sum := ch.counts_sum
+  omega
+
+/-- **Pure-Tier-A trajectories preserve all actualizations.** Since
+every step is an actualization and strict chains preserve actualized
+meetings, the past grows monotonically along the entire chain. -/
+theorem pure_tier_A_past_monotone {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (_h : ch.bracketedCount = 0) :
+    past R₁ ⊆ past R₂ := ch.past_monotone'
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
