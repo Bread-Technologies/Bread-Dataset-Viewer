@@ -556,6 +556,34 @@ theorem complexity_eq_twice_length_iff_pure_decoherent {P : Type u} {C : Type v}
   · intro h; omega
   · intro h; omega
 
+/-- **Full decoherence + complexity certificate.** Single Lean
+expression bundling the module's content: decoherence rate +
+trajectory complexity + their properties. -/
+theorem framework_decoherence_full_certificate :
+    -- Decoherence content.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 →
+      actualizationRate ch = (0, ch.length)) ∧
+    -- Path-independence of coherence.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- Complexity bounds.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length ≤ trajectoryComplexity ch
+      ∧ trajectoryComplexity ch ≤ 2 * ch.length) ∧
+    -- Complexity is compositional.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      trajectoryComplexity (ch₁.append ch₂)
+        = trajectoryComplexity ch₁ + trajectoryComplexity ch₂) :=
+  ⟨fun ch h => coherent_regime ch h,
+   fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   fun ch => ⟨complexity_ge_length ch, complexity_le_twice_length ch⟩,
+   fun ch₁ ch₂ => trajectoryComplexity_append ch₁ ch₂⟩
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
@@ -565,8 +593,9 @@ The key formal results: (i) the (count, length) rate measure with
 its compositional + regime-characterization theorems; (ii) the
 trajectory-complexity measure with its compositional + iff-bound
 theorems; (iii) `path_independent_coherence` showing coherence is
-endpoint-determined; (iv) `decoherence_certificate` as the bundled
-expression of the four core facts.
+endpoint-determined; (iv) `decoherence_certificate` and
+`framework_decoherence_full_certificate` as the bundled
+expressions of the core facts.
 
 Open: continuous-time exponential-suppression dynamics, operational
 environment-density definition, quantitative decoherence-time
