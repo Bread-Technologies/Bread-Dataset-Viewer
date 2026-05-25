@@ -1179,3 +1179,38 @@ discrimination) is now substantially advanced: qQM excluded via S1
 (local tomography), all three other signatures constructed, real-vs-
 complex discrimination via Renou-style experimental results
 remaining as the open piece.
+
+**Critical observation about qubit forcing.** With the
+`TomographicLocality` predicate (`GPTTensor.lean`) in place, BOTH
+rebit AND qQM are excluded:
+
+  Classical: K_AB = N_A · N_B  → ✓ (locally tomographic, but L7 fails)
+  Rebit:     K(4) = 10 ≠ 9 = 3·3  → violates local tomography
+  Qubit:     K(4) = 16 = 4·4    → ✓ (uniquely consistent)
+  qQM:       K(4) = 28 ≠ 36 = 6·6 → violates local tomography
+
+So the framework's L7 closure (excludes classical) + TomographicLocality
+(excludes rebit and qQM) jointly FORCE the qubit signature K = N². The
+full Lean theorem requires constructing the rebit and qQM composites
+explicitly, but the structural argument is complete.
+
+**A.13 Tier 2 #6 baby step: U(1) gauge instance + SU(2) axes present.**
+
+`Dichotomy.framework_u1_gauge_instance` formalizes the framework's
+smallest non-trivial gauge instance: CircleGPT's
+`rotOneParameterFamily` is a continuous homomorphism (ℝ, +) → U(1)
+realized as state-preserving bijections on the rebit. Per
+`TIER2_GAUGE_SCOPING.md` §7, this is the minimal Tier 2 step the
+framework has earned.
+
+`Dichotomy.framework_so3_axes_present` formalizes the next step:
+three independent `OneParameterFamily` instances (rotX, rotY, rotZ)
+on QubitGPT, together generating SO(3) ≃ SU(2)/Z₂ — the framework's
+first non-abelian-gauge candidate. Full SO(3) closure (composition
+across generators) is deferred.
+
+What this delivers for Tier 2 #6: the framework's gauge-as-connection
+intuition is formally instantiated for U(1) (the smallest abelian Lie
+group) and partially instantiated for SU(2) (via the rotX/Y/Z
+axes-present theorem). The full SO(3)/SU(2) Lie-group structure (with
+composition closure on the avail set) is the next deferred piece.
