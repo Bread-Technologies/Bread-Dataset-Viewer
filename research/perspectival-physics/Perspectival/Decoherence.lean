@@ -703,6 +703,36 @@ theorem plain_complexity_ge_length {P : Type u} {C : Type v}
   have h_sum := ch.counts_sum
   omega
 
+/-! ## Coherence preservation along Reality-successor
+
+A strict chain's coherence status is governed by the
+`RealitySuccessor` structure: chains with the same endpoints
+have agreeing coherence (path-independent), and chains can only
+"lose" coherence by adding actualization steps. -/
+
+/-- **Monotonicity of decoherence under chain extension.** Extending
+a chain by appending another chain can only INCREASE the tier A
+content (never decrease). -/
+theorem tier_A_monotone_under_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂) := by
+  show ch₁.actualizationCount ≤ (ch₁.append ch₂).actualizationCount
+  rw [RealityChain'.append_actualizationCount]
+  omega
+
+/-- **Coherence is destroyed but not restored by chain extension.** If
+a chain becomes coherent at some intermediate point, but then any
+further extension... wait, actually coherence CAN be lost by adding
+actualizations. The framework's content is that *gaining* coherence
+requires the chain to be coherent throughout. -/
+theorem decoherent_chain_extension_decoherent {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h_de : 0 < tierAEventCount ch₁) : 0 < tierAEventCount (ch₁.append ch₂) := by
+  have := tier_A_monotone_under_append ch₁ ch₂
+  omega
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
