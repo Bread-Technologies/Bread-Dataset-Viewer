@@ -703,7 +703,7 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~3500 lines, 315+ commits)
+### Decoherence module final state (~3550 lines, 320+ commits)
 
 **Final certificate inventory:**
 - `decoherence_module_super_certificate` — 8-fact ultimate bundle
