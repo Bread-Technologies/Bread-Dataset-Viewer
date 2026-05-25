@@ -400,5 +400,48 @@ theorem productEffect_bounds_on_product
     _ ≤ 1 * 1     := by exact mul_le_mul_of_nonneg_left h2.2 (by norm_num)
     _ = 1         := by ring
 
+/-- **Bounds extend to the convex hull.** Since the set `{ρ |
+0 ≤ productEffect e₁ e₂ ρ ≤ 1}` is the intersection of two half-spaces
+(hence convex) AND contains all product generators (by
+`productEffect_bounds_on_product`), it contains the entire convex
+hull = `tensorStates`. -/
+theorem productEffect_bounds_on_tensorStates
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    {e₁ : V₁ →ₗ[ℝ] ℝ} {e₂ : V₂ →ₗ[ℝ] ℝ}
+    (he₁ : e₁ ∈ G₁.effects) (he₂ : e₂ ∈ G₂.effects)
+    {ρ : V₁ ⊗[ℝ] V₂} (hρ : ρ ∈ tensorStates G₁ G₂) :
+    0 ≤ productEffect e₁ e₂ ρ ∧ productEffect e₁ e₂ ρ ≤ 1 := by
+  -- Define the half-space set as a convex set.
+  set T : Set (V₁ ⊗[ℝ] V₂) :=
+    {x | 0 ≤ productEffect e₁ e₂ x ∧ productEffect e₁ e₂ x ≤ 1}
+  -- Show T is convex.
+  have hT_convex : Convex ℝ T := by
+    intro x hx y hy a b ha hb hab
+    refine ⟨?_, ?_⟩
+    · show 0 ≤ productEffect e₁ e₂ (a • x + b • y)
+      rw [LinearMap.map_add, LinearMap.map_smul, LinearMap.map_smul]
+      exact add_nonneg (mul_nonneg ha hx.1) (mul_nonneg hb hy.1)
+    · show productEffect e₁ e₂ (a • x + b • y) ≤ 1
+      rw [LinearMap.map_add, LinearMap.map_smul, LinearMap.map_smul]
+      calc a • (productEffect e₁ e₂ x) + b • (productEffect e₁ e₂ y)
+          = a * (productEffect e₁ e₂ x) + b * (productEffect e₁ e₂ y) := by
+              simp [smul_eq_mul]
+        _ ≤ a * 1 + b * 1 := by
+              have h1 : a * (productEffect e₁ e₂ x) ≤ a * 1 :=
+                mul_le_mul_of_nonneg_left hx.2 ha
+              have h2 : b * (productEffect e₁ e₂ y) ≤ b * 1 :=
+                mul_le_mul_of_nonneg_left hy.2 hb
+              linarith
+        _ = 1 := by linarith [hab]
+  -- productGenerators ⊆ T.
+  have hgen_sub : productGenerators G₁ G₂ ⊆ T := by
+    intro x hx
+    obtain ⟨ρ₁, hρ₁, ρ₂, hρ₂, rfl⟩ := hx
+    exact productEffect_bounds_on_product he₁ he₂ hρ₁ hρ₂
+  -- Conclude convexHull ⊆ T.
+  exact convexHull_min hgen_sub hT_convex hρ
+
 end GPT
 end Perspectival
