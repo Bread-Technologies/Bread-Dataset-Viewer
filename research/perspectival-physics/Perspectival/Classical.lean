@@ -2627,6 +2627,146 @@ example : n3_disc_det (LinearMap.id : V 3 →ₗ[ℝ] V 3)
   rw [n3_disc_det_id, n3_disc_det_swap01]
   norm_num
 
+/-! ## TransitiveAgency impossibility on Classical n = 2
+
+`TransitiveAgency` (defined in `Continuity.lean`) is the substantive
+half of Hardy's Axiom 5: the available StrictReversibles act
+transitively on pure states.  For Classical `n = 2`, no such agency
+can exist.  The argument:
+
+1. Suppose `T : TransitiveAgency (gpt 2)` exists, with `vertex 2 0`
+   and `vertex 2 1` as pure states.
+2. By transitivity, some `R ∈ T.avail` carries `vertex 2 0` to
+   `vertex 2 1`.  In particular `R.toLin (vertex 2 0) = vertex 2 1`,
+   so the first coordinate of `R.toLin (vertex 2 0)` is `0`.
+3. Compute `n2_disc_det R.toLin = -R.toLin(vertex 2 1) 0`.  Bijectivity
+   of `R.toLin` combined with state-preservation forces this to be
+   strictly negative (the determinant cannot vanish on a bijection).
+4. Identity is in `T.avail` (by the parent `StrictConnectedAgency`
+   axiom), and `n2_disc_det LinearMap.id = 1 > 0`.
+5. Apply `T.strict_paths` to get a `StrictReversiblePath` from `id` to
+   `R`.  Feed the path into `classical_n2_no_path_across_sign` — the
+   continuous-bijective-state-preserving determinant must cross zero,
+   contradicting bijectivity.
+
+So `TransitiveAgency` and Classical `n = 2` cannot coexist (modulo the
+purity-of-vertices hypothesis, which itself is a routine
+extreme-point computation that we take as input). -/
+
+/-- Given a `StrictReversible` on `gpt 2` that maps `vertex 2 0` to
+`vertex 2 1`, its `n2_disc_det` is strictly negative.
+
+The argument: `n2_disc_det R.toLin = R.toLin(v0) 0 - R.toLin(v1) 0
+= 0 - R.toLin(v1) 0 = -R.toLin(v1) 0`.  Since `R.toLin(v1) ∈ states 2`,
+this is in `[-1, 0]`; bijectivity + state-preservation forbids `0`. -/
+theorem n2_disc_det_neg_of_strict_swap_vertex
+    (R : Perspectival.Continuity.StrictReversible (gpt 2))
+    (hRv0 : R.toLin (vertex 2 0) = vertex 2 1) :
+    n2_disc_det R.toLin < 0 := by
+  -- R.toLin(v0) 0 = 0 since R.toLin(v0) = vertex 2 1 and v1 0 = 0
+  have h0 : R.toLin (vertex 2 0) 0 = 0 := by
+    rw [hRv0]; exact (vertex_n2_one_coords).1
+  -- R.toLin(v1) ∈ states 2, so R.toLin(v1) 0 ∈ [0, 1]
+  have hRv1_state : R.toLin (vertex 2 1) ∈ states 2 :=
+    R.preserves_states _ (vertex_in_states 2 1)
+  have hRv1_nonneg : 0 ≤ R.toLin (vertex 2 1) 0 :=
+    classical_n2_state_nonneg _ hRv1_state 0
+  -- It suffices to show R.toLin(v1) 0 > 0.  By bijective state-preserving:
+  -- det = R(v0) 0 - R(v1) 0 = -R(v1) 0; det ≠ 0 ⇒ R(v1) 0 ≠ 0 ⇒ R(v1) 0 > 0.
+  have hdet_signed :=
+    classical_n2_bijective_state_preserving_det_nonzero
+      R.toLin R.preserves_states R.isEquiv
+  have hdet_eq : n2_disc_det R.toLin = -R.toLin (vertex 2 1) 0 := by
+    show R.toLin (vertex 2 0) 0 - R.toLin (vertex 2 1) 0 = -R.toLin (vertex 2 1) 0
+    rw [h0]; ring
+  rw [hdet_eq]
+  -- hdet_signed : 0 < n2_disc_det R.toLin ∨ n2_disc_det R.toLin < 0
+  rw [hdet_eq] at hdet_signed
+  -- So either 0 < -R(v1) 0 or -R(v1) 0 < 0
+  rcases hdet_signed with hpos | hneg
+  · -- 0 < -R(v1) 0  ⇒ R(v1) 0 < 0; contradicts nonnegativity.
+    linarith
+  · exact hneg
+
+/-- **MAIN THEOREM (TransitiveAgency on Classical n=2 is impossible).**
+
+Given any `TransitiveAgency` over `gpt 2` and witnesses that
+`vertex 2 0` and `vertex 2 1` are pure states, we derive `False`.
+
+Argument: transitivity hands us a `StrictReversible R ∈ T.avail` with
+`R.toLin (vertex 2 0) = vertex 2 1`, whose `n2_disc_det` is strictly
+negative.  But the identity is in `T.avail` (the parent
+`StrictConnectedAgency` axiom), with `n2_disc_det = 1 > 0`.  The
+`T.strict_paths` field gives a continuous bijective state-preserving
+path from `id` to `R`; `classical_n2_no_path_across_sign` says no such
+path exists across the sign-of-det disconnect. -/
+theorem classical_n2_no_transitive_agency
+    (T : Perspectival.Continuity.TransitiveAgency (gpt 2))
+    (hp0 : Perspectival.Continuity.PureState (gpt 2) (vertex 2 0))
+    (hp1 : Perspectival.Continuity.PureState (gpt 2) (vertex 2 1)) :
+    False := by
+  -- Step 1: transitivity gives R ∈ avail with R(v0) = v1.
+  obtain ⟨R, hR_avail, hRρ⟩ := T.transitive_on_pure
+    (vertex 2 0) (vertex 2 1) hp0 hp1
+  -- Step 2: det(R) < 0.
+  have hdet_R_neg : n2_disc_det R.toLin < 0 :=
+    n2_disc_det_neg_of_strict_swap_vertex R hRρ
+  -- Step 3: id is in avail with det = 1 > 0.
+  have hid_avail :
+      Perspectival.Continuity.StrictReversible.id (gpt 2) ∈ T.avail :=
+    T.toStrictConnectedAgency.id_avail
+  -- Step 4: get a StrictReversiblePath from id to R.
+  obtain ⟨p⟩ := T.strict_paths
+    (Perspectival.Continuity.StrictReversible.id (gpt 2)) R
+    hid_avail hR_avail
+  -- Step 5: apply classical_n2_no_path_across_sign to derive False.
+  -- We need n2_disc_det ∘ p.γ continuous; that's
+  -- n2_disc_det_path_continuous applied to p.γ.
+  apply classical_n2_no_path_across_sign p.γ
+    (n2_disc_det_path_continuous p.γ p.continuous)
+    p.preserves_states_along p.bijective_along
+  · -- 0 < n2_disc_det (p.γ 0).  p.γ 0 = id.toLin = LinearMap.id, det = 1.
+    have hγ0 : p.γ 0 = LinearMap.id := by rw [p.start]; rfl
+    rw [hγ0, n2_disc_det_id]
+    norm_num
+  · -- n2_disc_det (p.γ 1) < 0.  p.γ 1 = R.toLin; det < 0.
+    have hγ1 : p.γ 1 = R.toLin := p.finish
+    rw [hγ1]
+    exact hdet_R_neg
+
+/-- Companion: any `TransitiveAgency` on `gpt 2` is impossible
+*assuming* the pure-state extremality of the two vertices.  Packaged
+form for downstream consumers. -/
+theorem classical_n2_transitive_agency_impossible
+    (hp0 : Perspectival.Continuity.PureState (gpt 2) (vertex 2 0))
+    (hp1 : Perspectival.Continuity.PureState (gpt 2) (vertex 2 1)) :
+    ¬ Nonempty (Perspectival.Continuity.TransitiveAgency (gpt 2)) := by
+  intro ⟨T⟩
+  exact classical_n2_no_transitive_agency T hp0 hp1
+
+/-- Vertices `vertex 2 0` and `vertex 2 1` are distinct (concrete
+inequality, used by the `trivial_impossible` instantiation below). -/
+theorem classical_n2_vertices_distinct :
+    (vertex 2 0 : V 2) ≠ vertex 2 1 := by
+  intro h
+  have h00 : (vertex 2 0 : V 2) 0 = (vertex 2 1 : V 2) 0 := congr_fun h 0
+  rw [(vertex_n2_zero_coords).1, (vertex_n2_one_coords).1] at h00
+  norm_num at h00
+
+/-- Specialization of `TransitiveAgency.trivial_impossible` to Classical
+`n = 2`: the trivial agency (which IS a valid `StrictConnectedAgency`
+on Classical `n = 2`) cannot be promoted to a `TransitiveAgency`,
+assuming the vertex-purity hypotheses. -/
+theorem classical_n2_trivial_strict_agency_not_transitive
+    (T : Perspectival.Continuity.TransitiveAgency (gpt 2))
+    (h_avail : T.avail =
+      (Perspectival.Continuity.trivialStrictAgency (gpt 2)).avail)
+    (hp0 : Perspectival.Continuity.PureState (gpt 2) (vertex 2 0))
+    (hp1 : Perspectival.Continuity.PureState (gpt 2) (vertex 2 1)) :
+    False :=
+  Perspectival.Continuity.TransitiveAgency.trivial_impossible
+    (gpt 2) T h_avail hp0 hp1 classical_n2_vertices_distinct
+
 end Classical
 end Perspectival
 
