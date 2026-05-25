@@ -639,8 +639,8 @@ TransitiveAgency.** The qubit's full SO(3) StrictConnectedAgency is not
 yet promoted to TransitiveAgency (transitivity on the full Bloch sphere
 requires composition closure across rotation generators); when this is
 in place, QubitGPT will also satisfy A5_Strong unconditionally. -/
-theorem qubit_full_hardy_reconstruction
-    (GB : GPT (Fin 4 → ℝ))
+theorem qubit_full_hardy_reconstruction {VB : Type}
+    [AddCommGroup VB] [Module ℝ VB] (GB : GPT VB)
     (T : Continuity.TransitiveAgency QubitGPT.qubitGPT) :
     Hardy.Axiom1_Probabilities QubitGPT.qubitGPT ∧
     Hardy.Axiom3_Subspaces QubitGPT.qubitGPT ∧
