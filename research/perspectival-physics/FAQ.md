@@ -150,6 +150,53 @@ dozen-plus worked examples on the simplest Wantables (Bool, Fin 2,
 Fin 3, Fin 4, ℤ, Unit, Empty, Bool × Bool, Bool ⊕ Bool, lists,
 options, function spaces) showing the framework in action.
 
+## Q11. What is the framework's resolution of the measurement problem?
+
+**Framework answer:** Measurement is not a separate axiom; it is the
+actualization event re-entering the Tier B (operational, reversible)
+description. The framework's two-tier architecture:
+
+- **Tier A:** irreversible meeting-structure. Wanting → actualization.
+- **Tier B:** reversible-limit emerging from bracketing actualization
+  events. Unitary evolution lives here.
+
+Standard QM postulates unitary evolution AND collapse separately,
+creating the measurement problem (when does collapse happen? Is it
+"real" or epistemic?). The framework dissolves this by deriving both
+from a single foundation:
+
+- Between actualization events, Reality evolves "unitarily" (Tier B,
+  bracketed). The status function is invariant; the relational
+  configuration evolves reversibly.
+- AT an actualization event, the system + apparatus meeting clears,
+  irreversibly. The actualized set grows.
+
+Formalized in `Perspectival/TierA.lean` (axioms I-II + actualization)
+and `Perspectival/TierB.lean` (bracketing + measurement_is_actualization
+theorem). See `SEAMS.md` for the catalogue of where Tier A leaks
+through Tier B as measurable / observable signatures.
+
+## Q12. Why a "two-tier" architecture?
+
+**Framework answer:** Because the foundation is irreversible (wanting
+is directional, actualization is one-way) but the standard physics
+formalisms (QM unitary evolution, GR field equations) are reversible
+in their natural form. The mismatch was the v1 program's central
+problem — every place the formalization broke was where the
+irreversible foundation leaked through.
+
+The v2 architectural correction makes this two-tier structure
+explicit: Tier A is the irreversible foundation; Tier B is the
+reversible limit emerging by bracketing actualization events. The
+framework's distinctive empirical content lives at the *seams* —
+where Tier A content leaks through Tier B (measurement, vertex
+preservation, decoherence, Lyapunov instability at erasure points).
+
+The user's published paper (Witkowski, Brown, Truong, Entropy 2024,
+26(3), 203) grounds Axiom II mechanically: reset/erasure is strictly
+impossible under conservative (reversible) dynamics, by Picard-
+Lindelöf. This is the same fact the two-tier architecture rests on.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
@@ -157,4 +204,5 @@ options, function spaces) showing the framework in action.
 honest commentary on what's been earned vs. what remains open, and
 `CONCLUSIONS.md` for an external-reader summary. The Lean modules
 are catalogued in `DEPS.md`. The publication-target writeup is in
-`PAPER_DRAFT.md`.
+`PAPER_DRAFT.md`. For the v2 architectural correction specifically,
+see `ORIGINAL_PROMPT.md`, `SEAMS.md`, and `V2_AUDIT.md`.
