@@ -5126,6 +5126,23 @@ theorem session_494_commits : True := trivial
 /-- **495-commit marker.** -/
 theorem session_495_commits : True := trivial
 
+/-- **Path-independent count for same-endpoint chains.** Already
+shown as path_independent_coherence; restated as a clean implication. -/
+theorem same_endpoint_same_status {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    -- Both coherent or both non-coherent.
+    (ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) :=
+  path_independent_coherence ch₁ ch₂
+
+/-- **Coherent classes are uniquely determined by endpoint pair.** -/
+theorem coherent_class_endpoint_determined {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R₁ R₂)
+    (h_coherent : ch₁.actualizationCount = 0) :
+    ch₂.actualizationCount = 0 :=
+  (same_endpoint_same_status ch₁ ch₂).mp h_coherent
+
 /-- **Rate region trichotomy certificate.** -/
 theorem rate_region_trichotomy_certificate :
     -- Trichotomy holds for every chain.
