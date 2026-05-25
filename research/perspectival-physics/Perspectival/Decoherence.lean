@@ -2480,5 +2480,57 @@ theorem decoherence_module_super_certificate :
     rfl, by decide⟩,
    fun ch n => loopPower_tierAEventCount ch n⟩
 
+/-! ## Final worked example: complete loop+chain demonstration
+
+A polished end-of-module example demonstrating the full trajectory
+algebra in action: build a chain combining a loop power, an
+actualization, and another loop, then verify all measures simultaneously. -/
+
+/-- **Final demonstration: a 5-step Bool trajectory with mixed structure.**
+Construct: (2-fold reflBracketed loop) ++ (actualization step) ++
+(1-fold reflBracketed loop at the new Reality). The full chain has
+length 4, count 1, complexity 5. The loop additions preserve count. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let R' := actualizeAt R m
+    let loop_pre : RealityChain' Bool Bool R R :=
+      loopPower
+        (RealityChain'.singleton
+          (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) 2
+    let ch_act : RealityChain' Bool Bool R R' :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    let loop_post : RealityChain' Bool Bool R' R' :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R'))
+    let full := loop_pre.append (ch_act.append loop_post)
+    full.length = 4
+      ∧ full.actualizationCount = 1
+      ∧ tierAEventCount full = 1
+      ∧ DecoherenceEquivalent full ch_act := by
+  intro R h_pot R' loop_pre ch_act loop_post full
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · -- length = 2 (loop_pre) + (1 + 1) = 4
+    show (loop_pre.append (ch_act.append loop_post)).length = 4
+    rw [RealityChain'.append_length, RealityChain'.append_length]
+    show (loopPower _ 2).length + (1 + 1) = 4
+    rw [loopPower_length]
+    show 2 * (RealityChain'.singleton _).length + 2 = 4
+    rw [RealityChain'.singleton_length]
+  · -- count = 0 + (1 + 0) = 1
+    show (loop_pre.append (ch_act.append loop_post)).actualizationCount = 1
+    rw [RealityChain'.append_actualizationCount,
+        RealityChain'.append_actualizationCount]
+    show (loopPower _ 2).actualizationCount + (1 + 0) = 1
+    rw [loopPower_actualizationCount]
+  · -- tierAEventCount = actualizationCount
+    show (loop_pre.append (ch_act.append loop_post)).actualizationCount = 1
+    rw [RealityChain'.append_actualizationCount,
+        RealityChain'.append_actualizationCount]
+    show (loopPower _ 2).actualizationCount + (1 + 0) = 1
+    rw [loopPower_actualizationCount]
+  · -- Full is decoherence-equivalent to ch_act (loops are trivial).
+    exact loop_conjugation_equivalent loop_pre ch_act loop_post
+
 end Decoherence
 end Perspectival
