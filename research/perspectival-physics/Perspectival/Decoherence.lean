@@ -4764,6 +4764,25 @@ theorem rate_point_addition {P : Type u} {C : Type v}
        (actualizationRate ch₁).2 + (actualizationRate ch₂).2) :=
   concatenated_decoherence ch₁ ch₂
 
+/-- **Phase space transition certificate.** Bundles the rate-point
+addition fact with its corollaries. -/
+theorem rate_phase_transition_certificate :
+    -- Rate addition under composition.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      actualizationRate (ch₁.append ch₂) =
+        ((actualizationRate ch₁).1 + (actualizationRate ch₂).1,
+         (actualizationRate ch₁).2 + (actualizationRate ch₂).2)) ∧
+    -- Two coherent → rate sums (0, k) + (0, m) = (0, k+m), coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      ch₁.actualizationCount = 0 → ch₂.actualizationCount = 0 →
+      (actualizationRate (ch₁.append ch₂)).1 = 0) :=
+  ⟨fun ch₁ ch₂ => rate_point_addition ch₁ ch₂,
+   fun ch₁ ch₂ h₁ h₂ => by
+     show (ch₁.append ch₂).actualizationCount = 0
+     rw [RealityChain'.append_actualizationCount, h₁, h₂]⟩
+
 /-- **Decoherence phase space certificate.** Bundles the phase space
 structure facts. -/
 theorem decoherence_phase_space_certificate :
