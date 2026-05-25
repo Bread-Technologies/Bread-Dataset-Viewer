@@ -1024,5 +1024,52 @@ Key declarations:
     modulo the deferred pure-state classification.
 -/
 
+/-! ## Cardinality observations: rotAvail is non-trivial -/
+
+/-- `rotZ π` is not the identity: it sends (1, 0, 1) to (-1, 0, 1). -/
+theorem rotZ_pi_ne_id : rotZ Real.pi ≠ LinearMap.id := by
+  intro h
+  -- Apply both sides to (1, 0, 1).
+  have hpt : rotZ Real.pi (fun i => if i = 0 then (1 : ℝ) else if i = 1 then 0 else 1)
+            = (fun i => if i = 0 then (1 : ℝ) else if i = 1 then 0 else 1) := by
+    rw [h]; rfl
+  -- (rotZ π) at index 0 sends 1 to -1, not 1.
+  have hzero : rotZ Real.pi (fun i => if i = 0 then (1 : ℝ) else if i = 1 then 0 else 1) 0
+             = -1 := by
+    rw [rotZ_apply_zero]
+    show 1 * Real.cos Real.pi - 0 * Real.sin Real.pi = -1
+    rw [Real.cos_pi]; ring
+  have hzero_id : (fun i : Fin 3 => if i = 0 then (1 : ℝ) else if i = 1 then 0 else 1) 0
+                = 1 := by
+    show (if (0 : Fin 3) = 0 then (1 : ℝ) else if (0 : Fin 3) = 1 then 0 else 1) = 1
+    simp
+  have : (-1 : ℝ) = 1 := by rw [← hzero, hpt, hzero_id]
+  norm_num at this
+
+/-- `rotStrictReversible π` is not the identity StrictReversible. -/
+theorem rotStrictReversible_pi_ne_id :
+    rotStrictReversible Real.pi ≠ Perspectival.Continuity.StrictReversible.id circleGPT := by
+  intro h
+  have := congrArg (fun (R : Perspectival.Continuity.StrictReversible circleGPT) => R.toLin) h
+  -- (rotStrictReversible π).toLin = rotZ π; (id).toLin = LinearMap.id.
+  simp [rotStrictReversible_toLin] at this
+  exact rotZ_pi_ne_id this
+
+/-- **CircleGPT has at least two distinct elements in `rotAvail`** —
+the identity and the 180° rotation. This shows the avail set is
+non-trivial (not just `{id}`). -/
+theorem rotAvail_has_two_distinct :
+    ∃ R₁ R₂ : Perspectival.Continuity.StrictReversible circleGPT,
+      R₁ ∈ rotAvail ∧ R₂ ∈ rotAvail ∧ R₁ ≠ R₂ := by
+  refine ⟨Perspectival.Continuity.StrictReversible.id circleGPT,
+          rotStrictReversible Real.pi,
+          ?_, rot_in_avail Real.pi, ?_⟩
+  · -- id = rotStrictReversible 0 ∈ rotAvail
+    rw [← rotStrictReversible_zero]
+    exact rot_in_avail 0
+  · -- id ≠ rotStrictReversible π
+    intro h
+    exact rotStrictReversible_pi_ne_id h.symm
+
 end CircleGPT
 end Perspectival
