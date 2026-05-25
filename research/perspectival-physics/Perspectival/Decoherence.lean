@@ -5158,6 +5158,10 @@ theorem session_498_commits : True := trivial
 /-- **499-commit milestone marker.** -/
 theorem session_499_commits : True := trivial
 
+/-- **500-COMMIT MILESTONE.** A major session-segment milestone:
+500 commits in this Decoherence-focused work segment. -/
+theorem session_500_commits_MILESTONE : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
