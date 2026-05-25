@@ -2199,6 +2199,91 @@ theorem DecoherenceQuotient.eq_iff_count {P : Type u} {C : Type v}
   ⟨fun h => h ▸ rfl,
    fun h => DecoherenceQuotient.count_injective q₁ q₂ h⟩
 
+/-! ## Coherence predicate
+
+The coherence predicate `IsCoherent ch` decides whether a chain is
+coherent (Tier A event count = 0). This is decidable since it reduces
+to a natural-number equality. The predicate is upward-closed under
+prepending coherent extensions and downward-closed under removing
+coherent suffixes. -/
+
+/-- **IsCoherent: the chain is in the coherent regime.** A chain is
+coherent iff its actualization count is zero. -/
+def IsCoherent {P : Type u} {C : Type v} {R₁ R₂ : Reality P C}
+    (ch : RealityChain' P C R₁ R₂) : Prop :=
+  tierAEventCount ch = 0
+
+/-- **IsCoherent is decidable.** -/
+instance IsCoherent.decidable {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    Decidable (IsCoherent ch) :=
+  inferInstanceAs (Decidable (tierAEventCount ch = 0))
+
+/-- **Nil is coherent.** -/
+@[simp]
+theorem IsCoherent.nil {P : Type u} {C : Type v} (R : Reality P C) :
+    IsCoherent (RealityChain'.nil R) := rfl
+
+/-- **Loops are coherent.** -/
+theorem IsCoherent.loop {P : Type u} {C : Type v} {R : Reality P C}
+    (loop : RealityChain' P C R R) : IsCoherent loop :=
+  loop_is_coherent loop
+
+/-- **Append is coherent iff both parts are coherent.** -/
+theorem IsCoherent.append_iff {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    IsCoherent (ch₁.append ch₂) ↔ IsCoherent ch₁ ∧ IsCoherent ch₂ := by
+  show tierAEventCount (ch₁.append ch₂) = 0 ↔
+       tierAEventCount ch₁ = 0 ∧ tierAEventCount ch₂ = 0
+  rw [tierAEventCount_append]
+  exact Nat.add_eq_zero
+
+/-- **Coherence is preserved under DecoherenceEquivalent.** -/
+theorem IsCoherent.respects_equivalence {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂) (h₁ : IsCoherent ch₁) :
+    IsCoherent ch₂ := by
+  -- DecoherenceEquivalent unfolds to actualizationCount equality.
+  have h' : ch₁.actualizationCount = ch₂.actualizationCount := h
+  show ch₂.actualizationCount = 0
+  rw [← h']
+  exact h₁
+
+/-- **IsCoherent characterized via endpoint equality on strict chains.**
+Combines `coherent_kernel_iff_endpoints_eq` with `IsCoherent`. -/
+theorem IsCoherent.iff_endpoints_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    IsCoherent ch ↔ R₁ = R₂ := by
+  exact coherent_kernel_iff_endpoints_eq ch
+
+/-- **Coherence predicate certificate.** Bundles the four lemmas:
+nil/loops coherent, append-iff, equivalence-respecting, endpoint-iff. -/
+theorem coherence_predicate_certificate :
+    -- (a) nil is coherent.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      IsCoherent (RealityChain'.nil R)) ∧
+    -- (b) loops are coherent.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R), IsCoherent loop) ∧
+    -- (c) append coherent iff both parts coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      IsCoherent (ch₁.append ch₂) ↔ IsCoherent ch₁ ∧ IsCoherent ch₂) ∧
+    -- (d) coherence respects equivalence.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        {ch₁ ch₂ : RealityChain' P C R₁ R₂},
+      DecoherenceEquivalent ch₁ ch₂ → IsCoherent ch₁ → IsCoherent ch₂) ∧
+    -- (e) coherence iff endpoint equality.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsCoherent ch ↔ R₁ = R₂) :=
+  ⟨fun R => IsCoherent.nil R,
+   fun loop => IsCoherent.loop loop,
+   fun ch₁ ch₂ => IsCoherent.append_iff ch₁ ch₂,
+   fun h h₁ => IsCoherent.respects_equivalence h h₁,
+   fun ch => IsCoherent.iff_endpoints_eq ch⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
