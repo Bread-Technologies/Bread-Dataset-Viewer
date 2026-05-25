@@ -4295,6 +4295,21 @@ theorem loop_trio_sum_law_pow {P : Type u} {C : Type v}
     tierAEventCount (ch ^ n) + (ch ^ n).bracketedCount = (ch ^ n).length :=
   trio_sum_law (ch ^ n)
 
+/-- **Identity commutes with everything in the loop monoid.** -/
+theorem loop_one_commute {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    Commute 1 ch := Commute.one_left ch
+
+/-- **Identity commutes with everything (right version).** -/
+theorem loop_commute_one {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    Commute ch 1 := Commute.one_right ch
+
+/-- **Self-commute on loops.** Any loop commutes with itself. -/
+theorem loop_self_commute {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    Commute ch ch := Commute.refl ch
+
 /-- **Grading certificate.** Length is a ℕ-valued grading function
 on the chain monoid, with composition increasing additively and
 nil being the unit. -/
