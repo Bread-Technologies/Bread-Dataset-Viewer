@@ -898,6 +898,14 @@ theorem DecoherenceEquivalent_trans {P : Type u} {C : Type v}
     (h₂₃ : DecoherenceEquivalent ch₂ ch₃) :
     DecoherenceEquivalent ch₁ ch₃ := h₁₂.trans h₂₃
 
+/-- **Coherent chains are decoherence-equivalent to nil.** -/
+theorem coherent_decoherence_equivalent_to_nil {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R)
+    (h_co : ch.actualizationCount = 0) :
+    DecoherenceEquivalent ch (RealityChain'.nil R) := by
+  show ch.actualizationCount = (RealityChain'.nil R).actualizationCount
+  rw [h_co]; rfl
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
