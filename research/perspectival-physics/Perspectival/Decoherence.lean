@@ -3991,6 +3991,43 @@ theorem chain_no_rewind_certificate :
   ⟨fun ch _m h_act => chain_no_rewind ch h_act,
    fun ch => ch.past_monotone'⟩
 
+/-- **Full structural framework demonstration on Bool.** A final
+worked example that exercises the entire trajectory algebra: build
+a 3-step Bool trajectory combining a loop power and an actualization,
+verify length + count + DE simultaneously. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let R' := actualizeAt R m
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let act : RealityChain' Bool Bool R R' :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    let full := (base ^ 2).append act
+    -- Verify multiple properties simultaneously:
+    full.length = 3
+      ∧ tierAEventCount full = 1
+      ∧ DecoherenceEquivalent full act := by
+  intro R h_pot R' base act full
+  refine ⟨?_, ?_, ?_⟩
+  · -- length: (base^2).length + act.length = 2 + 1 = 3
+    show ((base ^ 2).append act).length = 3
+    rw [RealityChain'.append_length, loop_npow_length]
+    show 2 * (RealityChain'.singleton _).length +
+         (RealityChain'.singleton _).length = 3
+    rw [RealityChain'.singleton_length]
+    rfl
+  · -- count: 0 + 1 = 1
+    show ((base ^ 2).append act).actualizationCount = 1
+    rw [RealityChain'.append_actualizationCount]
+    have h_loop : (base ^ 2).actualizationCount = 0 :=
+      loop_npow_tierAEventCount base 2
+    rw [h_loop, RealityChain'.singleton_actualizationCount]
+    rfl
+  · -- DE: prepending the loop preserves equivalence class.
+    exact loop_prepend_equivalent (base ^ 2) act
+
 /-- **Complexity-length bounds certificate.** -/
 theorem complexity_length_bounds_certificate :
     -- Lower bound: complexity ≥ length.
