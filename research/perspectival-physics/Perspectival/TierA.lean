@@ -339,6 +339,15 @@ the Picard-Lindelöf existence-and-uniqueness theorem. Approaching a
 reset under conservative dynamics yields Lyapunov instability at the
 reset point.
 
+Per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` — the active entropy
+addendum — this mechanical impossibility is one half of the framework's
+both-halves derivation of the Second Law. The other half is the
+subjectivist Jaynesian content (entropy = observer-relative
+coarse-graining of distinguishable states). The Lean side encodes the
+mechanical half (here, plus `actualizeAt_many_to_one` above for the
+elementary-event form); the Jaynesian half is metaphysical commitment
+not currently Lean-encoded at the framework's scope.
+
 Translated to Tier A: actualization is many-to-one (multiple potential
 meeting-configurations collapsing into one actualized configuration).
 Many-to-one is incompatible with conservative (one-to-one, reversible)
