@@ -878,6 +878,7 @@ class StrictConnectedAgency (G : GPT V) where
 /-! ### R6 trivial agency (singleton {id}) -/
 
 /-- The trivial StrictConnectedAgency: only the identity is available. -/
+@[reducible]
 def trivialStrictAgency (G : GPT V) : StrictConnectedAgency G where
   avail := { StrictReversible.id G }
   id_avail := rfl
@@ -998,6 +999,7 @@ instance (priority := 100) StrictConnectedAgency.ofGroupClosedAgency
     exact ⟨p.toStrictReversiblePath⟩
 
 /-- The trivial GroupClosedAgency with avail = {StrictReversible.id G}. -/
+@[reducible]
 def trivialGroupClosedAgency {V : Type u} [AddCommGroup V] [Module ℝ V]
     [TopologicalSpace V] (G : GPT V) : GroupClosedAgency G where
   avail := { StrictReversible.id G }
@@ -1124,6 +1126,7 @@ which is R4 in the roadmap. -/
 
 /-- If a GPT has at most one pure state, the trivial strict agency
 extends to a `TransitiveAgency`. -/
+@[reducible]
 def TransitiveAgency.ofUniquePureState
     {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
     (G : GPT V)

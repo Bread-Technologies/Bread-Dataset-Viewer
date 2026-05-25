@@ -286,6 +286,7 @@ end PatternStableWantable
 non-trivially inhabited, there is a `PatternStableWantable` instance
 with `Stable := fun _ => True`. This is the maximal-stability degenerate
 case; non-trivial formulations restrict `Stable` further. -/
+@[reducible]
 def PatternStableWantable.trivialOfNonempty (W : Type u) [Wantable W]
     [Nonempty W] : PatternStableWantable W where
   toWantable := inferInstance
