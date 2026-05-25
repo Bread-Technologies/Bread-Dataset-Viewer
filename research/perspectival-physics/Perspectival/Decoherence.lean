@@ -518,6 +518,24 @@ theorem decoherent_complexity {P : Type u} {C : Type v}
   have h_sum := ch.counts_sum
   omega
 
+/-- **Complexity is bounded by 2 * length.** A trivial upper bound. -/
+theorem complexity_le_twice_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    trajectoryComplexity ch ≤ 2 * ch.length := by
+  unfold trajectoryComplexity
+  have h_sum := ch.counts_sum
+  have h_bound := ch.actualizationCount_le_length
+  omega
+
+/-- **Complexity is bounded below by length.** Lower bound: each step
+contributes at least 1 (either bracketed = 1 or actualization = 2). -/
+theorem complexity_ge_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.length ≤ trajectoryComplexity ch := by
+  unfold trajectoryComplexity
+  have h_sum := ch.counts_sum
+  omega
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
