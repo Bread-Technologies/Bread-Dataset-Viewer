@@ -3844,6 +3844,20 @@ example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
 example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
     ch ^ 1 = ch := pow_one ch
 
+/-- **tierAEventCount is a monoid morphism (manual statement).** Maps
+from `(RealityChain' P C R R, *, 1)` to `(ℕ, +, 0)`. We state this
+without a bundled `MonoidHom` since the additive-multiplicative
+translation requires extra Mathlib machinery. -/
+theorem tierAEventCount_loopMonoid_morphism {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    -- Preserves multiplication (sends * to +).
+    (∀ (ch₁ ch₂ : RealityChain' P C R R),
+      tierAEventCount (ch₁ * ch₂) = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    -- Preserves identity (sends 1 to 0).
+    tierAEventCount (1 : RealityChain' P C R R) = 0 :=
+  ⟨fun ch₁ ch₂ => loop_tierAEventCount_mul ch₁ ch₂,
+   loop_tierAEventCount_one⟩
+
 /-- **The loopMonoid integration is complete (Prop part).** Bundles
 the propositional facts about the loop monoid integration. The
 `Monoid (RealityChain' P C R R)` instance is registered separately
