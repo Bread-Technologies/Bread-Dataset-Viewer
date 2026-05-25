@@ -5009,6 +5009,14 @@ theorem length_n_count_range {P : Type u} {C : Type v}
   have h_le := ch.actualizationCount_le_length
   omega
 
+/-- **Bracketed count range at fixed length.** -/
+theorem length_n_bracketed_range {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (n : ℕ)
+    (h : ch.length = n) :
+    ch.bracketedCount ≤ n := by
+  have h_brk := length_ge_bracketed ch
+  omega
+
 /-- **Length-count range certificate.** -/
 theorem length_count_range_certificate :
     -- At length 0, count = 0.
