@@ -221,6 +221,27 @@ theorem gptTensor_distinguishable_left
   · -- productEffect (ρ₂ ⊗ σ) = e₁(ρ₂) · G₂.unit(σ) = 0 · 1 = 0
     rw [GPT.productEffect_tmul, he₁_ρ₂]; ring
 
+/-- **Hardy A4 N-multiplicativity, BOTH factors distinguishable.**
+If `(ρ₁, ρ₂)` distinguishable in `G₁` AND `(σ₁, σ₂)` distinguishable in
+`G₂`, then `(ρ₁ ⊗ σ₁, ρ₂ ⊗ σ₂)` distinguishable in `gptTensor G₁ G₂`.
+Witness effect: `productEffect e_1 e_2`. -/
+theorem gptTensor_distinguishable_both
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    {ρ₁ ρ₂ : V₁} (h₁ : Distinguishable G₁ ρ₁ ρ₂)
+    {σ₁ σ₂ : V₂} (h₂ : Distinguishable G₂ σ₁ σ₂) :
+    Distinguishable (GPT.gptTensor G₁ G₂)
+      (ρ₁ ⊗ₜ[ℝ] σ₁) (ρ₂ ⊗ₜ[ℝ] σ₂) := by
+  obtain ⟨e₁, he₁_in, he₁_ρ₁, he₁_ρ₂⟩ := h₁
+  obtain ⟨e₂, he₂_in, he₂_σ₁, he₂_σ₂⟩ := h₂
+  refine ⟨GPT.productEffect e₁ e₂,
+    GPT.productEffect_in_effects he₁_in he₂_in, ?_, ?_⟩
+  · -- productEffect (ρ₁ ⊗ σ₁) = e₁(ρ₁) · e₂(σ₁) = 1 · 1 = 1
+    rw [GPT.productEffect_tmul, he₁_ρ₁, he₂_σ₁]; ring
+  · -- productEffect (ρ₂ ⊗ σ₂) = e₁(ρ₂) · e₂(σ₂) = 0 · 0 = 0
+    rw [GPT.productEffect_tmul, he₁_ρ₂, he₂_σ₂]; ring
+
 /-- **Axiom 5 — Continuity of reversible transformations.**
 There exists a continuous reversible transformation on a system
 between any two pure states of that system.
