@@ -3797,6 +3797,22 @@ theorem loop_pow_succ {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
     ch ^ (n + 1) = ch ^ n * ch := pow_succ ch n
 
+/-- **Loop count commutes (in additive sense).** Although raw chains
+don't commute under `*`, the counts always do (since they're 0+0=0+0). -/
+theorem loop_count_abelian {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    tierAEventCount (ch₁ * ch₂) = tierAEventCount (ch₂ * ch₁) := by
+  rw [loop_tierAEventCount_mul, loop_tierAEventCount_mul]
+  omega
+
+/-- **Loops are pairwise decoherence-equivalent under swap.** Two
+loops at R have equivalent products `ch₁ * ch₂` and `ch₂ * ch₁`
+(both are coherent). -/
+theorem loop_swap_equivalent {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    DecoherenceEquivalent (ch₁ * ch₂) (ch₂ * ch₁) :=
+  loop_count_abelian ch₁ ch₂
+
 /-- **Decoherence framework MASTER certificate.** A single Lean
 theorem bundling EVERY major structural result of the Decoherence
 module's loop submonoid + quotient algebra into one referenceable
