@@ -622,6 +622,21 @@ example {P : Type u} {C : Type v} (R : Reality P C) :
   show 2 * _ + _ = 1
   rfl
 
+/-- **Worked example: composing 2 bracketed singleton chains gives complexity = 2.** -/
+example {P : Type u} {C : Type v} (R : Reality P C) :
+    let ch₁ : RealityChain' P C R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let ch₂ : RealityChain' P C R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    trajectoryComplexity (ch₁.append ch₂) = 2 := by
+  intro ch₁ ch₂
+  rw [trajectoryComplexity_append]
+  -- Both singletons have complexity = 1.
+  show 1 + 1 = 2
+  rfl
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
