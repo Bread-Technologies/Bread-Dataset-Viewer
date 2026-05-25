@@ -703,6 +703,27 @@ theorem plain_complexity_ge_length {P : Type u} {C : Type v}
   have h_sum := ch.counts_sum
   omega
 
+/-! ## Closing remarks
+
+This module is the framework's first Lean correlate of a v2 Seam
+that was previously OPEN. The trajectory algebra (rate, complexity,
+composition, regime characterization) is fully formalized at the
+discrete level.
+
+The framework's Seam 4 prediction (per `SEAMS.md`) — that
+decoherence rates depend on actualization-content density — is now
+machine-verified at the structural level via the `actualizationRate`
+and `trajectoryComplexity` measures + their compositional structure.
+
+What this module does NOT do:
+- Connect to continuous-time exponential-suppression.
+- Provide operational definitions of "environment density".
+- Quantitative comparisons with statistical decoherence models.
+
+These are documented as Tier 2 open work. The current scaffold
+makes those extensions concrete and tractable; the count-based
+structural shadow is in place. -/
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
