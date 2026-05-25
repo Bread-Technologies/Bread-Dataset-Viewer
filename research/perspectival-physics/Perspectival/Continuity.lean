@@ -1384,6 +1384,23 @@ class HasOneParameterAgency
     (G : GPT V) where
   family : OneParameterFamily G
 
+/-- A GPT has *k-axis agency* if it admits `k` distinct
+`OneParameterFamily` instances — k independent 1-parameter subgroups.
+The framework's scaffold toward k-dim Lie group symmetry.
+
+Examples:
+- k = 1: `HasOneParameterAgency` (U(1) / abelian).
+- k = 3: `HasMultiAxisAgency 3` (SO(3) / SU(2)-like axis presence).
+- k = 8: would be SU(3) (eight Gell-Mann generators).
+
+Note: this does not require the families to be independent in any
+strong sense (e.g., generating a non-abelian Lie algebra); it just
+collects k of them. -/
+structure HasMultiAxisAgency (k : ℕ)
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) where
+  axes : Fin k → OneParameterFamily G
+
 /-! ### Worked example: agency → Hardy A5 pipeline
 
 A concrete demonstration of the framework's machine-verified Hardy A5

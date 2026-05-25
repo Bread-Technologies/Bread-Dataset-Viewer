@@ -1571,5 +1571,15 @@ noncomputable instance qubitHasOneParameterAgency :
     Perspectival.Continuity.HasOneParameterAgency qubitGPT where
   family := rotZOneParameterFamily
 
+/-- **QubitGPT has 3-axis agency** (the three SO(3) generator families).
+This is the framework's first instance of `HasMultiAxisAgency` —
+scaffold toward a SU(2)/SO(3) gauge instance (Tier 2 #6 next-step). -/
+noncomputable def qubitMultiAxisAgency :
+    Perspectival.Continuity.HasMultiAxisAgency 3 qubitGPT where
+  axes := fun i =>
+    if i = 0 then rotXOneParameterFamily
+    else if i = 1 then rotYOneParameterFamily
+    else rotZOneParameterFamily
+
 end QubitGPT
 end Perspectival
