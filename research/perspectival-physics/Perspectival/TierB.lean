@@ -652,6 +652,23 @@ theorem RealityChain'.implies_successor {P : Type u} {C : Type v} :
       reality_successor_trans step.is_successor
         (RealityChain'.implies_successor rest)
 
+/-- **Past monotonicity along strict chains.** Past grows along any
+RealityChain' — the immediate consequence of `implies_successor` +
+`TierA.past_monotone`. -/
+theorem RealityChain'.past_monotone' {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    past R₁ ⊆ past R₂ :=
+  TierA.past_monotone ch.implies_successor
+
+/-- **No-return-to-potential along strict chains.** Once a meeting is
+actualized, it stays actualized along any RealityChain' — the
+trajectory-level form of the arrow-of-time content. -/
+theorem RealityChain'.no_return_along_chain {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    {m : Meeting P C} (h_act : R₁ m = MeetingStatus.Actualized) :
+    R₂ m = MeetingStatus.Actualized :=
+  TierA.no_return_to_potential ch.implies_successor h_act
+
 /-- **A bracketed step preserves both potential and actualized status
 of every meeting.** Restated: the entire meeting-status function is
 unchanged across a bracketed step. -/
