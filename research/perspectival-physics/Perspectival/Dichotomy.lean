@@ -335,6 +335,17 @@ theorem framework_gauge_ladder :
           ⟨QubitGPT.qubitStrictConnectedAgency_full⟩, ?_⟩
   exact ⟨⟨QutritGPT.rotL3 0, 0, rfl⟩⟩
 
+/-- **The framework's gauge ladder, OneParameterFamily form.** All three
+Standard Model gauge factor candidates now have a OneParameterFamily
+witness in the framework: -/
+theorem framework_gauge_ladder_oneparam :
+    Nonempty (Continuity.OneParameterFamily CircleGPT.circleGPT) ∧
+    Nonempty (Continuity.OneParameterFamily QubitGPT.qubitGPT) ∧
+    Nonempty (Continuity.OneParameterFamily QutritGPT.qutritGPT) :=
+  ⟨⟨CircleGPT.rotOneParameterFamily⟩,
+   ⟨QubitGPT.rotZOneParameterFamily⟩,
+   ⟨QutritGPT.rotL3OneParameterFamily⟩⟩
+
 /-- **Framework's SU(3) toehold (extended).** Three Gell-Mann-style
 rotation generators on QutritGPT: rotL1, rotL2, rotL3. These three
 families form a non-abelian subgroup of O(8) at the Bloch level
