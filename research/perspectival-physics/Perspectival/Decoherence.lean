@@ -906,6 +906,22 @@ theorem coherent_decoherence_equivalent_to_nil {P : Type u} {C : Type v}
   show ch.actualizationCount = (RealityChain'.nil R).actualizationCount
   rw [h_co]; rfl
 
+/-- **DecoherenceEquivalent ⇒ same status.** Two decoherence-equivalent
+chains agree on their coherence status. -/
+theorem DecoherenceEquivalent_status {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂) :
+    (ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) := by
+  show ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0
+  rw [h]
+
+/-- **DecoherenceEquivalent ⇒ equal Tier A content.** Equivalent chains
+have equal tierAEventCount. -/
+theorem DecoherenceEquivalent_tier_A {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂) :
+    tierAEventCount ch₁ = tierAEventCount ch₂ := h
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
