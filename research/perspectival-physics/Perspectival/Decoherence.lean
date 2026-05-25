@@ -5061,6 +5061,21 @@ theorem pure_decoherent_rate_explicit {P : Type u} {C : Type v}
     (h : ch.bracketedCount = 0) :
     actualizationRate ch = (ch.length, ch.length) := decoherence_regime ch h
 
+/-- **Explicit rate certificate.** Bundles the explicit rate formulas. -/
+theorem explicit_rate_certificate :
+    -- Coherent: (0, length).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 →
+      actualizationRate ch = (0, ch.length)) ∧
+    -- Pure-decoherent: (length, length).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.bracketedCount = 0 →
+      actualizationRate ch = (ch.length, ch.length)) :=
+  ⟨fun ch h => coherent_rate_explicit ch h,
+   fun ch h => pure_decoherent_rate_explicit ch h⟩
+
 /-- **Decoherence summary theorem in 5 sentences.**
 The framework's Seam 4 content per the entropy addendum says:
 (a) decoherence is the Tier B accumulated effect of Tier A actualization events;
