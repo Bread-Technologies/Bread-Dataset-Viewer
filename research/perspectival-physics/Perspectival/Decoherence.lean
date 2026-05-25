@@ -1517,6 +1517,23 @@ dissolutions documented in `TIER4_DISSOLUTIONS.md`:
 - **#23 Decoherence formalized:** this entire module.
 -/
 
+/-! ## End-of-module overview
+
+The Decoherence module's structure, in dependency order:
+
+1. **Foundation:** import TierA + TierB, open both namespaces.
+2. **Core measures:** actualizationRate, tierAEventCount, trajectoryComplexity.
+3. **Regime characterizations:** coherent / decoherence / trichotomy.
+4. **Compositional content:** monoid morphism, additivity, monotonicity.
+5. **Equivalences:** DecoherenceEquivalent + congruence + hierarchy.
+6. **Anti-realism content:** path-independent status vs path-dependent
+   content (with explicit witness).
+7. **Arrow content:** chain witnesses preorder; past as covariant functor.
+8. **Bundle certificates:** 5+ certificates summarizing different aspects.
+9. **Worked examples:** ~10 concrete examples on Unit and Bool meetings.
+
+Total: ~1700 lines, fully build-verified against Mathlib v4.29.1. -/
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
