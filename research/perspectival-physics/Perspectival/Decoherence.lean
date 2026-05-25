@@ -768,6 +768,22 @@ theorem length_monotone_under_left_append {P : Type u} {C : Type v}
   rw [RealityChain'.append_length]
   omega
 
+/-- **The monotonicity certificate.** Bundles tier A, length, and
+complexity monotonicity into one Lean expression. -/
+theorem decoherence_monotonicity_certificate :
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂)) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      ch₁.length ≤ (ch₁.append ch₂).length) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      trajectoryComplexity ch₁ ≤ trajectoryComplexity (ch₁.append ch₂)) :=
+  ⟨fun ch₁ ch₂ => tier_A_monotone_under_append ch₁ ch₂,
+   fun ch₁ ch₂ => length_monotone_under_append ch₁ ch₂,
+   fun ch₁ ch₂ => complexity_monotone_under_append ch₁ ch₂⟩
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
