@@ -733,6 +733,44 @@ theorem RealityChain.singleton_actualization_count {P : Type u} {C : Type v}
   · simp [RealityChain.singleton, RealityChain.actualizationCount]
   · simp [RealityChain.singleton, RealityChain.bracketedCount]
 
+/-- **Append additivity for actualizationCount.** -/
+theorem RealityChain.append_actualizationCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C}
+      (ch₁ : RealityChain P C R₁ R₂) (ch₂ : RealityChain P C R₂ R₃),
+      (ch₁.append ch₂).actualizationCount
+        = ch₁.actualizationCount + ch₂.actualizationCount
+  | _, _, _, RealityChain.nil _, _ => by
+      simp [RealityChain.append, RealityChain.actualizationCount]
+  | _, _, _, RealityChain.cons step rest, ch₂ => by
+      simp only [RealityChain.append, RealityChain.actualizationCount]
+      rw [RealityChain.append_actualizationCount rest ch₂]
+      omega
+
+/-- **Append additivity for bracketedCount.** -/
+theorem RealityChain.append_bracketedCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C}
+      (ch₁ : RealityChain P C R₁ R₂) (ch₂ : RealityChain P C R₂ R₃),
+      (ch₁.append ch₂).bracketedCount
+        = ch₁.bracketedCount + ch₂.bracketedCount
+  | _, _, _, RealityChain.nil _, _ => by
+      simp [RealityChain.append, RealityChain.bracketedCount]
+  | _, _, _, RealityChain.cons step rest, ch₂ => by
+      simp only [RealityChain.append, RealityChain.bracketedCount]
+      rw [RealityChain.append_bracketedCount rest ch₂]
+      omega
+
+/-- **Append additivity for length.** -/
+theorem RealityChain.append_length {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C}
+      (ch₁ : RealityChain P C R₁ R₂) (ch₂ : RealityChain P C R₂ R₃),
+      (ch₁.append ch₂).length = ch₁.length + ch₂.length
+  | _, _, _, RealityChain.nil _, _ => by
+      simp [RealityChain.append, RealityChain.length]
+  | _, _, _, RealityChain.cons _ rest, ch₂ => by
+      simp only [RealityChain.append, RealityChain.length]
+      rw [RealityChain.append_length rest ch₂]
+      omega
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
