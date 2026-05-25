@@ -1692,6 +1692,35 @@ theorem loop_insertion_length_increases {P : Type u} {C : Type v}
     (loop.append ch).length = loop.length + ch.length :=
   RealityChain'.append_length loop ch
 
+/-- **Loop insertion changes density (length component).** If
+`loop : R₁ → R₁` is nontrivial (length > 0), then the density of
+`loop.append ch` differs from the density of `ch` only in the length
+component (count unchanged). -/
+theorem loop_prepend_density_length_changes {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂) :
+    (loop.append ch).actualizationDensity
+      = ((loop.append ch).actualizationCount, loop.length + ch.length) := by
+  show (_, _) = _
+  rw [RealityChain'.append_length]
+
+/-- **Density-equality fails under nontrivial loop insertion.** If
+`loop` has positive length, then the density of `loop.append ch`
+differs from the density of `ch`. This shows density (count, length)
+is FINER than DecoherenceEquivalent — it distinguishes loops with
+different lengths from the original chain. -/
+theorem loop_prepend_density_differs_when_positive_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂)
+    (h : 0 < loop.length) :
+    (loop.append ch).actualizationDensity ≠ ch.actualizationDensity := by
+  intro h_eq
+  have h_len_eq : (loop.append ch).length = ch.length := by
+    have ⟨_, h2⟩ := (density_eq_iff (loop.append ch) ch).mp h_eq
+    exact h2
+  rw [RealityChain'.append_length] at h_len_eq
+  omega
+
 /-- **Loop conjugation preserves count.** Sandwiching a chain by
 loops on both sides preserves the actualization count. -/
 theorem loop_conjugation_preserves_count {P : Type u} {C : Type v}
