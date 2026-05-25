@@ -750,6 +750,24 @@ theorem complexity_monotone_under_append {P : Type u} {C : Type v}
   rw [trajectoryComplexity_append]
   omega
 
+/-- **Symmetric tier A monotonicity (right side).** Appending on the
+left can only increase the tail's tier A content. -/
+theorem tier_A_monotone_under_left_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount ch₂ ≤ tierAEventCount (ch₁.append ch₂) := by
+  show ch₂.actualizationCount ≤ (ch₁.append ch₂).actualizationCount
+  rw [RealityChain'.append_actualizationCount]
+  omega
+
+/-- **Symmetric length monotonicity (right side).** -/
+theorem length_monotone_under_left_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    ch₂.length ≤ (ch₁.append ch₂).length := by
+  rw [RealityChain'.append_length]
+  omega
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
