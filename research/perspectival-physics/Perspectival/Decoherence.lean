@@ -3050,6 +3050,29 @@ theorem rate_count_invariant_under_equivalence {P : Type u} {C : Type v}
     (h : DecoherenceEquivalent ch₁ ch₂) :
     (actualizationRate ch₁).1 = (actualizationRate ch₂).1 := h
 
+/-- **DecoherenceEquivalent preserves coherence status.** Already
+stated in `DecoherenceEquivalent_status`; restated here as a clean
+formal corollary. -/
+theorem equivalence_preserves_coherence {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂) :
+    (ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) :=
+  DecoherenceEquivalent_status h
+
+/-- **DecoherenceEquivalent preserves pure-decoherent status (iff length equal).**
+Two equivalent chains agree on pure-decoherent status iff they have
+the same length. (Because pure-decoherent = (bracketed = 0) =
+(count = length), so the iff depends on length equality.) -/
+theorem equivalence_pure_decoherent_iff_length_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h_eq : DecoherenceEquivalent ch₁ ch₂)
+    (h_len : ch₁.length = ch₂.length) :
+    ch₁.bracketedCount = 0 ↔ ch₂.bracketedCount = 0 := by
+  have h_count : ch₁.actualizationCount = ch₂.actualizationCount := h_eq
+  have h₁ := ch₁.counts_sum
+  have h₂ := ch₂.counts_sum
+  omega
+
 /-- **Rate length is NOT invariant under DecoherenceEquivalent in
 general.** Witnesses: nil chain vs singleton bracketed chain at R
 both have count 0 but different lengths (0 vs 1). -/
