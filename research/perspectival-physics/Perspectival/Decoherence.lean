@@ -1978,6 +1978,21 @@ theorem DecoherenceQuotient.loop_quotient_trivial {P : Type u} {C : Type v}
     (by rw [DecoherenceQuotient.loop_count_zero,
             DecoherenceQuotient.loop_count_zero])
 
+/-- **Loop quotient is a Subsingleton.** Type-class instance: the
+loop decoherence quotient is a subsingleton (all elements equal).
+This is the framework's formal statement that "loop classes form a
+single point in the moduli space of trajectories". -/
+instance DecoherenceQuotient.loop_subsingleton {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    Subsingleton (DecoherenceQuotient R R) :=
+  ⟨fun q₁ q₂ => DecoherenceQuotient.loop_quotient_trivial q₁ q₂⟩
+
+/-- **Loop quotient is inhabited (nil class exists).** -/
+instance DecoherenceQuotient.loop_inhabited {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    Inhabited (DecoherenceQuotient R R) :=
+  ⟨Quotient.mk _ (RealityChain'.nil R)⟩
+
 /-- **Trio-of-morphisms certificate.** All three count-style measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms with
 zero on nil. -/
