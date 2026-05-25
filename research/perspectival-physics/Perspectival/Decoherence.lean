@@ -141,6 +141,38 @@ example (P : Type u) (C : Type v) (R : Reality P C) :
   · rw [RealityChain'.singleton_actualizationCount]; rfl
   · exact RealityChain'.singleton_length_eq_one _
 
+/-- **Concatenated decoherence: composing two decoherence trajectories
+adds their rates.** A direct corollary of rate_count_additive and
+rate_length_additive — running two trajectories in sequence
+accumulates both their seam-crossing counts and their lengths. -/
+theorem concatenated_decoherence {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    actualizationRate (ch₁.append ch₂)
+      = ((actualizationRate ch₁).1 + (actualizationRate ch₂).1,
+         (actualizationRate ch₁).2 + (actualizationRate ch₂).2) := by
+  refine Prod.ext ?_ ?_
+  · exact rate_count_additive ch₁ ch₂
+  · exact rate_length_additive ch₁ ch₂
+
+/-- **Concatenating coherent + decoherent regimes.** If ch₁ has zero
+actualizations (coherent regime) and ch₂ has zero bracketed steps
+(decoherent regime), the composite chain has rate
+(ch₂.length, ch₁.length + ch₂.length). The coherent part contributes
+only to the length; the decoherent part contributes to both. -/
+theorem coherent_plus_decoherent {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h₁ : ch₁.actualizationCount = 0)
+    (h₂ : ch₂.bracketedCount = 0) :
+    actualizationRate (ch₁.append ch₂) = (ch₂.length, ch₁.length + ch₂.length) := by
+  rw [concatenated_decoherence]
+  -- actualizationRate ch₁ = (0, ch₁.length).
+  have h_co₁ := coherent_regime ch₁ h₁
+  -- actualizationRate ch₂ = (ch₂.length, ch₂.length).
+  have h_deco₂ := decoherence_regime ch₂ h₂
+  rw [h_co₁, h_deco₂]; simp
+
 /-! ## Decoherence framework summary
 
 This module provides the structural shadow of the framework's reading
@@ -154,6 +186,8 @@ at the system-environment interface.
   characterize the two extremes.
 - `rate_count_additive` and `rate_length_additive` : compositional
   structure under chain concatenation.
+- `concatenated_decoherence` : trajectory composition adds rates.
+- `coherent_plus_decoherent` : worked compound rate.
 
 **Open work:**
 - Connecting the count-based rate to a continuous-time exponential-
