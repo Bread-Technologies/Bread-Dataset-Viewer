@@ -1608,6 +1608,79 @@ theorem counts_image_contains_zero :
       tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0 :=
   fun _ _ R => coherent_kernel_nil R
 
+/-! ## Loop insertion preserves Tier A content
+
+A key structural fact about the loop submonoid: inserting a loop
+(prepending or appending) preserves the actualization count of any
+chain. This means loops are "transparent" to the count measure —
+they're identity elements modulo DecoherenceEquivalent. -/
+
+/-- **Prepending a loop preserves count.** If `loop : R₁ → R₁` and
+`ch : R₁ → R₂`, then `loop.append ch` has the same count as `ch`. -/
+theorem loop_prepend_preserves_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂) :
+    tierAEventCount (loop.append ch) = tierAEventCount ch := by
+  rw [tierAEventCount_append]
+  have h : tierAEventCount loop = 0 := loop_is_coherent loop
+  omega
+
+/-- **Appending a loop preserves count.** If `ch : R₁ → R₂` and
+`loop : R₂ → R₂`, then `ch.append loop` has the same count as `ch`. -/
+theorem loop_append_preserves_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch : RealityChain' P C R₁ R₂) (loop : RealityChain' P C R₂ R₂) :
+    tierAEventCount (ch.append loop) = tierAEventCount ch := by
+  rw [tierAEventCount_append]
+  have h : tierAEventCount loop = 0 := loop_is_coherent loop
+  omega
+
+/-- **Loop insertion is decoherence-equivalent to the original.** -/
+theorem loop_prepend_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂) :
+    DecoherenceEquivalent (loop.append ch) ch :=
+  loop_prepend_preserves_count loop ch
+
+/-- **Loop appending is decoherence-equivalent to the original.** -/
+theorem loop_append_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch : RealityChain' P C R₁ R₂) (loop : RealityChain' P C R₂ R₂) :
+    DecoherenceEquivalent (ch.append loop) ch :=
+  loop_append_preserves_count ch loop
+
+/-- **Loop insertion increases length but preserves count.** This is
+the framework's expression of "loops add 'time' without 'decoherence'":
+you can prepend or append any loop to extend duration while leaving
+the Tier A content unchanged. -/
+theorem loop_insertion_length_increases {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂) :
+    (loop.append ch).length = loop.length + ch.length :=
+  RealityChain'.append_length loop ch
+
+/-- **Loop-insertion certificate.** Bundles the loop-insertion content. -/
+theorem loop_insertion_certificate :
+    -- (a) Prepending a loop preserves count.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount (loop.append ch) = tierAEventCount ch) ∧
+    -- (b) Appending a loop preserves count.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (loop : RealityChain' P C R₂ R₂),
+      tierAEventCount (ch.append loop) = tierAEventCount ch) ∧
+    -- (c) Loop insertion is decoherence-equivalent (both sides).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂),
+      DecoherenceEquivalent (loop.append ch) ch) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (loop : RealityChain' P C R₂ R₂),
+      DecoherenceEquivalent (ch.append loop) ch) :=
+  ⟨fun loop ch => loop_prepend_preserves_count loop ch,
+   fun ch loop => loop_append_preserves_count ch loop,
+   fun loop ch => loop_prepend_equivalent loop ch,
+   fun ch loop => loop_append_equivalent ch loop⟩
+
 /-! ## Anti-realist monoid morphism interpretation
 
 The framework's anti-realism: only the COUNT (= number of seam
