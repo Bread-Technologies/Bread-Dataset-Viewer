@@ -141,5 +141,32 @@ example (P : Type u) (C : Type v) (R : Reality P C) :
   · rw [RealityChain'.singleton_actualizationCount]; rfl
   · exact RealityChain'.singleton_length_eq_one _
 
+/-! ## Decoherence framework summary
+
+This module provides the structural shadow of the framework's reading
+of decoherence: a Tier B phenomenon (off-diagonal suppression)
+understood as the cumulative effect of Tier A actualization events
+at the system-environment interface.
+
+**Key results:**
+- `actualizationRate` : the count-based decoherence-rate measure.
+- `coherent_regime` (rate (0, n)) and `decoherence_regime` (rate (n, n))
+  characterize the two extremes.
+- `rate_count_additive` and `rate_length_additive` : compositional
+  structure under chain concatenation.
+
+**Open work:**
+- Connecting the count-based rate to a continuous-time exponential-
+  suppression rate. This requires either Mathlib's `Real`-valued
+  rate framework or a discrete-time approximation theorem.
+- Operational definitions of "environment Tier A density" suitable
+  for empirical comparison.
+- Quantitative predictions vs. statistical decoherence-time models.
+
+The framework's distinctive prediction (per `SEAMS.md` Seam 4 +
+`ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`): environments rich in
+actualization content decohere systems faster than statistical
+models alone predict. Testable in principle. -/
+
 end Decoherence
 end Perspectival
