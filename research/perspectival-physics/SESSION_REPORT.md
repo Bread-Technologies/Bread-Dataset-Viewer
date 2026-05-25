@@ -703,7 +703,19 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~6100 lines, 481+ commits)
+### Decoherence module final state (~6300 lines, 500+ commits)
+
+**MAJOR MILESTONE: 500 commits crossed in this session segment.**
+
+The Decoherence module has crossed 6300 lines with exactly 500
+commits in this session segment. Mathlib Monoid integration
+comprehensive, 50+ bundle certificates, ~70 worked examples, full
+phase space structure formalized. Per the entropy addendum's Seam 4
+content: loop submonoid + quotient algebra + anti-realism witnesses
++ Boltzmann brain dissolution + no-Maxwell-demon + Tier B
+reversibility + measurement-collapse correlate + chain monoid
+axioms + complexity range + rate region trichotomy + path-
+independence + trio sum law + decomposition certificates.
 
 **MILESTONE: 6000 lines, 467+ commits**
 
