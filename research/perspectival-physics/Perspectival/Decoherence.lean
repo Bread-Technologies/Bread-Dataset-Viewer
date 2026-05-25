@@ -1833,6 +1833,38 @@ theorem loop_insertion_certificate :
    fun loop ch => loop_prepend_equivalent loop ch,
    fun ch loop => loop_append_equivalent ch loop⟩
 
+/-! ## Loop submonoid is infinite
+
+For any Reality R, there are infinitely many distinct loop chains
+at R, indexed by their length. This shows the loop submonoid is
+genuinely large — not collapsed to a single chain. -/
+
+/-- **Loop submonoid is unbounded in length.** For any natural number
+n, there exists a loop chain of length n at any Reality R. -/
+theorem loop_submonoid_unbounded_length {P : Type u} {C : Type v}
+    (R : Reality P C) (n : Nat) :
+    ∃ (ch : RealityChain' P C R R), ch.length = n := by
+  refine ⟨loopPower
+    (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n, ?_⟩
+  rw [loopPower_length]
+  show n * (RealityChain'.singleton _).length = n
+  rw [RealityChain'.singleton_length]
+  omega
+
+/-- **Loops at distinct lengths are distinct.** Two loop chains
+constructed from `loopPower` with different exponents have different
+lengths (hence different chains as data). -/
+theorem distinct_loopPower_distinct_length {P : Type u} {C : Type v}
+    (R : Reality P C) {m n : Nat} (h : m ≠ n) :
+    (loopPower
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) m).length ≠
+    (loopPower
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n).length :=
+  reflBracketed_loopPower_distinct_lengths R h
+
 /-! ## Loops are NOT resets — past is preserved
 
 A subtle but important structural fact: while loop chains have
