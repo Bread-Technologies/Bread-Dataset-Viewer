@@ -2024,6 +2024,59 @@ theorem loop_disrupts_pure_decoherent {P : Type u} {C : Type v}
   have h_loop_sum := loop.counts_sum
   omega
 
+/-- **Active step ratio.** Defined as actualizationCount, this is the
+"Tier A active content" of a trajectory. -/
+def activeStepCount {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) : ℕ :=
+  tierAEventCount ch
+
+/-- **Passive step ratio.** Defined as bracketedCount, this is the
+"Tier B passive content" of a trajectory. -/
+def passiveStepCount {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) : ℕ :=
+  ch.bracketedCount
+
+/-- **Active + Passive = Length.** The partition law. -/
+theorem active_passive_partition {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    activeStepCount ch + passiveStepCount ch = ch.length := by
+  show tierAEventCount ch + ch.bracketedCount = ch.length
+  exact ch.counts_sum
+
+/-- **Coherent ↔ all-passive.** -/
+theorem coherent_iff_all_passive {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    activeStepCount ch = 0 ↔ passiveStepCount ch = ch.length := by
+  show ch.actualizationCount = 0 ↔ ch.bracketedCount = ch.length
+  have h := ch.counts_sum
+  omega
+
+/-- **Pure-decoherent ↔ all-active.** -/
+theorem pure_decoherent_iff_all_active {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    passiveStepCount ch = 0 ↔ activeStepCount ch = ch.length := by
+  show ch.bracketedCount = 0 ↔ ch.actualizationCount = ch.length
+  have h := ch.counts_sum
+  omega
+
+/-- **Active/passive partition certificate.** -/
+theorem active_passive_certificate :
+    -- (a) Partition law.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      activeStepCount ch + passiveStepCount ch = ch.length) ∧
+    -- (b) Coherent ↔ all-passive.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      activeStepCount ch = 0 ↔ passiveStepCount ch = ch.length) ∧
+    -- (c) Pure-decoherent ↔ all-active.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      passiveStepCount ch = 0 ↔ activeStepCount ch = ch.length) :=
+  ⟨fun ch => active_passive_partition ch,
+   fun ch => coherent_iff_all_passive ch,
+   fun ch => pure_decoherent_iff_all_active ch⟩
+
 /-- **Loop insertion regime-shift certificate.** Bundles the loop
 regime-shift content. -/
 theorem loop_regime_shift_certificate :
