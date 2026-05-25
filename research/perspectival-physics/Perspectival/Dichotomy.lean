@@ -27,9 +27,12 @@ import Perspectival.Classical
 import Perspectival.CircleGPT
 import Perspectival.Continuity
 import Perspectival.Hardy
+import Perspectival.GPTTensor
 
 namespace Perspectival
 namespace Dichotomy
+
+open TensorProduct
 
 /-! ## Negative side: Classical n ≥ 2 fails L6 under vertex-preservation -/
 
@@ -130,6 +133,21 @@ theorem framework_dichotomy_existential :
   · intro PPT
     exact classical_no_L7_unconditional 2 (by omega) PPT
   · exact ⟨circle_transitive_agency⟩
+
+/-! ## Worked example: CircleGPT × CircleGPT via gptTensor -/
+
+/-- **Hardy A4 dimension example**: the gptTensor of two CircleGPTs
+has linear dimension 9 = 3 × 3, in agreement with Hardy A4's
+multiplicativity. -/
+example :
+    Module.finrank ℝ ((Fin 3 → ℝ) ⊗[ℝ] (Fin 3 → ℝ))
+    = (Module.finrank ℝ (Fin 3 → ℝ)) * (Module.finrank ℝ (Fin 3 → ℝ)) :=
+  GPT.gptTensor_finrank_eq_mul CircleGPT.circleGPT CircleGPT.circleGPT
+
+/-- **Hardy A4 dimension at the general GPT level** for two CircleGPTs. -/
+example :
+    Hardy.Axiom4_Composite_Dimension CircleGPT.circleGPT CircleGPT.circleGPT :=
+  Hardy.axiom4_dimension_holds CircleGPT.circleGPT CircleGPT.circleGPT
 
 end Dichotomy
 end Perspectival
