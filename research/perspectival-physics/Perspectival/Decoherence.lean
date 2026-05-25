@@ -3371,6 +3371,54 @@ theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
   have h₂ : (1 : RealityChain' P C R R).actualizationCount = 0 := rfl
   omega
 
+/-- **bracketedCount is a Monoid morphism on loops.** -/
+theorem loop_bracketedCount_mul {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    (ch₁ * ch₂).bracketedCount = ch₁.bracketedCount + ch₂.bracketedCount :=
+  RealityChain'.append_bracketedCount ch₁ ch₂
+
+/-- **bracketedCount of one is zero.** -/
+theorem loop_bracketedCount_one {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    (1 : RealityChain' P C R R).bracketedCount = 0 := rfl
+
+/-- **length is a Monoid morphism on loops.** -/
+theorem loop_length_mul {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    (ch₁ * ch₂).length = ch₁.length + ch₂.length :=
+  RealityChain'.append_length ch₁ ch₂
+
+/-- **length of one is zero.** -/
+theorem loop_length_one {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    (1 : RealityChain' P C R R).length = 0 := rfl
+
+/-- **Loop monoid morphism certificate.** All three count measures
+behave as monoid morphisms (RealityChain' R R → ℕ multiplicative-
+to-additive) on the loop monoid. -/
+theorem loop_monoid_morphism_certificate :
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      tierAEventCount (ch₁ * ch₂) = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      tierAEventCount (1 : RealityChain' P C R R) = 0) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      (ch₁ * ch₂).bracketedCount = ch₁.bracketedCount + ch₂.bracketedCount) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      (1 : RealityChain' P C R R).bracketedCount = 0) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      (ch₁ * ch₂).length = ch₁.length + ch₂.length) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      (1 : RealityChain' P C R R).length = 0) :=
+  ⟨fun ch₁ ch₂ => loop_tierAEventCount_mul ch₁ ch₂,
+   fun {_ _ _} => loop_tierAEventCount_one,
+   fun ch₁ ch₂ => loop_bracketedCount_mul ch₁ ch₂,
+   fun {_ _ _} => loop_bracketedCount_one,
+   fun ch₁ ch₂ => loop_length_mul ch₁ ch₂,
+   fun {_ _ _} => loop_length_one⟩
+
 /-- **Trivial chain has nil-like behavior.** A length-0 chain
 trivially has all measures 0 and trivially preserves past. -/
 theorem trivial_chain_nil_like {P : Type u} {C : Type v}
