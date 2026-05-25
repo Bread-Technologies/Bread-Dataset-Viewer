@@ -426,6 +426,49 @@ def RealityChain.append {P : Type u} {C : Type v} :
   | _, _, _, RealityChain.cons step rest, ch₂ =>
       RealityChain.cons step (RealityChain.append rest ch₂)
 
+/-- Number of actualization steps along a RealityChain. Bracketed
+steps contribute 0; actualization steps contribute 1. -/
+def RealityChain.actualizationCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C}, RealityChain P C R₁ R₂ → ℕ
+  | _, _, RealityChain.nil _ => 0
+  | _, _, RealityChain.cons step rest =>
+      (match step with
+        | TrajectoryStep.bracketed _ => 0
+        | TrajectoryStep.actualization _ => 1) +
+      RealityChain.actualizationCount rest
+
+/-- Number of bracketed steps along a RealityChain. Bracketed steps
+contribute 1; actualization steps contribute 0. -/
+def RealityChain.bracketedCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C}, RealityChain P C R₁ R₂ → ℕ
+  | _, _, RealityChain.nil _ => 0
+  | _, _, RealityChain.cons step rest =>
+      (match step with
+        | TrajectoryStep.bracketed _ => 1
+        | TrajectoryStep.actualization _ => 0) +
+      RealityChain.bracketedCount rest
+
+/-- Length of a RealityChain (total step count). -/
+def RealityChain.length {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C}, RealityChain P C R₁ R₂ → ℕ
+  | _, _, RealityChain.nil _ => 0
+  | _, _, RealityChain.cons _ rest => 1 + RealityChain.length rest
+
+/-- **The trajectory step counts sum to the length.** Each step is
+either bracketed or an actualization (by the trajectory dichotomy), so
+actualizationCount + bracketedCount = length. -/
+theorem RealityChain.counts_sum {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂),
+      ch.actualizationCount + ch.bracketedCount = ch.length
+  | _, _, RealityChain.nil _ => rfl
+  | _, _, RealityChain.cons step rest => by
+      simp only [RealityChain.actualizationCount, RealityChain.bracketedCount,
+                 RealityChain.length]
+      cases step <;>
+        · simp only
+          have h := RealityChain.counts_sum rest
+          omega
+
 /-! **Note on chain successor properties.** The trajectory-step
 relation's actualization arm uses `AtSeam` only (a witness of *some*
 new actualization). To conclude `RealitySuccessor R₁ R₂` from a chain,
