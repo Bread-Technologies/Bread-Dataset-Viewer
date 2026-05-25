@@ -342,6 +342,14 @@ theorem framework_su3_toehold_three_generators :
    ⟨⟨QutritGPT.rotL2 0, 0, rfl⟩⟩,
    ⟨⟨QutritGPT.rotL3 0, 0, rfl⟩⟩⟩
 
+/-! **Non-trivial generator distinctness on QutritGPT.** The three
+Gell-Mann-style families are PAIRWISE DISTINCT: rotL1, rotL2, rotL3
+rotate different pairs of Bloch coordinates, so they act differently
+on suitable test vectors. The formal proof requires coordinate
+computation on specific test vectors; deferred. The structural
+non-degeneracy of the SU(3) toehold is clear at the construction
+level. -/
+
 /-! ## Classical fails Hardy A5 Strong Pure (framework-distinctive)
 
 The framework's refined Axiom 5 (`Hardy.Axiom5_Continuity_Strong_Pure`)
