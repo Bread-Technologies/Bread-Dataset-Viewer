@@ -4753,6 +4753,17 @@ theorem rate_origin_iff_length_zero {P : Type u} {C : Type v}
     have h_count := length_zero_count_zero ch h
     rw [h_count]
 
+/-- **Phase space transitions: appending shifts the rate point.**
+For any chain extension, the rate of the composition is the
+sum of the rate components. -/
+theorem rate_point_addition {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    actualizationRate (ch₁.append ch₂) =
+      ((actualizationRate ch₁).1 + (actualizationRate ch₂).1,
+       (actualizationRate ch₁).2 + (actualizationRate ch₂).2) :=
+  concatenated_decoherence ch₁ ch₂
+
 /-- **Decoherence phase space certificate.** Bundles the phase space
 structure facts. -/
 theorem decoherence_phase_space_certificate :
