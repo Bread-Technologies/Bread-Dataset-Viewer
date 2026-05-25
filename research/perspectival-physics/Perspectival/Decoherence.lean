@@ -4604,6 +4604,15 @@ example (R : Reality Bool Bool)
   show trajectoryComplexity (ch.append ch) = _
   exact trajectoryComplexity_append ch ch
 
+/-- **Worked example: complexity of cube equals 3 times complexity.** -/
+example (R : Reality Bool Bool)
+    (ch : RealityChain' Bool Bool R R) :
+    trajectoryComplexity (ch ^ 3) = 3 * trajectoryComplexity ch := by
+  show trajectoryComplexity (ch ^ 3) = _
+  rw [loop_npow_complexity]
+  have h_comp : trajectoryComplexity ch = ch.length := loop_complexity_eq_length ch
+  rw [h_comp]
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
