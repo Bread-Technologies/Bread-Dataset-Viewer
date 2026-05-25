@@ -1050,6 +1050,25 @@ example (P : Type u) (C : Type v) (R : Reality P C) :
   show (0 : ℕ) ≠ 1
   decide
 
+/-! ## DecoherenceEquivalent and length
+
+DecoherenceEquivalent does NOT determine length. Two equivalent
+chains can have arbitrarily different lengths (the bracketed part
+of the chain freely scales without changing tier A content). -/
+
+/-- **DecoherenceEquivalent doesn't determine length.** Counter-example
+showing two coherent (count = 0) chains with different lengths. -/
+example (P : Type u) (C : Type v) (R : Reality P C) :
+    let ch₁ : RealityChain' P C R R := RealityChain'.nil R
+    let ch₂ : RealityChain' P C R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    DecoherenceEquivalent ch₁ ch₂
+      ∧ ch₁.length ≠ ch₂.length := by
+  refine ⟨rfl, ?_⟩
+  show (0 : ℕ) ≠ 1
+  decide
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
