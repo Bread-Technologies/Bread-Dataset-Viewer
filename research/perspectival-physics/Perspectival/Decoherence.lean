@@ -2023,6 +2023,55 @@ dissolutions documented in `TIER4_DISSOLUTIONS.md`:
 - **#23 Decoherence formalized:** this entire module.
 -/
 
+/-! ## Worked example: two loops, same equivalence class
+
+Concrete demonstration of the loop submonoid: two structurally
+different loop chains at the same R have the same DecoherenceEquivalent
+class (the coherent class). -/
+
+/-- **Example: two distinct Bool loops at R are decoherence-equivalent.**
+A 1-fold and a 2-fold reflexive-bracketed loop have different lengths
+(1 vs 2) but both belong to the coherent (count = 0) class. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let loop_1 := loopPower base 1
+    let loop_2 := loopPower base 2
+    DecoherenceEquivalent loop_1 loop_2
+      ∧ loop_1.length ≠ loop_2.length := by
+  intro base loop_1 loop_2
+  refine ⟨loopPower_all_equivalent base 1 2, ?_⟩
+  rw [loopPower_length, loopPower_length]
+  show 1 * (RealityChain'.singleton _).length ≠ 2 * _
+  rw [RealityChain'.singleton_length]
+  omega
+
+/-- **Example: loop insertion preserves count on a Bool chain.** Given
+a 2-fold loop and an actualization, the loop-prepended chain has the
+same count as the original. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let base_loop : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let loop_2 := loopPower base_loop 2
+    let ch_act : RealityChain' Bool Bool R (actualizeAt R m) :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    -- Inserting a 2-loop preserves count.
+    tierAEventCount (loop_2.append ch_act) = tierAEventCount ch_act
+      -- ... but increases length by 2.
+      ∧ (loop_2.append ch_act).length = ch_act.length + 2 := by
+  intro R h_pot base_loop loop_2 ch_act
+  refine ⟨loop_prepend_preserves_count loop_2 ch_act, ?_⟩
+  rw [RealityChain'.append_length]
+  show (loopPower _ 2).length + _ = _ + 2
+  rw [loopPower_length]
+  show 2 * (RealityChain'.singleton _).length + _ = _ + 2
+  rw [RealityChain'.singleton_length]
+  omega
+
 /-! ## End-of-module overview
 
 The Decoherence module's structure, in dependency order:
