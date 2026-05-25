@@ -2181,6 +2181,24 @@ theorem decoherence_quotient_algebra_certificate :
    fun q => DecoherenceQuotient.nil_append q,
    fun q => DecoherenceQuotient.append_nil q⟩
 
+/-- **Decidable equality on the decoherence quotient.** Since count is
+injective into ℕ and ℕ has decidable equality, equality on
+`DecoherenceQuotient R₁ R₂` is decidable: two classes are equal iff
+they have the same count. -/
+instance DecoherenceQuotient.decidableEq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} :
+    DecidableEq (DecoherenceQuotient R₁ R₂) := fun q₁ q₂ =>
+  decidable_of_iff (q₁.count = q₂.count)
+    ⟨fun h => DecoherenceQuotient.count_injective q₁ q₂ h,
+     fun h => h ▸ rfl⟩
+
+/-- **Quotient class equality reduces to count equality.** -/
+theorem DecoherenceQuotient.eq_iff_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q₁ q₂ : DecoherenceQuotient R₁ R₂) :
+    q₁ = q₂ ↔ q₁.count = q₂.count :=
+  ⟨fun h => h ▸ rfl,
+   fun h => DecoherenceQuotient.count_injective q₁ q₂ h⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
