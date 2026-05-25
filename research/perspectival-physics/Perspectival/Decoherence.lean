@@ -4189,6 +4189,43 @@ example (R : Reality Bool Bool) :
     rw [RealityChain'.singleton_length]
   }
 
+/-! ## Chain monoid is ℕ-graded by length
+
+Each chain has a natural-number "length grade", and composition
+respects the grading (length is additive). This makes the chain
+monoid a `ℕ`-graded structure.
+
+The framework's reading: trajectory length is the natural "time
+coordinate" on the chain monoid — composition increases the time
+coordinate additively. -/
+
+/-- **Length is a grading function on chains.** For any chain
+`ch : R₁ → R₂`, its length is a natural number. Composition
+respects the grading. -/
+theorem length_is_grading {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).length = ch₁.length + ch₂.length :=
+  RealityChain'.append_length ch₁ ch₂
+
+/-- **Nil chain has grade 0.** -/
+theorem nil_grade_zero {P : Type u} {C : Type v} (R : Reality P C) :
+    (RealityChain'.nil (P := P) (C := C) R).length = 0 := rfl
+
+/-- **Grading certificate.** Length is a ℕ-valued grading function
+on the chain monoid, with composition increasing additively and
+nil being the unit. -/
+theorem chain_grading_certificate :
+    -- Length respects composition.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      (ch₁.append ch₂).length = ch₁.length + ch₂.length) ∧
+    -- Nil has grade 0.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      (RealityChain'.nil (P := P) (C := C) R).length = 0) :=
+  ⟨fun ch₁ ch₂ => length_is_grading ch₁ ch₂,
+   fun R => nil_grade_zero R⟩
+
 /-! ## Final framework integration
 
 The Decoherence module's content integrates with the rest of the
