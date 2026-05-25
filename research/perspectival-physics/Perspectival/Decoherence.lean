@@ -3888,6 +3888,19 @@ theorem loopPower_npow_complexity_agree {P : Type u} {C : Type v}
     trajectoryComplexity (loopPower ch n) = trajectoryComplexity (ch ^ n) := by
   rw [loopPower_complexity, loop_npow_complexity]
 
+/-- **Composing equivalent chains preserves equivalence.** If two
+pairs of equivalent chains compose (in matching endpoints), the
+results are decoherence-equivalent. This is the chain-monoid
+congruence for DE: append is well-defined on equivalence classes. -/
+theorem compose_preserves_equivalence {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    {ch₁ ch₁' : RealityChain' P C R₁ R₂}
+    {ch₂ ch₂' : RealityChain' P C R₂ R₃}
+    (h₁ : DecoherenceEquivalent ch₁ ch₁')
+    (h₂ : DecoherenceEquivalent ch₂ ch₂') :
+    DecoherenceEquivalent (ch₁.append ch₂) (ch₁'.append ch₂') :=
+  DecoherenceEquivalent_append_both h₁ h₂
+
 /-- **Full loopPower / Monoid `^` agreement certificate.** All
 measures (count, length, bracketed, complexity) agree between
 the custom `loopPower` and the Mathlib Monoid `^` operation. -/
