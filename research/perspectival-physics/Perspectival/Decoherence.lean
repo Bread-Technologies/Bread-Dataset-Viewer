@@ -4373,6 +4373,16 @@ example (R : Reality Bool Bool) :
   show 7 * (RealityChain'.singleton _).length = 7
   rw [RealityChain'.singleton_length]
 
+/-- **Worked example: pow_mul on Bool loop.** base ^ (2 * 3) has the
+same length as (base ^ 2) ^ 3. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (base ^ (2 * 3)).length = ((base ^ 2) ^ 3).length := by
+  intro base
+  rw [← pow_mul]
+
 /-- **Loop power monotonicity certificate.** -/
 theorem loop_npow_monotonicity_certificate :
     -- Weak monotonicity.
