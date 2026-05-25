@@ -303,6 +303,61 @@ theorem classical_hardy_N_at_least (n : ℕ) :
     simp
   · exact Classical.vertex_distinguishability_set n
 
+/-! ## CircleGPT distinguishability witness: N ≥ 2
+
+The two antipodal pure states `circlePoint 0 = (1, 0, 1)` and
+`circlePoint π = (-1, 0, 1)` are perfectly distinguishable by the
+effect `e(x, y, z) = (x + z) / 2`, which gives 1 and 0 respectively.
+
+This shows `N(CircleGPT) ≥ 2`, matching the rebit Hardy signature
+2K = N(N+1) at N = 2 (K = 3). -/
+
+/-- The effect that distinguishes (1,0,1) from (-1,0,1) on CircleGPT. -/
+private noncomputable def circle_test_effect :
+    (Fin 3 → ℝ) →ₗ[ℝ] ℝ where
+  toFun ρ := (ρ 0 + ρ 2) / 2
+  map_add' x y := by show (x 0 + y 0 + (x 2 + y 2)) / 2 = _ ; ring
+  map_smul' c x := by
+    show (c * x 0 + c * x 2) / 2 = c * ((x 0 + x 2) / 2); ring
+
+private theorem circle_test_effect_in_effects :
+    circle_test_effect ∈ CircleGPT.circleGPT.effects := by
+  intro ρ hρ
+  -- e ρ = (ρ 0 + ρ 2) / 2, with ρ 2 = 1, ρ 0² + ρ 1² ≤ 1 ⇒ |ρ 0| ≤ 1.
+  have h_w : ρ 2 = 1 := hρ.1
+  have hsq : ρ 0 ^ 2 + ρ 1 ^ 2 ≤ 1 := hρ.2
+  have hρ0_sq_le : ρ 0 ^ 2 ≤ 1 := by nlinarith [sq_nonneg (ρ 1)]
+  have hρ0_bound : -1 ≤ ρ 0 ∧ ρ 0 ≤ 1 := by
+    constructor
+    · nlinarith [sq_nonneg (ρ 0 - 1), sq_nonneg (ρ 0 + 1)]
+    · nlinarith [sq_nonneg (ρ 0 - 1), sq_nonneg (ρ 0 + 1)]
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (ρ 0 + ρ 2) / 2
+    rw [h_w]
+    linarith [hρ0_bound.1]
+  · show (ρ 0 + ρ 2) / 2 ≤ 1
+    rw [h_w]
+    linarith [hρ0_bound.2]
+
+/-- **CircleGPT operational dimension N ≥ 2.** The two pure states
+`circlePoint 0 = (1, 0, 1)` and `circlePoint π = (-1, 0, 1)` are
+perfectly distinguishable by `circle_test_effect`. -/
+theorem circle_hardy_N_at_least_two :
+    Hardy.Distinguishable CircleGPT.circleGPT
+      (CircleGPT.circlePoint 0) (CircleGPT.circlePoint Real.pi) := by
+  refine ⟨circle_test_effect, circle_test_effect_in_effects, ?_, ?_⟩
+  · -- e (circlePoint 0) = (cos 0 + 1) / 2 = (1 + 1) / 2 = 1
+    show (CircleGPT.circlePoint 0 0 + CircleGPT.circlePoint 0 2) / 2 = 1
+    rw [CircleGPT.circlePoint_apply_zero, CircleGPT.circlePoint_apply_two,
+        Real.cos_zero]
+    norm_num
+  · -- e (circlePoint π) = (cos π + 1) / 2 = (-1 + 1) / 2 = 0
+    show (CircleGPT.circlePoint Real.pi 0 + CircleGPT.circlePoint Real.pi 2) / 2
+       = 0
+    rw [CircleGPT.circlePoint_apply_zero, CircleGPT.circlePoint_apply_two,
+        Real.cos_pi]
+    norm_num
+
 /-! ## Hardy A4 dimension applies to all three trichotomy points -/
 
 /-- The Hardy A4 dimension multiplicativity holds for any pair of GPT
