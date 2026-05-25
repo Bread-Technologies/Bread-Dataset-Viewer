@@ -358,6 +358,68 @@ theorem circle_hardy_N_at_least_two :
         Real.cos_pi]
     norm_num
 
+/-! ## QubitGPT distinguishability witness: N ≥ 2
+
+The antipodal pure states `blochPlusZ = (0, 0, 1, 1)` and `blochMinusZ
+= (0, 0, -1, 1)` on the Bloch sphere are perfectly distinguishable by
+the effect `e(x, y, z, w) = (z + w) / 2`. -/
+
+/-- The "-z direction" Bloch sphere point. -/
+private noncomputable def qubit_minusZ : Fin 4 → ℝ :=
+  fun i => if i = 3 then 1 else if i = 2 then -1 else 0
+
+private theorem qubit_minusZ_in_states : qubit_minusZ ∈ QubitGPT.states := by
+  refine ⟨?_, ?_⟩
+  · show qubit_minusZ 3 = 1
+    show (if (3 : Fin 4) = 3 then (1 : ℝ) else _) = 1; simp
+  · show qubit_minusZ 0 ^ 2 + qubit_minusZ 1 ^ 2 + qubit_minusZ 2 ^ 2 ≤ 1
+    show ((if (0 : Fin 4) = 3 then (1 : ℝ) else if (0 : Fin 4) = 2 then -1 else 0) ^ 2
+       + (if (1 : Fin 4) = 3 then (1 : ℝ) else if (1 : Fin 4) = 2 then -1 else 0) ^ 2
+       + (if (2 : Fin 4) = 3 then (1 : ℝ) else if (2 : Fin 4) = 2 then -1 else 0) ^ 2)
+       ≤ 1
+    simp
+
+/-- The qubit distinguishability test effect: `e(x, y, z, w) = (z + w) / 2`. -/
+private noncomputable def qubit_test_effect :
+    (Fin 4 → ℝ) →ₗ[ℝ] ℝ where
+  toFun ρ := (ρ 2 + ρ 3) / 2
+  map_add' x y := by show (x 2 + y 2 + (x 3 + y 3)) / 2 = _; ring
+  map_smul' c x := by
+    show (c * x 2 + c * x 3) / 2 = c * ((x 2 + x 3) / 2); ring
+
+private theorem qubit_test_effect_in_effects :
+    qubit_test_effect ∈ QubitGPT.qubitGPT.effects := by
+  intro ρ hρ
+  have h_w : ρ 3 = 1 := hρ.1
+  have hsq : ρ 0 ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2 ≤ 1 := hρ.2
+  have hρ2_sq_le : ρ 2 ^ 2 ≤ 1 := by nlinarith [sq_nonneg (ρ 0), sq_nonneg (ρ 1)]
+  have hρ2_bound : -1 ≤ ρ 2 ∧ ρ 2 ≤ 1 := by
+    constructor
+    · nlinarith [sq_nonneg (ρ 2 - 1), sq_nonneg (ρ 2 + 1)]
+    · nlinarith [sq_nonneg (ρ 2 - 1), sq_nonneg (ρ 2 + 1)]
+  refine ⟨?_, ?_⟩
+  · show 0 ≤ (ρ 2 + ρ 3) / 2
+    rw [h_w]
+    linarith [hρ2_bound.1]
+  · show (ρ 2 + ρ 3) / 2 ≤ 1
+    rw [h_w]
+    linarith [hρ2_bound.2]
+
+/-- **QubitGPT operational dimension N ≥ 2.** `blochPlusZ` and
+`qubit_minusZ` are perfectly distinguishable. -/
+theorem qubit_hardy_N_at_least_two :
+    Hardy.Distinguishable QubitGPT.qubitGPT
+      QubitGPT.blochPlusZ qubit_minusZ := by
+  refine ⟨qubit_test_effect, qubit_test_effect_in_effects, ?_, ?_⟩
+  · -- e blochPlusZ = (1 + 1) / 2 = 1
+    show (QubitGPT.blochPlusZ 2 + QubitGPT.blochPlusZ 3) / 2 = 1
+    unfold QubitGPT.blochPlusZ QubitGPT.blochPoint
+    simp
+  · -- e qubit_minusZ = (-1 + 1) / 2 = 0
+    show (qubit_minusZ 2 + qubit_minusZ 3) / 2 = 0
+    unfold qubit_minusZ
+    simp
+
 /-! ## Hardy A4 dimension applies to all three trichotomy points -/
 
 /-- The Hardy A4 dimension multiplicativity holds for any pair of GPT
