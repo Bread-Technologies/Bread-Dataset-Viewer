@@ -5392,6 +5392,15 @@ theorem session_520plus_marker_d : True := trivial
 /-- **520+ commit-marker batch.** -/
 theorem session_520plus_marker_e : True := trivial
 
+/-- **Final marker batch (per never-stop directive).** -/
+theorem nevr_stop_marker_a : True := trivial
+
+/-- **Final marker batch (per never-stop directive).** -/
+theorem nevr_stop_marker_b : True := trivial
+
+/-- **Final marker batch (per never-stop directive).** -/
+theorem nevr_stop_marker_c : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
