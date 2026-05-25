@@ -3832,6 +3832,43 @@ example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
 example (R : Reality Bool Bool) (ch₁ ch₂ ch₃ : RealityChain' Bool Bool R R) :
     ch₁ * ch₂ * ch₃ = ch₁ * (ch₂ * ch₃) := mul_assoc ch₁ ch₂ ch₃
 
+/-- **Worked example: Mathlib `pow_two` applies to loops.** -/
+example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
+    ch ^ 2 = ch * ch := sq ch ▸ rfl
+
+/-- **Worked example: pow_zero on loops.** -/
+example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
+    ch ^ 0 = 1 := pow_zero ch
+
+/-- **Worked example: pow_one on loops.** -/
+example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
+    ch ^ 1 = ch := pow_one ch
+
+/-- **The loopMonoid integration is complete (Prop part).** Bundles
+the propositional facts about the loop monoid integration. The
+`Monoid (RealityChain' P C R R)` instance is registered separately
+as `loopMonoid`. -/
+theorem loopMonoid_integration_certificate :
+    -- Bridge between Mathlib mul and chain append.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      ch₁ * ch₂ = ch₁.append ch₂) ∧
+    -- Bridge between Mathlib one and chain nil.
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      (1 : RealityChain' P C R R) = RealityChain'.nil R) ∧
+    -- Monoid power has count zero on loops.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      tierAEventCount (ch ^ n) = 0) ∧
+    -- Monoid power length scales linearly.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      (ch ^ n).length = n * ch.length) :=
+  ⟨fun ch₁ ch₂ => loop_mul_eq_append ch₁ ch₂,
+   fun {_ _ _} => loop_one_eq_nil,
+   fun ch n => loop_npow_tierAEventCount ch n,
+   fun ch n => loop_npow_length ch n⟩
+
 /-- **Decoherence framework MASTER certificate.** A single Lean
 theorem bundling EVERY major structural result of the Decoherence
 module's loop submonoid + quotient algebra into one referenceable
