@@ -1292,6 +1292,60 @@ theorem anti_realist_structural_realism :
     by decide⟩,
    fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂⟩
 
+/-! ## Final certificate
+
+A single Lean expression bundling the full Decoherence module's
+verified content: regimes, compositional structure, equivalences,
+anti-realism, monotonicity, monoid morphisms. -/
+
+/-- **The grand decoherence certificate.** Bundles 8 core facts. -/
+theorem grand_decoherence_certificate :
+    -- 1. Coherent regime.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 →
+      actualizationRate ch = (0, ch.length)) ∧
+    -- 2. Decoherence regime.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.bracketedCount = 0 →
+      actualizationRate ch = (ch.length, ch.length)) ∧
+    -- 3. Path-independent coherence status.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- 4. Compositional count (monoid morphism).
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂)
+        = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    -- 5. Compositional complexity (monoid morphism).
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      trajectoryComplexity (ch₁.append ch₂)
+        = trajectoryComplexity ch₁ + trajectoryComplexity ch₂) ∧
+    -- 6. Tier A monotone under chain extension.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂)) ∧
+    -- 7. Equivalent chains have equal tier A content.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      DecoherenceEquivalent ch₁ ch₂ →
+      tierAEventCount ch₁ = tierAEventCount ch₂) ∧
+    -- 8. Past grows under chain.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      past R₁ ⊆ past R₃) :=
+  ⟨fun ch h => coherent_regime ch h,
+   fun ch h => decoherence_regime ch h,
+   fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂,
+   fun ch₁ ch₂ => trajectoryComplexity_monoid_morphism ch₁ ch₂,
+   fun ch₁ ch₂ => tier_A_monotone_under_append ch₁ ch₂,
+   fun _ _ h => DecoherenceEquivalent_tier_A h,
+   fun ch₁ ch₂ => past_grows_under_chain ch₁ ch₂⟩
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
