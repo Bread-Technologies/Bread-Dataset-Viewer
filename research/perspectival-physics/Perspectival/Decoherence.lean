@@ -3006,5 +3006,21 @@ example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
   · -- Full is decoherence-equivalent to ch_act (loops are trivial).
     exact loop_conjugation_equivalent loop_pre ch_act loop_post
 
+/-! ## Final structural statement: trichotomy is non-vacuous (coherent witness)
+
+At minimum, the coherent regime is concretely witnessed by the nil
+chain at any Reality state. This guarantees the framework's coherent
+class is not empty. Pure-decoherent and mixed regime witnesses exist
+in worked examples above (requiring DecidableEq instances). -/
+
+/-- **Coherent regime is concretely inhabited.** The nil chain at any
+Reality state witnesses the coherent regime (count = 0, length = 0). -/
+theorem coherent_regime_inhabited :
+    ∃ (P : Type) (C : Type) (R : Reality P C)
+      (ch : RealityChain' P C R R),
+    ch.actualizationCount = 0 ∧ ch.length = 0 :=
+  ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+   RealityChain'.nil _, rfl, rfl⟩
+
 end Decoherence
 end Perspectival
