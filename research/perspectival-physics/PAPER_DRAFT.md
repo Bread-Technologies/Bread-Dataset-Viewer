@@ -989,14 +989,14 @@ results that go beyond restating standard GPT content:
   ✓ Hardy Axiom 5 from libertarian agency (Section 5.1).
   ✓ R6 Birkhoff disconnect: classical-side incompatibility with
     strict agency for n=2 (Section 5.2). Formally hypothesis-free.
-  ✓ R6 n=3 sign-of-det invariant: even/odd permutation discrimination
-    via the 6-term Leibniz formula `n3_disc_det`, with `n3_disc_det_id = 1`,
-    `n3_disc_det_swap01 = -1`, and IVT zero-crossing along any
-    continuous path. **UNCONDITIONAL** disconnect now proven:
-    `classical_n3_no_strict_path_id_to_swap01`. The closing lemma
-    `n3_det_zero_implies_not_injective` is proved via the Mathlib
-    `Matrix.det` ↔ `LinearMap.det` bridge using `LinearMap.toMatrix'`,
-    `LinearMap.det_toMatrix'`, and `LinearMap.isUnit_iff_ker_eq_bot`.
+  ✓ **R6 disconnect proven for ALL n ≥ 2** (`classical_general_no_strict_path_id_to_swap01`).
+    Generalized via `Matrix.toLin' ∘ Equiv.Perm.permMatrix ℝ ∘ Equiv.swap`,
+    with one-line det computation using `LinearMap.det_toLin' +
+    Matrix.det_permutation + Equiv.Perm.sign_swap`. The framework's R6
+    program-level claim is now FULLY ESTABLISHED at the Lean-verified
+    level. Specializations: n=2 (`classical_n2_strict_reversible_path_id_swap_empty`),
+    n=3 (`classical_n3_no_strict_path_id_to_swap01`), n=4, n=5 (with
+    closed-form names `classical_n4_*` / `classical_n5_*`).
   ✓ Triple no-go: bare WantableGPT bridge always lands classical
     (Section 6.1).
   ✓ Vertex-decomposition + structural identification of
