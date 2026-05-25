@@ -169,6 +169,56 @@ formalizable in the current Lean codebase. Suggested by Axiom I + IV
 (perspective at each occasion; unified experience requires sustained
 pattern stability).
 
+## Entropy and Second Law predictions (per addendum)
+
+### P11 — Second Law derivable, not contingent  [D conceptually]
+
+Per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`, the framework predicts
+that the Second Law follows necessarily from:
+(i) subjectivist coarse-graining (Jaynes);
+(ii) physical construction determining distinguishability;
+(iii) mechanical impossibility of many-to-one collapse under
+conservative dynamics (WBT 2024 Picard-Lindelöf).
+
+**Empirical content:** the kT ln 2 erasure bound (Landauer's principle)
+is *mechanically derivable from pure dynamics*, not a statistical-
+mechanical postulate. The framework's prediction goes further:
+deviations from kT ln 2 (in either direction) at the bit-erasure
+scale would be empirical evidence against the framework. Current
+nano-scale Landauer experiments are consistent with kT ln 2; the
+framework predicts no anomalies.
+
+**Status.** Conceptual derivation in place (per WBT 2024 +
+framework Tier A); formal Lean encoding of the mechanical half
+(`actualizeAt_many_to_one`, `axiom_II_actualization_irreversible`).
+Quantitative experimental tests via increasingly precise nano-scale
+Landauer measurements.
+
+### P12 — Past Hypothesis is a category error  [S]
+
+The framework predicts that the standard "Past Hypothesis" debate
+(why was the early universe in a low-entropy state?) will be
+recognized as a category error in foundations-of-physics work.
+"Low entropy" presupposes substantial entropy; the framework's
+reframing (low entropy = "from this coarse-graining, past-direction
+configurations are fewer," constitutive of past) dissolves the
+puzzle rather than answering it.
+
+**Testability.** Not directly testable; this is a meta-prediction
+about how the foundations community will eventually re-categorize
+the problem.
+
+### P13 — Boltzmann brain reasoning has no purchase  [S]
+
+The framework predicts that Boltzmann brain reasoning — which
+relies on substantial high-entropy state-spaces from which fluctuations
+occur — has no purchase under the framework's relational ontology.
+Cosmological models making Boltzmann brain predictions presuppose
+ontology the framework rejects.
+
+**Testability.** Indirect — affects how cosmological multiverse
+scenarios get evaluated.
+
 ## Methodological predictions
 
 ### P10 — Sharper Bell-style inequalities from observer plurality  [S]
@@ -202,6 +252,9 @@ challenging but in principle feasible.
 | P8 | Hard-problem dissolution | D conceptually |
 | P9 | Partial panexperientialism | X |
 | P10 | Sharper Bell-style inequalities | S |
+| P11 | Second Law derivable, not contingent | D conceptually |
+| P12 | Past Hypothesis as category error | S |
+| P13 | Boltzmann brain reasoning has no purchase | S |
 
 The strongest claims are D (P1–P4); they are also the most quantum-
 foundational and the least *philosophically distinctive*. The most
