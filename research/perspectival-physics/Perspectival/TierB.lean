@@ -951,6 +951,17 @@ theorem RealityChain'.length_zero_implies_eq {P : Type u} {C : Type v}
   have h_le := ch.actualizationCount_le_length
   omega
 
+/-- **Distinct endpoints force length ≥ 1.** Contrapositive of
+`length_zero_implies_eq`. -/
+theorem RealityChain'.distinct_endpoints_implies_length_pos
+    {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h_ne : R₁ ≠ R₂) : 0 < ch.length := by
+  by_contra h_le
+  push_neg at h_le
+  have h_zero : ch.length = 0 := Nat.le_zero.mp h_le
+  exact h_ne (ch.length_zero_implies_eq h_zero)
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
