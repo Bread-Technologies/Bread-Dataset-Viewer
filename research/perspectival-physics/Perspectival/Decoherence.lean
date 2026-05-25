@@ -794,6 +794,12 @@ theorem coherent_append_preserves_past {P : Type u} {C : Type v}
   have h_eq : R₁ = R₃ := (ch₁.append ch₂).zero_actualization_implies_eq h_co
   rw [h_eq]
 
+-- (A theorem `decoherent_grows_past` showing past R₁ ⊊ past R₂ for
+-- positive tier A content is conceptually clear but the proof of
+-- proper-subset requires careful case analysis on Reality function
+-- values; deferred to future work. The weaker `past_monotone'`
+-- already establishes the subset direction.)
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
