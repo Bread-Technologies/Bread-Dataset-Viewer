@@ -886,6 +886,25 @@ theorem v2_QM_from_richer_Tier_B :
    ⟨CircleGPT.circleStrictConnectedAgency⟩,
    ⟨QubitGPT.qubitStrictConnectedAgency_full⟩⟩
 
+/-- **R7 instance evidence on CircleGPT** (scaffold-level). The R7
+conjecture holds trivially for CircleGPT at the scaffold level —
+because `SmoothConnectedAgency` currently carries only a placeholder
+smooth-manifold field. This is *not* a substantive proof of the
+conjecture's Lie-group content; it is INSTANCE EVIDENCE that the
+conjecture's existence claim is satisfied on the framework's
+canonical U(1) instance. -/
+theorem R7_Conjecture_holds_on_circleGPT :
+    Continuity.R7_Conjecture CircleGPT.circleGPT :=
+  Continuity.R7_Conjecture_of_strict CircleGPT.circleStrictConnectedAgency
+
+/-- **R7 instance evidence on QubitGPT** (scaffold-level). Same as
+CircleGPT — QubitGPT's full StrictConnectedAgency suffices to satisfy
+the existence-part of R7 at the scaffold level. This is the
+framework's canonical SO(3)/SU(2) instance evidence. -/
+theorem R7_Conjecture_holds_on_qubitGPT :
+    Continuity.R7_Conjecture QubitGPT.qubitGPT :=
+  Continuity.R7_Conjecture_of_strict QubitGPT.qubitStrictConnectedAgency_full
+
 /-- **Extended v2 certificate** — consolidates all major v2
 architectural facts, including the elementary Tier A → Tier B bridge
 through `actualizeAt`. This is the v2-progressive end-state summary. -/

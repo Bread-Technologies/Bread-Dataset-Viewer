@@ -1484,6 +1484,33 @@ def R7_Conjecture
     -- (complex Hilbert space, dimension n). Stated structurally for now.
     True
 
+/-- **Constructor: SmoothConnectedAgency from StrictConnectedAgency.**
+At the scaffold level (where `smooth_manifold_placeholder` is `True`),
+any GPT with a `StrictConnectedAgency` instance trivially admits a
+`SmoothConnectedAgency`. This is the framework's minimal instance-
+construction; the substantive content (Lie group structure) is
+deferred to future Mathlib-LieGroup wiring. -/
+def SmoothConnectedAgency.ofStrict
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (SCA : StrictConnectedAgency G) :
+    SmoothConnectedAgency G :=
+  { SCA with smooth_manifold_placeholder := trivial }
+
+/-- **R7 conjecture holds trivially for any GPT with
+`StrictConnectedAgency`** at the scaffold-level smooth-structure.
+Since `SmoothConnectedAgency` is currently a scaffold (the
+`smooth_manifold_placeholder : True` carries no content), the
+existence-part of R7 follows immediately from any `StrictConnectedAgency`.
+
+This is INSTANCE EVIDENCE for R7 — not a proof of the conjecture's
+substantive content, which requires the Lie-group structure to be
+genuinely characterized. -/
+theorem R7_Conjecture_of_strict
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (SCA : StrictConnectedAgency G) :
+    R7_Conjecture G :=
+  fun _ => ⟨SmoothConnectedAgency.ofStrict SCA, trivial⟩
+
 /-! ### Worked example: agency → Hardy A5 pipeline
 
 A concrete demonstration of the framework's machine-verified Hardy A5
