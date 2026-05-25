@@ -542,6 +542,9 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `v2_QM_from_richer_Tier_B` — non-classical Tier B realized by richer carriers | `Dichotomy.lean` | ✓ (a) |
 | `framework_v2_certificate`, `framework_v2_extended_certificate` — consolidated v2 facts | `Dichotomy.lean` | ✓ (a) |
 | `framework_v2_trajectory_certificate` — multi-step trajectory bundle | `Dichotomy.lean` | ✓ (a) |
+| `bracketed_implies_successor`, `TrajectoryStep'`, `RealityChain'` + `implies_successor` + `past_monotone'` + `no_return_along_chain` — strict chains carry time-ordering | `TierB.lean` | ✓ (a) |
+| `actualizeAt_strict_step`, `TrajectoryStep'.bracketed` — strict-step constructors | `TierB.lean` | ✓ (a) |
+| `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
 | `SmoothConnectedAgency` scaffold | `Continuity.lean` | ✓ (a) scaffold only |
 | `SmoothConnectedAgency.ofStrict`, `R7_Conjecture_of_strict` | `Continuity.lean` | ✓ (a) scaffold-level |
