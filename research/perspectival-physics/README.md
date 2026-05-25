@@ -84,6 +84,12 @@ strengthening).
   full iff characterizations (count = 0 ↔ R₁ = R₂ on strict chains).
 - `Decoherence.lean` — Seam 4 formal correlate (decoherence as
   accumulated actualization at system-environment interface).
+  Contains: `actualizationRate`, `trajectoryComplexity`, regime
+  characterizations (`coherent_regime`, `decoherence_regime`,
+  `trajectory_trichotomy`), compositional + monotonicity content,
+  `path_independent_coherence`, `decoherence_anti_realism`,
+  `DecoherenceEquivalent` (equivalence relation + congruence under
+  append), and bundle certificates.
 - `Ontology.lean` — axioms I–IV encoded as Lean 4 types (v1; under v2,
   this is Tier B content augmented with Tier A foundation).
 - `Transformations.lean` — PTrans as a Group, MulAction on meetings.
