@@ -1420,6 +1420,20 @@ example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
   rw [RealityChain'.singleton_bracketedCount]
   rfl
 
+/-- **Example: trajectoryComplexity bounds on Bool.** A concrete chain's
+complexity is between its length and 2 * its length. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let ch : RealityChain' Bool Bool R (actualizeAt R m) :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    ch.length ≤ trajectoryComplexity ch
+      ∧ trajectoryComplexity ch ≤ 2 * ch.length := by
+  intro R h_pot ch
+  refine ⟨?_, ?_⟩
+  · exact complexity_ge_length ch
+  · exact complexity_le_twice_length ch
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
