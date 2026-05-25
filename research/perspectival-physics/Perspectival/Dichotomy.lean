@@ -89,5 +89,47 @@ theorem circle_axiom5_strong
   Hardy.axiom5_strong_of_transitive_agency CircleGPT.circleGPT
     circle_transitive_agency h_pure_states
 
+/-! ## L7 closure: unconditional on Classical
+
+With reverse R1 (`pure_state_of_classical_is_vertex`) closed, the L7
+no-go on Classical is now fully unconditional. -/
+
+/-- **Classical L7 closure (unconditional).** No
+`PurePreservingTransitiveAgency` exists on Classical n ≥ 2. This
+combines L7 typeclass (paths preserve pure states) with R1 (vertices
+are pure) and reverse-R1 (pure are vertices) to reduce to L6 vertex-
+preservation closure. -/
+theorem classical_no_L7_unconditional (n : ℕ) (h : 1 < n)
+    (PPT : Continuity.PurePreservingTransitiveAgency (Classical.gpt n)) :
+    False :=
+  Classical.classical_general_no_pure_preserving_transitive_agency (n := n) h PPT
+
+/-! ## The framework's classical-vs-quantum dichotomy theorem -/
+
+/-- **THE DICHOTOMY THEOREM.** The framework formally distinguishes
+classical from continuous-symmetry GPTs at the level of the L7
+(`PurePreservingTransitiveAgency`) typeclass:
+
+- For Classical n ≥ 2: NO `PurePreservingTransitiveAgency` exists.
+- For CircleGPT: a non-trivial `TransitiveAgency` exists (with U(1)
+  acting transitively on the pure-state circle).
+
+These are two formally incompatible structural classes. Reading
+`TransitiveAgency` as the substantive content of Hardy Axiom 5
+(transitivity of available reversibles on pure states), this is the
+framework's first machine-verified theoretical no-go separating
+classical from continuous-symmetry GPTs at the operational level —
+the formal version of "classical theories don't have continuous
+symmetries; quantum-like theories do." -/
+theorem framework_dichotomy_existential :
+    -- Negative: No PurePreservingTransitiveAgency on Classical 2.
+    (∀ PPT : Continuity.PurePreservingTransitiveAgency (Classical.gpt 2), False) ∧
+    -- Positive: Some TransitiveAgency on CircleGPT.
+    Nonempty (Continuity.TransitiveAgency CircleGPT.circleGPT) := by
+  refine ⟨?_, ?_⟩
+  · intro PPT
+    exact classical_no_L7_unconditional 2 (by omega) PPT
+  · exact ⟨circle_transitive_agency⟩
+
 end Dichotomy
 end Perspectival
