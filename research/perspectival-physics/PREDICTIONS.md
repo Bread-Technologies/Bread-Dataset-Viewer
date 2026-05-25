@@ -208,6 +208,24 @@ puzzle rather than answering it.
 about how the foundations community will eventually re-categorize
 the problem.
 
+### P14 — Decoherence path-independence  [D conceptually + machine-verified]
+
+Per the strict-chain iff `RealityChain'.eq_iff_zero_count` + the
+trichotomy `trajectory_trichotomy`, the framework predicts that
+*coherence is a property of the endpoint pair, not the trajectory
+taken*. Specifically: given two strict trajectories between the
+same Reality endpoints, both have count = 0 iff R₁ = R₂.
+
+**Empirical content:** all trajectories from a coherent state to
+the same coherent state must themselves be coherent. No "hidden
+intermediate decoherence" is possible at the strict-chain level.
+
+**Status.** Machine-verified at the structural level
+(`Perspectival/Decoherence.lean :: path_independent_coherence`).
+The continuous-time / phase-space content requires Mathlib's
+ODE infrastructure + a proper decoherence-time framework — deferred
+to Tier 2.
+
 ### P13 — Boltzmann brain reasoning has no purchase  [S]
 
 The framework predicts that Boltzmann brain reasoning — which
@@ -255,6 +273,7 @@ challenging but in principle feasible.
 | P11 | Second Law derivable, not contingent | D conceptually |
 | P12 | Past Hypothesis as category error | S |
 | P13 | Boltzmann brain reasoning has no purchase | S |
+| P14 | Decoherence path-independence | D + machine-verified |
 
 The strongest claims are D (P1–P4); they are also the most quantum-
 foundational and the least *philosophically distinctive*. The most
