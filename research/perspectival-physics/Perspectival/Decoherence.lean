@@ -659,6 +659,30 @@ theorem trajectory_rate_path_dependence {P : Type u} {C : Type v}
     (ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) :=
   path_independent_coherence ch₁ ch₂
 
+/-- **Plain-chain analog of trajectoryComplexity.** -/
+def trajectoryComplexityPlain {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂) : ℕ :=
+  2 * ch.actualizationCount + ch.bracketedCount
+
+/-- **Plain-chain complexity respects append.** -/
+theorem trajectoryComplexityPlain_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain P C R₁ R₂) (ch₂ : RealityChain P C R₂ R₃) :
+    trajectoryComplexityPlain (ch₁.append ch₂)
+      = trajectoryComplexityPlain ch₁ + trajectoryComplexityPlain ch₂ := by
+  unfold trajectoryComplexityPlain
+  rw [RealityChain.append_actualizationCount,
+      RealityChain.append_bracketedCount]
+  omega
+
+/-- **Forgetful preserves complexity.** -/
+theorem trajectoryComplexity_forget {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    trajectoryComplexity ch = trajectoryComplexityPlain ch.toRealityChain := by
+  unfold trajectoryComplexity trajectoryComplexityPlain
+  rw [RealityChain'.toRealityChain_actualizationCount,
+      RealityChain'.toRealityChain_bracketedCount]
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
