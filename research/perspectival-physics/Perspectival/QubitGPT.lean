@@ -699,6 +699,49 @@ theorem rotZ_continuous (θ : ℝ) : Continuous (rotZ θ) := by
         show Continuous (fun ρ : V => ρ 3)
         exact continuous_apply 3
 
+/-- `rotZ θ` is JOINTLY continuous in `(θ, ρ)` — analog of
+`CircleGPT.rotZ_continuous_pair` for the Bloch ball. -/
+theorem rotZ_continuous_pair :
+    Continuous (fun p : ℝ × V => rotZ p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  by_cases h0 : i = 0
+  · subst h0
+    show Continuous (fun p : ℝ × V =>
+      p.2 0 * Real.cos p.1 - p.2 1 * Real.sin p.1)
+    have hp1_cont : Continuous (fun p : ℝ × V => p.1) := continuous_fst
+    have hcos : Continuous (fun p : ℝ × V => Real.cos p.1) :=
+      Real.continuous_cos.comp hp1_cont
+    have hsin : Continuous (fun p : ℝ × V => Real.sin p.1) :=
+      Real.continuous_sin.comp hp1_cont
+    have h0c : Continuous (fun p : ℝ × V => p.2 0) :=
+      (continuous_apply 0).comp continuous_snd
+    have h1c : Continuous (fun p : ℝ × V => p.2 1) :=
+      (continuous_apply 1).comp continuous_snd
+    exact (h0c.mul hcos).sub (h1c.mul hsin)
+  · by_cases h1 : i = 1
+    · subst h1
+      show Continuous (fun p : ℝ × V =>
+        p.2 0 * Real.sin p.1 + p.2 1 * Real.cos p.1)
+      have hp1_cont : Continuous (fun p : ℝ × V => p.1) := continuous_fst
+      have hcos : Continuous (fun p : ℝ × V => Real.cos p.1) :=
+        Real.continuous_cos.comp hp1_cont
+      have hsin : Continuous (fun p : ℝ × V => Real.sin p.1) :=
+        Real.continuous_sin.comp hp1_cont
+      have h0c : Continuous (fun p : ℝ × V => p.2 0) :=
+        (continuous_apply 0).comp continuous_snd
+      have h1c : Continuous (fun p : ℝ × V => p.2 1) :=
+        (continuous_apply 1).comp continuous_snd
+      exact (h0c.mul hsin).add (h1c.mul hcos)
+    · by_cases h2 : i = 2
+      · subst h2
+        show Continuous (fun p : ℝ × V => p.2 2)
+        exact (continuous_apply 2).comp continuous_snd
+      · have hi3 : i = 3 := fin4_is_three i h0 h1 h2
+        subst hi3
+        show Continuous (fun p : ℝ × V => p.2 3)
+        exact (continuous_apply 3).comp continuous_snd
+
 theorem rotZ_comp (θ₁ θ₂ : ℝ) :
     (rotZ θ₁).comp (rotZ θ₂) = rotZ (θ₁ + θ₂) := by
   apply LinearMap.ext; intro ρ
@@ -1011,6 +1054,29 @@ theorem blochPlusZ_in_states : blochPlusZ ∈ states := by
 exhibiting the complex-quantum point of the (classical / rebit / qubit /
 quaternionic) trichotomy. -/
 theorem qubit_hardy_signature : Module.finrank ℝ V = 4 := qubit_hardy_K
+
+/-! ## OneParameterFamily instance: the rotZ 1-parameter subgroup -/
+
+/-- The qubit's `rotZ` family packaged as a `OneParameterFamily` —
+the framework's first non-trivial continuous-symmetry instance on a
+complex-QM-signature GPT. -/
+noncomputable def rotZOneParameterFamily :
+    Perspectival.Continuity.OneParameterFamily qubitGPT where
+  f := rotZStrictReversible
+  continuous := rotZ_continuous_pair
+  zero := by
+    show (rotZStrictReversible 0).toLin = LinearMap.id
+    rw [rotZStrictReversible_toLin, rotZ_zero]
+  add θ₁ θ₂ := by
+    show (rotZStrictReversible (θ₁ + θ₂)).toLin
+        = (rotZStrictReversible θ₁).toLin.comp (rotZStrictReversible θ₂).toLin
+    rw [rotZStrictReversible_toLin, rotZStrictReversible_toLin,
+        rotZStrictReversible_toLin, ← rotZ_comp]
+
+/-- QubitGPT satisfies `HasOneParameterAgency`. -/
+noncomputable instance qubitHasOneParameterAgency :
+    Perspectival.Continuity.HasOneParameterAgency qubitGPT where
+  family := rotZOneParameterFamily
 
 end QubitGPT
 end Perspectival
