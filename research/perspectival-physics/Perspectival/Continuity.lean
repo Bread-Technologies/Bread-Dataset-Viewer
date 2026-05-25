@@ -1174,6 +1174,50 @@ theorem TransitiveAgency.hardy_axiom5
     have : path.γ 1 ρ₁ = R.toLin ρ₁ := by rw [path.finish]
     rw [this, hRρ]
 
+/-! ### PurePreservingTransitiveAgency — the framework's intended L7
+
+The L6 subagent's mathematical correction (in Classical.lean) showed
+that the naive R6 strengthening fails for `n ≥ 3` without an extra
+hypothesis: there exist genuine `StrictReversiblePath`s between id and
+non-trivial permutations (e.g., `t·I + (1-t)·C` for the 3-cycle C).
+The discreteness argument requires an additional "pure-state
+preservation along the path" hypothesis.
+
+`PurePreservingTransitiveAgency` packages this refinement: a
+TransitiveAgency whose strict paths preserve PureStates along the way.
+This is the framework's intended axiom refinement (per the user-
+authorized "metaphysics-fixed, axioms-adjustable" methodology). The
+pattern-stability metaphysics (Axiom IV) naturally motivates this
+condition: a stable particular pattern shouldn't "smear out" to a
+mixture along reversible dynamics.
+
+On Classical n ≥ 2, this typeclass is provably impossible (modulo
+R1: vertices are pure states), giving a clean classical no-go.
+On CircleGPT (and analogous continuous-symmetry GPTs), this typeclass
+is satisfied via rotations (each rotation preserves pure states). -/
+
+/-- A `PurePreservingTransitiveAgency` extends `TransitiveAgency` with
+the requirement that strict paths preserve PureStates along the way:
+for every t in [0,1] and every pure state ρ, p.γ t ρ is still a pure
+state. -/
+class PurePreservingTransitiveAgency {V : Type u} [AddCommGroup V] [Module ℝ V]
+    [TopologicalSpace V] (G : GPT V) extends TransitiveAgency G where
+  /-- Every strict path between elements of `avail` preserves pure
+  states along the way: for each `t : unitInterval` and pure state
+  `ρ`, `p.γ t ρ` is also a pure state. -/
+  preserves_pure_along :
+    ∀ R₁ R₂ : StrictReversible G, R₁ ∈ avail → R₂ ∈ avail →
+      ∀ (p : StrictReversiblePath G R₁ R₂)
+        (t : unitInterval) (ρ : V), PureState G ρ →
+        PureState G (p.γ t ρ)
+
+/-- `PurePreservingTransitiveAgency` is automatically a
+`TransitiveAgency`. -/
+instance (priority := 60) TransitiveAgency.ofPurePreserving
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V] {G : GPT V}
+    [PPT : PurePreservingTransitiveAgency G] : TransitiveAgency G :=
+  PPT.toTransitiveAgency
+
 /-! ### Cardinality lower bounds from TransitiveAgency
 
 A `TransitiveAgency` on a GPT with multiple distinct pure states
