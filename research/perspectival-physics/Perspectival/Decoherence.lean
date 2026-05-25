@@ -3315,6 +3315,39 @@ theorem loop_monoid_axioms_certificate :
    fun ch => loop_nil_append ch,
    fun ch => loop_append_nil ch⟩
 
+/-- **Loops at R form a `Monoid` instance.** Registers the loop
+chain monoid as a Lean-Mathlib `Monoid`. -/
+instance loopMonoid {P : Type u} {C : Type v} (R : Reality P C) :
+    Monoid (RealityChain' P C R R) where
+  mul := RealityChain'.append
+  one := RealityChain'.nil R
+  mul_assoc := RealityChain'.append_assoc
+  one_mul := RealityChain'.nil_append
+  mul_one := RealityChain'.append_nil
+
+/-- **Monoid mul = append.** -/
+theorem loop_mul_eq_append {P : Type u} {C : Type v} {R : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R R) :
+    ch₁ * ch₂ = ch₁.append ch₂ := rfl
+
+/-- **Monoid one = nil.** -/
+theorem loop_one_eq_nil {P : Type u} {C : Type v} {R : Reality P C} :
+    (1 : RealityChain' P C R R) = RealityChain'.nil R := rfl
+
+/-- **tierAEventCount is a Monoid morphism for loops.** Formally
+expresses `tierAEventCount : RealityChain' R R → ℕ` as a
+`MonoidHom`-style fact (without the bundled `MonoidHom` structure,
+since ℕ is additive). -/
+theorem loop_tierAEventCount_mul {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    tierAEventCount (ch₁ * ch₂) = tierAEventCount ch₁ + tierAEventCount ch₂ :=
+  tierAEventCount_append ch₁ ch₂
+
+/-- **tierAEventCount of one is zero.** -/
+theorem loop_tierAEventCount_one {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    tierAEventCount (1 : RealityChain' P C R R) = 0 := rfl
+
 /-- **Trivial chain has nil-like behavior.** A length-0 chain
 trivially has all measures 0 and trivially preserves past. -/
 theorem trivial_chain_nil_like {P : Type u} {C : Type v}
