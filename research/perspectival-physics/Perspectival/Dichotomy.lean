@@ -621,8 +621,10 @@ example (θ θ' : ℝ) :
 CircleGPT carries an unconditional TransitiveAgency, so the framework's
 full Hardy A1+A3+A4+A5 reconstruction applies directly. -/
 
-/-- **CircleGPT satisfies Hardy A1+A3+A4+A5 (everything except A2).** -/
-theorem circle_full_hardy_reconstruction (GB : GPT (Fin 3 → ℝ)) :
+/-- **CircleGPT satisfies Hardy A1+A3+A4+A5 (everything except A2).**
+For any second GPT `GB` on a vector space `VB`. -/
+theorem circle_full_hardy_reconstruction {VB : Type}
+    [AddCommGroup VB] [Module ℝ VB] (GB : GPT VB) :
     Hardy.Axiom1_Probabilities CircleGPT.circleGPT ∧
     Hardy.Axiom3_Subspaces CircleGPT.circleGPT ∧
     Hardy.Axiom4_Composite_Dimension CircleGPT.circleGPT GB ∧
