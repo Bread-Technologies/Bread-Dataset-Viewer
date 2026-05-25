@@ -408,6 +408,27 @@ Machine-verified: `Decoherence.decoherence_anti_realism` bundles
 the endpoint-determined-status content with an explicit witness
 of path-dependent complexity.
 
+## Q22. What is the chain monoid + morphism structure?
+
+**Framework answer:** Strict chains `RealityChain'` form a chain
+monoid under append:
+- **Identity:** `RealityChain'.nil R` (empty trajectory).
+- **Multiplication:** `RealityChain'.append`.
+- **Associativity** + identity laws verified in
+  `Perspectival/TierB.lean` (`append_assoc`, `nil_append`, `append_nil`).
+
+Both `tierAEventCount` and `trajectoryComplexity` are monoid
+morphisms from this chain monoid to `(ℕ, +)`:
+- Morphism law: f(ch₁.append ch₂) = f(ch₁) + f(ch₂).
+- Unit: f(nil R) = 0.
+
+See `Decoherence.trajectory_monoid_morphism_certificate` for the
+bundled facts.
+
+This algebraic structure makes trajectory measures composable in a
+clean monoidal way — the framework's "trajectory algebra" is
+structurally a graded monoid.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
