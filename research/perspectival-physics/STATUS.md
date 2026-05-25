@@ -532,6 +532,8 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `past_subset_past_actualizeAt` — past-monotonicity under pointwise events (arrow of time, elementary form) | `TierA.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow of time dual + actualization detector | `TierA.lean` | ✓ (a) |
 | `actualizeAt_atSeam`, `actualizeAt_not_bracketed`, `actualizeAt_asActualizationMap` — pointwise Tier A ↔ Tier B link | `TierB.lean` | ✓ (a) |
+| `RealityChain` + `singleton`/`append`/`actualizationCount`/`bracketedCount`/`length` — multi-step trajectory infrastructure | `TierB.lean` | ✓ (a) |
+| `RealityChain.counts_sum`, `RealityChain.zero_actualization_all_bracketed`, `RealityChain.bracketed_only_implies_eq` — trajectory dichotomy quantitative content | `TierB.lean` | ✓ (a) |
 | `definiteToVertex`, `definiteToVertex_perm` — Tier A/B → Classical.vertex bridge | `Dichotomy.lean` | ✓ (a) |
 | `v2_bare_Tier_B_is_classical_excluded` — v2-architectural identification | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
 | `v2_QM_from_richer_Tier_B` — non-classical Tier B realized by richer carriers | `Dichotomy.lean` | ✓ (a) |
