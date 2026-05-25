@@ -1027,6 +1027,29 @@ theorem class_determined_by_count {P : Type u} {C : Type v}
       tierAEventCount ch₁ = tierAEventCount ch₂ :=
   DecoherenceEquivalent_iff_tier_A ch₁ ch₂
 
+/-! ## Counter-example: complexity DISTINGUISHES equivalence classes
+
+While DecoherenceEquivalent collapses chains with equal tier A
+content, complexity can DISTINGUISH them — two chains with the same
+tier A count can have different complexities (different lengths).
+This shows complexity is a strict refinement of decoherence-
+equivalence. -/
+
+/-- **Chains in the same decoherence class can have different
+complexities.** Counter-example using nil vs. refl-bracketed
+singleton: both have count = 0 (decoherence-equivalent) but
+complexity 0 vs 1. -/
+example (P : Type u) (C : Type v) (R : Reality P C) :
+    let ch₁ : RealityChain' P C R R := RealityChain'.nil R
+    let ch₂ : RealityChain' P C R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    DecoherenceEquivalent ch₁ ch₂
+      ∧ trajectoryComplexity ch₁ ≠ trajectoryComplexity ch₂ := by
+  refine ⟨rfl, ?_⟩
+  show (0 : ℕ) ≠ 1
+  decide
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
