@@ -603,3 +603,39 @@ the bracketed dynamics acts.
   added Continuity / Dichotomy content uses small additive patterns
   consistent with existing module structure; should compile when
   the Mathlib cache is available.
+
+### v2 entropy addendum (received mid-session)
+
+The user issued an addendum to v2 (`ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`)
+extending the framework's anti-realism from information to entropy:
+
+- **Core commitment**: entropy is subjectivist coarse-graining (Jaynes);
+  the framework extends Jaynes from inference to structural anti-realism.
+- **Both-halves Second Law**: subjectivist count (Jaynes) + mechanical
+  impossibility of many-to-one collapse (WBT 2024 Picard-Lindelöf).
+- **Tier 4 dissolutions added (#17-#22)**: Past Hypothesis, Penrose
+  Weyl curvature, Boltzmann brains, BH entropy, cosmological/
+  thermodynamic arrow unification, Verlinde/holographic.
+- **Jaynes promoted to load-bearing** alongside QBism.
+- **Discipline**: never treat entropy or information as substantial;
+  always reference the coarse-graining and the perspective.
+
+Docs updated to integrate the addendum:
+- `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` (verbatim, new file).
+- `ORIGINAL_PROMPT.md`: header points to addendum as active.
+- `TIER4_DISSOLUTIONS.md`: 6 new dissolutions (#17-#22).
+- `SEAMS.md`: Seam 3 (WBT) gains explicit both-halves framing.
+- `LINEAGE.md`: Jaynes promoted; QBism reaffirmed; explicit anti-
+  realism-about-entropy section.
+- `GLOSSARY.md`: entropy / coarse-graining / subjectivism (framework
+  usage) / many-to-one collapse / both-halves framing.
+- `FAQ.md`: Q13-Q15 on entropy, Second Law, dissolutions.
+- `README.md`: prominent v2 entropy addendum blurb + addendum file
+  in docs section.
+- `FINDINGS.md`: §0b v2 entropy addendum.
+- `TIER3_ATTEMPT.md`: holographic-bound flag reframed under addendum.
+
+The Lean side is unchanged (the addendum is metaphysical hygiene, not
+a Lean-encodable structure at the current scope). A future Decoherence
+or coarse-graining module might encode some of this content formally;
+currently it lives in the prose corpus.
