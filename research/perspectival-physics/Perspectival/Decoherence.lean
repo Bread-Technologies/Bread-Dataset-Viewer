@@ -4442,6 +4442,23 @@ theorem length_zero_count_zero {P : Type u} {C : Type v}
   have h_le := ch.actualizationCount_le_length
   omega
 
+/-- **Worked example: Tier B reversibility on a Bool loop.** A concrete
+demonstration that a coherent Bool loop witnesses Tier B reversibility:
+endpoints equal, past invariant, complexity = length. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let loop3 := loopPower base 3
+    R = R
+      ∧ past R = past R
+      ∧ loop3.bracketedCount = loop3.length
+      ∧ trajectoryComplexity loop3 = loop3.length := by
+  intro base loop3
+  apply coherent_witnesses_tier_B_reversibility
+  show tierAEventCount loop3 = 0
+  exact loopPower_tierAEventCount base 3
+
 /-- **Bracketed count bounded by length-bracketed.** -/
 theorem length_bounded_bracketed_certificate :
     -- Length 0 implies bracketed 0.
