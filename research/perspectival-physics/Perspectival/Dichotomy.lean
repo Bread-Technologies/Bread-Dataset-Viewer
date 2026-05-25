@@ -92,6 +92,15 @@ theorem circle_axiom5_strong
   Hardy.axiom5_strong_of_transitive_agency CircleGPT.circleGPT
     circle_transitive_agency h_pure_states
 
+/-- **CircleGPT satisfies Hardy A5 strong-form UNCONDITIONALLY.** The
+membership hypothesis `IsExtreme ℝ states {ρ} → ρ ∈ states` is
+automatic: any extreme point of a set lies in its closure, and for our
+state space (closed unit disk lifted) extreme points are contained in
+the set by definition. -/
+theorem circle_axiom5_strong_unconditional :
+    Hardy.Axiom5_Continuity_Strong CircleGPT.circleGPT :=
+  circle_axiom5_strong (fun _ h => h.1 (Set.mem_singleton _))
+
 /-! ## L7 closure: unconditional on Classical
 
 With reverse R1 (`pure_state_of_classical_is_vertex`) closed, the L7
