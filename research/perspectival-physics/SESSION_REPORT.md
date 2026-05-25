@@ -697,11 +697,58 @@ machinery is in place.
 
 ### Total commit volume this session segment
 
-The session has now produced 120+ commits with full v2 + entropy
+The session has now produced 160+ commits with full v2 + entropy
 addendum + strict-chain + Decoherence integration. All five
 Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
+
+### Decoherence module final state (~800 lines)
+
+`Perspectival/Decoherence.lean` now contains:
+
+**Core measures:**
+- `actualizationRate` : (count, length) along strict chain.
+- `actualizationRatePlain` : analog on plain chains.
+- `tierAEventCount` : count alias.
+- `trajectoryComplexity` : 2*count + bracketed (weighted measure).
+- `trajectoryComplexityPlain` : plain-chain analog.
+
+**Regime characterizations:**
+- `coherent_regime` / `decoherence_regime` (and plain analogs)
+- `trajectory_trichotomy` : every chain is coherent | pure | mixed
+- `complexity_eq_length_iff_coherent` and dual iff for pure-decoherent
+- `bare_tier_B_density` and `pure_actualization_density` for actualizationDensity
+
+**Compositional content:**
+- `rate_count_additive`, `rate_length_additive` : pair additivity
+- `concatenated_decoherence` : full rate composition
+- `coherent_plus_decoherent` and `decoherent_plus_coherent` : mixed
+- `trajectoryComplexity_append` + `trajectoryComplexityPlain_append`
+- `coherent_compose` + `coherent_compose_eq`
+
+**Equality + iff content:**
+- `coherent_and_decoherent_distinct_endpoints` : impossibility
+- `path_independent_coherence` : coherence is endpoint-determined
+- `positive_tier_A_implies_distinct_endpoints` (and dual)
+- `trajectory_rate_path_dependence` : path-dependence note
+
+**Forgetful + bounds:**
+- `actualizationRate_forget` : strict→plain rate preservation
+- `trajectoryComplexity_forget` : strict→plain complexity preservation
+- `complexity_ge_length` / `complexity_le_twice_length` (+ plain analogs)
+- `rate_count_le_length`, `rate_count_nonneg`
+
+**Bundled certificates:**
+- `decoherence_certificate` : 4-fact rate-pair bundle
+- `framework_decoherence_full_certificate` : 4-fact full bundle (rate + path-independence + complexity bounds + compositionality)
+
+**Worked examples:** nil chain, singleton actualizeAt, singleton
+bracketed, 2-bracketed composition.
+
+The framework's Seam 4 content is now substantially formalized
+at the count-based structural level. The continuous-time dynamics
+remain Tier 2 work.
 
 ### v2 entropy addendum (received mid-session)
 
