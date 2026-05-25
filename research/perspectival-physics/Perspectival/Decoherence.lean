@@ -1933,6 +1933,34 @@ instance DecoherenceEquivalent_setoid {P : Type u} {C : Type v}
             fun h => DecoherenceEquivalent_symm h,
             fun h₁₂ h₂₃ => DecoherenceEquivalent_trans h₁₂ h₂₃⟩
 
+/-- **Decoherence quotient.** The type of decoherence-equivalence
+classes of strict chains between R₁ and R₂. -/
+abbrev DecoherenceQuotient {P : Type u} {C : Type v}
+    (R₁ R₂ : Reality P C) : Type max u v :=
+  Quotient (DecoherenceEquivalent_setoid R₁ R₂)
+
+/-- **Count function descends to the quotient.** Since
+DecoherenceEquivalent identifies chains with equal counts, the
+count function descends to a well-defined function on the quotient. -/
+def DecoherenceQuotient.count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} : DecoherenceQuotient R₁ R₂ → ℕ :=
+  Quotient.lift (fun ch => tierAEventCount ch)
+    (fun ch₁ ch₂ h => h)
+
+/-- **Count is injective on the decoherence quotient.** This shows
+the quotient embeds into ℕ via the count. -/
+theorem DecoherenceQuotient.count_injective {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q₁ q₂ : DecoherenceQuotient R₁ R₂)
+    (h : q₁.count = q₂.count) : q₁ = q₂ := by
+  induction q₁ using Quotient.inductionOn with
+  | _ ch₁ =>
+    induction q₂ using Quotient.inductionOn with
+    | _ ch₂ =>
+      apply Quotient.sound
+      show DecoherenceEquivalent ch₁ ch₂
+      show ch₁.actualizationCount = ch₂.actualizationCount
+      exact h
+
 /-- **Trio-of-morphisms certificate.** All three count-style measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms with
 zero on nil. -/
