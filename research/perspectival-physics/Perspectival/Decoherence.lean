@@ -2059,6 +2059,17 @@ theorem pure_decoherent_iff_all_active {P : Type u} {C : Type v}
   have h := ch.counts_sum
   omega
 
+/-- **Singleton-actualization is at the seam.** Every singleton
+actualization chain corresponds to a seam-crossing event — the
+framework's formal correlate of measurement. Direct corollary of
+`measurement_is_actualization` from TierB. -/
+theorem singleton_actualization_at_seam {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    AtSeam R (actualizeAt R m) :=
+  TierB.actualizeAt_atSeam R m h_pot
+
 /-- **Collapse = single actualization step.** The framework's reading
 of wave function collapse: the smallest non-trivial actualization
 chain. Has count 1, length 1, complexity 2. This is the framework's
