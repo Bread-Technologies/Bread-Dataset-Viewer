@@ -3769,6 +3769,19 @@ theorem distinct_counts_distinct_quotient {P : Type u} {C : Type v}
   distinct_class_distinct_quotient ch₁ ch₂
     (distinct_counts_distinct_classes ch₁ ch₂ h)
 
+/-- **toDecoherenceClass equals Quotient.mk.** Definitional unfolding. -/
+theorem toDecoherenceClass_eq_quotient_mk {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    toDecoherenceClass ch = Quotient.mk _ ch := rfl
+
+/-- **Quotient.mk is surjective.** Every quotient element has a
+chain representative. -/
+theorem decoherenceQuotient_mk_surjective {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) :
+    ∃ (ch : RealityChain' P C R₁ R₂), q = toDecoherenceClass ch := by
+  induction q using Quotient.inductionOn with
+  | _ ch => exact ⟨ch, rfl⟩
+
 /-- **Decoherence framework MASTER certificate.** A single Lean
 theorem bundling EVERY major structural result of the Decoherence
 module's loop submonoid + quotient algebra into one referenceable
