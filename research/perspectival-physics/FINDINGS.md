@@ -710,5 +710,11 @@ Tier 1 status:
   `qubitStrictConnectedAgency_full` (paths between rotX, rotY, rotZ
   generator families through the identity). Framework-distinctive
   first machine-verified non-abelian agency.
-- ~ SU(3) toehold: QutritGPT (K = 9 = N², N = 3) + λ₃ Gell-Mann
-  generator. Remaining 7 Gell-Mann generators DEFERRED.
+- ~ SU(3) toehold: QutritGPT (K = 9 = N², N = 3) + 3 of 8 Gell-Mann-
+  style generators (rotL1, rotL2, rotL3 — all pairwise non-commuting
+  via shared Bloch coords). Remaining 5 generators + full SU(3) Lie
+  algebra structure DEFERRED.
+- ✓ Gauge composition (linear-map level): `framework_gauge_composition_linear`
+  — productTransform on gptTensor preserves states + unit, lifting
+  the gauge action from components to the composite (continuity
+  deferred to finite-dim case).
