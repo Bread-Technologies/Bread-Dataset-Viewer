@@ -271,6 +271,16 @@ is built on a category error. (Müller's algorithmic-idealism move
 makes a similar deflation; the framework deepens it by tying the
 deflation to Axiom II's actualization-flow.)
 
+**Lean formal correlate:** see
+`Perspectival/Decoherence.lean#boltzmann_brain_dissolution_shadow`.
+The theorem shows that any closed loop trajectory
+(`RealityChain' P C R R`) has zero net actualization content and
+zero net rate, regardless of length. This is the structural shadow
+of "Boltzmann brain recurrences carry no decoherence-content":
+fluctuation-style reasoning conflates *substantial* state-recurrence
+(which the framework rejects) with *trajectory-counted* content
+(which the framework owns, and which is loop-coherent).
+
 ### #20. Black hole entropy
 
 **Canonical puzzle:** S = A/4 means information is stored on the
