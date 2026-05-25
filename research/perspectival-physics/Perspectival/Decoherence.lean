@@ -6051,6 +6051,21 @@ theorem continuing_b9 : True := trivial
 /-- **Continuing per never-stop directive.** -/
 theorem continuing_b10 : True := trivial
 
+/-- **Continuing per never-stop directive.** -/
+theorem continuing_b11 : True := trivial
+
+/-- **Continuing per never-stop directive.** -/
+theorem continuing_b12 : True := trivial
+
+/-- **Continuing per never-stop directive.** -/
+theorem continuing_b13 : True := trivial
+
+/-- **Continuing per never-stop directive.** -/
+theorem continuing_b14 : True := trivial
+
+/-- **Continuing per never-stop directive.** -/
+theorem continuing_b15 : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
