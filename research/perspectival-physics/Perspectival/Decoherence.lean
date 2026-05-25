@@ -5017,6 +5017,17 @@ theorem length_n_bracketed_range {P : Type u} {C : Type v}
   have h_brk := length_ge_bracketed ch
   omega
 
+/-- **Complexity range at fixed length.** -/
+theorem length_n_complexity_range {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (n : ℕ)
+    (h : ch.length = n) :
+    n ≤ trajectoryComplexity ch ∧ trajectoryComplexity ch ≤ 2 * n := by
+  have h_ge := complexity_ge_length ch
+  have h_le := complexity_le_twice_length ch
+  refine ⟨?_, ?_⟩
+  · omega
+  · omega
+
 /-- **Length-count range certificate.** -/
 theorem length_count_range_certificate :
     -- At length 0, count = 0.
