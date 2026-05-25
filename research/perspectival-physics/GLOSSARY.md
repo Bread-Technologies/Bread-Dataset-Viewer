@@ -236,6 +236,26 @@ loop chain with itself.
 Characterized exactly by endpoint equality
 (`coherent_kernel_iff_endpoints_eq`).
 
+**Active step.** A trajectory step that is an actualization. The
+"Tier A irreversible content" carrier.
+
+**Passive step.** A trajectory step that is bracketed. The "Tier B
+reversible-limit content" carrier.
+
+**Active/passive partition.** The partition law:
+`activeStepCount + passiveStepCount = length`. Coherent ↔ all
+passive; pure-decoherent ↔ all active.
+
+**DecoherenceQuotient.** The quotient type
+`Quotient (DecoherenceEquivalent_setoid R₁ R₂)` — the type of
+decoherence-equivalence classes. Embeds injectively into ℕ via the
+`count` function.
+
+**Trio-of-morphisms.** The three measures (`tierAEventCount`,
+`bracketedCount`, `length`) are all monoid morphisms from the chain
+monoid to (ℕ, +). They satisfy the linear relation
+`tierAEventCount + bracketedCount = length`.
+
 ## Cross-references
 
 - For per-theorem status see `STATUS.md`.
