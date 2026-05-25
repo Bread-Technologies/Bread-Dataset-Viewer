@@ -3215,6 +3215,40 @@ theorem loop_complexity_eq_length {P : Type u} {C : Type v}
     trajectoryComplexity ch = ch.length :=
   coherent_complexity ch (loop_is_coherent ch)
 
+/-- **Length determined by count + bracketed.** -/
+theorem length_determined_by_counts {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.length = ch.actualizationCount + ch.bracketedCount := by
+  have h := ch.counts_sum; omega
+
+/-- **Count determined by length + bracketed.** -/
+theorem count_determined_by_length_bracketed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount = ch.length - ch.bracketedCount := by
+  have h := ch.counts_sum; omega
+
+/-- **Bracketed determined by length + count.** -/
+theorem bracketed_determined_by_length_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.bracketedCount = ch.length - ch.actualizationCount := by
+  have h := ch.counts_sum; omega
+
+/-- **Any-two-determines-third certificate.** Any two of the trio
+(count, bracketed, length) determine the third. -/
+theorem any_two_determines_third_certificate :
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = ch.actualizationCount + ch.bracketedCount) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = ch.length - ch.bracketedCount) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.bracketedCount = ch.length - ch.actualizationCount) :=
+  ⟨fun ch => length_determined_by_counts ch,
+   fun ch => count_determined_by_length_bracketed ch,
+   fun ch => bracketed_determined_by_length_count ch⟩
+
 /-- **Complexity strict monotonicity.** Extending a chain with a
 positive-length chain strictly increases complexity. -/
 theorem complexity_strict_monotone {P : Type u} {C : Type v}
