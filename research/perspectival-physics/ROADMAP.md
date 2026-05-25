@@ -251,6 +251,18 @@ unifying claim across semantic and physical levels.
     as substantial properties; always reference the coarse-graining
     and the perspective. This applies across all subsequent work.
 
+### Decoherence seam (Seam 4) — partially formalized
+
+The `RealityChain'.actualizationDensity` count-based measure
+(`Perspectival/TierB.lean`) is the first formal correlate of the
+decoherence seam (`SEAMS.md` Seam 4). It moves the seam from OPEN
+to STRUCTURAL by providing the (count, length) measure characterizing
+"seam-crossing rate" along a strict trajectory.
+
+What's still open: the exponential-suppression framework + a
+`Decoherence.lean` module connecting actualization density to the
+Tier B off-diagonal-suppression rate quantitatively.
+
 ## Methodology constants
 
 For all of the above:
