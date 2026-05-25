@@ -157,7 +157,7 @@ theorem axiom_II_actualize_lossy_on_status
 /-- **Axiom II (Reality as developing structure):** Reality is the
 state of all meetings at a given "moment." It evolves by
 actualization events — and only by actualization. -/
-def Reality (P : Type u) (C : Type v) : Type _ := Meeting P C → MeetingStatus
+abbrev Reality (P : Type u) (C : Type v) : Type _ := Meeting P C → MeetingStatus
 
 /-- Reality-state evolution is *monotone* with respect to the
 "actualized" order: actualized meetings stay actualized.
@@ -190,6 +190,48 @@ theorem reality_successor_antisymm {P : Type u} {C : Type v}
     (m : Meeting P C) :
     R₁ m = MeetingStatus.Actualized ↔ R₂ m = MeetingStatus.Actualized :=
   ⟨h₁₂ m, h₂₁ m⟩
+
+/-! ### Pointwise actualization
+
+Given a Reality state R and a target meeting m, the *pointwise
+actualization* `actualizeAt R m` is the Reality state that agrees with
+R everywhere except at m, where it is forced to `Actualized`.
+
+This is the elementary form of an actualization event, and it is a
+Reality-successor by construction (Axiom II content in elementary form). -/
+
+/-- **Pointwise actualization at a single meeting.** Given a Reality
+state R and a target meeting m, produce the Reality state with m
+actualized and all others unchanged. -/
+def actualizeAt {P : Type u} {C : Type v} [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) : Reality P C :=
+  fun m' => if m' = m then MeetingStatus.Actualized else R m'
+
+@[simp] theorem actualizeAt_self {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) :
+    actualizeAt R m m = MeetingStatus.Actualized := by
+  unfold actualizeAt
+  simp
+
+@[simp] theorem actualizeAt_other {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) {m m' : Meeting P C} (h : m' ≠ m) :
+    actualizeAt R m m' = R m' := by
+  unfold actualizeAt
+  rw [if_neg h]
+
+/-- **Pointwise actualization preserves the actualized set (and grows
+it).** This is the elementary form of `RealitySuccessor`. -/
+theorem actualizeAt_is_successor {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) :
+    RealitySuccessor R (actualizeAt R m) := by
+  intro m' h_act
+  unfold actualizeAt
+  by_cases h_eq : m' = m
+  · rw [if_pos h_eq]
+  · rw [if_neg h_eq]; exact h_act
 
 /-! ## The arrow of time from Axioms I + II
 
