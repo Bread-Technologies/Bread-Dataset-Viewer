@@ -1051,6 +1051,173 @@ theorem rotZStrictReversible_zero :
   show rotZ 0 = LinearMap.id
   exact rotZ_zero
 
+/-- `rotXStrictReversible 0 = StrictReversible.id qubitGPT`. -/
+theorem rotXStrictReversible_zero :
+    rotXStrictReversible 0 =
+      Perspectival.Continuity.StrictReversible.id qubitGPT := by
+  apply StrictReversible_eq_of_toLin
+  show rotX 0 = LinearMap.id
+  exact rotX_zero
+
+/-- `rotYStrictReversible 0 = StrictReversible.id qubitGPT`. -/
+theorem rotYStrictReversible_zero :
+    rotYStrictReversible 0 =
+      Perspectival.Continuity.StrictReversible.id qubitGPT := by
+  apply StrictReversible_eq_of_toLin
+  show rotY 0 = LinearMap.id
+  exact rotY_zero
+
+/-! ## Continuous paths inside the `rotX` and `rotY` families
+
+We replicate the `rotZPath` / `rotZStrictPath` construction for the other
+two SO(3) generators. -/
+
+/-- The rotation-path `γ(t) := rotX ((1-t) θ₁ + t θ₂)`. -/
+noncomputable def rotXPath (θ₁ θ₂ : ℝ) (t : unitInterval) : V →ₗ[ℝ] V :=
+  rotX (angleInterp θ₁ θ₂ t)
+
+@[simp] theorem rotXPath_zero (θ₁ θ₂ : ℝ) :
+    rotXPath θ₁ θ₂ 0 = rotX θ₁ := by
+  unfold rotXPath; rw [angleInterp_zero]
+
+@[simp] theorem rotXPath_one (θ₁ θ₂ : ℝ) :
+    rotXPath θ₁ θ₂ 1 = rotX θ₂ := by
+  unfold rotXPath; rw [angleInterp_one]
+
+/-- Joint continuity of `(t, v) ↦ rotXPath θ₁ θ₂ t v`. -/
+theorem rotXPath_continuous (θ₁ θ₂ : ℝ) :
+    Continuous (fun p : unitInterval × V => rotXPath θ₁ θ₂ p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  have hθ : Continuous (fun p : unitInterval × V => angleInterp θ₁ θ₂ p.1) :=
+    (angleInterp_continuous θ₁ θ₂).comp continuous_fst
+  have hcos : Continuous
+      (fun p : unitInterval × V => Real.cos (angleInterp θ₁ θ₂ p.1)) :=
+    Real.continuous_cos.comp hθ
+  have hsin : Continuous
+      (fun p : unitInterval × V => Real.sin (angleInterp θ₁ θ₂ p.1)) :=
+    Real.continuous_sin.comp hθ
+  have h0c : Continuous (fun p : unitInterval × V => p.2 0) :=
+    (continuous_apply 0).comp continuous_snd
+  have h1c : Continuous (fun p : unitInterval × V => p.2 1) :=
+    (continuous_apply 1).comp continuous_snd
+  have h2c : Continuous (fun p : unitInterval × V => p.2 2) :=
+    (continuous_apply 2).comp continuous_snd
+  have h3c : Continuous (fun p : unitInterval × V => p.2 3) :=
+    (continuous_apply 3).comp continuous_snd
+  by_cases h0 : i = 0
+  · subst h0
+    show Continuous (fun p : unitInterval × V => p.2 0)
+    exact h0c
+  · by_cases h1 : i = 1
+    · subst h1
+      show Continuous (fun p : unitInterval × V =>
+        p.2 1 * Real.cos (angleInterp θ₁ θ₂ p.1) -
+        p.2 2 * Real.sin (angleInterp θ₁ θ₂ p.1))
+      exact (h1c.mul hcos).sub (h2c.mul hsin)
+    · by_cases h2 : i = 2
+      · subst h2
+        show Continuous (fun p : unitInterval × V =>
+          p.2 1 * Real.sin (angleInterp θ₁ θ₂ p.1) +
+          p.2 2 * Real.cos (angleInterp θ₁ θ₂ p.1))
+        exact (h1c.mul hsin).add (h2c.mul hcos)
+      · have hi3 : i = 3 := fin4_is_three i h0 h1 h2
+        subst hi3
+        show Continuous (fun p : unitInterval × V => p.2 3)
+        exact h3c
+
+/-- A `StrictReversiblePath` between two `rotX` rotations. -/
+noncomputable def rotXStrictPath (θ₁ θ₂ : ℝ) :
+    Perspectival.Continuity.StrictReversiblePath qubitGPT
+      (rotXStrictReversible θ₁) (rotXStrictReversible θ₂) where
+  γ := rotXPath θ₁ θ₂
+  continuous := rotXPath_continuous θ₁ θ₂
+  start := by
+    show rotXPath θ₁ θ₂ 0 = (rotXStrictReversible θ₁).toLin
+    rw [rotXPath_zero, rotXStrictReversible_toLin]
+  finish := by
+    show rotXPath θ₁ θ₂ 1 = (rotXStrictReversible θ₂).toLin
+    rw [rotXPath_one, rotXStrictReversible_toLin]
+  preserves_states_along := fun t ρ hρ =>
+    rotX_preserves_states (angleInterp θ₁ θ₂ t) ρ hρ
+  preserves_unit_along := fun t =>
+    rotX_preserves_unit (angleInterp θ₁ θ₂ t)
+  bijective_along := fun t =>
+    rotX_bijective (angleInterp θ₁ θ₂ t)
+
+/-- The rotation-path `γ(t) := rotY ((1-t) θ₁ + t θ₂)`. -/
+noncomputable def rotYPath (θ₁ θ₂ : ℝ) (t : unitInterval) : V →ₗ[ℝ] V :=
+  rotY (angleInterp θ₁ θ₂ t)
+
+@[simp] theorem rotYPath_zero (θ₁ θ₂ : ℝ) :
+    rotYPath θ₁ θ₂ 0 = rotY θ₁ := by
+  unfold rotYPath; rw [angleInterp_zero]
+
+@[simp] theorem rotYPath_one (θ₁ θ₂ : ℝ) :
+    rotYPath θ₁ θ₂ 1 = rotY θ₂ := by
+  unfold rotYPath; rw [angleInterp_one]
+
+/-- Joint continuity of `(t, v) ↦ rotYPath θ₁ θ₂ t v`. -/
+theorem rotYPath_continuous (θ₁ θ₂ : ℝ) :
+    Continuous (fun p : unitInterval × V => rotYPath θ₁ θ₂ p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  have hθ : Continuous (fun p : unitInterval × V => angleInterp θ₁ θ₂ p.1) :=
+    (angleInterp_continuous θ₁ θ₂).comp continuous_fst
+  have hcos : Continuous
+      (fun p : unitInterval × V => Real.cos (angleInterp θ₁ θ₂ p.1)) :=
+    Real.continuous_cos.comp hθ
+  have hsin : Continuous
+      (fun p : unitInterval × V => Real.sin (angleInterp θ₁ θ₂ p.1)) :=
+    Real.continuous_sin.comp hθ
+  have h0c : Continuous (fun p : unitInterval × V => p.2 0) :=
+    (continuous_apply 0).comp continuous_snd
+  have h1c : Continuous (fun p : unitInterval × V => p.2 1) :=
+    (continuous_apply 1).comp continuous_snd
+  have h2c : Continuous (fun p : unitInterval × V => p.2 2) :=
+    (continuous_apply 2).comp continuous_snd
+  have h3c : Continuous (fun p : unitInterval × V => p.2 3) :=
+    (continuous_apply 3).comp continuous_snd
+  by_cases h0 : i = 0
+  · subst h0
+    show Continuous (fun p : unitInterval × V =>
+      p.2 0 * Real.cos (angleInterp θ₁ θ₂ p.1) +
+      p.2 2 * Real.sin (angleInterp θ₁ θ₂ p.1))
+    exact (h0c.mul hcos).add (h2c.mul hsin)
+  · by_cases h1 : i = 1
+    · subst h1
+      show Continuous (fun p : unitInterval × V => p.2 1)
+      exact h1c
+    · by_cases h2 : i = 2
+      · subst h2
+        show Continuous (fun p : unitInterval × V =>
+          -p.2 0 * Real.sin (angleInterp θ₁ θ₂ p.1) +
+          p.2 2 * Real.cos (angleInterp θ₁ θ₂ p.1))
+        exact (h0c.neg.mul hsin).add (h2c.mul hcos)
+      · have hi3 : i = 3 := fin4_is_three i h0 h1 h2
+        subst hi3
+        show Continuous (fun p : unitInterval × V => p.2 3)
+        exact h3c
+
+/-- A `StrictReversiblePath` between two `rotY` rotations. -/
+noncomputable def rotYStrictPath (θ₁ θ₂ : ℝ) :
+    Perspectival.Continuity.StrictReversiblePath qubitGPT
+      (rotYStrictReversible θ₁) (rotYStrictReversible θ₂) where
+  γ := rotYPath θ₁ θ₂
+  continuous := rotYPath_continuous θ₁ θ₂
+  start := by
+    show rotYPath θ₁ θ₂ 0 = (rotYStrictReversible θ₁).toLin
+    rw [rotYPath_zero, rotYStrictReversible_toLin]
+  finish := by
+    show rotYPath θ₁ θ₂ 1 = (rotYStrictReversible θ₂).toLin
+    rw [rotYPath_one, rotYStrictReversible_toLin]
+  preserves_states_along := fun t ρ hρ =>
+    rotY_preserves_states (angleInterp θ₁ θ₂ t) ρ hρ
+  preserves_unit_along := fun t =>
+    rotY_preserves_unit (angleInterp θ₁ θ₂ t)
+  bijective_along := fun t =>
+    rotY_bijective (angleInterp θ₁ θ₂ t)
+
 /-! ## The avail set: all `rotZ` rotations -/
 
 /-- The avail set: every `rotZ θ`. -/
@@ -1083,6 +1250,675 @@ noncomputable def qubitStrictConnectedAgency :
     obtain ⟨θ₂, hθ₂⟩ := h₂
     subst hθ₁; subst hθ₂
     exact ⟨rotZStrictPath θ₁ θ₂⟩
+
+/-! ## The avail sets for `rotX` and `rotY`; and the full SO(3) avail -/
+
+/-- The avail set: every `rotX θ`. -/
+noncomputable def rotXAvail :
+    Set (Perspectival.Continuity.StrictReversible qubitGPT) :=
+  Set.range rotXStrictReversible
+
+theorem rotX_in_avail (θ : ℝ) : rotXStrictReversible θ ∈ rotXAvail :=
+  ⟨θ, rfl⟩
+
+/-- The avail set: every `rotY θ`. -/
+noncomputable def rotYAvail :
+    Set (Perspectival.Continuity.StrictReversible qubitGPT) :=
+  Set.range rotYStrictReversible
+
+theorem rotY_in_avail (θ : ℝ) : rotYStrictReversible θ ∈ rotYAvail :=
+  ⟨θ, rfl⟩
+
+/-- The full SO(3) avail set: the union of the three rotation families. -/
+noncomputable def fullRotAvail :
+    Set (Perspectival.Continuity.StrictReversible qubitGPT) :=
+  rotXAvail ∪ rotYAvail ∪ rotZAvail
+
+theorem id_in_fullRotAvail :
+    Perspectival.Continuity.StrictReversible.id qubitGPT ∈ fullRotAvail := by
+  -- `id` is in `rotZAvail` since `rotZ 0 = id`.
+  right
+  exact id_in_rotZAvail
+
+/-! ## Path concatenation via the identity
+
+For a path from a `rotF₁ θ₁` to a `rotF₂ θ₂` in two DIFFERENT rotation
+families, we concatenate two paths through the identity:
+
+  - `t ∈ [0, 1/2]`: shrink `rotF₁ θ₁` down to `rotF₁ 0 = id`
+  - `t ∈ [1/2, 1]`: grow `id = rotF₂ 0` up to `rotF₂ θ₂`
+
+At `t = 1/2` both branches equal `LinearMap.id`, so the concatenation is
+continuous. -/
+
+/-- Halving an angle parameter: at `t = 0` it returns `θ`, at `t = 1/2`
+it returns `0`. (First half of the via-id path.) -/
+private noncomputable def angleShrink (θ : ℝ) (t : unitInterval) : ℝ :=
+  (1 - 2 * (t : ℝ)) * θ
+
+@[simp] private theorem angleShrink_zero (θ : ℝ) : angleShrink θ 0 = θ := by
+  show (1 - 2 * ((0 : unitInterval) : ℝ)) * θ = θ
+  simp
+
+private theorem angleShrink_half (θ : ℝ) (t : unitInterval) (ht : (t : ℝ) = 1/2) :
+    angleShrink θ t = 0 := by
+  show (1 - 2 * (t : ℝ)) * θ = 0
+  rw [ht]; ring
+
+private theorem angleShrink_continuous (θ : ℝ) :
+    Continuous (angleShrink θ) := by
+  unfold angleShrink
+  have ht : Continuous (fun t : unitInterval => (t : ℝ)) :=
+    continuous_subtype_val
+  exact (continuous_const.sub (continuous_const.mul ht)).mul continuous_const
+
+/-- Growing an angle parameter: at `t = 1/2` it returns `0`, at `t = 1`
+it returns `θ`. (Second half of the via-id path.) -/
+private noncomputable def angleGrow (θ : ℝ) (t : unitInterval) : ℝ :=
+  (2 * (t : ℝ) - 1) * θ
+
+@[simp] private theorem angleGrow_one (θ : ℝ) : angleGrow θ 1 = θ := by
+  show (2 * ((1 : unitInterval) : ℝ) - 1) * θ = θ
+  have h : ((1 : unitInterval) : ℝ) = 1 := rfl
+  rw [h]; ring
+
+private theorem angleGrow_half (θ : ℝ) (t : unitInterval) (ht : (t : ℝ) = 1/2) :
+    angleGrow θ t = 0 := by
+  show (2 * (t : ℝ) - 1) * θ = 0
+  rw [ht]; ring
+
+private theorem angleGrow_continuous (θ : ℝ) :
+    Continuous (angleGrow θ) := by
+  unfold angleGrow
+  have ht : Continuous (fun t : unitInterval => (t : ℝ)) :=
+    continuous_subtype_val
+  exact ((continuous_const.mul ht).sub continuous_const).mul continuous_const
+
+/-! ### The via-id path from `rotX θ₁` to `rotY θ₂` -/
+
+/-- Path from `rotX θ₁` to `rotY θ₂` via the identity at `t = 1/2`. -/
+noncomputable def rotXYPath (θ₁ θ₂ : ℝ) (t : unitInterval) : V →ₗ[ℝ] V :=
+  if (t : ℝ) ≤ 1/2
+  then rotX (angleShrink θ₁ t)
+  else rotY (angleGrow θ₂ t)
+
+theorem rotXYPath_zero (θ₁ θ₂ : ℝ) :
+    rotXYPath θ₁ θ₂ 0 = rotX θ₁ := by
+  unfold rotXYPath
+  have ht : ((0 : unitInterval) : ℝ) ≤ 1/2 := by
+    show (0 : ℝ) ≤ 1/2; norm_num
+  rw [if_pos ht, angleShrink_zero]
+
+theorem rotXYPath_one (θ₁ θ₂ : ℝ) :
+    rotXYPath θ₁ θ₂ 1 = rotY θ₂ := by
+  unfold rotXYPath
+  have ht : ¬ (((1 : unitInterval) : ℝ) ≤ 1/2) := by
+    show ¬ ((1 : ℝ) ≤ 1/2); norm_num
+  rw [if_neg ht, angleGrow_one]
+
+theorem rotXYPath_preserves_states (θ₁ θ₂ : ℝ) (t : unitInterval)
+    (ρ : V) (hρ : ρ ∈ states) :
+    rotXYPath θ₁ θ₂ t ρ ∈ states := by
+  unfold rotXYPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotX_preserves_states (angleShrink θ₁ t) ρ hρ
+  · rw [if_neg h]
+    exact rotY_preserves_states (angleGrow θ₂ t) ρ hρ
+
+theorem rotXYPath_preserves_unit (θ₁ θ₂ : ℝ) (t : unitInterval) :
+    unitLin.comp (rotXYPath θ₁ θ₂ t) = unitLin := by
+  unfold rotXYPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotX_preserves_unit (angleShrink θ₁ t)
+  · rw [if_neg h]
+    exact rotY_preserves_unit (angleGrow θ₂ t)
+
+theorem rotXYPath_bijective (θ₁ θ₂ : ℝ) (t : unitInterval) :
+    Function.Bijective (rotXYPath θ₁ θ₂ t) := by
+  unfold rotXYPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotX_bijective (angleShrink θ₁ t)
+  · rw [if_neg h]
+    exact rotY_bijective (angleGrow θ₂ t)
+
+/-- Joint continuity of the via-id path `rotXYPath`. -/
+theorem rotXYPath_continuous (θ₁ θ₂ : ℝ) :
+    Continuous (fun p : unitInterval × V => rotXYPath θ₁ θ₂ p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  -- Continuous predicates on (t, v).
+  have htval : Continuous (fun p : unitInterval × V => (p.1 : ℝ)) :=
+    continuous_subtype_val.comp continuous_fst
+  have hshrink : Continuous (fun p : unitInterval × V => angleShrink θ₁ p.1) :=
+    (angleShrink_continuous θ₁).comp continuous_fst
+  have hgrow : Continuous (fun p : unitInterval × V => angleGrow θ₂ p.1) :=
+    (angleGrow_continuous θ₂).comp continuous_fst
+  have hcosS : Continuous (fun p : unitInterval × V =>
+      Real.cos (angleShrink θ₁ p.1)) := Real.continuous_cos.comp hshrink
+  have hsinS : Continuous (fun p : unitInterval × V =>
+      Real.sin (angleShrink θ₁ p.1)) := Real.continuous_sin.comp hshrink
+  have hcosG : Continuous (fun p : unitInterval × V =>
+      Real.cos (angleGrow θ₂ p.1)) := Real.continuous_cos.comp hgrow
+  have hsinG : Continuous (fun p : unitInterval × V =>
+      Real.sin (angleGrow θ₂ p.1)) := Real.continuous_sin.comp hgrow
+  have h0c : Continuous (fun p : unitInterval × V => p.2 0) :=
+    (continuous_apply 0).comp continuous_snd
+  have h1c : Continuous (fun p : unitInterval × V => p.2 1) :=
+    (continuous_apply 1).comp continuous_snd
+  have h2c : Continuous (fun p : unitInterval × V => p.2 2) :=
+    (continuous_apply 2).comp continuous_snd
+  have h3c : Continuous (fun p : unitInterval × V => p.2 3) :=
+    (continuous_apply 3).comp continuous_snd
+  -- Branch the i ∈ Fin 4 cases.
+  by_cases h0 : i = 0
+  · subst h0
+    -- branch1: rotX (angleShrink θ₁ t) ρ 0 = ρ 0
+    -- branch2: rotY (angleGrow θ₂ t) ρ 0 = ρ 0 · cos + ρ 2 · sin
+    have heq : (fun p : unitInterval × V => (rotXYPath θ₁ θ₂ p.1) p.2 0)
+        = (fun p : unitInterval × V =>
+          if (p.1 : ℝ) ≤ 1/2 then p.2 0
+          else p.2 0 * Real.cos (angleGrow θ₂ p.1)
+               + p.2 2 * Real.sin (angleGrow θ₂ p.1)) := by
+      funext p
+      unfold rotXYPath
+      by_cases hp : (p.1 : ℝ) ≤ 1/2
+      · rw [if_pos hp, if_pos hp]; rfl
+      · rw [if_neg hp, if_neg hp]; rfl
+    rw [heq]
+    refine Continuous.if_le h0c
+      ((h0c.mul hcosG).add (h2c.mul hsinG))
+      htval continuous_const ?_
+    intro p hp
+    have h0' : angleGrow θ₂ p.1 = 0 := angleGrow_half θ₂ p.1 hp
+    rw [h0', Real.cos_zero, Real.sin_zero]; ring
+  · by_cases h1 : i = 1
+    · subst h1
+      -- branch1: rotX … ρ 1 = ρ 1 · cosS - ρ 2 · sinS
+      -- branch2: rotY … ρ 1 = ρ 1
+      have heq : (fun p : unitInterval × V => (rotXYPath θ₁ θ₂ p.1) p.2 1)
+          = (fun p : unitInterval × V =>
+            if (p.1 : ℝ) ≤ 1/2
+            then p.2 1 * Real.cos (angleShrink θ₁ p.1)
+                 - p.2 2 * Real.sin (angleShrink θ₁ p.1)
+            else p.2 1) := by
+        funext p
+        unfold rotXYPath
+        by_cases hp : (p.1 : ℝ) ≤ 1/2
+        · rw [if_pos hp, if_pos hp]; rfl
+        · rw [if_neg hp, if_neg hp]; rfl
+      rw [heq]
+      refine Continuous.if_le ((h1c.mul hcosS).sub (h2c.mul hsinS))
+        h1c htval continuous_const ?_
+      intro p hp
+      have h0' : angleShrink θ₁ p.1 = 0 := angleShrink_half θ₁ p.1 hp
+      rw [h0', Real.cos_zero, Real.sin_zero]; ring
+    · by_cases h2 : i = 2
+      · subst h2
+        -- branch1: rotX … ρ 2 = ρ 1 · sinS + ρ 2 · cosS
+        -- branch2: rotY … ρ 2 = -ρ 0 · sinG + ρ 2 · cosG
+        have heq : (fun p : unitInterval × V => (rotXYPath θ₁ θ₂ p.1) p.2 2)
+            = (fun p : unitInterval × V =>
+              if (p.1 : ℝ) ≤ 1/2
+              then p.2 1 * Real.sin (angleShrink θ₁ p.1)
+                   + p.2 2 * Real.cos (angleShrink θ₁ p.1)
+              else -p.2 0 * Real.sin (angleGrow θ₂ p.1)
+                   + p.2 2 * Real.cos (angleGrow θ₂ p.1)) := by
+          funext p
+          unfold rotXYPath
+          by_cases hp : (p.1 : ℝ) ≤ 1/2
+          · rw [if_pos hp, if_pos hp]; rfl
+          · rw [if_neg hp, if_neg hp]; rfl
+        rw [heq]
+        refine Continuous.if_le ((h1c.mul hsinS).add (h2c.mul hcosS))
+          ((h0c.neg.mul hsinG).add (h2c.mul hcosG)) htval continuous_const ?_
+        intro p hp
+        have hS : angleShrink θ₁ p.1 = 0 := angleShrink_half θ₁ p.1 hp
+        have hG : angleGrow θ₂ p.1 = 0 := angleGrow_half θ₂ p.1 hp
+        rw [hS, hG, Real.cos_zero, Real.sin_zero]; ring
+      · have hi3 : i = 3 := fin4_is_three i h0 h1 h2
+        subst hi3
+        have heq : (fun p : unitInterval × V => (rotXYPath θ₁ θ₂ p.1) p.2 3)
+            = (fun p : unitInterval × V => p.2 3) := by
+          funext p
+          unfold rotXYPath
+          by_cases hp : (p.1 : ℝ) ≤ 1/2
+          · rw [if_pos hp]; rfl
+          · rw [if_neg hp]; rfl
+        rw [heq]
+        exact h3c
+
+/-- The via-id `StrictReversiblePath` from `rotX θ₁` to `rotY θ₂`. -/
+noncomputable def rotXYStrictPath (θ₁ θ₂ : ℝ) :
+    Perspectival.Continuity.StrictReversiblePath qubitGPT
+      (rotXStrictReversible θ₁) (rotYStrictReversible θ₂) where
+  γ := rotXYPath θ₁ θ₂
+  continuous := rotXYPath_continuous θ₁ θ₂
+  start := by
+    show rotXYPath θ₁ θ₂ 0 = (rotXStrictReversible θ₁).toLin
+    rw [rotXYPath_zero, rotXStrictReversible_toLin]
+  finish := by
+    show rotXYPath θ₁ θ₂ 1 = (rotYStrictReversible θ₂).toLin
+    rw [rotXYPath_one, rotYStrictReversible_toLin]
+  preserves_states_along := rotXYPath_preserves_states θ₁ θ₂
+  preserves_unit_along := rotXYPath_preserves_unit θ₁ θ₂
+  bijective_along := rotXYPath_bijective θ₁ θ₂
+
+/-! ### The via-id path from `rotX θ₁` to `rotZ θ₂` -/
+
+/-- Path from `rotX θ₁` to `rotZ θ₂` via the identity at `t = 1/2`. -/
+noncomputable def rotXZPath (θ₁ θ₂ : ℝ) (t : unitInterval) : V →ₗ[ℝ] V :=
+  if (t : ℝ) ≤ 1/2
+  then rotX (angleShrink θ₁ t)
+  else rotZ (angleGrow θ₂ t)
+
+theorem rotXZPath_zero (θ₁ θ₂ : ℝ) :
+    rotXZPath θ₁ θ₂ 0 = rotX θ₁ := by
+  unfold rotXZPath
+  have ht : ((0 : unitInterval) : ℝ) ≤ 1/2 := by
+    show (0 : ℝ) ≤ 1/2; norm_num
+  rw [if_pos ht, angleShrink_zero]
+
+theorem rotXZPath_one (θ₁ θ₂ : ℝ) :
+    rotXZPath θ₁ θ₂ 1 = rotZ θ₂ := by
+  unfold rotXZPath
+  have ht : ¬ (((1 : unitInterval) : ℝ) ≤ 1/2) := by
+    show ¬ ((1 : ℝ) ≤ 1/2); norm_num
+  rw [if_neg ht, angleGrow_one]
+
+theorem rotXZPath_preserves_states (θ₁ θ₂ : ℝ) (t : unitInterval)
+    (ρ : V) (hρ : ρ ∈ states) :
+    rotXZPath θ₁ θ₂ t ρ ∈ states := by
+  unfold rotXZPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotX_preserves_states (angleShrink θ₁ t) ρ hρ
+  · rw [if_neg h]
+    exact rotZ_preserves_states (angleGrow θ₂ t) ρ hρ
+
+theorem rotXZPath_preserves_unit (θ₁ θ₂ : ℝ) (t : unitInterval) :
+    unitLin.comp (rotXZPath θ₁ θ₂ t) = unitLin := by
+  unfold rotXZPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotX_preserves_unit (angleShrink θ₁ t)
+  · rw [if_neg h]
+    exact rotZ_preserves_unit (angleGrow θ₂ t)
+
+theorem rotXZPath_bijective (θ₁ θ₂ : ℝ) (t : unitInterval) :
+    Function.Bijective (rotXZPath θ₁ θ₂ t) := by
+  unfold rotXZPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotX_bijective (angleShrink θ₁ t)
+  · rw [if_neg h]
+    exact rotZ_bijective (angleGrow θ₂ t)
+
+/-- Joint continuity of the via-id path `rotXZPath`. -/
+theorem rotXZPath_continuous (θ₁ θ₂ : ℝ) :
+    Continuous (fun p : unitInterval × V => rotXZPath θ₁ θ₂ p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  have htval : Continuous (fun p : unitInterval × V => (p.1 : ℝ)) :=
+    continuous_subtype_val.comp continuous_fst
+  have hshrink : Continuous (fun p : unitInterval × V => angleShrink θ₁ p.1) :=
+    (angleShrink_continuous θ₁).comp continuous_fst
+  have hgrow : Continuous (fun p : unitInterval × V => angleGrow θ₂ p.1) :=
+    (angleGrow_continuous θ₂).comp continuous_fst
+  have hcosS : Continuous (fun p : unitInterval × V =>
+      Real.cos (angleShrink θ₁ p.1)) := Real.continuous_cos.comp hshrink
+  have hsinS : Continuous (fun p : unitInterval × V =>
+      Real.sin (angleShrink θ₁ p.1)) := Real.continuous_sin.comp hshrink
+  have hcosG : Continuous (fun p : unitInterval × V =>
+      Real.cos (angleGrow θ₂ p.1)) := Real.continuous_cos.comp hgrow
+  have hsinG : Continuous (fun p : unitInterval × V =>
+      Real.sin (angleGrow θ₂ p.1)) := Real.continuous_sin.comp hgrow
+  have h0c : Continuous (fun p : unitInterval × V => p.2 0) :=
+    (continuous_apply 0).comp continuous_snd
+  have h1c : Continuous (fun p : unitInterval × V => p.2 1) :=
+    (continuous_apply 1).comp continuous_snd
+  have h2c : Continuous (fun p : unitInterval × V => p.2 2) :=
+    (continuous_apply 2).comp continuous_snd
+  have h3c : Continuous (fun p : unitInterval × V => p.2 3) :=
+    (continuous_apply 3).comp continuous_snd
+  by_cases h0 : i = 0
+  · subst h0
+    -- branch1: rotX … ρ 0 = ρ 0
+    -- branch2: rotZ … ρ 0 = ρ 0 · cosG - ρ 1 · sinG
+    have heq : (fun p : unitInterval × V => (rotXZPath θ₁ θ₂ p.1) p.2 0)
+        = (fun p : unitInterval × V =>
+          if (p.1 : ℝ) ≤ 1/2 then p.2 0
+          else p.2 0 * Real.cos (angleGrow θ₂ p.1)
+               - p.2 1 * Real.sin (angleGrow θ₂ p.1)) := by
+      funext p
+      unfold rotXZPath
+      by_cases hp : (p.1 : ℝ) ≤ 1/2
+      · rw [if_pos hp, if_pos hp]; rfl
+      · rw [if_neg hp, if_neg hp]; rfl
+    rw [heq]
+    refine Continuous.if_le h0c
+      ((h0c.mul hcosG).sub (h1c.mul hsinG))
+      htval continuous_const ?_
+    intro p hp
+    have hG : angleGrow θ₂ p.1 = 0 := angleGrow_half θ₂ p.1 hp
+    rw [hG, Real.cos_zero, Real.sin_zero]; ring
+  · by_cases h1 : i = 1
+    · subst h1
+      -- branch1: rotX … ρ 1 = ρ 1 · cosS - ρ 2 · sinS
+      -- branch2: rotZ … ρ 1 = ρ 0 · sinG + ρ 1 · cosG
+      have heq : (fun p : unitInterval × V => (rotXZPath θ₁ θ₂ p.1) p.2 1)
+          = (fun p : unitInterval × V =>
+            if (p.1 : ℝ) ≤ 1/2
+            then p.2 1 * Real.cos (angleShrink θ₁ p.1)
+                 - p.2 2 * Real.sin (angleShrink θ₁ p.1)
+            else p.2 0 * Real.sin (angleGrow θ₂ p.1)
+                 + p.2 1 * Real.cos (angleGrow θ₂ p.1)) := by
+        funext p
+        unfold rotXZPath
+        by_cases hp : (p.1 : ℝ) ≤ 1/2
+        · rw [if_pos hp, if_pos hp]; rfl
+        · rw [if_neg hp, if_neg hp]; rfl
+      rw [heq]
+      refine Continuous.if_le ((h1c.mul hcosS).sub (h2c.mul hsinS))
+        ((h0c.mul hsinG).add (h1c.mul hcosG)) htval continuous_const ?_
+      intro p hp
+      have hS : angleShrink θ₁ p.1 = 0 := angleShrink_half θ₁ p.1 hp
+      have hG : angleGrow θ₂ p.1 = 0 := angleGrow_half θ₂ p.1 hp
+      rw [hS, hG, Real.cos_zero, Real.sin_zero]; ring
+    · by_cases h2 : i = 2
+      · subst h2
+        -- branch1: rotX … ρ 2 = ρ 1 · sinS + ρ 2 · cosS
+        -- branch2: rotZ … ρ 2 = ρ 2
+        have heq : (fun p : unitInterval × V => (rotXZPath θ₁ θ₂ p.1) p.2 2)
+            = (fun p : unitInterval × V =>
+              if (p.1 : ℝ) ≤ 1/2
+              then p.2 1 * Real.sin (angleShrink θ₁ p.1)
+                   + p.2 2 * Real.cos (angleShrink θ₁ p.1)
+              else p.2 2) := by
+          funext p
+          unfold rotXZPath
+          by_cases hp : (p.1 : ℝ) ≤ 1/2
+          · rw [if_pos hp, if_pos hp]; rfl
+          · rw [if_neg hp, if_neg hp]; rfl
+        rw [heq]
+        refine Continuous.if_le ((h1c.mul hsinS).add (h2c.mul hcosS))
+          h2c htval continuous_const ?_
+        intro p hp
+        have hS : angleShrink θ₁ p.1 = 0 := angleShrink_half θ₁ p.1 hp
+        rw [hS, Real.cos_zero, Real.sin_zero]; ring
+      · have hi3 : i = 3 := fin4_is_three i h0 h1 h2
+        subst hi3
+        have heq : (fun p : unitInterval × V => (rotXZPath θ₁ θ₂ p.1) p.2 3)
+            = (fun p : unitInterval × V => p.2 3) := by
+          funext p
+          unfold rotXZPath
+          by_cases hp : (p.1 : ℝ) ≤ 1/2
+          · rw [if_pos hp]; rfl
+          · rw [if_neg hp]; rfl
+        rw [heq]
+        exact h3c
+
+/-- The via-id `StrictReversiblePath` from `rotX θ₁` to `rotZ θ₂`. -/
+noncomputable def rotXZStrictPath (θ₁ θ₂ : ℝ) :
+    Perspectival.Continuity.StrictReversiblePath qubitGPT
+      (rotXStrictReversible θ₁) (rotZStrictReversible θ₂) where
+  γ := rotXZPath θ₁ θ₂
+  continuous := rotXZPath_continuous θ₁ θ₂
+  start := by
+    show rotXZPath θ₁ θ₂ 0 = (rotXStrictReversible θ₁).toLin
+    rw [rotXZPath_zero, rotXStrictReversible_toLin]
+  finish := by
+    show rotXZPath θ₁ θ₂ 1 = (rotZStrictReversible θ₂).toLin
+    rw [rotXZPath_one, rotZStrictReversible_toLin]
+  preserves_states_along := rotXZPath_preserves_states θ₁ θ₂
+  preserves_unit_along := rotXZPath_preserves_unit θ₁ θ₂
+  bijective_along := rotXZPath_bijective θ₁ θ₂
+
+/-! ### The via-id path from `rotY θ₁` to `rotZ θ₂` -/
+
+/-- Path from `rotY θ₁` to `rotZ θ₂` via the identity at `t = 1/2`. -/
+noncomputable def rotYZPath (θ₁ θ₂ : ℝ) (t : unitInterval) : V →ₗ[ℝ] V :=
+  if (t : ℝ) ≤ 1/2
+  then rotY (angleShrink θ₁ t)
+  else rotZ (angleGrow θ₂ t)
+
+theorem rotYZPath_zero (θ₁ θ₂ : ℝ) :
+    rotYZPath θ₁ θ₂ 0 = rotY θ₁ := by
+  unfold rotYZPath
+  have ht : ((0 : unitInterval) : ℝ) ≤ 1/2 := by
+    show (0 : ℝ) ≤ 1/2; norm_num
+  rw [if_pos ht, angleShrink_zero]
+
+theorem rotYZPath_one (θ₁ θ₂ : ℝ) :
+    rotYZPath θ₁ θ₂ 1 = rotZ θ₂ := by
+  unfold rotYZPath
+  have ht : ¬ (((1 : unitInterval) : ℝ) ≤ 1/2) := by
+    show ¬ ((1 : ℝ) ≤ 1/2); norm_num
+  rw [if_neg ht, angleGrow_one]
+
+theorem rotYZPath_preserves_states (θ₁ θ₂ : ℝ) (t : unitInterval)
+    (ρ : V) (hρ : ρ ∈ states) :
+    rotYZPath θ₁ θ₂ t ρ ∈ states := by
+  unfold rotYZPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotY_preserves_states (angleShrink θ₁ t) ρ hρ
+  · rw [if_neg h]
+    exact rotZ_preserves_states (angleGrow θ₂ t) ρ hρ
+
+theorem rotYZPath_preserves_unit (θ₁ θ₂ : ℝ) (t : unitInterval) :
+    unitLin.comp (rotYZPath θ₁ θ₂ t) = unitLin := by
+  unfold rotYZPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotY_preserves_unit (angleShrink θ₁ t)
+  · rw [if_neg h]
+    exact rotZ_preserves_unit (angleGrow θ₂ t)
+
+theorem rotYZPath_bijective (θ₁ θ₂ : ℝ) (t : unitInterval) :
+    Function.Bijective (rotYZPath θ₁ θ₂ t) := by
+  unfold rotYZPath
+  by_cases h : (t : ℝ) ≤ 1/2
+  · rw [if_pos h]
+    exact rotY_bijective (angleShrink θ₁ t)
+  · rw [if_neg h]
+    exact rotZ_bijective (angleGrow θ₂ t)
+
+/-- Joint continuity of the via-id path `rotYZPath`. -/
+theorem rotYZPath_continuous (θ₁ θ₂ : ℝ) :
+    Continuous (fun p : unitInterval × V => rotYZPath θ₁ θ₂ p.1 p.2) := by
+  apply continuous_pi
+  intro i
+  have htval : Continuous (fun p : unitInterval × V => (p.1 : ℝ)) :=
+    continuous_subtype_val.comp continuous_fst
+  have hshrink : Continuous (fun p : unitInterval × V => angleShrink θ₁ p.1) :=
+    (angleShrink_continuous θ₁).comp continuous_fst
+  have hgrow : Continuous (fun p : unitInterval × V => angleGrow θ₂ p.1) :=
+    (angleGrow_continuous θ₂).comp continuous_fst
+  have hcosS : Continuous (fun p : unitInterval × V =>
+      Real.cos (angleShrink θ₁ p.1)) := Real.continuous_cos.comp hshrink
+  have hsinS : Continuous (fun p : unitInterval × V =>
+      Real.sin (angleShrink θ₁ p.1)) := Real.continuous_sin.comp hshrink
+  have hcosG : Continuous (fun p : unitInterval × V =>
+      Real.cos (angleGrow θ₂ p.1)) := Real.continuous_cos.comp hgrow
+  have hsinG : Continuous (fun p : unitInterval × V =>
+      Real.sin (angleGrow θ₂ p.1)) := Real.continuous_sin.comp hgrow
+  have h0c : Continuous (fun p : unitInterval × V => p.2 0) :=
+    (continuous_apply 0).comp continuous_snd
+  have h1c : Continuous (fun p : unitInterval × V => p.2 1) :=
+    (continuous_apply 1).comp continuous_snd
+  have h2c : Continuous (fun p : unitInterval × V => p.2 2) :=
+    (continuous_apply 2).comp continuous_snd
+  have h3c : Continuous (fun p : unitInterval × V => p.2 3) :=
+    (continuous_apply 3).comp continuous_snd
+  by_cases h0 : i = 0
+  · subst h0
+    -- branch1: rotY … ρ 0 = ρ 0 · cosS + ρ 2 · sinS
+    -- branch2: rotZ … ρ 0 = ρ 0 · cosG - ρ 1 · sinG
+    have heq : (fun p : unitInterval × V => (rotYZPath θ₁ θ₂ p.1) p.2 0)
+        = (fun p : unitInterval × V =>
+          if (p.1 : ℝ) ≤ 1/2
+          then p.2 0 * Real.cos (angleShrink θ₁ p.1)
+               + p.2 2 * Real.sin (angleShrink θ₁ p.1)
+          else p.2 0 * Real.cos (angleGrow θ₂ p.1)
+               - p.2 1 * Real.sin (angleGrow θ₂ p.1)) := by
+      funext p
+      unfold rotYZPath
+      by_cases hp : (p.1 : ℝ) ≤ 1/2
+      · rw [if_pos hp, if_pos hp]; rfl
+      · rw [if_neg hp, if_neg hp]; rfl
+    rw [heq]
+    refine Continuous.if_le ((h0c.mul hcosS).add (h2c.mul hsinS))
+      ((h0c.mul hcosG).sub (h1c.mul hsinG)) htval continuous_const ?_
+    intro p hp
+    have hS : angleShrink θ₁ p.1 = 0 := angleShrink_half θ₁ p.1 hp
+    have hG : angleGrow θ₂ p.1 = 0 := angleGrow_half θ₂ p.1 hp
+    rw [hS, hG, Real.cos_zero, Real.sin_zero]; ring
+  · by_cases h1 : i = 1
+    · subst h1
+      -- branch1: rotY … ρ 1 = ρ 1
+      -- branch2: rotZ … ρ 1 = ρ 0 · sinG + ρ 1 · cosG
+      have heq : (fun p : unitInterval × V => (rotYZPath θ₁ θ₂ p.1) p.2 1)
+          = (fun p : unitInterval × V =>
+            if (p.1 : ℝ) ≤ 1/2 then p.2 1
+            else p.2 0 * Real.sin (angleGrow θ₂ p.1)
+                 + p.2 1 * Real.cos (angleGrow θ₂ p.1)) := by
+        funext p
+        unfold rotYZPath
+        by_cases hp : (p.1 : ℝ) ≤ 1/2
+        · rw [if_pos hp, if_pos hp]; rfl
+        · rw [if_neg hp, if_neg hp]; rfl
+      rw [heq]
+      refine Continuous.if_le h1c
+        ((h0c.mul hsinG).add (h1c.mul hcosG)) htval continuous_const ?_
+      intro p hp
+      have hG : angleGrow θ₂ p.1 = 0 := angleGrow_half θ₂ p.1 hp
+      rw [hG, Real.cos_zero, Real.sin_zero]; ring
+    · by_cases h2 : i = 2
+      · subst h2
+        -- branch1: rotY … ρ 2 = -ρ 0 · sinS + ρ 2 · cosS
+        -- branch2: rotZ … ρ 2 = ρ 2
+        have heq : (fun p : unitInterval × V => (rotYZPath θ₁ θ₂ p.1) p.2 2)
+            = (fun p : unitInterval × V =>
+              if (p.1 : ℝ) ≤ 1/2
+              then -p.2 0 * Real.sin (angleShrink θ₁ p.1)
+                   + p.2 2 * Real.cos (angleShrink θ₁ p.1)
+              else p.2 2) := by
+          funext p
+          unfold rotYZPath
+          by_cases hp : (p.1 : ℝ) ≤ 1/2
+          · rw [if_pos hp, if_pos hp]; rfl
+          · rw [if_neg hp, if_neg hp]; rfl
+        rw [heq]
+        refine Continuous.if_le ((h0c.neg.mul hsinS).add (h2c.mul hcosS))
+          h2c htval continuous_const ?_
+        intro p hp
+        have hS : angleShrink θ₁ p.1 = 0 := angleShrink_half θ₁ p.1 hp
+        rw [hS, Real.cos_zero, Real.sin_zero]; ring
+      · have hi3 : i = 3 := fin4_is_three i h0 h1 h2
+        subst hi3
+        have heq : (fun p : unitInterval × V => (rotYZPath θ₁ θ₂ p.1) p.2 3)
+            = (fun p : unitInterval × V => p.2 3) := by
+          funext p
+          unfold rotYZPath
+          by_cases hp : (p.1 : ℝ) ≤ 1/2
+          · rw [if_pos hp]; rfl
+          · rw [if_neg hp]; rfl
+        rw [heq]
+        exact h3c
+
+/-- The via-id `StrictReversiblePath` from `rotY θ₁` to `rotZ θ₂`. -/
+noncomputable def rotYZStrictPath (θ₁ θ₂ : ℝ) :
+    Perspectival.Continuity.StrictReversiblePath qubitGPT
+      (rotYStrictReversible θ₁) (rotZStrictReversible θ₂) where
+  γ := rotYZPath θ₁ θ₂
+  continuous := rotYZPath_continuous θ₁ θ₂
+  start := by
+    show rotYZPath θ₁ θ₂ 0 = (rotYStrictReversible θ₁).toLin
+    rw [rotYZPath_zero, rotYStrictReversible_toLin]
+  finish := by
+    show rotYZPath θ₁ θ₂ 1 = (rotZStrictReversible θ₂).toLin
+    rw [rotYZPath_one, rotZStrictReversible_toLin]
+  preserves_states_along := rotYZPath_preserves_states θ₁ θ₂
+  preserves_unit_along := rotYZPath_preserves_unit θ₁ θ₂
+  bijective_along := rotYZPath_bijective θ₁ θ₂
+
+/-! ### Reversing a `StrictReversiblePath`
+
+We need paths in both directions. The reverse path uses
+`unitInterval.symm t = 1 - t`. -/
+
+/-- The reverse of a `StrictReversiblePath`. -/
+noncomputable def strictReversiblePathReverse {G : Perspectival.GPT V}
+    {R₁ R₂ : Perspectival.Continuity.StrictReversible G}
+    (p : Perspectival.Continuity.StrictReversiblePath G R₁ R₂) :
+    Perspectival.Continuity.StrictReversiblePath G R₂ R₁ where
+  γ := fun t => p.γ (unitInterval.symm t)
+  continuous := by
+    have hsymm : Continuous
+        (fun p' : unitInterval × V => (unitInterval.symm p'.1, p'.2)) := by
+      refine Continuous.prodMk ?_ continuous_snd
+      exact unitInterval.continuous_symm.comp continuous_fst
+    exact p.continuous.comp hsymm
+  start := by
+    show p.γ (unitInterval.symm 0) = R₂.toLin
+    rw [unitInterval.symm_zero]; exact p.finish
+  finish := by
+    show p.γ (unitInterval.symm 1) = R₁.toLin
+    rw [unitInterval.symm_one]; exact p.start
+  preserves_states_along := fun t ρ hρ =>
+    p.preserves_states_along (unitInterval.symm t) ρ hρ
+  preserves_unit_along := fun t =>
+    p.preserves_unit_along (unitInterval.symm t)
+  bijective_along := fun t =>
+    p.bijective_along (unitInterval.symm t)
+
+/-! ## `StrictConnectedAgency` for the Qubit GPT — full SO(3) generators
+
+We populate `StrictConnectedAgency qubitGPT` with the full union of the
+three rotation families. Within-family pairs use the affine
+`rot{X,Y,Z}StrictPath`; cross-family pairs use the via-id concatenated
+`rot{XY,XZ,YZ}StrictPath` (or their reverses). -/
+
+@[reducible]
+noncomputable def qubitStrictConnectedAgency_full :
+    Perspectival.Continuity.StrictConnectedAgency qubitGPT where
+  avail := fullRotAvail
+  id_avail := id_in_fullRotAvail
+  strict_paths R₁ R₂ h₁ h₂ := by
+    rcases h₁ with (h₁ | h₁) | h₁
+    · -- R₁ ∈ rotXAvail
+      obtain ⟨θ₁, hθ₁⟩ := h₁
+      subst hθ₁
+      rcases h₂ with (h₂ | h₂) | h₂
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨rotXStrictPath θ₁ θ₂⟩
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨rotXYStrictPath θ₁ θ₂⟩
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨rotXZStrictPath θ₁ θ₂⟩
+    · -- R₁ ∈ rotYAvail
+      obtain ⟨θ₁, hθ₁⟩ := h₁
+      subst hθ₁
+      rcases h₂ with (h₂ | h₂) | h₂
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨strictReversiblePathReverse (rotXYStrictPath θ₂ θ₁)⟩
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨rotYStrictPath θ₁ θ₂⟩
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨rotYZStrictPath θ₁ θ₂⟩
+    · -- R₁ ∈ rotZAvail
+      obtain ⟨θ₁, hθ₁⟩ := h₁
+      subst hθ₁
+      rcases h₂ with (h₂ | h₂) | h₂
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨strictReversiblePathReverse (rotXZStrictPath θ₂ θ₁)⟩
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨strictReversiblePathReverse (rotYZStrictPath θ₂ θ₁)⟩
+      · obtain ⟨θ₂, hθ₂⟩ := h₂; subst hθ₂
+        exact ⟨rotZStrictPath θ₁ θ₂⟩
 
 /-! ## Bloch-sphere points: the pure-state surface
 
