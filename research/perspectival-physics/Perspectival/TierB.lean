@@ -391,6 +391,14 @@ theorem bracketed_and_seam_exclusive {P : Type u} {C : Type v}
     (h_seam : AtSeam R₁ R₂) : False :=
   seam_breaks_bracketing h_seam h_bracketed
 
+/-- **Bracketed transitions are Reality-successors (forward direction).**
+A bracketed transition has actualized R₁ ⊆ actualized R₂ trivially
+(by the iff hypothesis). -/
+theorem bracketed_implies_successor {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : BracketedTransition R₁ R₂) :
+    RealitySuccessor R₁ R₂ :=
+  fun m h_act => (h m).mp h_act
+
 /-! ### Reality chains: multi-step trajectories
 
 A `RealityChain R₁ R_n` is a finite sequence of `TrajectoryStep`s
