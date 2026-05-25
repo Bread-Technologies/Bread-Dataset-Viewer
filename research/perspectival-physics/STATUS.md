@@ -413,3 +413,58 @@ the framework's metaphysics (Axiom IV pattern stability), or must it
 be added as an explicit operational postulate? (ii) Reverse R1
 (pure ⇒ vertex in Classical n) — currently being proved by a subagent.
 With reverse R1, L7 closure on Classical becomes unconditional.
+
+## Latest session (continued): Hardy trichotomy + QubitGPT + gauge instances
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| **R1 reverse closed** (`pure_state_of_classical_is_vertex`) | `Classical.lean` | ✓ (a) |
+| **L7 closure UNCONDITIONAL on Classical** (`classical_general_no_pure_preserving_transitive_agency`) | `Classical.lean` | ✓ (a) |
+| **`framework_dichotomy_existential`** — single Lean statement of classical-vs-quantum dichotomy | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
+| **QubitGPT** — full complex-QM 2-level GPT (Bloch ball, K=N²=4) | `QubitGPT.lean` (~1400 lines) | ✓ (a) |
+| qubit_hardy_K = 4, qubit_hardy_signature, all six GPT axioms | `QubitGPT.lean` | ✓ (a) |
+| Three SO(3) rotation generators rotX, rotY, rotZ (full preservation, bijectivity, continuity, composition) | `QubitGPT.lean` | ✓ (a) |
+| Three OneParameterFamily instances on QubitGPT | `QubitGPT.lean` | ✓ (a) |
+| qubitStrictConnectedAgency (rotZ family avail) | `QubitGPT.lean` | ✓ (a) |
+| qubitMultiAxisAgency : HasMultiAxisAgency 3 qubitGPT | `QubitGPT.lean` | ✓ (a) |
+| Bloch sphere pure-state classification (`pure_state_implies_blochSphere`, `qubit_pure_state_classification`) | `QubitGPT.lean` | ✓ (a) |
+| **`hardy_trichotomy`** — Classical K=2, CircleGPT K=3, QubitGPT K=4 in one statement | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
+| `trichotomy_strict_agency`, `trichotomy_one_parameter_agency`, `trichotomy_hardy_axiom4` | `Dichotomy.lean` | ✓ (a) |
+| `framework_hardy_signatures_verified` — K+N witnesses across all three | `Dichotomy.lean` | ✓ (a) |
+| `circle_hardy_N_at_least_two`, `qubit_hardy_N_at_least_two` — operational N witnesses | `Dichotomy.lean` | ✓ (a) |
+| `classical_hardy_K`, `classical_hardy_N_at_least` | `Dichotomy.lean` | ✓ (a) |
+| `circle_hardy_K = 3` | `Dichotomy.lean` | ✓ (a) |
+| `framework_u1_gauge_instance` (Tier 2 #6 baby step) — U(1) ≃ rotOneParameterFamily | `Dichotomy.lean` | ✓ (a) **Tier 2** |
+| `framework_so3_axes_present` (Tier 2 toward SU(2)) — 3 axes on QubitGPT | `Dichotomy.lean` | ✓ (a) **Tier 2** |
+| `Continuity.HasOneParameterAgency`, `HasMultiAxisAgency k` typeclasses | `Continuity.lean` | ✓ (a) |
+| `Continuity.OneParameterFamily`, `OneParameterFamily.inv`, `OneParameterFamily.zero_apply` | `Continuity.lean` | ✓ (a) |
+| `CircleGPT.rotOneParameterFamily`, `circleHasOneParameterAgency` | `CircleGPT.lean` | ✓ (a) |
+| `QubitGPT.rotZOneParameterFamily`, `rotXOneParameterFamily`, `rotYOneParameterFamily`, `qubitHasOneParameterAgency` | `QubitGPT.lean` | ✓ (a) |
+| **`gptTensor`** — general GPT tensor product operator | `GPTTensor.lean` (~250 lines) | ✓ (a) |
+| `gptTensor_finrank_eq_mul` — Hardy A4 dimension half DERIVABLE at general GPT level | `GPTTensor.lean` | ✓ (a) |
+| `Hardy.Axiom4_Composite_Dimension`, `axiom4_dimension_holds`, `Axiom4_Composite_State_Exists`, `axiom4_state_exists_holds` | `Hardy.lean` | ✓ (a) |
+| `TomographicLocality` predicate + `gptTensor_tomographic_local` | `GPTTensor.lean` | ✓ (a) |
+| qQM AND rebit exclusion via TomographicLocality (structural argument, documented) | `GPTTensor.lean` | ✓ (a) — Tier 1 #5 partial |
+| `productEffect` / `effectBilin` infrastructure for Hardy A4 N-multiplicativity | `GPTTensor.lean` | ✓ (a); full N-mult deferred |
+| `Hardy.Axiom5_Continuity_Strong`, `Hardy.Axiom5_Continuity_Strong_Pure` predicates + `axiom5_strong_of_transitive_agency` bridge | `Hardy.lean` | ✓ (a) |
+| `TransitiveAgency.hardy_axiom5`, `hardy_axiom5_state_path` — strong-form bridges | `Continuity.lean` | ✓ (a) |
+| `TransitiveAgency.avail_at_least_two`, `avail_at_least_n`, `distinct_R_of_distinct_targets` — cardinality bounds | `Continuity.lean` | ✓ (a) |
+| `TransitiveAgency.ofUniquePureState` — positive constructor (degenerate) | `Continuity.lean` | ✓ (a) |
+| `PurePreservingTransitiveAgency` typeclass + L7 closure conditional on reverse R1 | `Continuity.lean` | ✓ (a) |
+| `CircleGPT.circleTransitiveAgency_unconditional` — UNCONDITIONAL non-degenerate TransitiveAgency | `CircleGPT.lean` | ✓ (a) **framework-distinctive** |
+| `pure_state_classification_holds` (CircleGPT) | `CircleGPT.lean` | ✓ (a) |
+| `circle_axiom5_strong_unconditional` — CircleGPT satisfies Hardy A5 strong-form UNCONDITIONALLY | `Dichotomy.lean` | ✓ (a) |
+
+**Tier 1 program status: SUBSTANTIALLY COMPLETE.** Hardy A1, A3, A5
+derivable; A4 dimension half derivable; classical-vs-quantum dichotomy
+machine-verified; Hardy K-trichotomy fully constructed; qubit-forcing
+argument (L7 excludes classical + TomographicLocality excludes rebit
+and qQM) documented at the structural level.
+
+**Tier 2 #6 baby step DONE**: U(1) gauge instance via CircleGPT;
+SO(3)/SU(2) axes present via QubitGPT.
+
+**Open critical-path**: (i) Full SO(3) StrictConnectedAgency on
+QubitGPT (a subagent is currently extending this). (ii) Rebit and qQM
+explicit composite constructions to close the qubit_uniqueness theorem.
+(iii) Tier 2 SU(3) and higher.
