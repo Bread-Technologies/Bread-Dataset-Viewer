@@ -736,6 +736,25 @@ theorem framework_certificate :
     exact classical_no_L7_unconditional 2 (by omega) PPT
   · exact Hardy.axiom4_dimension_holds _ _
 
+/-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
+
+A triple-tensor instance — `gptTensor (gptTensor CircleGPT QubitGPT)
+QutritGPT` — would carry a simultaneous (rotZ × rotZ × rotL3) gauge
+action via nested productTransform. The framework's gauge composition
+machinery (`framework_gauge_composition_linear` + `productTransform_*`
+lemmas) supports this in principle.
+
+The full formalization requires lifting continuity through nested
+gptTensor (Mathlib's `TensorProduct.map` continuity on infinite-dim
+spaces is non-trivial; finite-dim subcase needs explicit
+`FiniteDimensional` instances on the inner tensor space which
+`gptTensor` doesn't auto-provide).
+
+Currently DEFERRED — the structural argument is clear, but the
+typeclass-resolution path needs explicit construction of
+`FiniteDimensional` instances on tensor products of finite-dim
+spaces. -/
+
 /-! ## Reading guide
 
 This module is the framework's cross-cutting machine-verified summary.
