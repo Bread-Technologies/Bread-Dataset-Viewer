@@ -217,6 +217,22 @@ theorem rate_count_le_length {P : Type u} {C : Type v}
   show ch.actualizationCount ≤ ch.length
   exact ch.actualizationCount_le_length
 
+/-- **Rate count = length iff pure-decoherent.** Equality in the
+count ≤ length bound characterizes the pure-decoherent regime
+(all steps are actualizations). -/
+theorem rate_count_eq_length_iff_pure_decoherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 = (actualizationRate ch).2 ↔
+    ch.bracketedCount = 0 := by
+  show ch.actualizationCount = ch.length ↔ ch.bracketedCount = 0
+  have h_sum := ch.counts_sum
+  omega
+
+/-- **Rate count = 0 iff coherent.** Direct restatement. -/
+theorem rate_count_eq_zero_iff_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 = 0 ↔ ch.actualizationCount = 0 := Iff.rfl
+
 -- (Concrete two-actualization Bool example deferred — the strict
 -- chain construction works but the proof had subtle goal-reduction
 -- issues. The abstract `concatenated_decoherence` + `coherent_plus_decoherent`
