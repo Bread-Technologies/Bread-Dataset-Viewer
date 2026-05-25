@@ -4753,6 +4753,35 @@ theorem rate_origin_iff_length_zero {P : Type u} {C : Type v}
     have h_count := length_zero_count_zero ch h
     rw [h_count]
 
+/-- **Decoherence phase space structure.** The space of possible
+trajectory rates forms a triangular region in ℕ × ℕ defined by:
+- x = 0 (left edge): coherent chains
+- x = y (diagonal): pure-decoherent chains
+- 0 < x < y (interior): mixed chains
+- y = 0 (bottom edge, just origin): nil chain
+
+This is the framework's "decoherence phase space" structure. -/
+theorem decoherence_phase_space_structure {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    let r := actualizationRate ch
+    -- Phase space region: count ≤ length.
+    r.1 ≤ r.2
+      -- Origin: length 0 means count 0.
+      ∧ (r.2 = 0 → r.1 = 0)
+      -- Left edge (coherent): count 0.
+      ∧ (r.1 = 0 ↔ ch.actualizationCount = 0)
+      -- Diagonal (pure-decoherent): count = length.
+      ∧ (r.1 = r.2 ↔ ch.bracketedCount = 0) := by
+  intro r
+  refine ⟨rate_count_le_length ch, ?_, ?_, ?_⟩
+  · intro h_zero
+    show ch.actualizationCount = 0
+    have h_len : ch.length = 0 := h_zero
+    have h_le := ch.actualizationCount_le_length
+    omega
+  · exact rate_x_axis_iff_coherent ch
+  · exact rate_diagonal_iff_pure_decoherent ch
+
 /-- **Rate visualization theorem.** The rate of a chain is a single
 point in the ℕ × ℕ "decoherence space" with coordinates (count, length).
 The relation count ≤ length defines a triangular region. Different
