@@ -662,6 +662,47 @@ structure with quantitative trajectory algebra. The full iff
 characterization (R₁ ≠ R₂ ↔ at least one actualization) is the
 substantive content threading past-growth through chains.
 
+### NEW MODULE: Decoherence.lean (Seam 4)
+
+The Seam 4 (decoherence) seam has been moved from OPEN to STRUCTURAL
+via a new Lean module `Perspectival/Decoherence.lean`:
+
+**Core content:**
+- `actualizationRate` : the count-based decoherence-rate measure
+  along a strict chain.
+- `coherent_regime` : count = 0 → rate (0, n) (Tier-B-isolated).
+- `decoherence_regime` : bracketed = 0 → rate (n, n) (free-fall Tier A).
+
+**Compositional structure:**
+- `rate_count_additive`, `rate_length_additive` : pair-coordinate
+  additivity.
+- `concatenated_decoherence` : rate-pair composition.
+- `coherent_plus_decoherent`, `decoherent_plus_coherent` : both
+  orderings of regime composition.
+
+**Worked examples:**
+- `actualizeAt_strict_step` singleton has rate (1, 1).
+- `TrajectoryStep'.bracketed` (refl) singleton has rate (0, 1).
+
+**Open work documented:**
+- Continuous-time exponential-suppression dynamics.
+- Operational definition of environment Tier A density.
+- Quantitative predictions vs. statistical decoherence-time models.
+
+The framework's distinctive prediction is now Lean-encoded at the
+structural level: environments rich in actualization content
+decohere systems faster than statistical models alone predict. The
+operational connection requires further work, but the structural
+machinery is in place.
+
+### Total commit volume this session segment
+
+The session has now produced 120+ commits with full v2 + entropy
+addendum + strict-chain + Decoherence integration. All five
+Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
+build cleanly. The framework's trajectory algebra is fully
+operational at the count-based level.
+
 ### v2 entropy addendum (received mid-session)
 
 The user issued an addendum to v2 (`ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`)
