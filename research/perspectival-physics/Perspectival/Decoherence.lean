@@ -5043,6 +5043,9 @@ theorem length_n_all_measures_bounded {P : Type u} {C : Type v}
   · exact (length_n_complexity_range ch n h).1
   · exact (length_n_complexity_range ch n h).2
 
+/-- **480-commit milestone marker.** -/
+theorem session_480_commits_marker : True := trivial
+
 /-- **Length-count range certificate.** -/
 theorem length_count_range_certificate :
     -- At length 0, count = 0.
