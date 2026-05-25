@@ -1233,6 +1233,30 @@ theorem chain_compose_witnesses_trans {P : Type u} {C : Type v}
     (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
     RealitySuccessor R₁ R₃ := (ch₁.append ch₂).implies_successor
 
+/-! ## Past growth structure under chain composition
+
+The framework's arrow-of-time content: past grows monotonically
+under chain composition. This makes "the past" a covariant functor
+from the chain monoid to the partial-order of subsets (of Meeting). -/
+
+/-- **Past growth under chain composition.** A strict chain implies
+past R₁ ⊆ past R₂, and chain composition preserves this. -/
+theorem past_grows_under_chain {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    past R₁ ⊆ past R₃ := by
+  -- Use the chain composition and past_monotone.
+  have h_succ : RealitySuccessor R₁ R₃ := (ch₁.append ch₂).implies_successor
+  exact TierA.past_monotone h_succ
+
+/-- **Past is a functor (monoid → Subsets).** Composition preserves
+the order; nil maps to the identity inclusion. -/
+theorem past_functor_compose {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    past R₁ ⊆ past R₂ ∧ past R₂ ⊆ past R₃ ∧ past R₁ ⊆ past R₃ :=
+  ⟨ch₁.past_monotone', ch₂.past_monotone', past_grows_under_chain ch₁ ch₂⟩
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
