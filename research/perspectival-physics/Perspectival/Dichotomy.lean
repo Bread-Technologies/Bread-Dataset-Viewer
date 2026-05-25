@@ -325,6 +325,23 @@ theorem framework_gauge_ladder :
           ⟨QubitGPT.qubitStrictConnectedAgency_full⟩, ?_⟩
   exact ⟨⟨QutritGPT.rotL3 0, 0, rfl⟩⟩
 
+/-- **Framework's SU(3) toehold (extended).** Three Gell-Mann-style
+rotation generators on QutritGPT: rotL1, rotL2, rotL3. These three
+families form a non-abelian subgroup of O(8) at the Bloch level
+(pairwise non-commuting because they share Bloch coordinates), giving
+the framework a structural shadow of SU(3) — not yet the full Lie
+algebra structure but a proper non-abelian 3-generator instance. -/
+theorem framework_su3_toehold_three_generators :
+    Nonempty { R : QutritGPT.V →ₗ[ℝ] QutritGPT.V //
+              ∃ θ : ℝ, R = QutritGPT.rotL1 θ } ∧
+    Nonempty { R : QutritGPT.V →ₗ[ℝ] QutritGPT.V //
+              ∃ θ : ℝ, R = QutritGPT.rotL2 θ } ∧
+    Nonempty { R : QutritGPT.V →ₗ[ℝ] QutritGPT.V //
+              ∃ θ : ℝ, R = QutritGPT.rotL3 θ } :=
+  ⟨⟨⟨QutritGPT.rotL1 0, 0, rfl⟩⟩,
+   ⟨⟨QutritGPT.rotL2 0, 0, rfl⟩⟩,
+   ⟨⟨QutritGPT.rotL3 0, 0, rfl⟩⟩⟩
+
 /-! ## Classical fails Hardy A5 Strong Pure (framework-distinctive)
 
 The framework's refined Axiom 5 (`Hardy.Axiom5_Continuity_Strong_Pure`)
