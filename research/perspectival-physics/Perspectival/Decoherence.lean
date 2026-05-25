@@ -3226,6 +3226,49 @@ theorem class_projection_certificate :
    fun _ch₁ _ch₂ h => toDecoherenceClass_equivalent h,
    fun _ => rfl⟩
 
+/-- **The framework's anti-realism re-stated structurally.** A clean
+restatement of the framework's anti-realism content:
+- Decoherence-status is endpoint-determined (anti-realist on substance).
+- Decoherence-content is trajectory-counted (realist on structure).
+- The two are linked by `tierAEventCount` being the count of
+  irreversible Tier A events along the trajectory.
+
+This is the framework's Jaynes-style structural realism vs
+substance-realism: structure is real, substance is not. -/
+theorem framework_anti_realism_restatement :
+    -- Status (coherent or not) is endpoint-determined.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- Coherent ↔ endpoints equal (kernel characterization).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch = 0 ↔ R₁ = R₂) ∧
+    -- Content (count) is the Tier A event content.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch = ch.actualizationCount) ∧
+    -- Counts add under composition (structural realism).
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂)
+        = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    -- Path-dependent content witness: counts agree, complexity differs.
+    (∃ (P : Type) (C : Type) (R : Reality P C)
+        (ch₁ ch₂ : RealityChain' P C R R),
+      DecoherenceEquivalent ch₁ ch₂
+        ∧ trajectoryComplexity ch₁ ≠ trajectoryComplexity ch₂) :=
+  ⟨fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   fun ch => coherent_kernel_iff_endpoints_eq ch,
+   fun _ => rfl,
+   fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂,
+   ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+    RealityChain'.nil _,
+    RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+    rfl,
+    by decide⟩⟩
+
 /-- **Tier B reversibility certificate.** Bundles the coherent-chain
 characterization. -/
 theorem tier_B_reversibility_certificate :
