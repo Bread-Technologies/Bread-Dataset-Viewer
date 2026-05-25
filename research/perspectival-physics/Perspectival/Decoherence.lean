@@ -442,6 +442,26 @@ theorem zero_tier_A_implies_equal_endpoints {P : Type u} {C : Type v}
     (h : tierAEventCount ch = 0) : R₁ = R₂ :=
   ch.zero_actualization_implies_eq h
 
+/-- **Singleton actualizeAt-strict-step chain has tierAEventCount = 1.** -/
+@[simp] theorem actualizeAt_chain_tier_A_event_count {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    tierAEventCount
+      (RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)) = 1 := by
+  show (RealityChain'.singleton _).actualizationCount = 1
+  rw [RealityChain'.singleton_actualizationCount]
+  rfl
+
+/-- **Singleton bracketed-step chain has tierAEventCount = 0.** -/
+@[simp] theorem bracketed_chain_tier_A_event_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h_br : TierB.BracketedTransition R₁ R₂) :
+    tierAEventCount
+      (RealityChain'.singleton (TierB.TrajectoryStep'.bracketed h_br)) = 0 := by
+  show (RealityChain'.singleton _).actualizationCount = 0
+  rw [RealityChain'.singleton_actualizationCount]
+  rfl
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
