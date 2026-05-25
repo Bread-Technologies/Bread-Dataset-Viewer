@@ -618,6 +618,50 @@ full transitive Mathlib build executed). All warnings are pre-existing
 linter notices about unused-variables, deprecated `push_neg`, and
 unused simp args in non-v2 code paths.
 
+### Strict-chain infrastructure (post-build-verify segment)
+
+After build verification confirmed cleanliness, substantial extensions
+to the trajectory machinery:
+
+**Strict-chain (RealityChain') infrastructure:**
+- `TrajectoryStep'` : step + RealitySuccessor witness pair.
+- `TrajectoryStep'.bracketed` : constructor from bracketed transition.
+- `actualizeAt_strict_step` : constructor from pointwise actualization.
+- `RealityChain'` : inductive type of strict chains.
+- `RealityChain'.implies_successor` : strict chain → cumulative
+  RealitySuccessor (chained via reality_successor_trans).
+- `RealityChain'.past_monotone'` and `no_return_along_chain` :
+  arrow-of-time consequences.
+- `RealityChain'.toRealityChain` + length/count preservation : forgetful
+  map to plain chains.
+- `RealityChain'.singleton` + `append` + count additivity.
+
+**Substantive iff theorems (threading past-growth through chain):**
+- `RealityChain'.pos_count_implies_ne` : count > 0 → R₁ ≠ R₂
+  (the non-trivial direction, proved via no_return_along_chain).
+- `RealityChain'.ne_iff_pos_count` + `eq_iff_zero_count` : full iff.
+
+**Plain-chain extensions:**
+- `RealityChain.length`, `actualizationCount`, `bracketedCount`.
+- `counts_sum`, `append_*Count`, append_length additivity.
+- `bracketed_only_implies_eq`, `distinct_endpoints_implies_actualization`.
+- `bracketed_chain_zero_count`, `single_step_count_zero_iff_bracketed`.
+- `actualizeAt_chain`, `reflBracketedChain` constructors + count simps.
+
+**Dichotomy v2 certificates:**
+- `framework_v2_trajectory_certificate` : plain-chain bundle.
+- `framework_v2_strict_chain_certificate` : strict-chain bundle with
+  the full iff.
+
+**Worked examples in TierA + TierB:** Bool-typed Wants, Meetings,
+Realities + multi-step trajectories (2-step actualization, mixed
+bracketed-actualization, 3-step refl-actualize-refl).
+
+These extensions fully formalize the framework's "evolution + measurement"
+structure with quantitative trajectory algebra. The full iff
+characterization (R₁ ≠ R₂ ↔ at least one actualization) is the
+substantive content threading past-growth through chains.
+
 ### v2 entropy addendum (received mid-session)
 
 The user issued an addendum to v2 (`ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`)
