@@ -983,6 +983,28 @@ theorem DecoherenceEquivalent_append_both {P : Type u} {C : Type v}
     DecoherenceEquivalent_append_right ch₁' h₂
   exact DecoherenceEquivalent_trans h_first h_second
 
+/-- **Decoherence equivalence certificate.** Single Lean expression
+bundling the equivalence-relation properties + congruence content. -/
+theorem decoherence_equivalence_certificate :
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂), DecoherenceEquivalent ch ch) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        {ch₁ ch₂ : RealityChain' P C R₁ R₂},
+      DecoherenceEquivalent ch₁ ch₂ → DecoherenceEquivalent ch₂ ch₁) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        {ch₁ ch₂ ch₃ : RealityChain' P C R₁ R₂},
+      DecoherenceEquivalent ch₁ ch₂ → DecoherenceEquivalent ch₂ ch₃ →
+      DecoherenceEquivalent ch₁ ch₃) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        {ch₁ ch₁' : RealityChain' P C R₁ R₂}
+        {ch₂ ch₂' : RealityChain' P C R₂ R₃},
+      DecoherenceEquivalent ch₁ ch₁' → DecoherenceEquivalent ch₂ ch₂' →
+      DecoherenceEquivalent (ch₁.append ch₂) (ch₁'.append ch₂')) :=
+  ⟨DecoherenceEquivalent_refl,
+   DecoherenceEquivalent_symm,
+   DecoherenceEquivalent_trans,
+   DecoherenceEquivalent_append_both⟩
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
