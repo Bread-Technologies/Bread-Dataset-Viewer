@@ -4764,6 +4764,27 @@ theorem rate_point_addition {P : Type u} {C : Type v}
        (actualizationRate ch₁).2 + (actualizationRate ch₂).2) :=
   concatenated_decoherence ch₁ ch₂
 
+/-- **Rate point in lattice region.** For any chain, the rate point
+(count, length) is in the lattice region {(k, n) ∈ ℕ × ℕ : k ≤ n}. -/
+theorem rate_in_lattice_region {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    let p := actualizationRate ch
+    p.1 ≤ p.2 := rate_count_le_length ch
+
+/-- **Rate at fixed length n.** Chains of length n have rate (k, n)
+with k ≤ n. The first component k ranges from 0 (coherent) to n
+(pure-decoherent). -/
+theorem rate_at_fixed_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (n : ℕ)
+    (h : ch.length = n) :
+    let p := actualizationRate ch
+    p.2 = n ∧ p.1 ≤ n := by
+  intro p
+  refine ⟨h, ?_⟩
+  have h_le := ch.actualizationCount_le_length
+  show ch.actualizationCount ≤ n
+  omega
+
 /-- **Phase space transition certificate.** Bundles the rate-point
 addition fact with its corollaries. -/
 theorem rate_phase_transition_certificate :
