@@ -956,6 +956,10 @@ example (P : Type u) (C : Type v)
     rfl
   -- ch implies RealitySuccessor R (actualizeAt R m).
   have h_succ : RealitySuccessor R (actualizeAt R m) := ch.implies_successor
+  -- And by the iff: count > 0 ↔ R ≠ actualizeAt R m. Here count = 1 > 0.
+  have h_ne_iff := ch.ne_iff_pos_count
+  have h_pos : 0 < ch.actualizationCount := by rw [h_count]; omega
+  have h_ne : R ≠ actualizeAt R m := h_ne_iff.mpr h_pos
   trivial
 
 /-- **Any non-equal Reality transition must be at the seam.** Combining
