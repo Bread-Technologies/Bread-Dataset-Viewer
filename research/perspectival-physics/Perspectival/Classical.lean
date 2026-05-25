@@ -2767,6 +2767,20 @@ theorem classical_n2_trivial_strict_agency_not_transitive
   Perspectival.Continuity.TransitiveAgency.trivial_impossible
     (gpt 2) T h_avail hp0 hp1 classical_n2_vertices_distinct
 
+/-! ## n=3 R6 conjecture now a THEOREM -/
+
+/-- **n=3 R6 disconnect, IsEmpty form**: the conjecture stated as
+`n3_R6_disconnect_conjecture` is now proven. -/
+theorem classical_n3_strict_reversible_path_id_swap01_empty :
+    n3_R6_disconnect_conjecture := by
+  rw [show n3_R6_disconnect_conjecture
+        = IsEmpty (Perspectival.Continuity.StrictReversiblePath (gpt 3)
+                    (Perspectival.Continuity.StrictReversible.id (gpt 3))
+                    swap01StrictReversible) from rfl,
+      isEmpty_iff]
+  intro p
+  exact classical_n3_no_strict_path_id_to_swap01 p
+
 end Classical
 end Perspectival
 
