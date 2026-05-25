@@ -3494,6 +3494,28 @@ theorem loop_one_pow_tierAEventCount {P : Type u} {C : Type v}
   rw [one_pow]
   exact loop_tierAEventCount_one
 
+/-- **Loop submonoid is "ℕ-graded by length".** For any natural
+number n, there is a loop chain (in the loopMonoid) with length n.
+This shows the loop monoid is non-trivial and surjects onto ℕ
+via length. -/
+theorem loop_monoid_length_surjective {P : Type u} {C : Type v}
+    (R : Reality P C) (n : ℕ) :
+    ∃ (ch : RealityChain' P C R R), ch.length = n :=
+  loop_submonoid_unbounded_length R n
+
+/-- **Loop monoid length is determined by power for refl-bracketed
+base.** The n-fold power of the unit-length reflexive loop has
+length n exactly. -/
+theorem refl_loop_pow_length_exact {P : Type u} {C : Type v}
+    (R : Reality P C) (n : ℕ) :
+    ((RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) ^ n).length
+      = n := by
+  rw [loop_npow_length]
+  show n * (RealityChain'.singleton _).length = n
+  rw [RealityChain'.singleton_length]
+  omega
+
 /-- **Worked example: loop monoid power notation on Bool.** Showing
 that the Mathlib `Monoid` `^` notation works on loop chains. -/
 example (R : Reality Bool Bool) :
