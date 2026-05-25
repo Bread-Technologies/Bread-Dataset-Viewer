@@ -3915,6 +3915,29 @@ theorem triple_compose_preserves_equivalence {P : Type u} {C : Type v}
       ((ch₁.append ch₂).append ch₃) ((ch₁'.append ch₂').append ch₃') :=
   compose_preserves_equivalence (compose_preserves_equivalence h₁ h₂) h₃
 
+/-- **DE congruence certificate.** Bundles the chain-monoid congruence
+content for DecoherenceEquivalent. -/
+theorem decoherence_equivalent_congruence_certificate :
+    -- Two-fold composition preserves DE.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        {ch₁ ch₁' : RealityChain' P C R₁ R₂}
+        {ch₂ ch₂' : RealityChain' P C R₂ R₃},
+      DecoherenceEquivalent ch₁ ch₁' →
+      DecoherenceEquivalent ch₂ ch₂' →
+      DecoherenceEquivalent (ch₁.append ch₂) (ch₁'.append ch₂')) ∧
+    -- Three-fold composition preserves DE.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ R₄ : Reality P C}
+        {ch₁ ch₁' : RealityChain' P C R₁ R₂}
+        {ch₂ ch₂' : RealityChain' P C R₂ R₃}
+        {ch₃ ch₃' : RealityChain' P C R₃ R₄},
+      DecoherenceEquivalent ch₁ ch₁' →
+      DecoherenceEquivalent ch₂ ch₂' →
+      DecoherenceEquivalent ch₃ ch₃' →
+      DecoherenceEquivalent
+        ((ch₁.append ch₂).append ch₃) ((ch₁'.append ch₂').append ch₃')) :=
+  ⟨fun h₁ h₂ => compose_preserves_equivalence h₁ h₂,
+   fun h₁ h₂ h₃ => triple_compose_preserves_equivalence h₁ h₂ h₃⟩
+
 /-- **Full loopPower / Monoid `^` agreement certificate.** All
 measures (count, length, bracketed, complexity) agree between
 the custom `loopPower` and the Mathlib Monoid `^` operation. -/
