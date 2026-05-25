@@ -3154,6 +3154,30 @@ theorem complexity_length_determine_count {P : Type u} {C : Type v}
   unfold trajectoryComplexity at h_comp
   omega
 
+/-- **Three-chain count addition.** For three chain composed in
+sequence, the count is the sum of individual counts. -/
+theorem three_chain_count_addition {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ R₄ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (ch₃ : RealityChain' P C R₃ R₄) :
+    ((ch₁.append ch₂).append ch₃).actualizationCount
+      = ch₁.actualizationCount + ch₂.actualizationCount
+        + ch₃.actualizationCount := by
+  rw [RealityChain'.append_actualizationCount,
+      RealityChain'.append_actualizationCount]
+
+/-- **Four-chain count addition.** -/
+theorem four_chain_count_addition {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ R₄ R₅ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (ch₃ : RealityChain' P C R₃ R₄) (ch₄ : RealityChain' P C R₄ R₅) :
+    (((ch₁.append ch₂).append ch₃).append ch₄).actualizationCount
+      = ch₁.actualizationCount + ch₂.actualizationCount
+        + ch₃.actualizationCount + ch₄.actualizationCount := by
+  rw [RealityChain'.append_actualizationCount,
+      RealityChain'.append_actualizationCount,
+      RealityChain'.append_actualizationCount]
+
 /-- **Tier B reversibility certificate.** Bundles the coherent-chain
 characterization. -/
 theorem tier_B_reversibility_certificate :
