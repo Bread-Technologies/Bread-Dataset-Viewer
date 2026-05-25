@@ -547,6 +547,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `actualizeAt_strict_step`, `TrajectoryStep'.bracketed` — strict-step constructors | `TierB.lean` | ✓ (a) |
 | `RealityChain'.ne_iff_pos_count`, `RealityChain'.eq_iff_zero_count` — full iff theorems via threading past-growth through chain | `TierB.lean` | ✓ (a) **strict-chain iff complete** |
 | `RealityChain.append_assoc`, `RealityChain'.append_assoc`, `nil_append`, `append_nil` — chain monoid identity + associativity laws | `TierB.lean` | ✓ (a) |
+| `RealityChain'.actualizationDensity`, `bare_tier_B_density`, `pure_actualization_density` — decoherence-relevant count measures | `TierB.lean` | ✓ (a) **Seam 4 structural** |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
