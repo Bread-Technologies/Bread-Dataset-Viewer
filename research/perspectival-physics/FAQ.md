@@ -539,6 +539,49 @@ of Tier A": when count = 0, the chain has no Tier A irreversibility
 content, and the chain is the Tier B description of "no change of
 state".
 
+## Q28. What's the decidable trichotomy predicate API?
+
+**Framework answer:** The Decoherence module exposes three named,
+decidable predicates corresponding to the trajectory regime trichotomy:
+- `IsCoherent ch`         — chain has zero Tier A event count
+- `IsPureDecoherent ch`   — chain has zero bracketed (passive) count
+- `IsMixed ch`            — both counts are positive
+
+Each carries a `Decidable` instance, so the regime of any chain can
+be computed/decided. The trichotomy is exhaustive and pairwise
+exclusive on the non-coherent side (`coherent_xor_mixed`,
+`pure_decoherent_xor_mixed`), bundled in
+`trichotomy_predicates_certificate`. The predicates align with the
+geometric `(count, length)` rate phase space via
+`rate_predicate_bridge_certificate`: coherent = (0, length) corner,
+pure-decoherent = (length, length) corner, mixed = strict interior
+(0 < count < length, which implies length ≥ 2).
+
+The `IsCoherent` predicate is further characterized by five lemmas
+(`coherence_predicate_certificate`): nil-coherent, loop-coherent,
+append-iff (coherent of append iff both parts coherent), respects
+DecoherenceEquivalent, and the endpoint characterization (coherent
+iff R₁ = R₂ — Tier B reversibility).
+
+## Q29. What's the DecoherenceQuotient.append + algebra structure?
+
+**Framework answer:** Chain append descends from `RealityChain'.append`
+to a well-defined operation on the decoherence quotient via
+`Quotient.map₂`. The congruence is `decoherenceEquivalent_append_congr`
+(count is compositional, so equivalent chains stay equivalent after
+appending equivalent chains). The quotient append:
+- has count as a monoid morphism: `count(q₁ ⋆ q₂) = count q₁ + count q₂`
+- is associative
+- has the nil class as a two-sided identity
+
+Bundled in `decoherence_quotient_algebra_certificate`. This gives
+`DecoherenceQuotient` a categorical algebraic structure: objects =
+realities, morphisms = quotient classes, composition = quotient
+append, identity = nil class. The `DecoherenceQuotient.count` is then
+a (functorial) morphism into the additive monoid ℕ. Equality on the
+quotient is decidable (`DecoherenceQuotient.decidableEq`,
+`eq_iff_count`) since count is injective into ℕ.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
