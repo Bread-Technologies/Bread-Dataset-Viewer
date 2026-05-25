@@ -455,6 +455,31 @@ theorem productEffect_in_effects
   intro ρ hρ
   exact productEffect_bounds_on_tensorStates he₁ he₂ hρ
 
+/-! ### Product transformations on gptTensor
+
+For two linear maps `f₁ : V₁ →ₗ V₁`, `f₂ : V₂ →ₗ V₂`, the tensor map
+`TensorProduct.map f₁ f₂ : V₁ ⊗ V₂ →ₗ V₁ ⊗ V₂` is the natural product
+action on the composite. We'll show it preserves states (i.e.,
+the convex hull of products) and is bijective when both factors are. -/
+
+/-- The product transformation `f₁ ⊗ f₂` on the gptTensor state space:
+sends `ρ₁ ⊗ ρ₂` to `f₁(ρ₁) ⊗ f₂(ρ₂)`, lifted to convex combinations. -/
+noncomputable def productTransform
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (f₁ : V₁ →ₗ[ℝ] V₁) (f₂ : V₂ →ₗ[ℝ] V₂) :
+    V₁ ⊗[ℝ] V₂ →ₗ[ℝ] V₁ ⊗[ℝ] V₂ :=
+  TensorProduct.map f₁ f₂
+
+/-- The product transformation evaluated on a pure product state. -/
+@[simp] theorem productTransform_tmul
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (f₁ : V₁ →ₗ[ℝ] V₁) (f₂ : V₂ →ₗ[ℝ] V₂) (ρ₁ : V₁) (ρ₂ : V₂) :
+    productTransform f₁ f₂ (ρ₁ ⊗ₜ[ℝ] ρ₂) = (f₁ ρ₁) ⊗ₜ[ℝ] (f₂ ρ₂) := by
+  show TensorProduct.map f₁ f₂ (ρ₁ ⊗ₜ[ℝ] ρ₂) = (f₁ ρ₁) ⊗ₜ[ℝ] (f₂ ρ₂)
+  rw [TensorProduct.map_tmul]
+
 
 end GPT
 end Perspectival
