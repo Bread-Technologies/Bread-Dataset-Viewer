@@ -4549,6 +4549,14 @@ example (R : Reality Bool Bool)
     ch ^ 1 = ch :=
   pow_one ch
 
+/-- **Worked example: pow_succ' equivalent on loops.** `ch ^ (n+1) = ch * ch^n`
+follows from `pow_succ ch n` and `Commute.self_pow`. -/
+example (R : Reality Bool Bool)
+    (ch : RealityChain' Bool Bool R R) (n : ℕ) :
+    ch ^ (n + 1) = ch * ch ^ n := by
+  rw [pow_succ]
+  exact ((Commute.self_pow ch n).eq).symm
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
