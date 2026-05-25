@@ -89,7 +89,13 @@ strengthening).
   `trajectory_trichotomy`), compositional + monotonicity content,
   `path_independent_coherence`, `decoherence_anti_realism`,
   `DecoherenceEquivalent` (equivalence relation + congruence under
-  append), and bundle certificates.
+  append), the **loop submonoid algebra** (`loop_is_coherent`,
+  `loopPower`, `loop_submonoid_certificate`, `loop_insertion_certificate`),
+  the **coherent kernel characterization**
+  (`coherent_kernel_iff_endpoints_eq`), the **Boltzmann brain dissolution
+  shadow** (`boltzmann_brain_dissolution_shadow`), and bundle
+  certificates including `decoherence_module_super_certificate`
+  (the 8-fact ultimate bundle).
 - `Ontology.lean` — axioms I–IV encoded as Lean 4 types (v1; under v2,
   this is Tier B content augmented with Tier A foundation).
 - `Transformations.lean` — PTrans as a Group, MulAction on meetings.
