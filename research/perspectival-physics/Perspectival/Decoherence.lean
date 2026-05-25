@@ -4785,6 +4785,19 @@ theorem rate_at_fixed_length {P : Type u} {C : Type v}
   show ch.actualizationCount ≤ n
   omega
 
+/-- **Worked example: rate of nil chain is (0, 0).** -/
+example (R : Reality Bool Bool) :
+    actualizationRate (RealityChain'.nil R) = (0, 0) := rfl
+
+/-- **Worked example: rate of singleton bracketed chain is (0, 1).** -/
+example (R : Reality Bool Bool) :
+    actualizationRate (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) = (0, 1) := by
+  show ((RealityChain'.singleton _).actualizationCount,
+        (RealityChain'.singleton _).length) = (0, 1)
+  rw [RealityChain'.singleton_actualizationCount, RealityChain'.singleton_length]
+  rfl
+
 /-- **Rate at fixed length certificate.** Combines fixed-length
 characterization with extremal cases. -/
 theorem rate_at_fixed_length_certificate :
