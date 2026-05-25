@@ -554,6 +554,9 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.coherent_compose`, `coherent_compose_eq`, `path_independent_coherence` — coherent trajectories form sub-monoid, coherence is path-independent | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.coherent_and_decoherent_distinct_endpoints` — incompatibility theorem | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.actualizationRatePlain`, `_forget` — plain-chain rate + forgetful preservation | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.tierAEventCount` + endpoint-relation + composition theorems | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.trajectory_trichotomy` — coherent/decoherent/mixed classification | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.trajectoryComplexity` + bounds + append additivity | `Decoherence.lean` | ✓ (a) **information-content measure** |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
