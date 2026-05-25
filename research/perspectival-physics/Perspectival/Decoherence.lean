@@ -3821,6 +3821,17 @@ theorem loop_quotient_commutes {P : Type u} {C : Type v}
     toDecoherenceClass (ch₁ * ch₂) = toDecoherenceClass (ch₂ * ch₁) :=
   toDecoherenceClass_equivalent (loop_swap_equivalent ch₁ ch₂)
 
+/-- **Worked example: Mathlib `mul_one` and `one_mul` apply to loops.**
+The Mathlib Monoid lemmas work directly on loop chains via the
+`loopMonoid` instance. -/
+example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
+    ch * 1 = ch ∧ 1 * ch = ch :=
+  ⟨mul_one ch, one_mul ch⟩
+
+/-- **Worked example: Mathlib `mul_assoc` applies to loops.** -/
+example (R : Reality Bool Bool) (ch₁ ch₂ ch₃ : RealityChain' Bool Bool R R) :
+    ch₁ * ch₂ * ch₃ = ch₁ * (ch₂ * ch₃) := mul_assoc ch₁ ch₂ ch₃
+
 /-- **Decoherence framework MASTER certificate.** A single Lean
 theorem bundling EVERY major structural result of the Decoherence
 module's loop submonoid + quotient algebra into one referenceable
