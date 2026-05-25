@@ -2461,6 +2461,97 @@ theorem rate_predicate_bridge_certificate :
    fun ch => IsMixed.iff_strict_interior ch,
    fun h => IsMixed.length_ge_two h⟩
 
+/-! ## Regime classifier (computable)
+
+A computable classifier `chainRegime` returning the regime as an
+enumeration. Together with the trichotomy theorem, this lets
+downstream code dispatch on regime via `match`. -/
+
+/-- **Regime enumeration.** The three trichotomy regimes as an
+inductive type. -/
+inductive Regime
+  | coherent
+  | pureDecoherent
+  | mixed
+  deriving DecidableEq, Repr
+
+/-- **Classify a chain by regime.** Computable via the decidable
+trichotomy predicates. Strict chains are coherent if count = 0
+(takes precedence over pureDecoherent for the nil chain, which is
+both vacuously). -/
+def chainRegime {P : Type u} {C : Type v} {R₁ R₂ : Reality P C}
+    (ch : RealityChain' P C R₁ R₂) : Regime :=
+  if ch.actualizationCount = 0 then Regime.coherent
+  else if ch.bracketedCount = 0 then Regime.pureDecoherent
+  else Regime.mixed
+
+/-- **chainRegime = coherent ↔ IsCoherent.** -/
+theorem chainRegime_eq_coherent_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    chainRegime ch = Regime.coherent ↔ IsCoherent ch := by
+  unfold chainRegime IsCoherent tierAEventCount
+  by_cases hC : ch.actualizationCount = 0
+  · rw [if_pos hC]
+    exact ⟨fun _ => hC, fun _ => rfl⟩
+  · rw [if_neg hC]
+    refine ⟨fun h => ?_, fun h => absurd h hC⟩
+    -- h : (if ch.bracketedCount = 0 then pureDecoherent else mixed) = coherent
+    by_cases hB : ch.bracketedCount = 0
+    · rw [if_pos hB] at h; cases h
+    · rw [if_neg hB] at h; cases h
+
+/-- **chainRegime = mixed ↔ IsMixed.** -/
+theorem chainRegime_eq_mixed_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    chainRegime ch = Regime.mixed ↔ IsMixed ch := by
+  unfold chainRegime IsMixed
+  by_cases hC : ch.actualizationCount = 0
+  · rw [if_pos hC]
+    refine ⟨fun h => ?_, fun ⟨hpos, _⟩ => absurd hC (Nat.pos_iff_ne_zero.mp hpos)⟩
+    cases h
+  · rw [if_neg hC]
+    by_cases hB : ch.bracketedCount = 0
+    · rw [if_pos hB]
+      refine ⟨fun h => ?_, fun ⟨_, hBpos⟩ => absurd hB (Nat.pos_iff_ne_zero.mp hBpos)⟩
+      cases h
+    · rw [if_neg hB]
+      exact ⟨fun _ => ⟨Nat.pos_of_ne_zero hC, Nat.pos_of_ne_zero hB⟩,
+             fun _ => rfl⟩
+
+/-- **chainRegime is a total classifier.** Every chain receives
+exactly one regime tag (with the convention that nil is coherent). -/
+theorem chainRegime_classifies {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    chainRegime ch = Regime.coherent ∨
+    chainRegime ch = Regime.pureDecoherent ∨
+    chainRegime ch = Regime.mixed := by
+  unfold chainRegime
+  by_cases hC : ch.actualizationCount = 0
+  · left; rw [if_pos hC]
+  · by_cases hB : ch.bracketedCount = 0
+    · right; left; rw [if_neg hC, if_pos hB]
+    · right; right; rw [if_neg hC, if_neg hB]
+
+/-- **Regime classifier certificate.** Bundles the three iff lemmas. -/
+theorem regime_classifier_certificate :
+    -- (a) chainRegime = coherent ↔ IsCoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      chainRegime ch = Regime.coherent ↔ IsCoherent ch) ∧
+    -- (b) chainRegime = mixed ↔ IsMixed.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      chainRegime ch = Regime.mixed ↔ IsMixed ch) ∧
+    -- (c) totality.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      chainRegime ch = Regime.coherent ∨
+      chainRegime ch = Regime.pureDecoherent ∨
+      chainRegime ch = Regime.mixed) :=
+  ⟨fun ch => chainRegime_eq_coherent_iff ch,
+   fun ch => chainRegime_eq_mixed_iff ch,
+   fun ch => chainRegime_classifies ch⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
