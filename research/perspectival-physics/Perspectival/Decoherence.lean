@@ -427,6 +427,21 @@ theorem coherent_zero_tier_A_content {P : Type u} {C : Type v}
     {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
     ch.actualizationCount = 0 ↔ tierAEventCount ch = 0 := Iff.rfl
 
+/-- **Tier A event content forces distinct endpoints.** Positive
+Tier A event count along a strict chain means R₁ ≠ R₂. The framework's
+"any actualization event leaves a Tier B footprint" content. -/
+theorem positive_tier_A_implies_distinct_endpoints {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : 0 < tierAEventCount ch) : R₁ ≠ R₂ :=
+  ch.pos_count_implies_ne h
+
+/-- **Coherent ⇒ R₁ = R₂.** Zero Tier A content along a strict chain
+implies equal Reality endpoints. -/
+theorem zero_tier_A_implies_equal_endpoints {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : tierAEventCount ch = 0) : R₁ = R₂ :=
+  ch.zero_actualization_implies_eq h
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
