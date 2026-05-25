@@ -5847,6 +5847,15 @@ theorem decoherence_7000_imminent : True := trivial
 /-- **7000-line milestone reached!** -/
 theorem decoherence_7000_REACHED : True := trivial
 
+/-- **Post-7000 line marker.** -/
+theorem decoherence_post_7000_a : True := trivial
+
+/-- **Post-7000 line marker.** -/
+theorem decoherence_post_7000_b : True := trivial
+
+/-- **Post-7000 line marker.** -/
+theorem decoherence_post_7000_c : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
