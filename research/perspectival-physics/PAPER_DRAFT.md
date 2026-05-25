@@ -1061,3 +1061,88 @@ stochastic Birkhoff polytope, and the transitivity requirement
 forces a witness in the other component. The two demands are
 incompatible. Quantum-like GPTs (where U(2) is connected) are
 expected to evade this incompatibility.
+
+**A.11 Classical-vs-Quantum Dichotomy (closed).** The "expected to
+evade" in A.10 is now actually verified. `Perspectival/Dichotomy.lean
+:: framework_dichotomy_existential`:
+
+```lean
+theorem framework_dichotomy_existential :
+    (∀ PPT : Continuity.PurePreservingTransitiveAgency
+              (Classical.gpt 2), False)
+    ∧ Nonempty (Continuity.TransitiveAgency CircleGPT.circleGPT)
+```
+
+Two halves:
+
+*Negative half — classical fails L7.* Via R1 forward + reverse
+(`vertex_is_pure`, `pure_state_of_classical_is_vertex`) and the L6
+discreteness disconnect under vertex-preservation, no
+`PurePreservingTransitiveAgency` exists on Classical n ≥ 2. The
+machinery introduced this round:
+
+- `vertexSet n`, `vertexSet_isDiscrete`,
+  `vertex_trajectory_continuous`,
+  `vertex_preserving_path_constant_on_vertex` (`Classical.lean`):
+  discreteness infrastructure for the standard simplex vertex set
+  under the linear-endomorphism topology.
+- `permLinGen σ`, `permStrictReversibleGen σ`, `permLinGen_ne_id_iff`:
+  general permutation-as-linear-map infrastructure for arbitrary
+  σ : Equiv.Perm (Fin n).
+- `strict_path_vertex_preserving_eq`: a vertex-preserving
+  StrictReversiblePath has equal endpoints (linear-map equality).
+- `classical_general_no_strict_vertex_preserving_path_id_to_perm`:
+  the R6 strengthening — under vertex-preservation hypothesis, no
+  strict path from id to any σ ≠ 1.
+- `classical_general_vertex_preserving_no_transitive_agency_unconditional`:
+  L6 closure on Classical n ≥ 2, unconditional on PureState
+  (discharged via `vertex_is_pure`).
+- `classical_general_no_pure_preserving_transitive_agency`: L7
+  closure on Classical n ≥ 2, UNCONDITIONAL (via reverse R1).
+
+*Critical mathematical correction.* The naive reading "every
+state-preserving + bijective linear map is a permutation matrix" is
+FALSE for n ≥ 3. Counterexample (documented in `Classical.lean`):
+the affine path `t·I + (1-t)·C` for the 3-cycle C is bijective
+throughout (det = `t³ + (1-t)³` > 0), so id and the 3-cycle ARE
+connected by a fully valid `StrictReversiblePath` in `gpt 3`. The
+det-sign disconnect cannot rule this out (both endpoints have det = 1),
+and the discreteness disconnect requires vertex-preservation hypothesis
+to rule it out. The strengthened R6 we proved is conditional on the
+additional "path stays on the discrete permutation locus" assumption —
+a genuine extra postulate beyond `StrictConnectedAgency` as formalized.
+This is the framework's first concrete axiom refinement, justified by
+Axiom IV (pattern stability of particulars).
+
+*Positive half — CircleGPT succeeds.* `Perspectival/CircleGPT.lean`
+(706+ lines) constructs the unit-disk-lifted-to-z=1 GPT and equips
+it with an unconditional `TransitiveAgency`:
+
+- `circleGPT : GPT (Fin 3 → ℝ)` with state space
+  `{ρ | ρ 2 = 1 ∧ ρ 0² + ρ 1² ≤ 1}`.
+- `rotZ θ : V →ₗ[ℝ] V` — rotation around the z-axis; proven
+  state-preserving + bijective + jointly continuous in (θ, v).
+- `rotStrictPath θ₁ θ₂ : StrictReversiblePath` via smooth angular
+  interpolation.
+- `circleStrictConnectedAgency : StrictConnectedAgency circleGPT` —
+  the COMPLETE non-trivial instance with avail = U(1) rotation family.
+- `circlePoint α = (cos α, sin α, 1)`,
+  `rotZ_transitive_on_circlePoints`: rotation acts transitively on the
+  parametric pure-state circle.
+- `pure_state_classification_holds`: every pure state equals some
+  circlePoint α (via boundary-vs-interior analysis).
+- `circleTransitiveAgency_unconditional : TransitiveAgency circleGPT`:
+  the full instance, unconditional.
+
+*Hardy A5 bridge.* `Continuity.TransitiveAgency.hardy_axiom5` provides,
+for any TransitiveAgency G, a continuous path of state-preserving
+bijective linear maps between any two pure states.
+`Hardy.axiom5_strong_of_transitive_agency` packages this as
+`Hardy.Axiom5_Continuity_Strong` (a non-vacuous predicate replacing
+the placeholder). Combined with the Dichotomy: CircleGPT satisfies
+strong-form Hardy A5; Classical n ≥ 2 fails it.
+
+This closes the previously-open Tier 1 "positive complement of R6"
+target: the class of GPTs supporting strict (transitive, pure-
+preserving) agency is now provably NON-empty (CircleGPT) AND
+provably DOES NOT include Classical n ≥ 2.
