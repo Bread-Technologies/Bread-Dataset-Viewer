@@ -906,6 +906,18 @@ theorem RealityChain'.append_actualizationCount {P : Type u} {C : Type v} :
       rw [RealityChain'.append_actualizationCount rest ch₂]
       omega
 
+/-- **Append additivity for strict chain length.** -/
+theorem RealityChain'.append_length {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C}
+      (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      (ch₁.append ch₂).length = ch₁.length + ch₂.length
+  | _, _, _, RealityChain'.nil _, _ => by
+      simp [RealityChain'.append, RealityChain'.length]
+  | _, _, _, RealityChain'.cons _ rest, ch₂ => by
+      simp only [RealityChain'.append, RealityChain'.length]
+      rw [RealityChain'.append_length rest ch₂]
+      omega
+
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
 transition R₁ → R₂ cannot be a bracketed step; if it's at all
