@@ -34,6 +34,7 @@ remaining task of Tier 1.
 import Perspectival.GPT
 import Perspectival.Ontology
 import Mathlib.Analysis.Convex.Extreme
+import Mathlib.Topology.UnitInterval
 
 namespace Perspectival
 namespace Hardy
@@ -193,6 +194,24 @@ def Axiom5_Continuity (G : GPT V) : Prop :=
     -- connecting ρ₁ to ρ₂ through pure states. The continuity
     -- predicate requires a topology on V; we leave that to refinements.
     True  -- placeholder
+
+/-- **Axiom 5 strong form (path of state-preserving bijective linear maps).**
+Given a topology on `V`, between any two pure states there is a
+continuous path of state-preserving bijective linear maps from the
+identity to a transformation realizing the move.
+
+This is the framework's intended substantive form, satisfied by any GPT
+admitting a `Continuity.TransitiveAgency`. See
+`Continuity.TransitiveAgency.hardy_axiom5` for the derivation. -/
+def Axiom5_Continuity_Strong (G : GPT V) [TopologicalSpace V] : Prop :=
+  ∀ ρ₁ ρ₂ : V,
+    IsExtreme ℝ G.states {ρ₁} → IsExtreme ℝ G.states {ρ₂} →
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      γ 0 = LinearMap.id ∧
+      γ 1 ρ₁ = ρ₂ ∧
+      (∀ t : unitInterval, ∀ ρ ∈ G.states, γ t ρ ∈ G.states) ∧
+      (∀ t : unitInterval, Function.Bijective (γ t))
 
 /-! ## Summary of categorizations (the actual research output of this file)
 
