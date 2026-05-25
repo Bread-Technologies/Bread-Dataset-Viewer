@@ -529,6 +529,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `past_actualizeAt_disjunction`, `past_actualizeAt_already_act` — past-growth from pointwise events | `TierA.lean` | ✓ (a) |
 | `actualizeAt_many_to_one` — WBT 2024 many-to-one collapse, structural shadow at elementary level | `TierA.lean` | ✓ (a) **per entropy addendum** |
 | `actualizeAt_comm`, `actualizeAt_idempotent` — order-independence and idempotence of pointwise events | `TierA.lean` | ✓ (a) |
+| `past_subset_past_actualizeAt` — past-monotonicity under pointwise events (arrow of time, elementary form) | `TierA.lean` | ✓ (a) |
 | `actualizeAt_atSeam`, `actualizeAt_not_bracketed`, `actualizeAt_asActualizationMap` — pointwise Tier A ↔ Tier B link | `TierB.lean` | ✓ (a) |
 | `definiteToVertex`, `definiteToVertex_perm` — Tier A/B → Classical.vertex bridge | `Dichotomy.lean` | ✓ (a) |
 | `v2_bare_Tier_B_is_classical_excluded` — v2-architectural identification | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
