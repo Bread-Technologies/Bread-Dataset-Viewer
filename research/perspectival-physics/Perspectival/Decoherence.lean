@@ -683,6 +683,26 @@ theorem trajectoryComplexity_forget {P : Type u} {C : Type v}
   rw [RealityChain'.toRealityChain_actualizationCount,
       RealityChain'.toRealityChain_bracketedCount]
 
+/-- **Plain-chain complexity bound: ≤ 2 * length.** -/
+theorem plain_complexity_le_twice_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂) :
+    trajectoryComplexityPlain ch ≤ 2 * ch.length := by
+  unfold trajectoryComplexityPlain
+  have h_sum := ch.counts_sum
+  have h_bound : ch.actualizationCount ≤ ch.length := by
+    -- For plain chains, also bounded.
+    -- This follows from counts_sum + bracketedCount ≥ 0.
+    omega
+  omega
+
+/-- **Plain-chain complexity bound: ≥ length.** -/
+theorem plain_complexity_ge_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂) :
+    ch.length ≤ trajectoryComplexityPlain ch := by
+  unfold trajectoryComplexityPlain
+  have h_sum := ch.counts_sum
+  omega
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
