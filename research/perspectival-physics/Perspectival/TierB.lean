@@ -941,6 +941,16 @@ theorem RealityChain'.actualizationCount_le_length {P : Type u} {C : Type v} :
       | bracketed _ => simp; omega
       | actualization _ => simp; omega
 
+/-- **Zero-length chains have equal endpoints.** A useful
+characterization: chains of length zero are nil-like, hence
+trivially R₁ = R₂ (by `eq_iff_zero_count` since count = 0 too). -/
+theorem RealityChain'.length_zero_implies_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.length = 0) : R₁ = R₂ := by
+  apply ch.zero_actualization_implies_eq
+  have h_le := ch.actualizationCount_le_length
+  omega
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
