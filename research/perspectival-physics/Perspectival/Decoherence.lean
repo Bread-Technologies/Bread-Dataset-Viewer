@@ -3273,6 +3273,48 @@ example (R : Reality Bool Bool) :
   intro base
   exact trio_sum_law (loopPower base 4)
 
+/-! ## Loops at R form a monoid under append
+
+For chains with equal endpoints (loops), the chain composition is
+well-typed and associative, with the nil chain as identity. This
+section makes the monoid structure on loops explicit. -/
+
+/-- **Loop monoid: associativity.** -/
+theorem loop_append_assoc {P : Type u} {C : Type v} {R : Reality P C}
+    (ch₁ ch₂ ch₃ : RealityChain' P C R R) :
+    (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃) :=
+  RealityChain'.append_assoc ch₁ ch₂ ch₃
+
+/-- **Loop monoid: left identity.** -/
+theorem loop_nil_append {P : Type u} {C : Type v} {R : Reality P C}
+    (ch : RealityChain' P C R R) :
+    (RealityChain'.nil R).append ch = ch :=
+  RealityChain'.nil_append ch
+
+/-- **Loop monoid: right identity.** -/
+theorem loop_append_nil {P : Type u} {C : Type v} {R : Reality P C}
+    (ch : RealityChain' P C R R) :
+    ch.append (RealityChain'.nil R) = ch :=
+  RealityChain'.append_nil ch
+
+/-- **Loop monoid axioms certificate.** -/
+theorem loop_monoid_axioms_certificate :
+    -- Associativity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ ch₃ : RealityChain' P C R R),
+      (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃)) ∧
+    -- Left identity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R),
+      (RealityChain'.nil R).append ch = ch) ∧
+    -- Right identity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R),
+      ch.append (RealityChain'.nil R) = ch) :=
+  ⟨fun ch₁ ch₂ ch₃ => loop_append_assoc ch₁ ch₂ ch₃,
+   fun ch => loop_nil_append ch,
+   fun ch => loop_append_nil ch⟩
+
 /-- **Trivial chain has nil-like behavior.** A length-0 chain
 trivially has all measures 0 and trivially preserves past. -/
 theorem trivial_chain_nil_like {P : Type u} {C : Type v}
