@@ -593,6 +593,28 @@ theorem productTransform_preserves_unit
         from LinearMap.map_add _ _ _]
     exact congr_arg₂ (· + ·) ha hb
 
+/-- **The identity product transformation preserves states.** -/
+theorem productTransform_id_preserves_states
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (G₁ : GPT V₁) (G₂ : GPT V₂)
+    {ρ : V₁ ⊗[ℝ] V₂} (hρ : ρ ∈ (gptTensor G₁ G₂).states) :
+    productTransform (LinearMap.id : V₁ →ₗ[ℝ] V₁)
+                     (LinearMap.id : V₂ →ₗ[ℝ] V₂) ρ
+    ∈ (gptTensor G₁ G₂).states := by
+  rw [productTransform_id]
+  exact hρ
+
+/-- **The identity product transformation preserves the unit.** -/
+@[simp] theorem productTransform_id_preserves_unit
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (G₁ : GPT V₁) (G₂ : GPT V₂) :
+    (tensorUnit G₁ G₂).comp (productTransform (LinearMap.id : V₁ →ₗ[ℝ] V₁)
+                                              (LinearMap.id : V₂ →ₗ[ℝ] V₂))
+    = tensorUnit G₁ G₂ := by
+  rw [productTransform_id, LinearMap.comp_id]
+
 
 end GPT
 end Perspectival
