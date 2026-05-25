@@ -151,6 +151,21 @@ theorem bracketing_yields_reversibility {P : Type u} {C : Type v}
     {R₁ R₂ : Reality P C} (h : BracketedTransition R₁ R₂) :
     BracketedTransition R₂ R₁ := bracketed_symm h
 
+/-- **Bracketed iff mutually-successor.** A transition is bracketed
+iff it is reversible in the `RealitySuccessor` ordering. This is the
+formal statement of "bracketing = reversibility in the time-arrow
+ordering." -/
+theorem bracketed_iff_mutual_successor {P : Type u} {C : Type v}
+    (R₁ R₂ : Reality P C) :
+    BracketedTransition R₁ R₂
+    ↔ RealitySuccessor R₁ R₂ ∧ RealitySuccessor R₂ R₁ := by
+  constructor
+  · intro h
+    exact ⟨fun m h_act => (h m).mp h_act, fun m h_act => (h m).mpr h_act⟩
+  · rintro ⟨h₁₂, h₂₁⟩
+    intro m
+    exact ⟨h₁₂ m, h₂₁ m⟩
+
 /-! ## The Tier A / Tier B seam
 
 The framework's distinctive content lives at the SEAMS — where Tier A
