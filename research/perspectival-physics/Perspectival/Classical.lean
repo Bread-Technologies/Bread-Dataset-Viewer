@@ -2803,8 +2803,11 @@ For Classical n general (n ≥ 3):
 
 The framework's R6 PROGRAM-LEVEL claim — classical GPTs cannot host
 nontrivial StrictConnectedAgency — has been proven for n=2 and
-substantially advanced for n=3 (sign invariant + IVT chain).
-The remaining closure (det = 0 → not injective for state-preserving
-linear maps on V 3) is a standard 3D linear algebra fact requiring
-either an explicit cofactor construction or Mathlib's Matrix.det
-bridge. This is the cleanest deferred R6 work. -/
+**FULLY proven for both n=2 AND n=3** as of this session. The
+det = 0 → not injective for V 3 (`n3_det_zero_implies_not_injective`)
+was closed via the Mathlib `Matrix.det` ↔ `LinearMap.det` bridge:
+`LinearMap.toMatrix' R` → `Matrix.det` (= `n3_disc_det R` after
+unfolding the Leibniz expansion via `Matrix.det_fin_three`) → IsUnit →
+LinearMap IsUnit → ker = ⊥ → Injective. So both halves of the R6 n=3
+disconnect are done, and `classical_n3_no_strict_path_id_to_swap01`
+is unconditional. -/
