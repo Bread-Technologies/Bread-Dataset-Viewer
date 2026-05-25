@@ -3427,6 +3427,34 @@ theorem loopPower_npow_equivalent {P : Type u} {C : Type v}
     DecoherenceEquivalent (loopPower ch n) (ch ^ n) :=
   loopPower_npow_count_agree ch n
 
+/-- **Power addition law on loops (length).** Inherits from Mathlib's
+`pow_add` via the Monoid instance. -/
+theorem loop_pow_add_length {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : ℕ) :
+    (ch ^ (m + n)).length = (ch ^ m).length + (ch ^ n).length := by
+  rw [pow_add, loop_length_mul]
+
+/-- **Power addition law on loops (tierAEventCount).** -/
+theorem loop_pow_add_tierAEventCount {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : ℕ) :
+    tierAEventCount (ch ^ (m + n))
+      = tierAEventCount (ch ^ m) + tierAEventCount (ch ^ n) := by
+  rw [pow_add, loop_tierAEventCount_mul]
+
+/-- **Power multiplication law on loops (length).** Inherits from
+Mathlib's `pow_mul`: (ch ^ m) ^ n has length m*n*ch.length. -/
+theorem loop_pow_mul_length {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : ℕ) :
+    ((ch ^ m) ^ n).length = (ch ^ (m * n)).length := by
+  rw [← pow_mul]
+
+/-- **Power composition law on loops (count).** Since count is always
+0 for loop powers, this trivially holds. -/
+theorem loop_pow_mul_tierAEventCount {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : ℕ) :
+    tierAEventCount ((ch ^ m) ^ n) = tierAEventCount (ch ^ (m * n)) := by
+  rw [← pow_mul]
+
 /-- **Worked example: loop monoid power notation on Bool.** Showing
 that the Mathlib `Monoid` `^` notation works on loop chains. -/
 example (R : Reality Bool Bool) :
