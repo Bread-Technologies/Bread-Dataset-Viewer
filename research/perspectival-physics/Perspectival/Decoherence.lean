@@ -5303,6 +5303,17 @@ theorem quick_ref_rate_def {P : Type u} {C : Type v}
     {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
     actualizationRate ch = (ch.actualizationCount, ch.length) := rfl
 
+/-- **Quick reference: complexity = 2*count + bracketed.** -/
+theorem quick_ref_complexity_def {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    trajectoryComplexity ch = 2 * ch.actualizationCount + ch.bracketedCount := rfl
+
+/-- **Quick reference: DecoherenceEquivalent iff count equal.** -/
+theorem quick_ref_DE_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    DecoherenceEquivalent ch₁ ch₂ ↔
+    ch₁.actualizationCount = ch₂.actualizationCount := Iff.rfl
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
