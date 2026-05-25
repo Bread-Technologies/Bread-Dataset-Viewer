@@ -93,16 +93,20 @@ beyond disjoint union, or non-finite Wantable structure. Composition
 behaviour is fully verified at the bridge level:
 `finrank_V_prod_eq_mul`, `finrank_V_sum_eq_add`.
 
-**R6 n = 2 Birkhoff disconnect.** A new theorem proved this session.
-On the classical 2-outcome GPT, no continuous path of bijective
-state-preserving linear maps connects `id` and `swap`. Proved
-hypothesis-free (auto-continuity is derived from the joint continuity
-field of the `StrictReversiblePath` structure) at
-`Classical.lean :: classical_n2_strict_reversible_path_id_swap_empty`,
+**R6 Birkhoff disconnect for ALL n ≥ 2.** Proven this session.
+On any classical n-outcome GPT (n ≥ 2), no continuous path of bijective
+state-preserving linear maps connects `id` and the (01)-transposition.
+`classical_general_no_strict_path_id_to_swap01` is the headline theorem.
+Generalized via `swap01LinGen` (= `Matrix.toLin' ∘ Equiv.Perm.permMatrix ℝ ∘ Equiv.swap`)
+with one-line det computation through `LinearMap.det_toLin' +
+Matrix.det_permutation + Equiv.Perm.sign_swap`. The n=2/3/4/5 cases are
+named specializations. Hypothesis-free (auto-continuity is derived from
+the joint continuity field of the `StrictReversiblePath` structure).
+For n=2 specifically: `classical_n2_strict_reversible_path_id_swap_empty`
 with a determinant-based IVT argument
 (`n2_disc_det`, `n2_disc_det_id = 1`, `n2_disc_det_swap = -1`,
-`ivt_path_one_to_neg_one`, and the state-preservation argument
-`n2_disc_det_zero_implies_not_injective`). The strict-reversible group
+`ivt_path_one_to_neg_one`, `n2_disc_det_zero_implies_not_injective`).
+The strict-reversible group
 of `Classical n=2` is therefore at least *two-component* —
 Boolean swap is genuinely disconnected from identity through bijective
 state-preserving dynamics. This is the framework's first formally
