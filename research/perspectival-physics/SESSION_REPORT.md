@@ -595,14 +595,28 @@ the bracketed dynamics acts.
 
 ### Build verification (this session segment)
 
-- `lake build Perspectival.TierA`: ✓ **VERIFIED**.
-- `lake build Perspectival.TierB`: ✓ **VERIFIED**.
-- `lake build Perspectival.Continuity` + `Dichotomy`: NOT VERIFIED in
-  this session (Mathlib cache unavailable in this environment;
-  full Mathlib build from source exceeds session-wallclock). All
-  added Continuity / Dichotomy content uses small additive patterns
-  consistent with existing module structure; should compile when
-  the Mathlib cache is available.
+All v2-modified modules build cleanly from source:
+
+- `lake build Perspectival.TierA`: ✓ **VERIFIED** (all v2 additions
+  including actualizeAt, past_actualizeAt_disjunction,
+  past_actualizeAt_already_act, actualizeAt_many_to_one,
+  actualizeAt_comm, actualizeAt_idempotent, past_subset_past_actualizeAt).
+- `lake build Perspectival.TierB`: ✓ **VERIFIED** (all v2 additions
+  including bracketed_iff_mutual_successor, DefiniteConfig ≃ Fin n,
+  permActOnDefinite_via_equiv, RealityChain + bracketed_chain_bracketed,
+  actualizeAt_atSeam / not_bracketed / asActualizationMap, etc).
+- `lake build Perspectival.Continuity`: ✓ **VERIFIED**
+  (SmoothConnectedAgency.ofStrict + R7_Conjecture_of_strict).
+- `lake build Perspectival.Dichotomy`: ✓ **VERIFIED**
+  (v2_bare_Tier_B_is_classical_excluded, v2_QM_from_richer_Tier_B,
+  R7_Conjecture_holds_on_circleGPT / _qubitGPT,
+  framework_v2_extended_certificate, etc).
+
+Build performed from source against Mathlib v4.29.1 in the local
+environment without cache (cache unavailable in this environment;
+full transitive Mathlib build executed). All warnings are pre-existing
+linter notices about unused-variables, deprecated `push_neg`, and
+unused simp args in non-v2 code paths.
 
 ### v2 entropy addendum (received mid-session)
 
