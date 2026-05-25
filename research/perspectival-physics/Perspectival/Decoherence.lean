@@ -3043,6 +3043,36 @@ theorem tier_A_equality_iff_coherent_extension {P : Type u} {C : Type v}
   rw [tierAEventCount_append]
   omega
 
+/-- **Rate's count is invariant under DecoherenceEquivalent.** But
+the length component may differ. -/
+theorem rate_count_invariant_under_equivalence {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂) :
+    (actualizationRate ch₁).1 = (actualizationRate ch₂).1 := h
+
+/-- **Rate length is NOT invariant under DecoherenceEquivalent in
+general.** Witnesses: nil chain vs singleton bracketed chain at R
+both have count 0 but different lengths (0 vs 1). -/
+theorem rate_length_not_invariant_under_equivalence :
+    ∃ (P : Type) (C : Type) (R : Reality P C)
+      (ch₁ ch₂ : RealityChain' P C R R),
+    DecoherenceEquivalent ch₁ ch₂ ∧
+    (actualizationRate ch₁).2 ≠ (actualizationRate ch₂).2 := by
+  refine ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+          RealityChain'.nil _,
+          RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+          ?_, ?_⟩
+  · -- Both coherent (count = 0).
+    show (RealityChain'.nil _).actualizationCount =
+        (RealityChain'.singleton _).actualizationCount
+    rw [RealityChain'.singleton_actualizationCount]; rfl
+  · -- Different lengths.
+    show (RealityChain'.nil _).length ≠ (RealityChain'.singleton _).length
+    rw [RealityChain'.singleton_length]
+    show (0 : ℕ) ≠ 1
+    omega
+
 /-- **Strict-monotonicity certificate.** Bundles the strict/equality
 conditions on tierAEventCount under chain extension. -/
 theorem tier_A_strict_monotonicity_certificate :
