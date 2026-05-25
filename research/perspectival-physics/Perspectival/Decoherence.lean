@@ -3516,6 +3516,29 @@ theorem refl_loop_pow_length_exact {P : Type u} {C : Type v}
   rw [RealityChain'.singleton_length]
   omega
 
+/-- **Loop power bracketed count.** -/
+theorem loop_npow_bracketedCount {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    (ch ^ n).bracketedCount = n * ch.bracketedCount := by
+  have h_loop : ch.bracketedCount = ch.length := loop_chain_all_bracketed ch
+  have h_pow_brk : (ch ^ n).bracketedCount = (ch ^ n).length := by
+    have h_pow_loop : (ch ^ n).bracketedCount = (ch ^ n).length :=
+      loop_chain_all_bracketed (ch ^ n)
+    exact h_pow_loop
+  rw [h_pow_brk, loop_npow_length, h_loop]
+
+/-- **Loop power complexity.** -/
+theorem loop_npow_complexity {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    trajectoryComplexity (ch ^ n) = n * ch.length := by
+  unfold trajectoryComplexity
+  have h_pow_zero : (ch ^ n).actualizationCount = 0 :=
+    loop_npow_tierAEventCount ch n
+  have h_pow_brk : (ch ^ n).bracketedCount = n * ch.bracketedCount :=
+    loop_npow_bracketedCount ch n
+  rw [h_pow_zero, h_pow_brk, loop_chain_all_bracketed ch]
+  omega
+
 /-- **Worked example: loop monoid power notation on Bool.** Showing
 that the Mathlib `Monoid` `^` notation works on loop chains. -/
 example (R : Reality Bool Bool) :
