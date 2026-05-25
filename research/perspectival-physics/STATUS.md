@@ -616,6 +616,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.chain_monoid_axioms_certificate` — full chain monoid axioms bundle | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.loop_count_commutative` — count commutativity on loops | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.DecoherenceEquivalent_decidable`, `DecoherenceEquivalent_setoid`, `DecoherenceQuotient`, `_count`, `count_injective`, `loop_quotient_trivial` — quotient structure | `Decoherence.lean` | ✓ (a) **quotient algebra** |
+| `Decoherence.DecoherenceQuotient.append`, `append_mk`, `count_append`, `append_assoc`, `nil_append`, `append_nil`, `decoherence_quotient_algebra_certificate`, `decoherenceEquivalent_append_congr` — quotient append descends from chain append via `Quotient.map₂`, with count compositional morphism, associativity, two-sided nil identity | `Decoherence.lean` | ✓ (a) **quotient append + categorical structure** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
