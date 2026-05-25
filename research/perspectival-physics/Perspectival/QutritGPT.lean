@@ -976,5 +976,24 @@ noncomputable instance qutritHasOneParameterAgency :
     Perspectival.Continuity.HasOneParameterAgency qutritGPT where
   family := rotL3OneParameterFamily
 
+/-! ## Deferred: remaining Gell-Mann generators
+
+Three of the eight Gell-Mann generators (rotL1, rotL2, rotL3) are
+implemented. The remaining five (λ₄, λ₅, λ₆, λ₇, λ₈) follow the same
+pattern — each is a rotation in a specific pair of Bloch coordinates:
+
+  λ₄: pair (ρ 0, ρ 4)
+  λ₅: pair (ρ 0, ρ 5)
+  λ₆: pair (ρ 1, ρ 6)
+  λ₇: pair (ρ 1, ρ 7)
+  λ₈: pair (ρ 2, ρ 5)  (the diagonal generator; specific to SU(3))
+
+Adding these is mechanical — each requires the same eleven theorems
+(apply_*, _zero, _preserves_*, _continuous, _comp, _bijective,
+Reversible/StrictReversible packaging). DEFERRED: the structural
+content (three independent generators forming a non-abelian subgroup)
+is established with rotL1, rotL2, rotL3; full SU(3) coverage is
+mechanical extension. -/
+
 end QutritGPT
 end Perspectival
