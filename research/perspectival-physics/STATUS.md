@@ -584,6 +584,13 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.loop_conjugation_preserves_count`, `_equivalent`, `loop_submonoid_trivial_action` — loop submonoid acts trivially on classes | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.decoherence_class_partition`, `loop_class_concentration`, `decoherence_class_partition_certificate` — DecoherenceEquivalent classes indexed by counts | `Decoherence.lean` | ✓ (a) **class partition** |
 | `Decoherence.loop_prepend_density_changes_length`, `_density_differs_when_positive_length` — density refines DecoherenceEquivalent under loop insertion | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.coherent_decompose`, `coherent_iff_both_factors_coherent`, `positive_count_iff_factor_positive`, `coherent_decomposition_certificate` — chain factorization preserves coherent status | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.rate_count_eq_length_iff_pure_decoherent`, `rate_count_eq_zero_iff_coherent` — iff bound characterizations | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.bracketedCount_monoid_morphism`, `length_monoid_morphism`, `trio_of_morphisms_certificate`, `trio_sum_law` — all three measures as monoid morphisms | `Decoherence.lean` | ✓ (a) **trio algebra** |
+| `Decoherence.chain_monoid_axioms_certificate` — full chain monoid axioms bundle | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.loop_count_commutative` — count commutativity on loops | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.DecoherenceEquivalent_decidable`, `DecoherenceEquivalent_setoid`, `DecoherenceQuotient`, `_count`, `count_injective`, `loop_quotient_trivial` — quotient structure | `Decoherence.lean` | ✓ (a) **quotient algebra** |
+| `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
