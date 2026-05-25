@@ -3941,6 +3941,39 @@ theorem loop_identity_decomposition {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) :
     ch = 1 * ch := (one_mul ch).symm
 
+/-- **Loop monoid action on chains starting at R (count preservation).**
+For any loop `g : R → R` and any chain `ch : R → R'`, the count of
+`g.append ch` equals the count of `ch`. This expresses that loops
+"act trivially" on counts. -/
+theorem loop_left_action_count {P : Type u} {C : Type v}
+    {R R' : Reality P C}
+    (g : RealityChain' P C R R) (ch : RealityChain' P C R R') :
+    tierAEventCount (g.append ch) = tierAEventCount ch :=
+  loop_prepend_preserves_count g ch
+
+/-- **Loop monoid action on chains ending at R (count preservation).**
+For any loop `g : R → R` and any chain `ch : R' → R`, the count of
+`ch.append g` equals the count of `ch`. -/
+theorem loop_right_action_count {P : Type u} {C : Type v}
+    {R R' : Reality P C}
+    (ch : RealityChain' P C R' R) (g : RealityChain' P C R R) :
+    tierAEventCount (ch.append g) = tierAEventCount ch :=
+  loop_append_preserves_count ch g
+
+/-- **Loop action certificate.** Bundles the loop-action content:
+loops act trivially (on counts) from either the left or the right. -/
+theorem loop_action_certificate :
+    -- Left action preserves count.
+    (∀ {P : Type} {C : Type} {R R' : Reality P C}
+        (g : RealityChain' P C R R) (ch : RealityChain' P C R R'),
+      tierAEventCount (g.append ch) = tierAEventCount ch) ∧
+    -- Right action preserves count.
+    (∀ {P : Type} {C : Type} {R R' : Reality P C}
+        (ch : RealityChain' P C R' R) (g : RealityChain' P C R R),
+      tierAEventCount (ch.append g) = tierAEventCount ch) :=
+  ⟨fun g ch => loop_left_action_count g ch,
+   fun ch g => loop_right_action_count ch g⟩
+
 /-- **Three-level anti-realism witness.** The framework's anti-realism
 content holds at multiple levels:
 1. STATUS (path-independent): coherence depends only on endpoints.
