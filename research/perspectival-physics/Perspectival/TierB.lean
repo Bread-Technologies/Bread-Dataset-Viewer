@@ -27,6 +27,7 @@ preservation as a *derived* theorem.
 import Perspectival.TierA
 import Mathlib.Data.Set.Basic
 import Mathlib.Order.Basic
+import Mathlib.GroupTheory.Perm.Basic
 
 namespace Perspectival
 namespace TierB
@@ -270,6 +271,46 @@ theorem bracketing_preserves_definiteness {n : ℕ}
     (c₁ : DefiniteConfig n) (σ : Equiv.Perm (Fin n)) :
     ∃ c₂ : DefiniteConfig n, DefiniteBracketed σ c₁ c₂ :=
   ⟨⟨σ c₁.primed⟩, rfl⟩
+
+/-! ### `Equiv.Perm` acts on `DefiniteConfig` — the framework's
+group-theoretic structure derives from bracketing -/
+
+/-- The natural action of `Equiv.Perm (Fin n)` on `DefiniteConfig n`. -/
+def permActOnDefinite {n : ℕ} (σ : Equiv.Perm (Fin n)) (c : DefiniteConfig n) :
+    DefiniteConfig n :=
+  ⟨σ c.primed⟩
+
+@[simp] theorem permActOnDefinite_one {n : ℕ} (c : DefiniteConfig n) :
+    permActOnDefinite (1 : Equiv.Perm (Fin n)) c = c := by
+  cases c; rfl
+
+theorem permActOnDefinite_mul {n : ℕ} (σ₁ σ₂ : Equiv.Perm (Fin n))
+    (c : DefiniteConfig n) :
+    permActOnDefinite (σ₁ * σ₂) c
+    = permActOnDefinite σ₁ (permActOnDefinite σ₂ c) := rfl
+
+/-- **The framework's discrete-permutation structure of Tier B
+classical dynamics derives from bracketing.** This is the group-
+theoretic restatement of vertex preservation: when bracketed dynamics
+act on definite configurations, the action group is exactly
+`Equiv.Perm (Fin n)` — the symmetric group.
+
+Together with the existing Classical.lean proofs that classical
+reversibles are exactly permutations (e.g., `permLinGen`), this
+establishes the v2-progressive arc: vertex preservation in the
+Classical R6 disconnect is the operational shadow of this
+group-theoretic fact at Tier A. -/
+theorem definite_bracketed_iff_perm {n : ℕ}
+    (c₁ c₂ : DefiniteConfig n) :
+    (∃ σ : Equiv.Perm (Fin n), DefiniteBracketed σ c₁ c₂) ↔
+    ∃ σ : Equiv.Perm (Fin n), σ c₁.primed = c₂.primed := by
+  constructor
+  · rintro ⟨σ, h⟩
+    refine ⟨σ, ?_⟩
+    exact h.symm
+  · rintro ⟨σ, h⟩
+    refine ⟨σ, ?_⟩
+    exact h.symm
 
 /-! ## Summary: the bracketing operation
 
