@@ -5550,6 +5550,20 @@ theorem quick_ref_complexity_eq_twice_iff {P : Type u} {C : Type v}
     trajectoryComplexity ch = 2 * ch.length ↔ ch.bracketedCount = 0 :=
   complexity_eq_twice_length_iff_pure_decoherent ch
 
+/-- **Quick reference: coherent regime rate.** -/
+theorem quick_ref_coherent_rate {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    actualizationRate ch = (0, ch.length) :=
+  coherent_regime ch h
+
+/-- **Quick reference: pure-decoherent regime rate.** -/
+theorem quick_ref_pure_decoherent_rate {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.bracketedCount = 0) :
+    actualizationRate ch = (ch.length, ch.length) :=
+  decoherence_regime ch h
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
