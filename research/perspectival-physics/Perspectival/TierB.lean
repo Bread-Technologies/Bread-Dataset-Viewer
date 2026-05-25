@@ -399,6 +399,27 @@ theorem bracketed_implies_successor {P : Type u} {C : Type v}
     RealitySuccessor R₁ R₂ :=
   fun m h_act => (h m).mp h_act
 
+/-- **A `TrajectoryStep'` is a strengthened TrajectoryStep that also
+carries a RealitySuccessor witness.** Useful for downstream reasoning
+where the chain must track the cumulative time-ordering. The
+elementary actualizeAt-based construction always satisfies this
+strengthening (see `actualizeAt_strict_step` below). -/
+structure TrajectoryStep' (P : Type u) (C : Type v)
+    (R₁ R₂ : Reality P C) where
+  step : TrajectoryStep P C R₁ R₂
+  is_successor : RealitySuccessor R₁ R₂
+
+/-- **Constructor from bracketed transition.** Any bracketed transition
+yields a TrajectoryStep' since bracketed implies successor. -/
+def TrajectoryStep'.bracketed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : BracketedTransition R₁ R₂) :
+    TrajectoryStep' P C R₁ R₂ where
+  step := TrajectoryStep.bracketed h
+  is_successor := bracketed_implies_successor h
+
+-- (Constructor `actualizeAt_strict_step` defined later, after
+-- `actualizeAt_atSeam` is available.)
+
 /-! ### Reality chains: multi-step trajectories
 
 A `RealityChain R₁ R_n` is a finite sequence of `TrajectoryStep`s
@@ -596,6 +617,18 @@ def actualizeAt_asActualizationMap {P : Type u} {C : Type v}
   after := actualizeAt R m
   is_successor := actualizeAt_is_successor R m
   nontrivial := ⟨m, h_pot, by simp⟩
+
+/-- **`TrajectoryStep'` from pointwise actualization.** Pointwise
+actualization at a potential meeting yields a TrajectoryStep' (the
+strengthened TrajectoryStep that carries a RealitySuccessor witness)
+via `actualizeAt_is_successor`. -/
+def actualizeAt_strict_step {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    TrajectoryStep' P C R (actualizeAt R m) where
+  step := TrajectoryStep.actualization (actualizeAt_atSeam R m h_pot)
+  is_successor := actualizeAt_is_successor R m
 
 /-- **A bracketed step preserves both potential and actualized status
 of every meeting.** Restated: the entire meeting-status function is
