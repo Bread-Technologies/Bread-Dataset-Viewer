@@ -2059,6 +2059,35 @@ theorem pure_decoherent_iff_all_active {P : Type u} {C : Type v}
   have h := ch.counts_sum
   omega
 
+/-- **Collapse = single actualization step.** The framework's reading
+of wave function collapse: the smallest non-trivial actualization
+chain. Has count 1, length 1, complexity 2. This is the framework's
+formal-level reading of "measurement is the smallest unit of
+irreversibility". -/
+theorem collapse_is_singleton_actualization {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    let collapse_chain : RealityChain' P C R (actualizeAt R m) :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    activeStepCount collapse_chain = 1
+      ∧ passiveStepCount collapse_chain = 0
+      ∧ collapse_chain.length = 1
+      ∧ trajectoryComplexity collapse_chain = 2 := by
+  intro collapse_chain
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · show (RealityChain'.singleton _).actualizationCount = 1
+    rw [RealityChain'.singleton_actualizationCount]; rfl
+  · show (RealityChain'.singleton _).bracketedCount = 0
+    rw [RealityChain'.singleton_bracketedCount]; rfl
+  · show (RealityChain'.singleton _).length = 1
+    rw [RealityChain'.singleton_length]
+  · show 2 * (RealityChain'.singleton _).actualizationCount
+        + (RealityChain'.singleton _).bracketedCount = 2
+    rw [RealityChain'.singleton_actualizationCount,
+        RealityChain'.singleton_bracketedCount]
+    rfl
+
 /-- **Active/passive partition certificate.** -/
 theorem active_passive_certificate :
     -- (a) Partition law.
