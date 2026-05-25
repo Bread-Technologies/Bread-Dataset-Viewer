@@ -5314,6 +5314,22 @@ theorem quick_ref_DE_iff {P : Type u} {C : Type v}
     DecoherenceEquivalent ch₁ ch₂ ↔
     ch₁.actualizationCount = ch₂.actualizationCount := Iff.rfl
 
+/-- **Quick reference: loop mul = append.** -/
+theorem quick_ref_loop_mul_append {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    ch₁ * ch₂ = ch₁.append ch₂ := rfl
+
+/-- **Quick reference: loop 1 = nil.** -/
+theorem quick_ref_loop_one_nil {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    (1 : RealityChain' P C R R) = RealityChain'.nil R := rfl
+
+/-- **Quick reference: loop pow has count 0.** -/
+theorem quick_ref_loop_pow_count {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    tierAEventCount (ch ^ n) = 0 :=
+  loop_npow_tierAEventCount ch n
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
