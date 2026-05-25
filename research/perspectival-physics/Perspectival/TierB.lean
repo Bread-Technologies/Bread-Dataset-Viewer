@@ -492,6 +492,10 @@ theorem RealityChain.zero_actualization_all_bracketed {P : Type u} {C : Type v} 
           -- An actualization step contributes 1, contradicting zero count.
           simp [RealityChain.actualizationCount] at h_zero
 
+-- (Stronger form `bracketed_only_implies_eq` uses `bracketed_iff_eq`
+-- which is defined later in this file; see worked example at the
+-- end of the module using both pieces together.)
+
 /-! **Note on chain successor properties.** The trajectory-step
 relation's actualization arm uses `AtSeam` only (a witness of *some*
 new actualization). To conclude `RealitySuccessor R₁ R₂` from a chain,
@@ -621,6 +625,28 @@ theorem bracketed_iff_eq {P : Type u} {C : Type v}
   · intro h_eq
     rw [h_eq]
     exact bracketed_refl R₂
+
+/-- **A chain whose every step is bracketed yields R₁ = R₂.** Chains
+of bracketed-only steps collapse the entire trajectory to equality on
+the Reality function — a v2-architectural restatement that bare Tier B
+(bracketed-only) is trivial on the Reality function level. -/
+theorem RealityChain.bracketed_only_implies_eq {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂),
+      ch.actualizationCount = 0 → R₁ = R₂
+  | _, _, RealityChain.nil _ => fun _ => rfl
+  | _, _, RealityChain.cons step rest => by
+      intro h_zero
+      cases step with
+      | bracketed h_br =>
+          have h_rest_zero : rest.actualizationCount = 0 := by
+            simp [RealityChain.actualizationCount] at h_zero
+            exact h_zero
+          have h_eq_step := (bracketed_iff_eq _ _).mp h_br
+          have h_eq_rest :=
+            RealityChain.bracketed_only_implies_eq rest h_rest_zero
+          rw [h_eq_step]; exact h_eq_rest
+      | actualization _ =>
+          simp [RealityChain.actualizationCount] at h_zero
 
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
