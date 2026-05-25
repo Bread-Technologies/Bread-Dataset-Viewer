@@ -326,6 +326,16 @@ theorem coherent_and_decoherent_distinct_endpoints
   have h_ne : R₁ ≠ R₂ := ch_deco.pos_count_implies_ne h_deco
   exact h_ne h_eq
 
+/-- **Path-independent coherence.** Given two strict chains between
+the same endpoints, their coherence statuses (count = 0 or > 0)
+agree. This is the framework's expression of "coherence is a
+property of the endpoint pair, not the trajectory taken." -/
+theorem path_independent_coherence {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0 := by
+  rw [← ch₁.eq_iff_zero_count, ← ch₂.eq_iff_zero_count]
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
