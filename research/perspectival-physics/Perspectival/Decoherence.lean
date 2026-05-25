@@ -784,6 +784,16 @@ theorem decoherence_monotonicity_certificate :
    fun ch₁ ch₂ => length_monotone_under_append ch₁ ch₂,
    fun ch₁ ch₂ => complexity_monotone_under_append ch₁ ch₂⟩
 
+/-- **Concatenating coherent extends past while preserving coherence.** -/
+theorem coherent_append_preserves_past {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h_co : (ch₁.append ch₂).actualizationCount = 0) :
+    past R₁ = past R₃ := by
+  -- The combined chain is coherent, so R₁ = R₃.
+  have h_eq : R₁ = R₃ := (ch₁.append ch₂).zero_actualization_implies_eq h_co
+  rw [h_eq]
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
