@@ -62,7 +62,9 @@ Status (this file):
 import Perspectival.GPT
 import Perspectival.Continuity
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 import Mathlib.Analysis.Convex.Basic
+import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.UnitInterval
 import Mathlib.LinearAlgebra.FiniteDimensional.Defs
@@ -1054,6 +1056,394 @@ theorem blochPlusZ_in_states : blochPlusZ ∈ states := by
 exhibiting the complex-quantum point of the (classical / rebit / qubit /
 quaternionic) trichotomy. -/
 theorem qubit_hardy_signature : Module.finrank ℝ V = 4 := qubit_hardy_K
+
+/-! ## Bloch-sphere boundary points and the pure-state classification
+
+The full pure-state classification for the qubit GPT: the pure states
+of `qubitGPT` are exactly the points of the Bloch sphere
+`{ (x, y, z, 1) : x² + y² + z² = 1 }`.
+
+This is the 3D analog of the CircleGPT `pure_state_classification`. The
+proof has two directions:
+
+  ✓ `blochSphere_point_is_pure_state` (easy direction): every parametric
+    Bloch-sphere point `blochPoint x y z` with `x² + y² + z² = 1` is a
+    pure state. Strict-convexity (Jensen-equality) on the 3D ball.
+  ✓ `pure_state_implies_blochSphere` (hard direction): every pure state
+    of `qubitGPT` arises as some `blochPoint x y z` with
+    `x² + y² + z² = 1`. Proof: a strict-interior point can be written
+    as the midpoint of two distinct nearby states (perturbing the
+    first coordinate), so extremality forces the squared norm to be 1.
+-/
+
+/-- The Bloch-sphere boundary point as a state, for `(x, y, z)` with
+`x² + y² + z² = 1`. This is just `blochPoint x y z` packaged with the
+unit-norm hypothesis; the existing `blochPoint` already provides the
+lift to `w = 1`. -/
+noncomputable def blochSpherePoint (x y z : ℝ) (_h : x ^ 2 + y ^ 2 + z ^ 2 = 1)
+    : V := blochPoint x y z
+
+@[simp] theorem blochSpherePoint_apply_zero (x y z : ℝ)
+    (h : x ^ 2 + y ^ 2 + z ^ 2 = 1) : blochSpherePoint x y z h 0 = x := rfl
+@[simp] theorem blochSpherePoint_apply_one (x y z : ℝ)
+    (h : x ^ 2 + y ^ 2 + z ^ 2 = 1) : blochSpherePoint x y z h 1 = y := rfl
+@[simp] theorem blochSpherePoint_apply_two (x y z : ℝ)
+    (h : x ^ 2 + y ^ 2 + z ^ 2 = 1) : blochSpherePoint x y z h 2 = z := rfl
+@[simp] theorem blochSpherePoint_apply_three (x y z : ℝ)
+    (h : x ^ 2 + y ^ 2 + z ^ 2 = 1) : blochSpherePoint x y z h 3 = 1 := rfl
+
+/-- A Bloch-sphere boundary point is itself a state. -/
+theorem blochSpherePoint_in_states (x y z : ℝ)
+    (h : x ^ 2 + y ^ 2 + z ^ 2 = 1) : blochSpherePoint x y z h ∈ states := by
+  unfold blochSpherePoint
+  exact blochPoint_in_states x y z (le_of_eq h)
+
+/-! ### Easy direction: every Bloch-sphere point is a pure state -/
+
+/-- **Easy direction:** every Bloch-sphere boundary point
+`blochSpherePoint x y z h` is a pure state of `qubitGPT`.
+
+Strategy: Jensen-equality on `x² + y² + z²`. If `t·a + (1-t)·b` lies on
+the unit Bloch sphere with `a, b ∈ states`, then `a = b = (x, y, z, 1)`. -/
+theorem blochSpherePoint_is_pure_state (x y z : ℝ)
+    (h : x ^ 2 + y ^ 2 + z ^ 2 = 1) :
+    Perspectival.Continuity.PureState qubitGPT
+      (blochSpherePoint x y z h) := by
+  refine ⟨blochSpherePoint_in_states x y z h, ?_, ?_⟩
+  · -- {blochSpherePoint x y z h} ⊆ states
+    intro v hv
+    rw [Set.mem_singleton_iff] at hv
+    rw [hv]
+    exact blochSpherePoint_in_states x y z h
+  · -- Open-segment endpoints lie in {blochSpherePoint x y z h}.
+    rintro p hp q hq r hr ⟨a, b, ha, hb, hab, hpq⟩
+    rw [Set.mem_singleton_iff] at hr
+    rw [Set.mem_singleton_iff]
+    -- r = blochSpherePoint x y z h = a • p + b • q; want p = blochSpherePoint.
+    -- p, q ∈ states.
+    -- (a * p 0 + b * q 0, a * p 1 + b * q 1, a * p 2 + b * q 2)
+    --   = blochSpherePoint x y z h on coords 0, 1, 2.
+    have h0 : a * p 0 + b * q 0 = x := by
+      have hh := congr_fun hpq 0
+      have hr0 : r 0 = x := by rw [hr]; rfl
+      simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hh
+      rw [hr0] at hh
+      linarith
+    have h1 : a * p 1 + b * q 1 = y := by
+      have hh := congr_fun hpq 1
+      have hr1 : r 1 = y := by rw [hr]; rfl
+      simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hh
+      rw [hr1] at hh
+      linarith
+    have h2 : a * p 2 + b * q 2 = z := by
+      have hh := congr_fun hpq 2
+      have hr2 : r 2 = z := by rw [hr]; rfl
+      simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hh
+      rw [hr2] at hh
+      linarith
+    -- ‖a p + b q‖² = 1.
+    have hnormeq :
+        (a * p 0 + b * q 0) ^ 2 + (a * p 1 + b * q 1) ^ 2
+          + (a * p 2 + b * q 2) ^ 2 = 1 := by
+      rw [h0, h1, h2]; exact h
+    -- Jensen identity:
+    --   a·(‖p‖²) + b·(‖q‖²) − ‖ap+bq‖²
+    --     = a·b·((p0−q0)² + (p1−q1)² + (p2−q2)²)
+    have hjensen :
+        a * (p 0 ^ 2 + p 1 ^ 2 + p 2 ^ 2)
+          + b * (q 0 ^ 2 + q 1 ^ 2 + q 2 ^ 2)
+          - ((a * p 0 + b * q 0) ^ 2 + (a * p 1 + b * q 1) ^ 2
+              + (a * p 2 + b * q 2) ^ 2)
+        = a * b * ((p 0 - q 0) ^ 2 + (p 1 - q 1) ^ 2 + (p 2 - q 2) ^ 2) := by
+      have hb_eq : b = 1 - a := by linarith
+      rw [hb_eq]; ring
+    have h_psq : p 0 ^ 2 + p 1 ^ 2 + p 2 ^ 2 ≤ 1 := hp.2
+    have h_qsq : q 0 ^ 2 + q 1 ^ 2 + q 2 ^ 2 ≤ 1 := hq.2
+    -- a·‖p‖² + b·‖q‖² ≤ a + b = 1.
+    have h_upper :
+        a * (p 0 ^ 2 + p 1 ^ 2 + p 2 ^ 2)
+          + b * (q 0 ^ 2 + q 1 ^ 2 + q 2 ^ 2) ≤ 1 := by
+      have h1' : a * (p 0 ^ 2 + p 1 ^ 2 + p 2 ^ 2) ≤ a * 1 :=
+        mul_le_mul_of_nonneg_left h_psq ha.le
+      have h2' : b * (q 0 ^ 2 + q 1 ^ 2 + q 2 ^ 2) ≤ b * 1 :=
+        mul_le_mul_of_nonneg_left h_qsq hb.le
+      linarith
+    -- Combined: a·b·(sum of squares) ≤ 0.
+    have hle_zero :
+        a * b * ((p 0 - q 0) ^ 2 + (p 1 - q 1) ^ 2 + (p 2 - q 2) ^ 2) ≤ 0 := by
+      linarith [hnormeq]
+    -- But a·b > 0 and the sum of squares ≥ 0, so the sum is 0.
+    have hab_pos : 0 < a * b := mul_pos ha hb
+    have h_nn :
+        0 ≤ (p 0 - q 0) ^ 2 + (p 1 - q 1) ^ 2 + (p 2 - q 2) ^ 2 := by
+      have := sq_nonneg (p 0 - q 0)
+      have := sq_nonneg (p 1 - q 1)
+      have := sq_nonneg (p 2 - q 2)
+      linarith
+    have hsum_zero :
+        (p 0 - q 0) ^ 2 + (p 1 - q 1) ^ 2 + (p 2 - q 2) ^ 2 = 0 := by
+      have hprod :
+          a * b * ((p 0 - q 0) ^ 2 + (p 1 - q 1) ^ 2 + (p 2 - q 2) ^ 2) = 0 := by
+        have hnonneg :
+            0 ≤ a * b * ((p 0 - q 0) ^ 2 + (p 1 - q 1) ^ 2 + (p 2 - q 2) ^ 2) :=
+          mul_nonneg hab_pos.le h_nn
+        linarith
+      exact (mul_eq_zero.mp hprod).resolve_left (ne_of_gt hab_pos)
+    -- Each square is 0.
+    have h_sq0_nn : 0 ≤ (p 0 - q 0) ^ 2 := sq_nonneg _
+    have h_sq1_nn : 0 ≤ (p 1 - q 1) ^ 2 := sq_nonneg _
+    have h_sq2_nn : 0 ≤ (p 2 - q 2) ^ 2 := sq_nonneg _
+    have h_sq0 : (p 0 - q 0) ^ 2 = 0 := by linarith
+    have h_sq1 : (p 1 - q 1) ^ 2 = 0 := by linarith
+    have h_sq2 : (p 2 - q 2) ^ 2 = 0 := by linarith
+    have h0_eq : p 0 = q 0 := by
+      have hzero : p 0 - q 0 = 0 :=
+        pow_eq_zero_iff (by norm_num : (2 : ℕ) ≠ 0) |>.mp h_sq0
+      linarith
+    have h1_eq : p 1 = q 1 := by
+      have hzero : p 1 - q 1 = 0 :=
+        pow_eq_zero_iff (by norm_num : (2 : ℕ) ≠ 0) |>.mp h_sq1
+      linarith
+    have h2_eq : p 2 = q 2 := by
+      have hzero : p 2 - q 2 = 0 :=
+        pow_eq_zero_iff (by norm_num : (2 : ℕ) ≠ 0) |>.mp h_sq2
+      linarith
+    -- Also p 3 = 1 = q 3 (from state membership).
+    have h3_eq : p 3 = q 3 := by rw [hp.1, hq.1]
+    -- Now compute p coords.
+    have h0p : p 0 = x := by
+      have heq : a * p 0 + b * q 0 = (a + b) * p 0 := by rw [h0_eq]; ring
+      rw [hab, one_mul] at heq
+      linarith [h0]
+    have h1p : p 1 = y := by
+      have heq : a * p 1 + b * q 1 = (a + b) * p 1 := by rw [h1_eq]; ring
+      rw [hab, one_mul] at heq
+      linarith [h1]
+    have h2p : p 2 = z := by
+      have heq : a * p 2 + b * q 2 = (a + b) * p 2 := by rw [h2_eq]; ring
+      rw [hab, one_mul] at heq
+      linarith [h2]
+    funext i
+    by_cases hi0 : i = 0
+    · subst hi0
+      show p 0 = blochSpherePoint x y z h 0
+      rw [h0p]; rfl
+    · by_cases hi1 : i = 1
+      · subst hi1
+        show p 1 = blochSpherePoint x y z h 1
+        rw [h1p]; rfl
+      · by_cases hi2 : i = 2
+        · subst hi2
+          show p 2 = blochSpherePoint x y z h 2
+          rw [h2p]; rfl
+        · have hi3 : i = 3 := fin4_is_three i hi0 hi1 hi2
+          subst hi3
+          show p 3 = blochSpherePoint x y z h 3
+          rw [hp.1]; rfl
+
+/-! ### Hard direction: every pure state is a Bloch-sphere point -/
+
+/-- **Helper.** Any state ρ with `ρ 0² + ρ 1² + ρ 2² < 1` is NOT
+extreme: we can write ρ as the midpoint of two distinct nearby states
+obtained by perturbing the first coordinate.
+
+This is the 3D analog of `CircleGPT.state_interior_not_extreme`. -/
+private theorem state_interior_not_extreme
+    (ρ : V) (hρ : ρ ∈ states) (hint : ρ 0 ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2 < 1) :
+    ¬ IsExtreme ℝ states {ρ} := by
+  intro hext
+  -- Pick δ := min(1, (1 - ‖ρ‖²)/(2|ρ 0| + 2)) > 0.
+  set c : ℝ := 1 - ρ 0 ^ 2 - ρ 1 ^ 2 - ρ 2 ^ 2 with hc_def
+  have hc_pos : 0 < c := by simp only [hc_def]; linarith
+  set δ : ℝ := min 1 (c / (2 * |ρ 0| + 2)) with hδ_def
+  have h_denom_pos : 0 < 2 * |ρ 0| + 2 := by
+    have := abs_nonneg (ρ 0); linarith
+  have hδ_pos : 0 < δ := by
+    simp only [hδ_def]
+    exact lt_min (by norm_num) (div_pos hc_pos h_denom_pos)
+  have hδ_le_one : δ ≤ 1 := min_le_left _ _
+  have hδ_le_quot : δ ≤ c / (2 * |ρ 0| + 2) := min_le_right _ _
+  -- Define ρ⁺ = (ρ 0 + δ, ρ 1, ρ 2, 1) and ρ⁻ = (ρ 0 - δ, ρ 1, ρ 2, 1).
+  let xp : V := fun i =>
+    if i = 0 then ρ 0 + δ else if i = 1 then ρ 1
+    else if i = 2 then ρ 2 else 1
+  let xm : V := fun i =>
+    if i = 0 then ρ 0 - δ else if i = 1 then ρ 1
+    else if i = 2 then ρ 2 else 1
+  have hxp0 : xp 0 = ρ 0 + δ := by
+    show (if (0:Fin 4) = 0 then _ else _) = _; rfl
+  have hxp1 : xp 1 = ρ 1 := by
+    show (if (1:Fin 4) = 0 then ρ 0 + δ else
+          if (1:Fin 4) = 1 then ρ 1 else
+          if (1:Fin 4) = 2 then ρ 2 else 1) = ρ 1
+    simp
+  have hxp2 : xp 2 = ρ 2 := by
+    show (if (2:Fin 4) = 0 then ρ 0 + δ else
+          if (2:Fin 4) = 1 then ρ 1 else
+          if (2:Fin 4) = 2 then ρ 2 else 1) = ρ 2
+    simp
+  have hxp3 : xp 3 = 1 := by
+    show (if (3:Fin 4) = 0 then ρ 0 + δ else
+          if (3:Fin 4) = 1 then ρ 1 else
+          if (3:Fin 4) = 2 then ρ 2 else 1) = 1
+    rfl
+  have hxm0 : xm 0 = ρ 0 - δ := by
+    show (if (0:Fin 4) = 0 then _ else _) = _; rfl
+  have hxm1 : xm 1 = ρ 1 := by
+    show (if (1:Fin 4) = 0 then ρ 0 - δ else
+          if (1:Fin 4) = 1 then ρ 1 else
+          if (1:Fin 4) = 2 then ρ 2 else 1) = ρ 1
+    simp
+  have hxm2 : xm 2 = ρ 2 := by
+    show (if (2:Fin 4) = 0 then ρ 0 - δ else
+          if (2:Fin 4) = 1 then ρ 1 else
+          if (2:Fin 4) = 2 then ρ 2 else 1) = ρ 2
+    simp
+  have hxm3 : xm 3 = 1 := by
+    show (if (3:Fin 4) = 0 then ρ 0 - δ else
+          if (3:Fin 4) = 1 then ρ 1 else
+          if (3:Fin 4) = 2 then ρ 2 else 1) = 1
+    rfl
+  -- Bound: (ρ 0 ± δ)² + ρ 1² + ρ 2² ≤ 1.
+  have h_bound : ∀ s : ℝ, s = δ ∨ s = -δ →
+      (ρ 0 + s) ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2 ≤ 1 := by
+    intro s hs
+    have hs_abs : |s| ≤ δ := by
+      rcases hs with rfl | rfl
+      · rw [abs_of_pos hδ_pos]
+      · rw [abs_neg]; rw [abs_of_pos hδ_pos]
+    have hs_sq : s ^ 2 ≤ δ ^ 2 := by
+      have : |s| ^ 2 ≤ δ ^ 2 :=
+        pow_le_pow_left₀ (abs_nonneg _) hs_abs 2
+      rwa [sq_abs] at this
+    have h_expand : (ρ 0 + s) ^ 2 = ρ 0 ^ 2 + 2 * ρ 0 * s + s ^ 2 := by ring
+    have h_cross : 2 * ρ 0 * s ≤ 2 * |ρ 0| * δ := by
+      have h_le1 : 2 * ρ 0 * s ≤ 2 * |ρ 0| * |s| := by
+        have h1' : ρ 0 * s ≤ |ρ 0 * s| := le_abs_self _
+        have h2' : |ρ 0 * s| = |ρ 0| * |s| := abs_mul _ _
+        linarith
+      have h_le2 : 2 * |ρ 0| * |s| ≤ 2 * |ρ 0| * δ := by
+        have := mul_le_mul_of_nonneg_left hs_abs
+          (by positivity : (0 : ℝ) ≤ 2 * |ρ 0|)
+        linarith
+      linarith
+    have hδ_sq_le_δ : δ ^ 2 ≤ δ := by
+      have : δ ^ 2 = δ * δ := sq δ
+      rw [this]
+      calc δ * δ ≤ δ * 1 := mul_le_mul_of_nonneg_left hδ_le_one hδ_pos.le
+        _ = δ := mul_one _
+    have h_combine : 2 * |ρ 0| * δ + δ ^ 2 ≤ c := by
+      have hsum_le : 2 * |ρ 0| * δ + δ ≤ (2 * |ρ 0| + 2) * δ := by
+        have habs_nn : 0 ≤ |ρ 0| := abs_nonneg _
+        nlinarith [hδ_pos]
+      have hquot_ineq : (2 * |ρ 0| + 2) * δ ≤ c := by
+        have := mul_le_mul_of_nonneg_left hδ_le_quot h_denom_pos.le
+        rw [mul_div_cancel₀ _ (ne_of_gt h_denom_pos)] at this
+        linarith
+      linarith
+    have h_step1 :
+        (ρ 0 + s) ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2
+          ≤ ρ 0 ^ 2 + 2 * |ρ 0| * δ + δ ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2 := by
+      rw [h_expand]
+      linarith
+    have h_step2 :
+        (ρ 0 + s) ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2
+          ≤ ρ 0 ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2 + c := by linarith
+    have hc_relation :
+        ρ 0 ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2 + c = 1 := by simp only [hc_def]; ring
+    linarith
+  -- Show xp, xm ∈ states.
+  have hxp_in : xp ∈ states := by
+    refine ⟨?_, ?_⟩
+    · rw [hxp3]
+    · rw [hxp0, hxp1, hxp2]
+      have h := h_bound δ (Or.inl rfl)
+      linarith
+  have hxm_in : xm ∈ states := by
+    refine ⟨?_, ?_⟩
+    · rw [hxm3]
+    · rw [hxm0, hxm1, hxm2]
+      have h := h_bound (-δ) (Or.inr rfl)
+      have h_neg : (ρ 0 - δ) = (ρ 0 + (-δ)) := by ring
+      rw [h_neg]
+      linarith
+  -- Midpoint: (1/2)·xp + (1/2)·xm = ρ.
+  have h_mid : ((1 / 2 : ℝ)) • xp + ((1 / 2 : ℝ)) • xm = ρ := by
+    funext i
+    by_cases hi0 : i = 0
+    · subst hi0
+      show (1 / 2 : ℝ) * xp 0 + (1 / 2 : ℝ) * xm 0 = ρ 0
+      rw [hxp0, hxm0]; ring
+    · by_cases hi1 : i = 1
+      · subst hi1
+        show (1 / 2 : ℝ) * xp 1 + (1 / 2 : ℝ) * xm 1 = ρ 1
+        rw [hxp1, hxm1]; ring
+      · by_cases hi2 : i = 2
+        · subst hi2
+          show (1 / 2 : ℝ) * xp 2 + (1 / 2 : ℝ) * xm 2 = ρ 2
+          rw [hxp2, hxm2]; ring
+        · have hi3 : i = 3 := fin4_is_three i hi0 hi1 hi2
+          subst hi3
+          show (1 / 2 : ℝ) * xp 3 + (1 / 2 : ℝ) * xm 3 = ρ 3
+          rw [hxp3, hxm3, hρ.1]; ring
+  -- ρ ∈ openSegment ℝ xp xm.
+  have h_in_open_seg : ρ ∈ openSegment ℝ xp xm :=
+    ⟨1 / 2, 1 / 2, by norm_num, by norm_num, by norm_num, h_mid⟩
+  -- By extremality of {ρ}, xp = ρ.
+  have hxp_eq : xp ∈ ({ρ} : Set V) :=
+    hext.left_mem_of_mem_openSegment hxp_in hxm_in (Set.mem_singleton _)
+      h_in_open_seg
+  rw [Set.mem_singleton_iff] at hxp_eq
+  -- But xp 0 = ρ 0 + δ ≠ ρ 0 since δ > 0.
+  have hxp0_eq : xp 0 = ρ 0 := by rw [hxp_eq]
+  rw [hxp0] at hxp0_eq
+  linarith
+
+/-- **Hard direction:** every pure state of `qubitGPT` equals some
+`blochSpherePoint x y z h` with `x² + y² + z² = 1`. -/
+theorem pure_state_implies_blochSphere (ρ : V)
+    (hρ_pure : Perspectival.Continuity.PureState qubitGPT ρ) :
+    ∃ (x y z : ℝ) (h : x ^ 2 + y ^ 2 + z ^ 2 = 1),
+      ρ = blochSpherePoint x y z h := by
+  obtain ⟨hρ_st, hρ_ext⟩ := hρ_pure
+  have hρ3 : ρ 3 = 1 := hρ_st.1
+  have hρ_le : ρ 0 ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2 ≤ 1 := hρ_st.2
+  -- ρ 0² + ρ 1² + ρ 2² = 1 by ruling out the strict case.
+  have hρ_eq : ρ 0 ^ 2 + ρ 1 ^ 2 + ρ 2 ^ 2 = 1 := by
+    rcases lt_or_eq_of_le hρ_le with hlt | heq
+    · exfalso
+      exact state_interior_not_extreme ρ hρ_st hlt hρ_ext
+    · exact heq
+  refine ⟨ρ 0, ρ 1, ρ 2, hρ_eq, ?_⟩
+  funext i
+  by_cases hi0 : i = 0
+  · subst hi0
+    show ρ 0 = blochSpherePoint (ρ 0) (ρ 1) (ρ 2) hρ_eq 0
+    rfl
+  · by_cases hi1 : i = 1
+    · subst hi1
+      show ρ 1 = blochSpherePoint (ρ 0) (ρ 1) (ρ 2) hρ_eq 1
+      rfl
+    · by_cases hi2 : i = 2
+      · subst hi2
+        show ρ 2 = blochSpherePoint (ρ 0) (ρ 1) (ρ 2) hρ_eq 2
+        rfl
+      · have hi3 : i = 3 := fin4_is_three i hi0 hi1 hi2
+        subst hi3
+        show ρ 3 = blochSpherePoint (ρ 0) (ρ 1) (ρ 2) hρ_eq 3
+        rw [hρ3]; rfl
+
+/-- **Pure-state classification (statement form).** Every pure state of
+`qubitGPT` is exactly a Bloch-sphere boundary point. -/
+def qubit_pure_state_classification_statement : Prop :=
+  ∀ ρ : V, Perspectival.Continuity.PureState qubitGPT ρ →
+    ∃ (x y z : ℝ) (h : x ^ 2 + y ^ 2 + z ^ 2 = 1),
+      ρ = blochSpherePoint x y z h
+
+/-- **The qubit pure-state classification holds.** -/
+theorem qubit_pure_state_classification :
+    qubit_pure_state_classification_statement :=
+  pure_state_implies_blochSphere
 
 /-! ## OneParameterFamily instance: the rotZ 1-parameter subgroup -/
 
