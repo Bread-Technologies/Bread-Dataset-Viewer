@@ -703,7 +703,7 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~2300 lines, 240+ commits)
+### Decoherence module final state (~2400 lines, 250+ commits)
 
 `Perspectival/Decoherence.lean` now contains:
 
@@ -774,7 +774,24 @@ DecoherenceEquivalent.
 - `boltzmann_brain_dissolution_shadow` : structural shadow of TIER4 #19
 - `coherent_kernel_iff_endpoints_eq` : kernel ↔ R₁ = R₂
 - `coherent_kernel_submonoid_certificate` : kernel sub-monoid structure
-- 4 worked Bool loop-power examples
+- 6+ worked Bool loop-power examples
+- `decoherence_module_super_certificate` : 8-fact ULTIMATE bundle
+  (trichotomy + monoid morphism + path-independence + loop submonoid
+   + kernel + past growth + anti-realism witness + Boltzmann shadow)
+
+**Loop insertion + coherent past invariance (further additions):**
+- `coherent_chain_invariant_past`, `loop_preserves_past`,
+  `coherent_invariant_past_certificate` : coherent chains preserve past
+- `loop_prepend_preserves_count`, `loop_append_preserves_count` :
+  loops transparent to counts under insertion
+- `loop_insertion_certificate` : full insertion bundle
+- `loop_conjugation_preserves_count`, `loop_conjugation_equivalent` :
+  sandwiching by loops preserves equivalence class
+- `loop_prepend_density_changes_length`,
+  `loop_prepend_density_differs_when_positive_length` : density
+  refines DecoherenceEquivalent (length distinguishes)
+- `loop_submonoid_trivial_action` : combined statement of trivial
+  action of loops on equivalence quotient
 
 The framework's Seam 4 content is now substantially formalized
 at the count-based structural level — including the loop submonoid
