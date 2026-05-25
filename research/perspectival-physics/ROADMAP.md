@@ -202,12 +202,16 @@ unifying claim across semantic and physical levels.
 6. ~~**CircleGPT positive existence (UNCONDITIONAL)**~~ — **DONE**: `CircleGPT.circleTransitiveAgency_unconditional` — non-degenerate TransitiveAgency on a non-classical GPT. The pure-state classification is closed via `pure_state_classification_holds`.
 7. ~~**Hardy A5 strong-form bridge**~~ — **DONE**: `Hardy.axiom5_strong_of_transitive_agency` packages `Continuity.TransitiveAgency.hardy_axiom5` into the substantive form of A5.
 8. ~~**Dichotomy theorem**~~ — **DONE**: `Dichotomy.framework_dichotomy_existential` — single Lean expression of the classical-vs-quantum dichotomy.
-9. **R7 Lie-group bridge** — needs Mathlib LieGroup wiring. The single biggest remaining piece; with CircleGPT we have the U(1) example concretely; making the avail set into a topological group with smooth structure is the next step.
-10. **Vertex-preservation as axiom**: investigate whether vertex-preservation along paths is forced by the framework's pattern-stability metaphysics (Axiom IV) or must be added as an additional operational postulate. This is the key open methodological question after the R6 correction.
-11. **PatternStableWantable formulation (b)**: reachable-closure / orbit-cardinality non-trivial stability predicate. (Mostly done via Stable_nontrivial.)
-12. **u(1) toy formalization**: per TIER2_GAUGE_SCOPING.md, the smallest non-trivial Lie-group gauge instance.
-13. **gptTensor**: tensor-product-of-GPTs construction, S1 tomographic locality. (In progress.)
-14. **qQM exclusion via local tomography** (S1 step in TIER1_5_HILBERT.md): once gptTensor lands, prove K_AB = K_A · K_B for the tensor — qQM violates this. Smallest tractable Tier 1 #5 piece.
+9. ~~**u(1) toy formalization**~~ — **DONE**: `Dichotomy.framework_u1_gauge_instance` via CircleGPT.
+10. ~~**gptTensor**~~ — **DONE**: `Perspectival/GPTTensor.lean`, with Hardy A4 dimension half + TomographicLocality + productEffect + productTransform infrastructure.
+11. ~~**qQM exclusion via local tomography**~~ — **DONE** at structural level: TomographicLocality excludes K_AB > K_A · K_B (qQM at N=2: 28 > 36, also excludes rebit at 10 > 9).
+12. ~~**Hardy QUADCHOTOMY**~~ — **DONE this session**: Classical/CircleGPT/QubitGPT/QutritGPT machine-constructed at 4 distinct Hardy K-signatures (`Dichotomy.hardy_quadchotomy`).
+13. ~~**Hardy gauge ladder + composition**~~ — **DONE this session**: `framework_gauge_ladder` (U(1) + SO(3) + SU(3) toehold) + `framework_gauge_composition_linear` (productTransform preserves states + unit on gptTensor).
+14. ~~**Framework certificate**~~ — **DONE this session**: `framework_certificate` as single Lean expression of all major results.
+15. **R7 full Lie-group bridge** — needs Mathlib LieGroup wiring. Lightweight precursor `OneParameterFamily` + `HasMultiAxisAgency` already in place; full LieGroup integration is the open piece.
+16. **Vertex-preservation as axiom**: investigate whether vertex-preservation along paths is forced by Axiom IV pattern-stability or must be an explicit operational postulate. Key open methodological question.
+17. **Rebit/qQM explicit composite construction**: required to make the qubit-uniqueness theorem fully unconditional (replacing the structural argument with a single Lean theorem).
+18. **PatternStableWantable formulation (b)**: mostly done via `Stable_nontrivial` + `complementOrbit`.
 
 ## Methodology constants
 
