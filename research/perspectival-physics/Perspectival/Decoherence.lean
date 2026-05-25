@@ -1069,6 +1069,30 @@ example (P : Type u) (C : Type v) (R : Reality P C) :
   show (0 : ℕ) ≠ 1
   decide
 
+/-! ## DecoherenceEquivalent + length combined invariant
+
+For complete characterization of trajectories (modulo identity of
+steps), we need both DecoherenceEquivalent (= equal count) AND
+equal length. The framework's content: complete trajectory identity
+modulo step-identity is determined by (count, length). -/
+
+/-- **Complete characterization: (count, length) equality.** Two
+chains have equal (count, length) iff their actualizationDensity
+pairs are equal. -/
+theorem density_eq_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    ch₁.actualizationDensity = ch₂.actualizationDensity
+      ↔ ch₁.actualizationCount = ch₂.actualizationCount
+        ∧ ch₁.length = ch₂.length := by
+  show (ch₁.actualizationCount, ch₁.length) = (ch₂.actualizationCount, ch₂.length)
+      ↔ _
+  constructor
+  · intro h
+    refine ⟨?_, ?_⟩
+    · have := congrArg Prod.fst h; exact this
+    · have := congrArg Prod.snd h; exact this
+  · rintro ⟨h₁, h₂⟩; rw [h₁, h₂]
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
