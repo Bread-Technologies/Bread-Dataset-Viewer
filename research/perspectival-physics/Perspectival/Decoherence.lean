@@ -4909,6 +4909,32 @@ theorem singleton_actualization_rate {P : Type u} {C : Type v}
       RealityChain'.singleton_length]
   rfl
 
+/-- **Singleton actualization measure certificate.** A singleton
+actualization on any meeting m with R m = Potential has count 1,
+bracketed 0, length 1, complexity 2. -/
+theorem singleton_actualization_measure_certificate :
+    ∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h_pot : R m = MeetingStatus.Potential),
+      (RealityChain'.singleton
+        (TierB.actualizeAt_strict_step R m h_pot)).actualizationCount = 1
+        ∧ (RealityChain'.singleton
+            (TierB.actualizeAt_strict_step R m h_pot)).bracketedCount = 0
+        ∧ (RealityChain'.singleton
+            (TierB.actualizeAt_strict_step R m h_pot)).length = 1
+        ∧ trajectoryComplexity (RealityChain'.singleton
+            (TierB.actualizeAt_strict_step R m h_pot)) = 2 := by
+  intro P C _ R m h_pot
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [RealityChain'.singleton_actualizationCount]; rfl
+  · rw [RealityChain'.singleton_bracketedCount]; rfl
+  · rw [RealityChain'.singleton_length]
+  · show 2 * (RealityChain'.singleton _).actualizationCount
+        + (RealityChain'.singleton _).bracketedCount = 2
+    rw [RealityChain'.singleton_actualizationCount,
+        RealityChain'.singleton_bracketedCount]
+    rfl
+
 /-- **Singleton bracketed chain measure certificate.** A bracketed
 singleton on any R has count 0, bracketed 1, length 1, complexity 1. -/
 theorem singleton_bracketed_measure_certificate :
