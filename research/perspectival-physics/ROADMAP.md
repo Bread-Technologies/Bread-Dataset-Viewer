@@ -208,10 +208,29 @@ unifying claim across semantic and physical levels.
 12. ~~**Hardy QUADCHOTOMY**~~ — **DONE this session**: Classical/CircleGPT/QubitGPT/QutritGPT machine-constructed at 4 distinct Hardy K-signatures (`Dichotomy.hardy_quadchotomy`).
 13. ~~**Hardy gauge ladder + composition**~~ — **DONE this session**: `framework_gauge_ladder` (U(1) + SO(3) + SU(3) toehold) + `framework_gauge_composition_linear` (productTransform preserves states + unit on gptTensor).
 14. ~~**Framework certificate**~~ — **DONE this session**: `framework_certificate` as single Lean expression of all major results.
-15. **R7 full Lie-group bridge** — needs Mathlib LieGroup wiring. Lightweight precursor `OneParameterFamily` + `HasMultiAxisAgency` already in place; full LieGroup integration is the open piece.
-16. **Vertex-preservation as axiom**: investigate whether vertex-preservation along paths is forced by Axiom IV pattern-stability or must be an explicit operational postulate. Key open methodological question.
+15. **R7 full Lie-group bridge** — needs Mathlib LieGroup wiring. Lightweight precursor `OneParameterFamily` + `HasMultiAxisAgency` already in place; **scaffold-level R7 instance evidence DONE** via `R7_Conjecture_holds_on_circleGPT` and `_qubitGPT` (the existence claim is trivially satisfied at the scaffold level). Full LieGroup integration is the open piece.
+16. ~~**Vertex-preservation as axiom**~~ — **RESOLVED under v2**: vertex preservation is a derived Tier B theorem from bracketing on DefiniteConfig (`TierB.bracketing_preserves_definiteness`). Under v2, this is a *progressive* reframing (made implicit commitment explicit) rather than an additional postulate. See `V2_AUDIT.md` audit item 3.
 17. **Rebit/qQM explicit composite construction**: required to make the qubit-uniqueness theorem fully unconditional (replacing the structural argument with a single Lean theorem).
 18. **PatternStableWantable formulation (b)**: mostly done via `Stable_nontrivial` + `complementOrbit`.
+
+### v2 additions (post-architectural-correction priorities)
+
+19. **Derive QM at Tier B from Tier A bracketing** — the central v2 open
+    item. Currently, `v2_bare_Tier_B_is_classical_excluded` proves bare
+    Tier B is classical; `v2_QM_from_richer_Tier_B` shows non-classical
+    is realizable on richer carriers. What's open: forcing the richer
+    carrier to be U(n) (vs O(n+1) / rebit / qQM) from Tier A
+    commitments alone, *without* additional postulates.
+20. **Renou-style rebit exclusion** at Tier A — operationalize the
+    network Bell test discrimination between U(n) and O(n+1).
+21. **Full Picard-Lindelöf encoding** — currently delegated to
+    Witkowski-Brown-Truong 2024. A Lean encoding would require Mathlib's
+    ODE infrastructure + a translation of phase-space dynamics into
+    the Reality/Meeting structure.
+22. **Decoherence as accumulated actualization** — Seam 4 of `SEAMS.md`
+    has no formal correlate yet. A `Decoherence.lean` module would
+    encode the Tier B exponential suppression as Tier A actualization
+    rate.
 
 ## Methodology constants
 
