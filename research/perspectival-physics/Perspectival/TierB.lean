@@ -377,6 +377,49 @@ theorem measurement_is_actualization {P : Type u} {C : Type v}
   obtain ⟨m, h_before_pot, h_after_act⟩ := am.nontrivial
   exact ⟨m, h_before_pot, h_after_act⟩
 
+/-! ### Pointwise actualization → AtSeam (Tier A ↔ Tier B concrete link)
+
+The pointwise actualization `actualizeAt R m` is the elementary form
+of an actualization event: it takes a Reality state R and a specific
+target meeting m, and returns the Reality state with m actualized
+(others unchanged). When m was potential in R, this pointwise event
+realizes the seam predicate: the (R, actualizeAt R m) pair is at the
+seam. This is the elementary Tier A event made visible as a Tier B
+seam crossing. -/
+
+/-- **Pointwise actualization at a previously-potential meeting is
+at the seam.** -/
+theorem actualizeAt_atSeam {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    AtSeam R (actualizeAt R m) :=
+  ⟨m, h_pot, by simp⟩
+
+/-- **Pointwise actualization at a previously-potential meeting is
+NOT bracketed.** Direct consequence of `actualizeAt_atSeam` and
+`seam_breaks_bracketing`. -/
+theorem actualizeAt_not_bracketed {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    ¬ BracketedTransition R (actualizeAt R m) :=
+  seam_breaks_bracketing (actualizeAt_atSeam R m h_pot)
+
+/-- **Pointwise actualization realizes an `ActualizationMap`.** A
+concrete construction: given any Reality state R with a potential
+meeting m, the pointwise actualization produces a witness of
+`ActualizationMap P C` whose `before` is R and `after` is `actualizeAt R m`. -/
+def actualizeAt_asActualizationMap {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    ActualizationMap P C where
+  before := R
+  after := actualizeAt R m
+  is_successor := actualizeAt_is_successor R m
+  nontrivial := ⟨m, h_pot, by simp⟩
+
 /-- **A bracketed step preserves both potential and actualized status
 of every meeting.** Restated: the entire meeting-status function is
 unchanged across a bracketed step. -/
@@ -510,6 +553,10 @@ This module formalizes the Tier A → Tier B bracketing operation.
   • `AtSeam`, `seam_breaks_bracketing` — the framework's reframing of
     "measurement" / "collapse" as Tier A re-entering the Tier B
     description.
+  • `actualizeAt_atSeam`, `actualizeAt_not_bracketed`,
+    `actualizeAt_asActualizationMap` — pointwise Tier A → Tier B
+    concrete link: the elementary actualization event realizes the
+    seam predicate and instantiates the abstract `ActualizationMap`.
 
 The existing modules (Continuity, GPT, Hardy, WantableGPT, the GPT
 instances, Dichotomy, ...) provide the *content* of Tier B once
