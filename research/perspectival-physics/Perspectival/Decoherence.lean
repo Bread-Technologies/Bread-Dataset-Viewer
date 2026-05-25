@@ -5538,6 +5538,18 @@ theorem quick_ref_eq_iff_zero_count {P : Type u} {C : Type v}
     R₁ = R₂ ↔ ch.actualizationCount = 0 :=
   ch.eq_iff_zero_count
 
+/-- **Quick reference: complexity equals length iff coherent.** -/
+theorem quick_ref_complexity_eq_length_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    trajectoryComplexity ch = ch.length ↔ ch.actualizationCount = 0 :=
+  complexity_eq_length_iff_coherent ch
+
+/-- **Quick reference: complexity equals 2*length iff pure-decoherent.** -/
+theorem quick_ref_complexity_eq_twice_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    trajectoryComplexity ch = 2 * ch.length ↔ ch.bracketedCount = 0 :=
+  complexity_eq_twice_length_iff_pure_decoherent ch
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
