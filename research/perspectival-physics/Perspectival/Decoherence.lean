@@ -3539,6 +3539,30 @@ theorem loop_npow_complexity {P : Type u} {C : Type v}
   rw [h_pow_zero, h_pow_brk, loop_chain_all_bracketed ch]
   omega
 
+/-- **Loop power measures certificate.** Bundles the loop power
+formulas for all measures (count, length, bracketed, complexity, rate). -/
+theorem loop_npow_measures_certificate :
+    -- count = 0
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      tierAEventCount (ch ^ n) = 0) ∧
+    -- length = n * ch.length
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      (ch ^ n).length = n * ch.length) ∧
+    -- bracketedCount = n * ch.bracketedCount
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      (ch ^ n).bracketedCount = n * ch.bracketedCount) ∧
+    -- complexity = n * ch.length
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      trajectoryComplexity (ch ^ n) = n * ch.length) :=
+  ⟨fun ch n => loop_npow_tierAEventCount ch n,
+   fun ch n => loop_npow_length ch n,
+   fun ch n => loop_npow_bracketedCount ch n,
+   fun ch n => loop_npow_complexity ch n⟩
+
 /-- **Worked example: loop monoid power notation on Bool.** Showing
 that the Mathlib `Monoid` `^` notation works on loop chains. -/
 example (R : Reality Bool Bool) :
