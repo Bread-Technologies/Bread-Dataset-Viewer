@@ -242,6 +242,45 @@ theorem gptTensor_distinguishable_both
   · -- productEffect (ρ₂ ⊗ σ₂) = e₁(ρ₂) · e₂(σ₂) = 0 · 0 = 0
     rw [GPT.productEffect_tmul, he₁_ρ₂, he₂_σ₂]; ring
 
+/-- **Hardy A4 N-multiplicativity (≥), via two general pairs.** If
+`(ρ_i, ρ_j)` distinguishable in G₁ AND `(σ_k, σ_l)` distinguishable
+in G₂, then `(ρ_i ⊗ σ_k, ρ_j ⊗ σ_l)` distinguishable in gptTensor.
+This generalizes both `_left` and `_both`: only ONE pair of indices
+needs to differ.
+
+In particular: if (i, k) ≠ (j, l), AT LEAST ONE of (ρ_i, ρ_j) or
+(σ_k, σ_l) is distinguishable (using DistinguishabilitySet conditions
+in a finite product set). This is the key lemma for the full N-mult
+forward proof. -/
+theorem gptTensor_distinguishable_general
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    {ρ₁ ρ₂ : V₁} {σ₁ σ₂ : V₂}
+    (h₁ : ρ₁ ∈ G₁.states) (h₂ : σ₁ ∈ G₂.states)
+    (h_diff : Distinguishable G₁ ρ₁ ρ₂ ∨ Distinguishable G₂ σ₁ σ₂)
+    (h_σ : σ₂ = σ₁ ∨ Distinguishable G₂ σ₁ σ₂)
+    (h_ρ : ρ₂ = ρ₁ ∨ Distinguishable G₁ ρ₁ ρ₂) :
+    Distinguishable (GPT.gptTensor G₁ G₂)
+      (ρ₁ ⊗ₜ[ℝ] σ₁) (ρ₂ ⊗ₜ[ℝ] σ₂) := by
+  rcases h_diff with hd₁ | hd₂
+  · -- ρ₁ ≠ ρ₂ distinguishable in G₁.
+    rcases h_σ with rfl | hd₂
+    · -- σ₂ = σ₁: use the _left lemma.
+      exact gptTensor_distinguishable_left hd₁ h₂
+    · -- σ₂ ≠ σ₁ distinguishable: use the _both lemma.
+      exact gptTensor_distinguishable_both hd₁ hd₂
+  · -- σ₁ ≠ σ₂ distinguishable in G₂.
+    rcases h_ρ with rfl | hd₁
+    · -- ρ₂ = ρ₁ (after rcases rfl, ρ₁ has been replaced by ρ₂).
+      obtain ⟨e₂, he₂_in, he₂_σ₁, he₂_σ₂⟩ := hd₂
+      refine ⟨GPT.productEffect G₁.unit e₂,
+        GPT.productEffect_in_effects G₁.unit_is_effect he₂_in, ?_, ?_⟩
+      · rw [GPT.productEffect_tmul, G₁.states_normalized ρ₂ h₁, he₂_σ₁]; ring
+      · rw [GPT.productEffect_tmul, G₁.states_normalized ρ₂ h₁, he₂_σ₂]; ring
+    · -- Both distinguishable: use _both.
+      exact gptTensor_distinguishable_both hd₁ hd₂
+
 /-- **Axiom 5 — Continuity of reversible transformations.**
 There exists a continuous reversible transformation on a system
 between any two pure states of that system.
