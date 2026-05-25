@@ -3243,6 +3243,21 @@ theorem class_projection_certificate :
    fun _ch₁ _ch₂ h => toDecoherenceClass_equivalent h,
    fun _ => rfl⟩
 
+/-- **Both status and content derive from Tier A.** The framework's
+structural claim: status (count = 0 or > 0) and content (complexity,
+length) both derive from the same Tier A primitives, even though
+one is path-independent and the other is path-dependent. -/
+theorem status_and_content_share_Tier_A_origin {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    -- Status is determined by count.
+    (ch.actualizationCount = 0 ↔ tierAEventCount ch = 0) ∧
+    -- Content (complexity) is determined by count + bracketed.
+    trajectoryComplexity ch = 2 * tierAEventCount ch + ch.bracketedCount ∧
+    -- Both count and bracketed are Tier A primitives
+    -- (count = actualizationCount = number of Tier A events).
+    tierAEventCount ch = ch.actualizationCount :=
+  ⟨Iff.rfl, rfl, rfl⟩
+
 /-- **The framework's anti-realism re-stated structurally.** A clean
 restatement of the framework's anti-realism content:
 - Decoherence-status is endpoint-determined (anti-realist on substance).
