@@ -554,3 +554,28 @@ non-trivial derivation in Lean, every claim tagged with calibration,
 every reframing documented as a scoping note — is what gives this
 sharpening room to fail honestly. That is the honest current state,
 the working target, and the framework's distinctive bet.
+
+## Addendum: late-session R6 + Hardy-A5 combined impossibility (L6)
+
+After the n=3 R6 disconnect was closed, a further framework-distinctive
+result emerged: `classical_n2_no_transitive_agency` (in Classical.lean).
+The argument combines:
+1. `TransitiveAgency G` (in Continuity.lean) — extends StrictConnectedAgency
+   with `transitive_on_pure`, the substantive content of Hardy Axiom 5
+   (transitivity of available reversibles on pure states).
+2. The R6 sign-of-det disconnect (already proven for n=2): no path-
+   connected strict-agency on Classical Bool can include both det > 0
+   and det < 0 transformations.
+3. The vertex-flip det fact: any R sending vertex 0 to vertex 1 (which
+   transitivity requires) has det < 0.
+4. id has det = 1 > 0 and is always in avail (StrictConnectedAgency.id_avail).
+
+The conjunction is impossible. So Classical Bool **cannot host the
+substantive content of Hardy Axiom 5** under the framework's strict-
+paths agency postulate.
+
+This is the framework's strongest formally-proven classical-side
+impossibility: the no-go theorem now connects Hardy Axiom 5
+transitivity directly to R6's path-connectedness, on the n=2 case.
+Quantum-like GPTs (U(2) connected) are expected to evade this — but
+the positive complement is still open.
