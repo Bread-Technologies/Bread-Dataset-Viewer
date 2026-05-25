@@ -703,7 +703,7 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~1700 lines, 220+ commits)
+### Decoherence module final state (~2100 lines, 230+ commits)
 
 `Perspectival/Decoherence.lean` now contains:
 
@@ -759,8 +759,26 @@ singleton bracketed (complexity = 1), 2-bracketed composition
 (complexity = 2), counter-example showing complexity refines
 DecoherenceEquivalent.
 
+**Loop chains and powers (added end-of-session):**
+- `loop_is_coherent` : `RealityChain' P C R R` ⇒ count = 0
+- `loopPower` : n-fold composition of a loop chain
+- `loopPower_length` (= n * ch.length), `_actualizationCount` (= 0),
+  `_bracketedCount` (= n * ch.bracketedCount), `_complexity` (= n * ch.length)
+- `loopPower_all_equivalent` : powers are decoherence-equivalent
+- `loop_submonoid_certificate` : loops form a submonoid of strict chains
+- `nontrivial_loop_exists` : reflBracketed witness for any R
+- `anti_realism_loop_power_witness` : infinite witness family for path-
+  dependent length at same DecoherenceEquivalent class
+- `loop_rate` and `loopPower_rate` : rate is (0, n * length)
+- `loop_rate_certificate` : rate-related loop facts
+- `boltzmann_brain_dissolution_shadow` : structural shadow of TIER4 #19
+- `coherent_kernel_iff_endpoints_eq` : kernel ↔ R₁ = R₂
+- `coherent_kernel_submonoid_certificate` : kernel sub-monoid structure
+- 4 worked Bool loop-power examples
+
 The framework's Seam 4 content is now substantially formalized
-at the count-based structural level. The continuous-time dynamics
+at the count-based structural level — including the loop submonoid
+algebra (closed-loop coherence). The continuous-time dynamics
 remain Tier 2 work.
 
 ### v2 entropy addendum (received mid-session)
