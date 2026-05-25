@@ -551,6 +551,9 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | **NEW: Decoherence.lean** — Seam 4 formal correlate (actualizationRate, coherent/decoherence regimes, rate compositional additivity) | `Decoherence.lean` | ✓ (a) **NEW MODULE — Seam 4** |
 | `Decoherence.concatenated_decoherence`, `coherent_plus_decoherent` — rate composition theorems | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.decoherence_certificate` — Seam 4 bundle (4 core facts in one Lean expression) | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.coherent_compose`, `coherent_compose_eq`, `path_independent_coherence` — coherent trajectories form sub-monoid, coherence is path-independent | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.coherent_and_decoherent_distinct_endpoints` — incompatibility theorem | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.actualizationRatePlain`, `_forget` — plain-chain rate + forgetful preservation | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
