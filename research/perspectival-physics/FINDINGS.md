@@ -92,6 +92,41 @@ substantial properties; always reference the coarse-graining and the
 perspective. "The entropy of X" without naming the coarse-graining
 is forbidden — pause and reformulate.
 
+## 0c. Decoherence module Seam-4 formal content
+
+Per the entropy addendum, decoherence reframes as the Tier B
+observable signature of accumulated Tier A actualization at the
+system-environment interface. The framework's Seam 4 content has
+been substantially formalized in `Perspectival/Decoherence.lean`
+(~2400 lines, build-verified) — the count-based structural shadow
+is COMPLETE.
+
+Headline results (full list in `STATUS.md`):
+
+- **Trajectory algebra**: `actualizationRate`, `trajectoryComplexity`,
+  monoid morphism structure, congruence relations.
+- **Regime trichotomy**: every chain is coherent | pure-decoherent |
+  mixed; characterized by counts.
+- **Loop submonoid algebra**: closed-loop trajectories
+  (`RealityChain' P C R R`) are necessarily coherent; loops act
+  trivially on `DecoherenceEquivalent` classes; loops can be
+  inserted without changing count.
+- **Coherent kernel characterization**:
+  `tierAEventCount ch = 0 ↔ R₁ = R₂` — the kernel of the counts
+  homomorphism is exactly the loops.
+- **Anti-realism witness**: explicit infinite witness family showing
+  status is endpoint-determined but content is trajectory-dependent.
+- **Boltzmann brain dissolution shadow**: closed-loop trajectories
+  carry zero net actualization content at all powers — the formal
+  correlate of "Boltzmann brain recurrences are not high-decoherence
+  events" (TIER4 dissolution #19).
+- **Super-certificate**: `decoherence_module_super_certificate`
+  bundles 8 headline facts in one Lean expression.
+
+What remains open: continuous-time exponential-suppression dynamics,
+operational environment-density definition, quantitative predictions
+vs statistical decoherence-time models. Tier 2 work.
+
 ## 0. The arc, in one paragraph
 
 Tier 1 of the program — *establish that the framework can do real
