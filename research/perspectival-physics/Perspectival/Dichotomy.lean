@@ -576,6 +576,25 @@ theorem framework_gauge_composition_linear
                 R₂.preserves_states hρ,
    GPT.productTransform_preserves_unit R₁.preserves_unit R₂.preserves_unit⟩
 
+/-! ## Worked example: U(1) × SO(3) gauge composition on CircleGPT ⊗ QubitGPT
+
+A concrete demonstration of `framework_gauge_composition_linear`: the
+rotation rotZ θ on CircleGPT and rotZ θ' on QubitGPT, composed via
+productTransform, give a state-preserving + unit-preserving linear
+map on the tensor product GPT. -/
+
+example (θ θ' : ℝ) :
+    -- The product transformation preserves the tensor state space.
+    (∀ ρ ∈ (GPT.gptTensor CircleGPT.circleGPT QubitGPT.qubitGPT).states,
+      GPT.productTransform (CircleGPT.rotZ θ) (QubitGPT.rotZ θ') ρ
+      ∈ (GPT.gptTensor CircleGPT.circleGPT QubitGPT.qubitGPT).states) ∧
+    -- And the unit functional.
+    (GPT.tensorUnit CircleGPT.circleGPT QubitGPT.qubitGPT).comp
+      (GPT.productTransform (CircleGPT.rotZ θ) (QubitGPT.rotZ θ'))
+    = GPT.tensorUnit CircleGPT.circleGPT QubitGPT.qubitGPT :=
+  framework_gauge_composition_linear
+    (CircleGPT.rotReversible θ) (QubitGPT.rotZReversible θ')
+
 /-! ## Framework certificate (full Tier 1 + Tier 2 baby step summary)
 
 A single theorem bundling the framework's major machine-verified
