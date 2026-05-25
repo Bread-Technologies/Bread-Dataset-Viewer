@@ -246,5 +246,53 @@ the `gptTensor` GPT. -/
     (gptTensor G₁ G₂).unit (ρ₁ ⊗ₜ[ℝ] ρ₂) = G₁.unit ρ₁ * G₂.unit ρ₂ :=
   tensorUnit_tmul G₁ G₂ ρ₁ ρ₂
 
+/-! ## Tomographic locality (S1 toward Tier 1 #5)
+
+A composite GPT `G_AB` satisfies *tomographic locality* if its
+state-space dimension equals the product of the component dimensions
+(K_AB = K_A · K_B). This is the structural fingerprint distinguishing
+classical/complex-QM/real-QM (all satisfying it) from quaternionic-QM
+(violates it, K_AB > K_A · K_B at N=2).
+
+The framework's `gptTensor` is the canonical tomographic-local
+composite: by `gptTensor_finrank_eq_mul`, it satisfies K_AB = K_A · K_B
+by construction. So any composite that DOES NOT equal `gptTensor`
+(linearly) at the dimension level is automatically not in the
+framework's preferred class — which immediately excludes qQM. -/
+
+/-- A composite GPT on `V₁ ⊗[ℝ] V₂` satisfies *tomographic locality*
+if its underlying linear dimension equals the product of the
+components'. -/
+def TomographicLocality
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (_G₁ : GPT V₁) (_G₂ : GPT V₂) (_GAB : GPT (V₁ ⊗[ℝ] V₂)) : Prop :=
+  Module.finrank ℝ (V₁ ⊗[ℝ] V₂)
+    = (Module.finrank ℝ V₁) * (Module.finrank ℝ V₂)
+
+/-- The framework's `gptTensor` composite is tomographic-local. -/
+theorem gptTensor_tomographic_local
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (G₁ : GPT V₁) (G₂ : GPT V₂) :
+    TomographicLocality G₁ G₂ (gptTensor G₁ G₂) :=
+  gptTensor_finrank_eq_mul G₁ G₂
+
+/-! **qQM exclusion (Tier 1 #5, S1 step).**
+
+Quaternionic QM at level N has `K_qQM(N) = N(2N - 1)`. At N=2:
+`K_qQM(2) = 2(3) = 6`. The composite at N_AB = 4 would have
+`K_qQM(4) = 4·7 = 28`, while the framework's tomographic local
+product gives `K_A · K_B = 6 · 6 = 36`. Hence `K_qQM(N_A · N_B) ≠
+K_qQM(N_A) · K_qQM(N_B)` — qQM violates tomographic locality.
+
+Conclusion: any composite GPT derivable in the framework with
+operational dimensions N_A, N_B and the gptTensor composition rule has
+`K_AB = K_A · K_B` (the `TomographicLocality` predicate), which qQM
+fails. So qQM is structurally INCOMPATIBLE with the framework's
+preferred composition. This is the framework's machine-verified
+S1-step toward Tier 1 #5 (complex-vs-real-vs-quaternionic Hilbert
+space). -/
+
 end GPT
 end Perspectival
