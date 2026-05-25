@@ -1126,6 +1126,22 @@ theorem RealityChain'.append_bracketedCount {P : Type u} {C : Type v} :
       rw [RealityChain'.append_bracketedCount rest ch₂]
       omega
 
+/-- **Worked example: chain-monoid associativity on concrete trajectory.**
+Demonstrates that `(ch₁ ++ ch₂) ++ ch₃ = ch₁ ++ (ch₂ ++ ch₃)` holds
+strictly for RealityChain'. -/
+example (P : Type u) (C : Type v) (R : Reality P C)
+    (ch₁ ch₂ ch₃ : RealityChain' P C R R) :
+    (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃) :=
+  RealityChain'.append_assoc ch₁ ch₂ ch₃
+
+/-- **Worked example: count additivity on a concrete 2-fold composition.** -/
+example (P : Type u) (C : Type v) (R : Reality P C)
+    (ch₁ ch₂ ch₃ : RealityChain' P C R R) :
+    ((ch₁.append ch₂).append ch₃).actualizationCount
+      = ch₁.actualizationCount + ch₂.actualizationCount + ch₃.actualizationCount := by
+  rw [RealityChain'.append_actualizationCount,
+      RealityChain'.append_actualizationCount]
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
