@@ -4753,6 +4753,35 @@ theorem rate_origin_iff_length_zero {P : Type u} {C : Type v}
     have h_count := length_zero_count_zero ch h
     rw [h_count]
 
+/-- **Decoherence phase space certificate.** Bundles the phase space
+structure facts. -/
+theorem decoherence_phase_space_certificate :
+    -- All chains have count ≤ length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 ≤ (actualizationRate ch).2) ∧
+    -- Length 0 implies count 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).2 = 0 → (actualizationRate ch).1 = 0) ∧
+    -- Left edge (count = 0) is coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = 0 ↔ ch.actualizationCount = 0) ∧
+    -- Diagonal (count = length) is pure-decoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = (actualizationRate ch).2 ↔
+      ch.bracketedCount = 0) :=
+  ⟨fun ch => rate_count_le_length ch,
+   fun ch h => by
+     have h_len : ch.length = 0 := h
+     have h_le := ch.actualizationCount_le_length
+     show ch.actualizationCount = 0
+     omega,
+   fun ch => rate_x_axis_iff_coherent ch,
+   fun ch => rate_diagonal_iff_pure_decoherent ch⟩
+
 /-- **Decoherence phase space structure.** The space of possible
 trajectory rates forms a triangular region in ℕ × ℕ defined by:
 - x = 0 (left edge): coherent chains
