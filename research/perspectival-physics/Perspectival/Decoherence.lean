@@ -4414,6 +4414,25 @@ theorem long_trajectory_rate_bound {P : Type u} {C : Type v}
     show ch.length ≤ n
     exact h
 
+/-- **Rate bound certificate.** Rate components are bounded by chain
+length parameters. -/
+theorem rate_bound_certificate :
+    -- Rate first component ≤ length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 ≤ ch.length) ∧
+    -- Rate second component = length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).2 = ch.length) ∧
+    -- Rate first component bounded by any n ≥ length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length ≤ n → (actualizationRate ch).1 ≤ n) :=
+  ⟨fun ch => rate_count_le_length ch,
+   fun _ => rfl,
+   fun ch n h => (long_trajectory_rate_bound ch n h).1⟩
+
 /-- **Bounded-trajectory certificate.** Trajectories of bounded
 length have all measures uniformly bounded. -/
 theorem bounded_trajectory_certificate :
