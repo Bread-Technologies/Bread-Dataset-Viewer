@@ -460,6 +460,38 @@ In the existing Tier B modules (Continuity, GPT, Hardy), this
 relational evolution is encoded operationally as `Reversible G` /
 `StrictReversible G` etc. — the inter-event dynamics. -/
 
+/-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
+
+A concrete worked example demonstrating the framework's two-tier
+architecture on the simplest non-trivial case: meetings between
+`Bool`-perspectives. -/
+
+example : True := by trivial  -- placeholder; example below uses Reality structure
+
+/-- **Trivial Tier A state**: all meetings potential, no actualizations. -/
+def trivialReality (P : Type u) (C : Type v) : Reality P C :=
+  fun _ => MeetingStatus.Potential
+
+/-- The trivial reality has empty past. -/
+example (P : Type u) (C : Type v) : past (trivialReality P C) = ∅ := by
+  ext m
+  show trivialReality P C m = MeetingStatus.Actualized ↔ False
+  show (MeetingStatus.Potential : MeetingStatus) = MeetingStatus.Actualized ↔ False
+  constructor
+  · intro h; exact MeetingStatus.noConfusion h
+  · intro h; exact h.elim
+
+/-- The trivial reality has full future. -/
+example (P : Type u) (C : Type v) (m : Meeting P C) :
+    m ∈ future (trivialReality P C) := by
+  show trivialReality P C m = MeetingStatus.Potential
+  rfl
+
+/-- The trivial reality is bracketed-equivalent to itself (trivially). -/
+example (P : Type u) (C : Type v) :
+    BracketedTransition (trivialReality P C) (trivialReality P C) :=
+  bracketed_refl _
+
 /-! ## Summary: the bracketing operation
 
 This module formalizes the Tier A → Tier B bracketing operation.
