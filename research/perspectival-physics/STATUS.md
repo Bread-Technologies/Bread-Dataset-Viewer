@@ -525,6 +525,12 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | **Vertex preservation as derived theorem** (v2-progressive reframing) | `TierB.lean` | ✓ (a) **framework-distinctive** |
 | `DefiniteConfig`, `DefiniteBracketed`, `bracketing_forces_permutation`, `bracketing_preserves_definiteness` | `TierB.lean` | ✓ (a) |
 | `definite_bracketed_id`, `definite_bracketed_compose` | `TierB.lean` | ✓ (a) |
+| `actualizeAt`, `actualizeAt_self`, `actualizeAt_other`, `actualizeAt_is_successor` — pointwise Axiom II event | `TierA.lean` | ✓ (a) |
+| `actualizeAt_atSeam`, `actualizeAt_not_bracketed`, `actualizeAt_asActualizationMap` — pointwise Tier A ↔ Tier B link | `TierB.lean` | ✓ (a) |
+| `definiteToVertex`, `definiteToVertex_perm` — Tier A/B → Classical.vertex bridge | `Dichotomy.lean` | ✓ (a) |
+| `v2_bare_Tier_B_is_classical_excluded` — v2-architectural identification | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
+| `v2_QM_from_richer_Tier_B` — non-classical Tier B realized by richer carriers | `Dichotomy.lean` | ✓ (a) |
+| `framework_v2_certificate`, `framework_v2_extended_certificate` — consolidated v2 facts | `Dichotomy.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
 | `SmoothConnectedAgency` scaffold | `Continuity.lean` | ✓ (a) scaffold only |
 | `SEAMS.md` — catalog of 6 Tier A / Tier B seams | docs | ✓ documented |
