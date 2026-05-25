@@ -595,6 +595,22 @@ example (θ θ' : ℝ) :
   framework_gauge_composition_linear
     (CircleGPT.rotReversible θ) (QubitGPT.rotZReversible θ')
 
+/-! ## Hardy reconstruction certificate for CircleGPT
+
+CircleGPT carries an unconditional TransitiveAgency, so the framework's
+full Hardy A1+A3+A4+A5 reconstruction applies directly. -/
+
+/-- **CircleGPT satisfies Hardy A1+A3+A4+A5 (everything except A2).** -/
+theorem circle_full_hardy_reconstruction (GB : GPT (Fin 3 → ℝ)) :
+    Hardy.Axiom1_Probabilities CircleGPT.circleGPT ∧
+    Hardy.Axiom3_Subspaces CircleGPT.circleGPT ∧
+    Hardy.Axiom4_Composite_Dimension CircleGPT.circleGPT GB ∧
+    Hardy.Axiom4_Composite_State_Exists CircleGPT.circleGPT GB ∧
+    Hardy.Axiom5_Continuity_Strong CircleGPT.circleGPT :=
+  Hardy.framework_hardy_with_agency CircleGPT.circleGPT GB
+    CircleGPT.circleTransitiveAgency_unconditional
+    (fun _ h => h.1 (Set.mem_singleton _))
+
 /-! ## Framework certificate (full Tier 1 + Tier 2 baby step summary)
 
 A single theorem bundling the framework's major machine-verified
