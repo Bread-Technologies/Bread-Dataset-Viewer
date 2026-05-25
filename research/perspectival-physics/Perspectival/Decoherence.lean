@@ -873,6 +873,31 @@ theorem decoherence_anti_realism :
       (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
     rfl, rfl, by decide⟩⟩
 
+/-- **Decoherence-equivalent trajectories.** Two strict chains are
+"decoherence-equivalent" if they have the same actualizationCount.
+This is weaker than equal length or equal complexity. -/
+def DecoherenceEquivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) : Prop :=
+  ch₁.actualizationCount = ch₂.actualizationCount
+
+/-- **Decoherence equivalence is reflexive.** -/
+theorem DecoherenceEquivalent_refl {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    DecoherenceEquivalent ch ch := rfl
+
+/-- **Decoherence equivalence is symmetric.** -/
+theorem DecoherenceEquivalent_symm {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂) :
+    DecoherenceEquivalent ch₂ ch₁ := h.symm
+
+/-- **Decoherence equivalence is transitive.** -/
+theorem DecoherenceEquivalent_trans {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ ch₃ : RealityChain' P C R₁ R₂}
+    (h₁₂ : DecoherenceEquivalent ch₁ ch₂)
+    (h₂₃ : DecoherenceEquivalent ch₂ ch₃) :
+    DecoherenceEquivalent ch₁ ch₃ := h₁₂.trans h₂₃
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
