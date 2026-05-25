@@ -4668,6 +4668,14 @@ theorem loop_characterization_refl {P : Type u} {C : Type v}
     tierAEventCount ch = 0 :=
   loop_is_coherent ch
 
+/-- **Loop characterization preserves equality through transformations.**
+If ch and ch' are both at R → R, then the iff equality holds for both. -/
+theorem loop_iff_preserved {P : Type u} {C : Type v}
+    {R : Reality P C} (ch ch' : RealityChain' P C R R) :
+    (R = R ↔ tierAEventCount ch = 0) ∧
+    (R = R ↔ tierAEventCount ch' = 0) :=
+  ⟨loop_iff_unified_measures ch, loop_iff_unified_measures ch'⟩
+
 /-- **Symmetry of loop characterization.** The implication count = 0 → R₁ = R₂
 goes both ways via the iff. -/
 theorem loop_characterization_iff_symm {P : Type u} {C : Type v}
