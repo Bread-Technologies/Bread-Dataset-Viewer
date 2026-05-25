@@ -4459,6 +4459,27 @@ example (R : Reality Bool Bool) :
   show tierAEventCount loop3 = 0
   exact loopPower_tierAEventCount base 3
 
+/-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
+with another step strictly increases count if the extension actualizes. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let R' := actualizeAt R m
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let loop5 := loopPower base 5
+    let act : RealityChain' Bool Bool R R' :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    -- Extending loop5 with the actualization strictly increases count.
+    tierAEventCount loop5 < tierAEventCount (loop5.append act) := by
+  intro R h_pot R' base loop5 act
+  apply no_maxwell_demon_strict
+  show 0 < (RealityChain'.singleton _).actualizationCount
+  rw [RealityChain'.singleton_actualizationCount]
+  show (0 : ℕ) < 1
+  omega
+
 /-- **Bracketed count bounded by length-bracketed.** -/
 theorem length_bounded_bracketed_certificate :
     -- Length 0 implies bracketed 0.
