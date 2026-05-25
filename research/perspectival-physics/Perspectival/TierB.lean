@@ -981,6 +981,23 @@ theorem RealityChain'.length_one_count_one_iff_actualization
   · rintro ⟨_, h_eq⟩
     rw [h_eq]
 
+/-- **Dual: length-1 strict chain with zero count iff bracketed.** -/
+theorem RealityChain'.length_one_count_zero_iff_bracketed
+    {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep' P C R₁ R₂) :
+    (RealityChain'.singleton step).actualizationCount = 0
+    ↔ ∃ h, step.step = TrajectoryStep.bracketed h := by
+  rw [RealityChain'.singleton_actualizationCount]
+  constructor
+  · intro h
+    cases h_eq : step.step with
+    | bracketed h_br => exact ⟨h_br, rfl⟩
+    | actualization _ =>
+        rw [h_eq] at h
+        simp at h
+  · rintro ⟨_, h_eq⟩
+    rw [h_eq]
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
