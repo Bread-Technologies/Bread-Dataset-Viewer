@@ -376,3 +376,40 @@ the program has earned only the negative side: a class of theories
 (classical) is provably excluded from supporting strict agency, but
 the class of theories that DO support it has not yet been
 characterized.** That is the honest position and the working target.
+
+## Latest session (closure of the L6 / L7 / R1 axis + CircleGPT positive existence)
+
+The framework's classical-vs-quantum dichotomy is now machine-verified
+at the level of `TransitiveAgency` (Hardy A5 transitivity clause)
+modulo a single axiom refinement (vertex-preservation along paths).
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| **R1 forward (vertex_is_pure)** — every vertex of Classical n is a pure state | `Classical.lean :: vertex_is_extreme, vertex_is_pure` | ✓ (a) |
+| **R6 discreteness** — vertex-preserving strict path id → σ for any σ ≠ 1 is impossible | `Classical.lean :: classical_general_no_strict_vertex_preserving_path_id_to_perm` | ✓ (a) |
+| **L6 closure under vertex-preservation** — no TransitiveAgency on Classical n ≥ 2 when paths preserve vertices | `Classical.lean :: classical_general_vertex_preserving_no_transitive_agency_unconditional` | ✓ (a) |
+| `vertexSet n`, `vertexSet_isDiscrete`, `vertex_trajectory_continuous`, `vertex_preserving_path_constant_on_vertex`, `permLinGen σ`, `permReversibleGen σ`, `permStrictReversibleGen σ`, `permLinGen_ne_id_iff`, `strict_path_vertex_preserving_eq` | `Classical.lean` | ✓ (a) |
+| **R6 correction** — naive "state-preserving + bijective = permutation" is FALSE for n ≥ 3; counterexample `t·I + (1-t)·C` documented inline | `Classical.lean :: SUMMARY` | ✓ (a) |
+| **CircleGPT positive existence** — circleStrictConnectedAgency: full non-trivial StrictConnectedAgency on the unit disk with U(1) rotation | `CircleGPT.lean :: circleStrictConnectedAgency` | ✓ (a) |
+| `unitLin`, `states`, `effects`, `circleGPT`, `rotZ θ`, `rotZ_preserves_states`, `rotZ_bijective`, `rotPath`, `rotStrictPath` | `CircleGPT.lean` | ✓ (a) |
+| **CircleGPT pure-state classification** — every PureState equals some circlePoint α | `CircleGPT.lean :: pure_state_classification_holds` | ✓ (a) |
+| **CircleGPT TransitiveAgency (unconditional)** — circleTransitiveAgency_unconditional | `CircleGPT.lean :: circleTransitiveAgency_unconditional` | ✓ (a) **framework-distinctive non-degenerate positive existence** |
+| **TransitiveAgency → Hardy A5 strong bridge** — Continuity.TransitiveAgency.hardy_axiom5, hardy_axiom5_state_path | `Continuity.lean` | ✓ (a) |
+| **TransitiveAgency cardinality bounds** — avail_at_least_two, avail_at_least_n, distinct_R_of_distinct_targets | `Continuity.lean` | ✓ (a) |
+| **TransitiveAgency.ofUniquePureState** — positive (degenerate) constructor | `Continuity.lean` | ✓ (a) |
+| **PurePreservingTransitiveAgency** — L7 typeclass (paths preserve pure states) | `Continuity.lean` | ✓ (a) |
+| **L7 closure on Classical (conditional on reverse R1)** — no PurePreservingTransitiveAgency on Classical n ≥ 2 if pure ⇒ vertex | `Classical.lean :: classical_general_no_pure_preserving_transitive_agency_conditional` | ✓ (a) |
+| **Hardy Axiom5_Continuity_Strong + axiom5_strong_of_transitive_agency** — bridge from TransitiveAgency to Hardy's substantive A5 form | `Hardy.lean` | ✓ (a) |
+
+**Framework's classical-vs-quantum dichotomy at the formal level:**
+- Classical n ≥ 2: provably fails L6 (TransitiveAgency under vertex-
+  preservation) **unconditionally**.
+- CircleGPT: satisfies L6 (StrictConnectedAgency with avail = U(1)
+  rotations) **unconditionally**; satisfies TransitiveAgency unconditionally.
+- The two sides are now provably DISTINCT classes of GPTs in Lean.
+
+**Open**: (i) Is the vertex-preservation hypothesis on paths forced by
+the framework's metaphysics (Axiom IV pattern stability), or must it
+be added as an explicit operational postulate? (ii) Reverse R1
+(pure ⇒ vertex in Classical n) — currently being proved by a subagent.
+With reverse R1, L7 closure on Classical becomes unconditional.
