@@ -232,6 +232,25 @@ unifying claim across semantic and physical levels.
     encode the Tier B exponential suppression as Tier A actualization
     rate.
 
+### Entropy addendum additions (per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`)
+
+23. **Both-halves Second Law** — Lean encoding of the mechanical half
+    is in place (`actualizeAt_many_to_one`, `axiom_II_actualization_irreversible`).
+    The subjectivist Jaynesian half (entropy = observer-relative
+    coarse-graining of distinguishable states) is metaphysical
+    commitment not currently Lean-encoded at the framework's scope.
+24. **Coarse-graining structure** — a future Lean module could
+    introduce a `CoarseGraining` type as a Setoid on Reality states
+    (or similar), with macrostates = quotient cells. The current
+    framework scope does not encode this; the philosophical
+    commitment is in the addendum.
+25. **Arrow unification (Seam 7)** — the Tier A arrow of time is
+    formally in place; the Tier B cosmological-arrow shadow requires
+    a spacetime model not currently in the framework.
+26. **Anti-drift discipline** — never treat entropy or information
+    as substantial properties; always reference the coarse-graining
+    and the perspective. This applies across all subsequent work.
+
 ## Methodology constants
 
 For all of the above:
