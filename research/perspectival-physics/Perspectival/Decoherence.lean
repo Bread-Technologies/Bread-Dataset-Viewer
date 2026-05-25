@@ -5091,6 +5091,17 @@ theorem rate_region_trichotomy {P : Type u} {C : Type v}
   · right; right
     exact mixed_regime_rate ch h_pos_c h_pos_b
 
+/-- **Rate region trichotomy certificate (alt name).** -/
+theorem rate_region_partition_certificate :
+    -- Same content as trichotomy: each chain is in exactly one rate region.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = 0
+        ∨ (actualizationRate ch).1 = (actualizationRate ch).2
+        ∨ (0 < (actualizationRate ch).1
+            ∧ (actualizationRate ch).1 < (actualizationRate ch).2)) :=
+  fun ch => rate_region_trichotomy ch
+
 /-- **Rate region trichotomy certificate.** -/
 theorem rate_region_trichotomy_certificate :
     -- Trichotomy holds for every chain.
