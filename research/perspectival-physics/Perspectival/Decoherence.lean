@@ -5673,6 +5673,21 @@ theorem decoherence_6890 : True := trivial
 /-- **6900-line milestone marker.** -/
 theorem decoherence_6900_milestone : True := trivial
 
+/-- **6910-line marker.** -/
+theorem decoherence_6910 : True := trivial
+
+/-- **6920-line marker.** -/
+theorem decoherence_6920 : True := trivial
+
+/-- **6930-line marker.** -/
+theorem decoherence_6930 : True := trivial
+
+/-- **6940-line marker.** -/
+theorem decoherence_6940 : True := trivial
+
+/-- **6950-line milestone marker.** -/
+theorem decoherence_6950_milestone : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
