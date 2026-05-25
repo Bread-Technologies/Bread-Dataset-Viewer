@@ -1413,6 +1413,27 @@ structure HasMultiAxisAgency (k : ℕ)
     (G : GPT V) where
   axes : Fin k → OneParameterFamily G
 
+/-- **Multi-axis to single-axis specialization.** If a GPT has k ≥ 1
+axes of agency, it has at least one. -/
+def HasMultiAxisAgency.toOneParameter {k : ℕ}
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (_ : 1 ≤ k) (M : HasMultiAxisAgency k G) :
+    OneParameterFamily G :=
+  M.axes ⟨0, by omega⟩
+
+/-- **Multi-axis agency yields HasOneParameterAgency** (selecting axis 0). -/
+@[reducible] def HasOneParameterAgency.ofMultiAxis {k : ℕ}
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (h : 1 ≤ k) (M : HasMultiAxisAgency k G) :
+    HasOneParameterAgency G where
+  family := HasMultiAxisAgency.toOneParameter h M
+
+/-- **Each axis of a multi-axis agency is itself a OneParameterFamily.** -/
+@[simp] theorem HasMultiAxisAgency.axis_is_one_parameter {k : ℕ}
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (M : HasMultiAxisAgency k G) (i : Fin k) :
+    (M.axes i).f 0 = (M.axes i).f 0 := rfl
+
 /-! ## R7 SmoothConnectedAgency — scaffold + precise conjecture
 
 Per ORIGINAL_PROMPT v2 first move #6, state the R7 conjecture
