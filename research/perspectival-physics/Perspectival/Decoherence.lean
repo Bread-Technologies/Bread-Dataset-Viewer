@@ -4645,6 +4645,22 @@ theorem loop_unified_measures {P : Type u} {C : Type v}
   ⟨loop_is_coherent ch, loop_bracketed_eq_length_general ch,
    loop_complexity_eq_length_general ch⟩
 
+/-- **Inverse: a chain with unified measures (count = 0) IS a loop.**
+The framework's structural characterization: if a chain has count 0
+and bracketed = length (equivalent conditions), then R₁ = R₂. -/
+theorem unified_measures_implies_loop {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : tierAEventCount ch = 0) :
+    R₁ = R₂ :=
+  ch.zero_actualization_implies_eq h
+
+/-- **Bidirectional loop characterization.** A chain is a loop
+(R₁ = R₂) iff it satisfies the unified measure structure (count = 0). -/
+theorem loop_iff_unified_measures {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    R₁ = R₂ ↔ tierAEventCount ch = 0 :=
+  (coherent_kernel_iff_endpoints_eq ch).symm
+
 /-- **Loop unified measures certificate.** Bundles the unified measure
 content for loop chains. -/
 theorem loop_unified_measures_certificate :
