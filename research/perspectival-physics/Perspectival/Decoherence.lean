@@ -129,5 +129,17 @@ example (P : Type u) (C : Type v)
   · -- length = 1.
     exact RealityChain'.singleton_length_eq_one _
 
+/-- **Example: a refl-bracketed trajectory's rate is (0, 1).** Pure
+Tier B inter-event evolution, no decoherence. -/
+example (P : Type u) (C : Type v) (R : Reality P C) :
+    actualizationRate
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) = (0, 1) := by
+  show RealityChain'.actualizationDensity _ = (0, 1)
+  show (RealityChain'.actualizationCount _, RealityChain'.length _) = (0, 1)
+  refine Prod.ext ?_ ?_
+  · rw [RealityChain'.singleton_actualizationCount]; rfl
+  · exact RealityChain'.singleton_length_eq_one _
+
 end Decoherence
 end Perspectival
