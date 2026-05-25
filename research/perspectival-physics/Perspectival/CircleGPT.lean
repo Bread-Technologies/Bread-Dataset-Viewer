@@ -1092,5 +1092,10 @@ noncomputable def rotOneParameterFamily :
     rw [rotStrictReversible_toLin, rotStrictReversible_toLin, rotStrictReversible_toLin,
         rotZ_comp]
 
+/-- CircleGPT satisfies `HasOneParameterAgency`. -/
+noncomputable instance circleHasOneParameterAgency :
+    Perspectival.Continuity.HasOneParameterAgency circleGPT where
+  family := rotOneParameterFamily
+
 end CircleGPT
 end Perspectival

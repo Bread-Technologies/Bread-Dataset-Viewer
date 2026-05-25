@@ -1375,6 +1375,15 @@ theorem OneParameterFamily.inv
     (F.f (-θ)).toLin.comp (F.f θ).toLin = LinearMap.id := by
   rw [← F.add]; simp
 
+/-- A GPT has *one-parameter agency* if it admits a `OneParameterFamily`.
+This is the framework's lightweight precursor to the full R7 Lie-group
+postulate — capturing "continuous symmetry exists" without requiring
+the full smooth-manifold infrastructure. -/
+class HasOneParameterAgency
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) where
+  family : OneParameterFamily G
+
 /-! ### Worked example: agency → Hardy A5 pipeline
 
 A concrete demonstration of the framework's machine-verified Hardy A5
