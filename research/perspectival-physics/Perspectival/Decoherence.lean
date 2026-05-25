@@ -1451,6 +1451,48 @@ example (R : Reality Bool Bool) :
   show 2 * _ + _ = 0
   rfl
 
+/-! ## Higher-arity composition examples
+
+Compositions involving 3+ chains demonstrate the associativity and
+compositional content scaling. -/
+
+/-- **Example: 3-fold composition associativity.** Three coherent
+chains composed associatively. -/
+example (R : Reality Bool Bool) :
+    let ch : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    -- Three coherent chains compose to a coherent chain of length 3.
+    trajectoryComplexity (ch.append (ch.append ch)) = 3 := by
+  intro ch
+  rw [trajectoryComplexity_append, trajectoryComplexity_append]
+  -- Each ch has complexity = 1.
+  show 1 + (1 + 1) = 3
+  rfl
+
+/-- **Example: alternating decoherent/coherent composition.**
+Demonstrates the framework's "alternating regime" content. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let R' := actualizeAt R m
+    -- Bracketed step at R → R, then actualization R → R'.
+    let ch_b : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let ch_a : RealityChain' Bool Bool R R' :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    -- Composition has count = 1, complexity = 3.
+    tierAEventCount (ch_b.append ch_a) = 1
+      ∧ trajectoryComplexity (ch_b.append ch_a) = 3 := by
+  intro R h_pot R' ch_b ch_a
+  refine ⟨?_, ?_⟩
+  · rw [tierAEventCount_append]; rfl
+  · rw [trajectoryComplexity_append]
+    -- ch_b has complexity 1, ch_a has complexity 2.
+    show 1 + 2 = 3
+    rfl
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
