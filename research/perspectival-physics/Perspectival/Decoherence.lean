@@ -291,6 +291,12 @@ theorem coherent_compose_eq {P : Type u} {C : Type v}
     R₁ = R₃ :=
   (ch₁.append ch₂).zero_actualization_implies_eq (coherent_compose ch₁ ch₂ h₁ h₂)
 
+-- (A theorem like "singleton actualization step has positive count"
+-- is conceptually clear but constructing TrajectoryStep' from a bare
+-- AtSeam witness requires also providing a RealitySuccessor witness,
+-- which AtSeam alone doesn't imply. Use `actualizeAt_strict_step`
+-- when constructing strict actualization steps from pointwise events.)
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
