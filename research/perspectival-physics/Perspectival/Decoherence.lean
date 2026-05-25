@@ -1993,6 +1993,53 @@ instance DecoherenceQuotient.loop_inhabited {P : Type u} {C : Type v}
     Inhabited (DecoherenceQuotient R R) :=
   ⟨Quotient.mk _ (RealityChain'.nil R)⟩
 
+/-! ## Loop insertion changes the trichotomy regime
+
+Inserting a loop into a pure-decoherent chain breaks pure decoherence
+(since the loop is bracketed). Inserting a loop into a coherent chain
+keeps it coherent. So loop insertion shifts the regime: coherent →
+coherent, pure-decoherent → mixed (when loop is nontrivial). -/
+
+/-- **Loop preserves coherence.** A loop chain prepended to a coherent
+chain produces a coherent chain. -/
+theorem loop_preserves_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    (loop.append ch).actualizationCount = 0 := by
+  rw [RealityChain'.append_actualizationCount, loop_is_coherent loop, h]
+
+/-- **Loop with positive length disrupts pure decoherence.** A
+non-trivial loop prepended to a pure-decoherent chain makes the
+result mixed (bracketed count becomes positive). -/
+theorem loop_disrupts_pure_decoherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂)
+    (h_loop_pos : 0 < loop.length)
+    (h_pure : ch.bracketedCount = 0) :
+    0 < (loop.append ch).bracketedCount := by
+  rw [RealityChain'.append_bracketedCount, h_pure]
+  -- loop has count 0 and length > 0, so bracketed = length > 0.
+  have h_loop_zero := loop_is_coherent loop
+  have h_loop_sum := loop.counts_sum
+  omega
+
+/-- **Loop insertion regime-shift certificate.** Bundles the loop
+regime-shift content. -/
+theorem loop_regime_shift_certificate :
+    -- (a) Loop preserves coherence.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 →
+      (loop.append ch).actualizationCount = 0) ∧
+    -- (b) Non-trivial loop disrupts pure decoherence.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop : RealityChain' P C R₁ R₁) (ch : RealityChain' P C R₁ R₂),
+      0 < loop.length → ch.bracketedCount = 0 →
+      0 < (loop.append ch).bracketedCount) :=
+  ⟨fun loop ch h => loop_preserves_coherent loop ch h,
+   fun loop ch h₁ h₂ => loop_disrupts_pure_decoherent loop ch h₁ h₂⟩
+
 /-- **Trio-of-morphisms certificate.** All three count-style measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms with
 zero on nil. -/
