@@ -3539,6 +3539,13 @@ theorem loop_npow_complexity {P : Type u} {C : Type v}
   rw [h_pow_zero, h_pow_brk, loop_chain_all_bracketed ch]
   omega
 
+/-- **Distinct counts ⇒ distinct DecoherenceEquivalent classes.** -/
+theorem distinct_counts_distinct_classes {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂)
+    (h : ch₁.actualizationCount ≠ ch₂.actualizationCount) :
+    ¬ DecoherenceEquivalent ch₁ ch₂ :=
+  fun h_eq => h h_eq
+
 /-- **Loop power measures certificate.** Bundles the loop power
 formulas for all measures (count, length, bracketed, complexity, rate). -/
 theorem loop_npow_measures_certificate :
