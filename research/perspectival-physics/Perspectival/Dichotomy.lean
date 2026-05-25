@@ -939,6 +939,34 @@ theorem framework_v2_extended_certificate :
    ⟨⟨CircleGPT.circleStrictConnectedAgency⟩,
     ⟨QubitGPT.qubitStrictConnectedAgency_full⟩⟩⟩
 
+/-- **v2 trajectory certificate** — bundles the v2 multi-step
+trajectory infrastructure: chains, counting, append additivity,
+bracketed-only-implies-eq, and the seam-crossing detector. This
+makes the framework's "evolution + measurement" architecture
+operationally concrete at the chain level. -/
+theorem framework_v2_trajectory_certificate :
+    -- 1. Append additivity for trajectory counts.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : TierA.Reality P C}
+        (ch₁ : TierB.RealityChain P C R₁ R₂) (ch₂ : TierB.RealityChain P C R₂ R₃),
+      (ch₁.append ch₂).actualizationCount
+        = ch₁.actualizationCount + ch₂.actualizationCount) ∧
+    -- 2. Counts sum to length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : TierA.Reality P C}
+        (ch : TierB.RealityChain P C R₁ R₂),
+      ch.actualizationCount + ch.bracketedCount = ch.length) ∧
+    -- 3. Bracketed-only chains have equal endpoints.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : TierA.Reality P C}
+        (ch : TierB.RealityChain P C R₁ R₂),
+      ch.actualizationCount = 0 → R₁ = R₂) ∧
+    -- 4. Distinct endpoints imply at least one actualization.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : TierA.Reality P C}
+        (ch : TierB.RealityChain P C R₁ R₂),
+      R₁ ≠ R₂ → 0 < ch.actualizationCount) :=
+  ⟨fun ch₁ ch₂ => TierB.RealityChain.append_actualizationCount ch₁ ch₂,
+   fun ch => TierB.RealityChain.counts_sum ch,
+   fun ch h => TierB.RealityChain.bracketed_only_implies_eq ch h,
+   fun ch h => TierB.RealityChain.distinct_endpoints_implies_actualization ch h⟩
+
 /-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
 
 A triple-tensor instance — `gptTensor (gptTensor CircleGPT QubitGPT)
