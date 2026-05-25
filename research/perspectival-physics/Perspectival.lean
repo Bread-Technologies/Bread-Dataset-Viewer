@@ -10,6 +10,7 @@ import Perspectival.Classical
 import Perspectival.Continuity
 import Perspectival.Distinguish
 import Perspectival.WantableGPT
+import Perspectival.GPTTensor
 import Perspectival.Examples
 import Perspectival.CircleGPT
 import Perspectival.Dichotomy

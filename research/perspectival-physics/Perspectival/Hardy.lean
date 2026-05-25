@@ -32,13 +32,17 @@ remaining task of Tier 1.
 -/
 
 import Perspectival.GPT
+import Perspectival.GPTTensor
 import Perspectival.Ontology
 import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Topology.UnitInterval
 import Perspectival.Continuity
+import Mathlib.LinearAlgebra.Dimension.Finrank
 
 namespace Perspectival
 namespace Hardy
+
+open TensorProduct
 
 variable {V : Type u} [AddCommGroup V] [Module ℝ V]
 
@@ -146,32 +150,54 @@ theorem axiom3_holds (G : GPT V) : Axiom3_Subspaces G := by
 A composite system consisting of subsystems A and B satisfies
 `N_AB = N_A * N_B` and `K_AB = K_A * K_B`.
 
-Category: **AUXILIARY** (refinement may make it DERIVABLE).
-The framework's Composition.lean shows disjoint-union has no cross-
-system meetings (no-signaling). However, the multiplicative composition
-rule (tensor structure) is STRONGER than the disjoint-union we have.
-Tensor composition appears to require an additional postulate about
-how independent perspectives' meeting probabilities multiply. -/
-def Axiom4_Composite_States_Multiply
-    {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
-    [AddCommGroup VB] [Module ℝ VB]
-    (GA : GPT VA) (GB : GPT VB) (nA nB : ℕ) : Prop :=
-  HasDimensionN GA nA → HasDimensionN GB nB →
-  -- There exists a composite GPT with dimension nA * nB. The
-  -- WantableGPT bridge concretely satisfies this via
-  -- Hardy_Axiom4_WantableGPT_dimension and
-  -- Hardy_Axiom4_WantableGPT_state_exists in WantableGPT.lean.
-  True  -- placeholder; full GPT-tensor formulation pending
+Category: **PARTIALLY DERIVABLE — DIMENSION HALF FORMALLY PROVEN**
+at the general GPT level via `GPT.gptTensor` (file
+`Perspectival/GPTTensor.lean`). The dimension half follows from
+`Module.finrank_tensorProduct`; see `Axiom4_Composite_Dimension`
+below. The state-half existence (a product state exists for every
+pair of component states) is `Axiom4_Composite_State_Exists`.
 
-/-- Vacuous proof of the placeholder Axiom 4. Concrete content for
-WantableGPT is in `Hardy_Axiom4_WantableGPT_dimension` and
-`Hardy_Axiom4_WantableGPT_state_exists` (WantableGPT.lean). -/
-theorem axiom4_holds_placeholder
+The OPERATIONAL multiplicativity N_AB = N_A * N_B (i.e. multiplicativity
+of the maximum perfectly-distinguishable set, not merely of the linear
+dimension) is the genuinely deep half: it requires showing every
+product of distinguishability sets remains a distinguishability set
+on the composite. That direction is OPEN in this formalization, and is
+where the framework would need to engage Hardy's "distinguishability
+preserves under product" argument. -/
+def Axiom4_Composite_Dimension
     {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
     [AddCommGroup VB] [Module ℝ VB]
-    (GA : GPT VA) (GB : GPT VB) (nA nB : ℕ) :
-    Axiom4_Composite_States_Multiply GA GB nA nB := by
-  intro _ _; trivial
+    (_GA : GPT VA) (_GB : GPT VB) : Prop :=
+  Module.finrank ℝ (VA ⊗[ℝ] VB)
+    = (Module.finrank ℝ VA) * (Module.finrank ℝ VB)
+
+/-- **Hardy A4 dimension half (general GPT level).** Holds for any
+pair of GPTs by `GPT.gptTensor_finrank_eq_mul`. -/
+theorem axiom4_dimension_holds
+    {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
+    [AddCommGroup VB] [Module ℝ VB]
+    (GA : GPT VA) (GB : GPT VB) :
+    Axiom4_Composite_Dimension GA GB :=
+  GPT.gptTensor_finrank_eq_mul GA GB
+
+/-- **Hardy A4 state-half (general GPT level): a product state of two
+component states is a state of the composite.** This holds by the very
+definition of `GPT.gptTensor` (separable / product states), without
+additional postulates. -/
+def Axiom4_Composite_State_Exists
+    {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
+    [AddCommGroup VB] [Module ℝ VB]
+    (GA : GPT VA) (GB : GPT VB) : Prop :=
+  ∀ ρA ∈ GA.states, ∀ ρB ∈ GB.states,
+    (ρA ⊗ₜ[ℝ] ρB) ∈ (GPT.gptTensor GA GB).states
+
+/-- **Hardy A4 state-half holds for any pair of GPTs.** -/
+theorem axiom4_state_exists_holds
+    {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
+    [AddCommGroup VB] [Module ℝ VB]
+    (GA : GPT VA) (GB : GPT VB) :
+    Axiom4_Composite_State_Exists GA GB :=
+  fun _ hρA _ hρB => GPT.gptTensor_tmul_mem_states GA GB hρA hρB
 
 /-- **Axiom 5 — Continuity of reversible transformations.**
 There exists a continuous reversible transformation on a system
@@ -241,15 +267,22 @@ theorem axiom5_strong_of_transitive_agency
                                    principle; not entailed by I–IV).
   Axiom 3 (Subspaces)            — DERIVABLE — FORMALLY PROVEN as
                                    `axiom3_holds` above.
-  Axiom 4 (Composite systems)    — PARTIALLY DERIVABLE: the dimension
-                                   half (K_AB = K_A · K_B) is formally
-                                   proven for WantableGPT as
+  Axiom 4 (Composite systems)    — PARTIALLY DERIVABLE: both the
+                                   dimension half and the state-half
+                                   existence are formally proven at the
+                                   GENERAL GPT level by
+                                   `axiom4_dimension_holds` and
+                                   `axiom4_state_exists_holds` (above),
+                                   via the `GPT.gptTensor` operator in
+                                   `Perspectival/GPTTensor.lean`. The
+                                   WantableGPT-specific predecessors
                                    `Hardy_Axiom4_WantableGPT_dimension`
-                                   in WantableGPT.lean. The tensor-state
-                                   factorization half requires the
-                                   `productState` construction in
-                                   Examples.lean, not auto-derived from
-                                   I–IV alone.
+                                   and `Hardy_Axiom4_WantableGPT_state_exists`
+                                   remain in WantableGPT.lean.
+                                   The OPEN piece is the operational
+                                   half N_AB = N_A · N_B (max
+                                   perfectly-distinguishable set
+                                   multiplicativity), not derived here.
   Axiom 5 (Continuity)           — DERIVABLE — formally proven in
                                    two forms:
                                    (i) `hardy_axiom5_of_agency` in

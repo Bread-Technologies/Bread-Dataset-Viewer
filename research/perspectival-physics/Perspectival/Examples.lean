@@ -3380,12 +3380,19 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V] (G : Perspectival.GPT V) :
     Perspectival.Hardy.Axiom3_Subspaces G :=
   Perspectival.Hardy.axiom3_holds G
 
-/-- Hardy Axiom 4 (placeholder) holds. -/
+/-- Hardy Axiom 4 (dimension half) holds. -/
 example {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
     [AddCommGroup VB] [Module ℝ VB]
-    (GA : Perspectival.GPT VA) (GB : Perspectival.GPT VB) (nA nB : ℕ) :
-    Perspectival.Hardy.Axiom4_Composite_States_Multiply GA GB nA nB :=
-  Perspectival.Hardy.axiom4_holds_placeholder GA GB nA nB
+    (GA : Perspectival.GPT VA) (GB : Perspectival.GPT VB) :
+    Perspectival.Hardy.Axiom4_Composite_Dimension GA GB :=
+  Perspectival.Hardy.axiom4_dimension_holds GA GB
+
+/-- Hardy Axiom 4 (state-half existence) holds. -/
+example {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
+    [AddCommGroup VB] [Module ℝ VB]
+    (GA : Perspectival.GPT VA) (GB : Perspectival.GPT VB) :
+    Perspectival.Hardy.Axiom4_Composite_State_Exists GA GB :=
+  Perspectival.Hardy.axiom4_state_exists_holds GA GB
 
 /-- N ≤ K for any GPT with a PerfectWitness. -/
 example {V : Type u} [AddCommGroup V] [Module ℝ V]
@@ -3935,11 +3942,17 @@ example : Perspectival.Hardy.Axiom1_Probabilities (Perspectival.Classical.gpt 3)
 example : Perspectival.Hardy.Axiom3_Subspaces (Perspectival.Classical.gpt 3) :=
   Perspectival.Hardy.axiom3_holds _
 
-/-- Hardy Axiom 4 placeholder is satisfied trivially. -/
-example : Perspectival.Hardy.Axiom4_Composite_States_Multiply
+/-- Hardy Axiom 4 (dimension half) holds at the general GPT level. -/
+example : Perspectival.Hardy.Axiom4_Composite_Dimension
     (Perspectival.WantableGPT.gpt Bool)
-    (Perspectival.WantableGPT.gpt Bool) 2 2 :=
-  Perspectival.Hardy.axiom4_holds_placeholder _ _ 2 2
+    (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Hardy.axiom4_dimension_holds _ _
+
+/-- Hardy Axiom 4 (state-half existence) holds at the general GPT level. -/
+example : Perspectival.Hardy.Axiom4_Composite_State_Exists
+    (Perspectival.WantableGPT.gpt Bool)
+    (Perspectival.WantableGPT.gpt Bool) :=
+  Perspectival.Hardy.axiom4_state_exists_holds _ _
 
 /-- Distinguishability of two specific WantableGPT Bool vertices. -/
 example : Perspectival.Hardy.Distinguishable
@@ -4743,12 +4756,19 @@ example {V : Type u} [AddCommGroup V] [Module ℝ V]
     (G : Perspectival.GPT V) (n k : ℕ) :
     Perspectival.Hardy.Axiom2_Simplicity G n k := trivial
 
-/-- Axiom 4 is the auxiliary placeholder (vacuously true).  -/
+/-- Axiom 4 (dimension half) holds at the general GPT level. -/
 example {VA VB : Type u}
     [AddCommGroup VA] [Module ℝ VA] [AddCommGroup VB] [Module ℝ VB]
-    (GA : Perspectival.GPT VA) (GB : Perspectival.GPT VB) (nA nB : ℕ) :
-    Perspectival.Hardy.Axiom4_Composite_States_Multiply GA GB nA nB :=
-  Perspectival.Hardy.axiom4_holds_placeholder GA GB nA nB
+    (GA : Perspectival.GPT VA) (GB : Perspectival.GPT VB) :
+    Perspectival.Hardy.Axiom4_Composite_Dimension GA GB :=
+  Perspectival.Hardy.axiom4_dimension_holds GA GB
+
+/-- Axiom 4 (state-half existence) holds at the general GPT level. -/
+example {VA VB : Type u}
+    [AddCommGroup VA] [Module ℝ VA] [AddCommGroup VB] [Module ℝ VB]
+    (GA : Perspectival.GPT VA) (GB : Perspectival.GPT VB) :
+    Perspectival.Hardy.Axiom4_Composite_State_Exists GA GB :=
+  Perspectival.Hardy.axiom4_state_exists_holds GA GB
 
 /-- Hardy Axiom 1 (probabilities in [0,1]) holds for the classical
 GPT on `n`. -/
