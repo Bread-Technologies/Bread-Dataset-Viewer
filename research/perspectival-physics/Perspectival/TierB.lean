@@ -1491,6 +1491,13 @@ def reflBracketedChain {P : Type u} {C : Type v} (R : Reality P C) :
     (R : Reality P C) : (reflBracketedChain R).bracketedCount = 1 :=
   (RealityChain.singleton_bracketed_count (bracketed_refl R)).2
 
+/-- **`reflBracketedChain` length is 1.** -/
+@[simp] theorem reflBracketedChain_length {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (reflBracketedChain R).length = 1 := by
+  show 1 + RealityChain.length _ = 1
+  simp [RealityChain.length]
+
 /-- **Worked example: a 2-step actualization trajectory.** Starting
 from an arbitrary R with two potential meetings m₁, m₂ (distinct),
 actualize m₁ first, then m₂. The 2-step chain has actualizationCount = 2,
