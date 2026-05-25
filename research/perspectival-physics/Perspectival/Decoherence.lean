@@ -4557,6 +4557,26 @@ example (R : Reality Bool Bool)
   rw [pow_succ]
   exact ((Commute.self_pow ch n).eq).symm
 
+/-- **Worked example: powers of base have same count.** Two different
+powers of the same base have same count (= 0). -/
+example (R : Reality Bool Bool)
+    (ch : RealityChain' Bool Bool R R) (m n : ℕ) :
+    (ch ^ m).actualizationCount = (ch ^ n).actualizationCount := by
+  have h₁ : (ch ^ m).actualizationCount = 0 := loop_npow_tierAEventCount ch m
+  have h₂ : (ch ^ n).actualizationCount = 0 := loop_npow_tierAEventCount ch n
+  omega
+
+/-- **Worked example: pow notation interacts with loop algebra.** -/
+example (R : Reality Bool Bool)
+    (ch : RealityChain' Bool Bool R R) :
+    (ch ^ 2 * ch ^ 3).actualizationCount = 0 := by
+  have h : tierAEventCount (ch ^ 2 * ch ^ 3) = 0 := by
+    rw [loop_tierAEventCount_mul]
+    have h₁ : tierAEventCount (ch ^ 2) = 0 := loop_npow_tierAEventCount ch 2
+    have h₂ : tierAEventCount (ch ^ 3) = 0 := loop_npow_tierAEventCount ch 3
+    omega
+  exact h
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
