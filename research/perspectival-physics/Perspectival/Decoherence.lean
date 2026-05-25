@@ -5221,6 +5221,27 @@ theorem quick_ref_loop_count {P : Type u} {C : Type v}
     ch.actualizationCount = 0 :=
   loop_is_coherent ch
 
+/-- **Quick reference: count adds under composition.** -/
+theorem quick_ref_count_adds {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).actualizationCount = ch₁.actualizationCount + ch₂.actualizationCount :=
+  RealityChain'.append_actualizationCount ch₁ ch₂
+
+/-- **Quick reference: bracketed adds under composition.** -/
+theorem quick_ref_bracketed_adds {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).bracketedCount = ch₁.bracketedCount + ch₂.bracketedCount :=
+  RealityChain'.append_bracketedCount ch₁ ch₂
+
+/-- **Quick reference: length adds under composition.** -/
+theorem quick_ref_length_adds {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).length = ch₁.length + ch₂.length :=
+  RealityChain'.append_length ch₁ ch₂
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
