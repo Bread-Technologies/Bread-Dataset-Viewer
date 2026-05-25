@@ -3096,6 +3096,45 @@ theorem loopPower_preserves_equivalence_class {P : Type u} {C : Type v}
       loopPower_actualizationCount, loopPower_actualizationCount]
   omega
 
+/-! ## Coherent chains as Tier B reversibility witnesses
+
+The framework's deepest claim: coherent chains (count = 0) ARE the
+Tier B reversible-limit description. By the kernel characterization,
+coherent ⇔ R₁ = R₂, so a coherent chain is precisely a witness that
+the system has not crossed any seam between R₁ and R₂. This is the
+formal-level Tier B reversibility content. -/
+
+/-- **Coherent chains witness Tier B reversibility.** A chain with
+zero actualizationCount is the formal correlate of "Tier B reversible
+limit": no irreversible content, endpoints equal, past invariant. -/
+theorem coherent_witnesses_tier_B_reversibility {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h_co : tierAEventCount ch = 0) :
+    R₁ = R₂
+      ∧ past R₁ = past R₂
+      ∧ ch.bracketedCount = ch.length
+      ∧ trajectoryComplexity ch = ch.length := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact (coherent_kernel_iff_endpoints_eq ch).mp h_co
+  · exact coherent_chain_invariant_past ch h_co
+  · have h_sum := ch.counts_sum
+    have h_co' : ch.actualizationCount = 0 := h_co
+    omega
+  · exact coherent_complexity ch h_co
+
+/-- **Tier B reversibility certificate.** Bundles the coherent-chain
+characterization. -/
+theorem tier_B_reversibility_certificate :
+    -- A coherent chain witnesses Tier B reversibility.
+    ∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+      (ch : RealityChain' P C R₁ R₂),
+    tierAEventCount ch = 0 →
+    R₁ = R₂
+      ∧ past R₁ = past R₂
+      ∧ ch.bracketedCount = ch.length
+      ∧ trajectoryComplexity ch = ch.length :=
+  fun ch h => coherent_witnesses_tier_B_reversibility ch h
+
 /-- **Rate length is NOT invariant under DecoherenceEquivalent in
 general.** Witnesses: nil chain vs singleton bracketed chain at R
 both have count 0 but different lengths (0 vs 1). -/
