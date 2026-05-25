@@ -4798,6 +4798,17 @@ example (R : Reality Bool Bool) :
   rw [RealityChain'.singleton_actualizationCount, RealityChain'.singleton_length]
   rfl
 
+/-- **Worked example: rate of base^3 is (0, 3).** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    actualizationRate (base ^ 3) = (0, 3) := by
+  intro base
+  rw [loop_rate, loop_npow_length]
+  show (0, 3 * (RealityChain'.singleton _).length) = (0, 3)
+  rw [RealityChain'.singleton_length]
+
 /-- **Rate at fixed length certificate.** Combines fixed-length
 characterization with extremal cases. -/
 theorem rate_at_fixed_length_certificate :
