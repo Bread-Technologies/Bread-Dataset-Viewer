@@ -56,6 +56,42 @@ carrier. This identifies the "where does QM come from" answer at the
 architecture level: from the choice of state carrier on which the
 bracketed dynamics acts.
 
+## 0b. v2 entropy addendum
+
+Per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` (which supersedes v2
+wherever they conflict): entropy is subjectivist coarse-graining
+(Jaynes); the framework extends Jaynes from inference to structural
+anti-realism. The Second Law derives via a both-halves argument —
+subjectivist count of distinguishable macrostates + mechanical
+impossibility of many-to-one collapse via Picard-Lindelöf (WBT 2024).
+Information is the dual: differential structure of distinguishability,
+not Shannon-substance.
+
+Jaynes is promoted to load-bearing; QBism reaffirmed as load-bearing
+(QBism's Dutch-book coherence is the QM analog of the consistency-
+across-coarse-grainings requirement for entropy).
+
+**The framework owns the word "subjectivism."** Realist-respectability
+relabeling ("structural realism, not subjectivism") is drift.
+Subjectivism here is *real* subjectivism: values perspective-relative,
+multiplicities real, structural constraints on consistent value-
+assignments real. Not "anything goes."
+
+**Dissolutions (per addendum):** Past Hypothesis dissolves; Penrose's
+Weyl curvature puzzle dissolves; Boltzmann brain worries dissolve;
+black hole entropy reframes (S = A/4 = dimensionality of
+distinguishable-from-outside structure under outside-observer
+coarse-graining, not horizon-substance); cosmological and
+thermodynamic arrows unify under Axiom II actualization-flow;
+Verlinde's entropic gravity / holographic principle / Bekenstein
+bound all reframe (same math, different ontology). See
+`TIER4_DISSOLUTIONS.md` items #17-#22.
+
+**Anti-drift discipline:** never treat entropy or information as
+substantial properties; always reference the coarse-graining and the
+perspective. "The entropy of X" without naming the coarse-graining
+is forbidden — pause and reformulate.
+
 ## 0. The arc, in one paragraph
 
 Tier 1 of the program — *establish that the framework can do real

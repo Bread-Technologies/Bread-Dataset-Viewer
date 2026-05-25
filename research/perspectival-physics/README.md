@@ -20,6 +20,17 @@ mechanical content of Axiom II via Picard-Lindelöf. See
 `ORIGINAL_PROMPT.md` (v2), `V2_AUDIT.md`, `SEAMS.md`, and the v2
 Lean modules `TierA.lean`, `TierB.lean`.
 
+**v2 entropy addendum (current):** entropy is not a property the
+universe has; it is subjectivist coarse-graining (Jaynes), with the
+framework extending Jaynes from inference to structural anti-realism.
+The Second Law is derived via a both-halves argument: subjectivist
+count of distinguishable macrostates + mechanical impossibility of
+many-to-one collapse under conservative dynamics (WBT 2024 Picard-
+Lindelöf). The Past Hypothesis, Boltzmann brains, black hole entropy,
+and Verlinde's entropic gravity all dissolve or reframe under this
+ontology. See `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` and
+`TIER4_DISSOLUTIONS.md` items #17-#22.
+
 **Headline results** (all machine-verified, no `sorry`):
 1. **Hardy QUADCHOTOMY**: four GPT instances at distinct Hardy K-
    signatures — classical (K=N), CircleGPT (rebit, K=N(N+1)/2),
