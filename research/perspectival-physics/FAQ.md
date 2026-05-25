@@ -305,6 +305,30 @@ actualization at a potential meeting lifts).
 successor evidence to recover a plain chain. Length and
 actualizationCount are preserved.
 
+## Q18. Is there a formal Lean module for decoherence?
+
+**Framework answer:** Yes — `Perspectival/Decoherence.lean`
+formalizes the framework's Seam 4 reading of decoherence (per
+`SEAMS.md`): decoherence as the accumulated effect of Tier A
+actualization events at the system-environment interface.
+
+**Core content:**
+- `actualizationRate` : the count-based rate (count, length) along
+  a strict chain.
+- `coherent_regime` : count = 0 → rate (0, length).
+- `decoherence_regime` : bracketed = 0 → rate (length, length).
+- `concatenated_decoherence` : rate composes coordinate-wise under
+  chain concatenation.
+- `decoherence_certificate` : single Lean expression bundling these.
+
+**What's NOT formalized:**
+- Continuous-time exponential-suppression dynamics.
+- Operational definitions of "environment Tier A density".
+- Quantitative decoherence-time predictions.
+
+These open extensions are documented as Tier 2 work. The current
+module establishes the count-based structural shadow.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
