@@ -1261,6 +1261,37 @@ theorem past_functor_compose {P : Type u} {C : Type v}
 theorem past_functor_id {P : Type u} {C : Type v} (R : Reality P C) :
     past R ⊆ past R := fun _ h => h
 
+/-! ## Anti-realist monoid morphism interpretation
+
+The framework's anti-realism: only the COUNT (= number of seam
+crossings) is path-independent (in the sense that two chains
+between same endpoints have agreeing counts modulo equivalence
+class). But the count IS a morphism — composable, structurally
+predictable. The framework owns this: anti-realist about
+substance (no "amount of decoherence"), realist about structure
+(count algebra is rigorous + composable). -/
+
+/-- **Anti-realist structure: count is composable.** Despite the
+anti-realism (no substantial decoherence-amount), the count
+respects composition. This is the framework's "structural realism
+about counts" position. -/
+theorem anti_realist_structural_realism :
+    -- Anti-realist on content (path-dependent complexity).
+    (∃ (P : Type) (C : Type) (R : Reality P C)
+        (ch₁ ch₂ : RealityChain' P C R R),
+      trajectoryComplexity ch₁ ≠ trajectoryComplexity ch₂) ∧
+    -- But realist about structure (compositional count).
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂)
+        = tierAEventCount ch₁ + tierAEventCount ch₂) :=
+  ⟨⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+    RealityChain'.nil _,
+    RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+    by decide⟩,
+   fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂⟩
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
