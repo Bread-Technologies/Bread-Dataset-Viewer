@@ -480,6 +480,28 @@ noncomputable def productTransform
   show TensorProduct.map f₁ f₂ (ρ₁ ⊗ₜ[ℝ] ρ₂) = (f₁ ρ₁) ⊗ₜ[ℝ] (f₂ ρ₂)
   rw [TensorProduct.map_tmul]
 
+/-- The product transformation of identity maps is the identity on the
+tensor product. -/
+@[simp] theorem productTransform_id
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂] :
+    productTransform (LinearMap.id : V₁ →ₗ[ℝ] V₁) (LinearMap.id : V₂ →ₗ[ℝ] V₂)
+    = LinearMap.id := by
+  show TensorProduct.map LinearMap.id LinearMap.id = LinearMap.id
+  exact TensorProduct.map_id
+
+/-- Composition of product transformations: `(g₁ ⊗ g₂) ∘ (f₁ ⊗ f₂) =
+(g₁ ∘ f₁) ⊗ (g₂ ∘ f₂)`. -/
+theorem productTransform_comp
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (f₁ g₁ : V₁ →ₗ[ℝ] V₁) (f₂ g₂ : V₂ →ₗ[ℝ] V₂) :
+    (productTransform g₁ g₂).comp (productTransform f₁ f₂)
+    = productTransform (g₁.comp f₁) (g₂.comp f₂) := by
+  show (TensorProduct.map g₁ g₂).comp (TensorProduct.map f₁ f₂)
+     = TensorProduct.map (g₁.comp f₁) (g₂.comp f₂)
+  exact (TensorProduct.map_comp g₁ g₂ f₁ f₂).symm
+
 
 end GPT
 end Perspectival
