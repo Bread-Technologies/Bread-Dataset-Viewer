@@ -3752,6 +3752,23 @@ theorem class_eq_iff_equivalent {P : Type u} {C : Type v}
     DecoherenceEquivalent ch₁ ch₂ :=
   ⟨class_eq_implies_equivalent, toDecoherenceClass_equivalent⟩
 
+/-- **Distinct classes ⇒ distinct quotient elements.** Contrapositive
+of `class_eq_iff_equivalent`. -/
+theorem distinct_class_distinct_quotient {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂)
+    (h : ¬ DecoherenceEquivalent ch₁ ch₂) :
+    toDecoherenceClass ch₁ ≠ toDecoherenceClass ch₂ :=
+  fun h_eq => h (class_eq_implies_equivalent h_eq)
+
+/-- **Distinct counts ⇒ distinct quotient elements.** Composition of
+`distinct_counts_distinct_classes` and `distinct_class_distinct_quotient`. -/
+theorem distinct_counts_distinct_quotient {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂)
+    (h : ch₁.actualizationCount ≠ ch₂.actualizationCount) :
+    toDecoherenceClass ch₁ ≠ toDecoherenceClass ch₂ :=
+  distinct_class_distinct_quotient ch₁ ch₂
+    (distinct_counts_distinct_classes ch₁ ch₂ h)
+
 /-- **Class projection certificate.** Bundles the canonical projection
 content. -/
 theorem class_projection_certificate :
