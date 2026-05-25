@@ -4850,6 +4850,14 @@ example (R : Reality Bool Bool) :
   show (0, 4 * (RealityChain'.singleton _).length) = (0, 4)
   rw [RealityChain'.singleton_length]
 
+/-- **Bool nil rate equals (0, 0).** Marker example. -/
+example (R : Reality Bool Bool) :
+    actualizationRate (RealityChain'.nil R) = (0, 0) := rfl
+
+/-- **Unit nil rate equals (0, 0).** Marker example. -/
+example (R : Reality Unit Unit) :
+    actualizationRate (RealityChain'.nil R) = (0, 0) := rfl
+
 /-- **Decoherence module's complete content** in one umbrella theorem.
 This is the framework's "everything" statement for Seam 4. -/
 theorem decoherence_complete_content :
