@@ -4048,6 +4048,27 @@ example (R : Reality Bool Bool) :
   show 5 * (RealityChain'.singleton _).length = 5
   rw [RealityChain'.singleton_length]
 
+/-- **loopPower at 1 equals the chain (with right-association from nil).** -/
+@[simp] theorem loopPower_one {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    loopPower ch 1 = ch.append (RealityChain'.nil R) := rfl
+
+/-- **loopPower at 1 measures.** -/
+theorem loopPower_one_count {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    (loopPower ch 1).actualizationCount = ch.actualizationCount := by
+  show (ch.append (RealityChain'.nil R)).actualizationCount = ch.actualizationCount
+  rw [RealityChain'.append_actualizationCount, RealityChain'.nil_actualizationCount]
+  omega
+
+/-- **loopPower at 1 length.** -/
+theorem loopPower_one_length {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    (loopPower ch 1).length = ch.length := by
+  show (ch.append (RealityChain'.nil R)).length = ch.length
+  rw [RealityChain'.append_length, RealityChain'.nil_length]
+  omega
+
 /-- **Complexity-length bounds certificate.** -/
 theorem complexity_length_bounds_certificate :
     -- Lower bound: complexity ≥ length.
