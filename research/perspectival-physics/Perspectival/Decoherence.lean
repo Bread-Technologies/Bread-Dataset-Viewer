@@ -5208,6 +5208,19 @@ theorem quick_ref_complexity_bounds {P : Type u} {C : Type v}
       ∧ trajectoryComplexity ch ≤ 2 * ch.length :=
   ⟨complexity_ge_length ch, complexity_le_twice_length ch⟩
 
+/-- **Quick reference: nil has all measures zero.** -/
+theorem quick_ref_nil_zero {P : Type u} {C : Type v} (R : Reality P C) :
+    (RealityChain'.nil (P := P) (C := C) R).actualizationCount = 0
+      ∧ (RealityChain'.nil (P := P) (C := C) R).bracketedCount = 0
+      ∧ (RealityChain'.nil (P := P) (C := C) R).length = 0 :=
+  ⟨rfl, rfl, rfl⟩
+
+/-- **Quick reference: loops have count 0.** -/
+theorem quick_ref_loop_count {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    ch.actualizationCount = 0 :=
+  loop_is_coherent ch
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
