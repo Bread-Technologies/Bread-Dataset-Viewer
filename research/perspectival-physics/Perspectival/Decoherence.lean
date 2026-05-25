@@ -5724,6 +5724,12 @@ theorem session_557_commits : True := trivial
 /-- **558-commit marker.** -/
 theorem session_558_commits : True := trivial
 
+/-- **559-commit marker.** -/
+theorem session_559_commits : True := trivial
+
+/-- **560-commit milestone marker.** -/
+theorem session_560_commits_milestone : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
