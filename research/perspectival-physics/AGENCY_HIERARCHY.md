@@ -38,13 +38,25 @@ Updated hierarchy:
 - L3: StrongConnectedAgency (R6-bis)
 - L4: StrictConnectedAgency (R6-tris)
 - L5: GroupClosedAgency (R7 algebraic scaffold)
-- L6: TransitiveAgency (Hardy A5 substantive) [IMPLEMENTED THIS SESSION]
-- L7: SmoothConnectedAgency (R7 full Lie-group) [deferred]
+- L6: TransitiveAgency (Hardy A5 substantive) [IMPLEMENTED]
+- L7: PurePreservingTransitiveAgency (pure states preserved along paths) [IMPLEMENTED]
+- L8: SmoothConnectedAgency (R7 full Lie-group) [deferred]
 
-Major new theorem at L6:
+Major theorems at L6/L7:
 - `classical_n2_no_transitive_agency`: R6 disconnect + Hardy A5
-  transitivity are INCOMPATIBLE on Classical Bool. The framework's
-  strongest classical-side impossibility result this session.
+  transitivity are INCOMPATIBLE on Classical Bool.
+- `classical_general_vertex_preserving_no_transitive_agency_unconditional`:
+  general n ≥ 2 closure for L6 under vertex-preservation (with
+  PureState discharged via R1).
+- `classical_general_no_pure_preserving_transitive_agency`: L7
+  unconditional closure on Classical n ≥ 2.
+- `framework_dichotomy_existential` (Dichotomy.lean): the framework's
+  classical-vs-quantum dichotomy as a single theorem.
+- `Continuity.TransitiveAgency.hardy_axiom5`: bridge from L6 to Hardy A5
+  strong-form.
+- `CircleGPT.circleStrictConnectedAgency` and
+  `circleTransitiveAgency_unconditional`: positive existence of L4/L6
+  on a non-classical GPT (CircleGPT).
 
 ## The six levels (original numbering)
 
