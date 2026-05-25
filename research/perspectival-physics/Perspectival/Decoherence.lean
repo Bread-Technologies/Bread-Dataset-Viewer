@@ -4100,6 +4100,27 @@ theorem loopPower_complexity_additive {P : Type u} {C : Type v}
       = trajectoryComplexity (loopPower ch (m + n)) := by
   rw [loopPower_complexity, loopPower_complexity, loopPower_complexity, Nat.add_mul]
 
+/-- **4-fold chain composition associates.** Iterated composition of
+4 chains can be re-associated freely. -/
+theorem four_chain_compose_assoc {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ R₄ R₅ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (ch₃ : RealityChain' P C R₃ R₄) (ch₄ : RealityChain' P C R₄ R₅) :
+    ((ch₁.append ch₂).append ch₃).append ch₄
+      = ch₁.append (ch₂.append (ch₃.append ch₄)) := by
+  rw [RealityChain'.append_assoc, RealityChain'.append_assoc]
+
+/-- **5-fold chain composition associates.** -/
+theorem five_chain_compose_assoc {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ R₄ R₅ R₆ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (ch₃ : RealityChain' P C R₃ R₄) (ch₄ : RealityChain' P C R₄ R₅)
+    (ch₅ : RealityChain' P C R₅ R₆) :
+    (((ch₁.append ch₂).append ch₃).append ch₄).append ch₅
+      = ch₁.append (ch₂.append (ch₃.append (ch₄.append ch₅))) := by
+  rw [RealityChain'.append_assoc, RealityChain'.append_assoc,
+      RealityChain'.append_assoc]
+
 /-- **loopPower additive certificate.** All three measures
 (actualizationCount, length, complexity) are additive over loop power
 exponents. This is the structural shadow of: `loopPower ch m + loopPower ch n
