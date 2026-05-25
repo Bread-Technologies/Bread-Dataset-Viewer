@@ -3666,6 +3666,72 @@ theorem classical_n3_no_strict_vertex_preserving_path_id_to_threeCycle
   classical_general_no_strict_vertex_preserving_path_id_to_perm (n := 3)
     threeCycle threeCycle_ne_one p hvp
 
+/-! ### L6 closure with vertex-preservation axiom refinement
+
+The L6 TransitiveAgency impossibility on Classical n ≥ 2, fully closed
+under the additional "paths preserve vertices along the way" hypothesis.
+
+This is the framework's intended axiom refinement: a `TransitiveAgency`
+should require not just state-preservation along paths (current strict
+agency) but VERTEX-preservation along paths. In Classical, vertices are
+pure states (R1, currently a hypothesis), so this is the same as
+"pure-state-preservation along paths" — a natural strengthening
+expressing the framework's commitment to particulars-as-stable-patterns.
+
+With this refinement, the L6 result FULLY closes for all n ≥ 2 (not
+just transpositions): no TransitiveAgency on Classical n exists when
+paths preserve vertices. -/
+
+/-- **L6 closure**: no `TransitiveAgency` on Classical n (n ≥ 2) exists
+when its underlying strict paths preserve vertices along the way.
+
+This subsumes the det-sign disconnect (which only handled n = 2 cleanly,
+or transpositions for general n) into a single clean theorem covering
+ALL non-identity transformations. -/
+theorem classical_general_vertex_preserving_no_transitive_agency
+    (h : 1 < n)
+    (T : Perspectival.Continuity.TransitiveAgency (gpt n))
+    (hp0 : Perspectival.Continuity.PureState (gpt n)
+              (vertex n ⟨0, by omega⟩))
+    (hp1 : Perspectival.Continuity.PureState (gpt n)
+              (vertex n ⟨1, by omega⟩))
+    (hvp_paths :
+      ∀ R₁ R₂ : Perspectival.Continuity.StrictReversible (gpt n),
+        R₁ ∈ T.avail → R₂ ∈ T.avail →
+        ∀ (p : Perspectival.Continuity.StrictReversiblePath (gpt n) R₁ R₂)
+          (t : unitInterval) (i : Fin n),
+          p.γ t (vertex n i) ∈ vertexSet n) :
+    False := by
+  -- vertices 0 and 1 are distinct (since n ≥ 2).
+  have hne : (vertex n ⟨0, by omega⟩) ≠ (vertex n ⟨1, by omega⟩) := by
+    intro habs
+    have := congr_fun habs ⟨0, by omega⟩
+    simp [vertex] at this
+  -- Transitivity gives R ∈ avail with R(v0) = v1.
+  obtain ⟨R, hR_avail, hRρ⟩ := T.transitive_on_pure
+    (vertex n ⟨0, by omega⟩) (vertex n ⟨1, by omega⟩) hp0 hp1
+  -- Strict paths gives a vertex-preserving path from id to R.
+  have h_id : Perspectival.Continuity.StrictReversible.id (gpt n) ∈ T.avail :=
+    T.id_avail
+  obtain ⟨p⟩ := T.strict_paths
+    (Perspectival.Continuity.StrictReversible.id (gpt n)) R h_id hR_avail
+  -- Vertex-preservation hypothesis applies to this path.
+  have hvp : ∀ t : unitInterval, ∀ i : Fin n,
+              p.γ t (vertex n i) ∈ vertexSet n :=
+    hvp_paths _ _ h_id hR_avail p
+  -- Conclude (id).toLin = R.toLin from vertex-preserving discreteness.
+  have heq := strict_path_vertex_preserving_eq (n := n) p hvp
+  -- LHS: (id).toLin = LinearMap.id, so RHS R.toLin = id.
+  have hLHS : (Perspectival.Continuity.StrictReversible.id (gpt n)).toLin
+              = (LinearMap.id : V n →ₗ[ℝ] V n) := rfl
+  rw [hLHS] at heq
+  -- So R.toLin (vertex n 0) = id (vertex n 0) = vertex n 0.
+  have h_v0 : R.toLin (vertex n ⟨0, by omega⟩) = vertex n ⟨0, by omega⟩ := by
+    rw [← heq]; rfl
+  -- But R.toLin (vertex n 0) = vertex n 1 by hRρ.
+  rw [hRρ] at h_v0
+  exact hne h_v0.symm
+
 end Classical
 end Perspectival
 
