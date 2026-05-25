@@ -4171,6 +4171,24 @@ example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
   intro R h_pot R' base act
   exact chain_compose_preserves_time_arrow base act
 
+/-- **Worked example: complexity of various refl loops on Bool.** Shows
+that the n-fold reflBracketed loop has complexity n for all n. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    trajectoryComplexity (loopPower base 0) = 0
+      ∧ trajectoryComplexity (loopPower base 1) = 1
+      ∧ trajectoryComplexity (loopPower base 5) = 5
+      ∧ trajectoryComplexity (loopPower base 10) = 10 := by
+  intro base
+  refine ⟨?_, ?_, ?_, ?_⟩
+  all_goals {
+    rw [loopPower_complexity]
+    show _ * (RealityChain'.singleton _).length = _
+    rw [RealityChain'.singleton_length]
+  }
+
 /-! ## Final framework integration
 
 The Decoherence module's content integrates with the rest of the
