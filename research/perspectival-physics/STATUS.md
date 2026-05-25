@@ -533,6 +533,8 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `framework_v2_certificate`, `framework_v2_extended_certificate` — consolidated v2 facts | `Dichotomy.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
 | `SmoothConnectedAgency` scaffold | `Continuity.lean` | ✓ (a) scaffold only |
+| `SmoothConnectedAgency.ofStrict`, `R7_Conjecture_of_strict` | `Continuity.lean` | ✓ (a) scaffold-level |
+| `R7_Conjecture_holds_on_circleGPT`, `_qubitGPT` — R7 instance evidence | `Dichotomy.lean` | ✓ (a) **scaffold-level R7** |
 | `SEAMS.md` — catalog of 6 Tier A / Tier B seams | docs | ✓ documented |
 | `V2_AUDIT.md` — honest re-examination of prior Tier B work | docs | ✓ documented |
 
