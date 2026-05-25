@@ -173,6 +173,21 @@ theorem coherent_plus_decoherent {P : Type u} {C : Type v}
   have h_deco₂ := decoherence_regime ch₂ h₂
   rw [h_co₁, h_deco₂]; simp
 
+/-- **Reverse: decoherent + coherent.** Symmetric composition gives
+rate (ch₁.length, ch₁.length + ch₂.length). The decoherent part
+contributes its actualizations early; the coherent tail extends
+length only. -/
+theorem decoherent_plus_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h₁ : ch₁.bracketedCount = 0)
+    (h₂ : ch₂.actualizationCount = 0) :
+    actualizationRate (ch₁.append ch₂) = (ch₁.length, ch₁.length + ch₂.length) := by
+  rw [concatenated_decoherence]
+  have h_deco₁ := decoherence_regime ch₁ h₁
+  have h_co₂ := coherent_regime ch₂ h₂
+  rw [h_deco₁, h_co₂]; simp
+
 /-! ## Decoherence framework summary
 
 This module provides the structural shadow of the framework's reading
