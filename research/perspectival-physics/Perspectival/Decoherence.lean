@@ -3930,6 +3930,17 @@ theorem loopMonoid_default_count {P : Type u} {C : Type v}
     {R : Reality P C} :
     tierAEventCount (default : RealityChain' P C R R) = 0 := rfl
 
+/-- **Loop submonoid trivial decomposition.** Every loop chain can be
+"decomposed" as itself times nil — a trivial but useful identity. -/
+theorem loop_trivial_decomposition {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    ch = ch * 1 := (mul_one ch).symm
+
+/-- **Loop submonoid identity-times-self decomposition.** -/
+theorem loop_identity_decomposition {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    ch = 1 * ch := (one_mul ch).symm
+
 /-- **Three-level anti-realism witness.** The framework's anti-realism
 content holds at multiple levels:
 1. STATUS (path-independent): coherence depends only on endpoints.
