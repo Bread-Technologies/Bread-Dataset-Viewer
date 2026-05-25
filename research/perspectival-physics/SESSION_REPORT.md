@@ -703,7 +703,7 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~800 lines)
+### Decoherence module final state (~1200 lines, 190+ commits)
 
 `Perspectival/Decoherence.lean` now contains:
 
@@ -742,9 +742,22 @@ operational at the count-based level.
 **Bundled certificates:**
 - `decoherence_certificate` : 4-fact rate-pair bundle
 - `framework_decoherence_full_certificate` : 4-fact full bundle (rate + path-independence + complexity bounds + compositionality)
+- `decoherence_monotonicity_certificate` : tier A + length + complexity monotonicity bundle
+- `decoherence_anti_realism` : status endpoint-determined + content path-dependent (with explicit witness)
+- `decoherence_equivalence_certificate` : refl + symm + trans + two-sided append congruence
 
-**Worked examples:** nil chain, singleton actualizeAt, singleton
-bracketed, 2-bracketed composition.
+**DecoherenceEquivalent relation:**
+- `DecoherenceEquivalent` : ch₁.actualizationCount = ch₂.actualizationCount
+- `_refl`, `_symm`, `_trans` : equivalence laws
+- `_append_left`, `_append_right`, `_append_both` : congruence under chain composition
+- `class_determined_by_count` : the iff form
+- `coherent_decoherence_equivalent_to_nil` : canonical form for coherent class
+- `same_tier_A_implies_equivalent`, `DecoherenceEquivalent_status/_tier_A/_iff_tier_A`
+
+**Worked examples:** nil chain, singleton actualizeAt (complexity = 2),
+singleton bracketed (complexity = 1), 2-bracketed composition
+(complexity = 2), counter-example showing complexity refines
+DecoherenceEquivalent.
 
 The framework's Seam 4 content is now substantially formalized
 at the count-based structural level. The continuous-time dynamics
