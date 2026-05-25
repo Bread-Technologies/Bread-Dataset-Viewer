@@ -388,6 +388,16 @@ theorem trajectory_trichotomy {P : Type u} {C : Type v}
       · exact Nat.pos_of_ne_zero h_c
       · exact Nat.pos_of_ne_zero h_b
 
+/-- **Length-positive ⇒ trichotomy is proper.** If the chain has
+positive length, the three categories partition trajectories
+(disjointly + exhaustively). -/
+theorem trajectory_trichotomy_at_positive_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (_h_len : 0 < ch.length) :
+    ch.actualizationCount = 0 ∨ ch.bracketedCount = 0 ∨
+    (0 < ch.actualizationCount ∧ 0 < ch.bracketedCount) :=
+  trajectory_trichotomy ch
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
