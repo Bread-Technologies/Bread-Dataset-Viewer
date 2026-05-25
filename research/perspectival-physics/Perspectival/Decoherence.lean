@@ -5330,6 +5330,18 @@ theorem quick_ref_loop_pow_count {P : Type u} {C : Type v}
     tierAEventCount (ch ^ n) = 0 :=
   loop_npow_tierAEventCount ch n
 
+/-- **Quick reference: loop pow has length = n * ch.length.** -/
+theorem quick_ref_loop_pow_length {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    (ch ^ n).length = n * ch.length :=
+  loop_npow_length ch n
+
+/-- **Quick reference: loop pow has complexity = n * ch.length.** -/
+theorem quick_ref_loop_pow_complexity {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    trajectoryComplexity (ch ^ n) = n * ch.length :=
+  loop_npow_complexity ch n
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
