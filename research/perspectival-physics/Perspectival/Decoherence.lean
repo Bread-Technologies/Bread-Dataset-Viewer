@@ -1896,6 +1896,14 @@ theorem length_nil {P : Type u} {C : Type v}
     (R : Reality P C) :
     (RealityChain'.nil (P := P) (C := C) R).length = 0 := rfl
 
+/-- **The trio sum law.** For any strict chain, tierAEventCount +
+bracketedCount = length. This is the framework's "Tier A + Tier B =
+Total" identity at the count level. -/
+theorem trio_sum_law {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    tierAEventCount ch + ch.bracketedCount = ch.length :=
+  ch.counts_sum
+
 /-- **Trio-of-morphisms certificate.** All three count-style measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms with
 zero on nil. -/
