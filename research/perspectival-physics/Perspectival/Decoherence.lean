@@ -368,6 +368,26 @@ theorem mixed_regime_count_bounds {P : Type u} {C : Type v}
     0 ≤ ch.actualizationCount ∧ ch.actualizationCount ≤ ch.length :=
   ⟨Nat.zero_le _, ch.actualizationCount_le_length⟩
 
+/-- **Trichotomy: every trajectory is coherent, decoherent, or mixed.**
+A `RealityChain'` falls into exactly one of three categories:
+- coherent (count = 0)
+- pure decoherent (bracketed = 0, equivalently count = length)
+- mixed (0 < count < length)
+
+Note these are not mutually exclusive at length 0 (where all three
+hold trivially); at length > 0 they're a proper trichotomy. -/
+theorem trajectory_trichotomy {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount = 0 ∨ ch.bracketedCount = 0 ∨
+    (0 < ch.actualizationCount ∧ 0 < ch.bracketedCount) := by
+  by_cases h_c : ch.actualizationCount = 0
+  · exact Or.inl h_c
+  · by_cases h_b : ch.bracketedCount = 0
+    · exact Or.inr (Or.inl h_b)
+    · refine Or.inr (Or.inr ⟨?_, ?_⟩)
+      · exact Nat.pos_of_ne_zero h_c
+      · exact Nat.pos_of_ne_zero h_b
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
