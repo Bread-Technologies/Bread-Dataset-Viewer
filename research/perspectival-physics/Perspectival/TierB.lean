@@ -1044,6 +1044,32 @@ theorem RealityChain.append_nil {P : Type u} {C : Type v} :
         = RealityChain.cons step rest
       rw [RealityChain.append_nil rest]
 
+/-- **Plain-chain append is associative.** -/
+theorem RealityChain.append_assoc {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ R₄ : Reality P C}
+      (ch₁ : RealityChain P C R₁ R₂) (ch₂ : RealityChain P C R₂ R₃)
+      (ch₃ : RealityChain P C R₃ R₄),
+      (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃)
+  | _, _, _, _, RealityChain.nil _, _, _ => by
+      simp [RealityChain.append]
+  | _, _, _, _, RealityChain.cons step rest, ch₂, ch₃ => by
+      show RealityChain.cons step ((rest.append ch₂).append ch₃)
+        = RealityChain.cons step (rest.append (ch₂.append ch₃))
+      rw [RealityChain.append_assoc rest ch₂ ch₃]
+
+/-- **Strict-chain append is associative.** -/
+theorem RealityChain'.append_assoc {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ R₄ : Reality P C}
+      (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+      (ch₃ : RealityChain' P C R₃ R₄),
+      (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃)
+  | _, _, _, _, RealityChain'.nil _, _, _ => by
+      simp [RealityChain'.append]
+  | _, _, _, _, RealityChain'.cons step rest, ch₂, ch₃ => by
+      show RealityChain'.cons step ((rest.append ch₂).append ch₃)
+        = RealityChain'.cons step (rest.append (ch₂.append ch₃))
+      rw [RealityChain'.append_assoc rest ch₂ ch₃]
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
