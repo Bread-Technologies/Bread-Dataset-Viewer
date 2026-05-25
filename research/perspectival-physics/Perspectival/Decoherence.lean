@@ -2284,6 +2284,96 @@ theorem coherence_predicate_certificate :
    fun h h₁ => IsCoherent.respects_equivalence h h₁,
    fun ch => IsCoherent.iff_endpoints_eq ch⟩
 
+/-! ## PureDecoherent and Mixed predicates
+
+These complete the trichotomy as named, decidable predicates: every
+chain is exactly one of `IsCoherent` / `IsPureDecoherent` / `IsMixed`,
+where the latter two are mutually exclusive with each other and with
+the coherent regime (modulo the nil case which is both coherent AND
+pure-decoherent — by length-0 vacuity). For positive-length chains,
+the trichotomy is strict. -/
+
+/-- **IsPureDecoherent: the chain has only actualizing (non-bracketed)
+steps.** Equivalent to `bracketedCount = 0`. -/
+def IsPureDecoherent {P : Type u} {C : Type v} {R₁ R₂ : Reality P C}
+    (ch : RealityChain' P C R₁ R₂) : Prop :=
+  ch.bracketedCount = 0
+
+/-- **IsPureDecoherent is decidable.** -/
+instance IsPureDecoherent.decidable {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    Decidable (IsPureDecoherent ch) :=
+  inferInstanceAs (Decidable (ch.bracketedCount = 0))
+
+/-- **Nil is vacuously pure-decoherent.** -/
+@[simp]
+theorem IsPureDecoherent.nil {P : Type u} {C : Type v} (R : Reality P C) :
+    IsPureDecoherent (RealityChain'.nil R) := rfl
+
+/-- **IsMixed: the chain has both actualizing and bracketed steps.** -/
+def IsMixed {P : Type u} {C : Type v} {R₁ R₂ : Reality P C}
+    (ch : RealityChain' P C R₁ R₂) : Prop :=
+  0 < ch.actualizationCount ∧ 0 < ch.bracketedCount
+
+/-- **IsMixed is decidable.** -/
+instance IsMixed.decidable {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    Decidable (IsMixed ch) :=
+  inferInstanceAs (Decidable (0 < ch.actualizationCount ∧
+                              0 < ch.bracketedCount))
+
+/-- **Trichotomy: exactly one of coherent / pure-decoherent / mixed
+holds for a positive-length chain.** (For the nil chain, both coherent
+and pure-decoherent hold vacuously.) -/
+theorem chain_regime_trichotomy {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    IsCoherent ch ∨ IsPureDecoherent ch ∨ IsMixed ch := by
+  -- count + bracketed = length. So one of these is true:
+  -- count = 0 (coherent), bracketed = 0 (pure), or both positive (mixed).
+  rcases Nat.eq_zero_or_pos (tierAEventCount ch) with hC | hCpos
+  · exact Or.inl hC
+  · rcases Nat.eq_zero_or_pos ch.bracketedCount with hP | hPpos
+    · exact Or.inr (Or.inl hP)
+    · refine Or.inr (Or.inr ⟨?_, hPpos⟩)
+      exact hCpos
+
+/-- **Coherent and Mixed are mutually exclusive.** Coherent means
+actualizationCount = 0; Mixed means 0 < actualizationCount. -/
+theorem coherent_xor_mixed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ¬ (IsCoherent ch ∧ IsMixed ch) := by
+  rintro ⟨hC, ⟨hM, _⟩⟩
+  -- IsCoherent ch ↔ actualizationCount = 0; IsMixed ⇒ 0 < count.
+  have h0 : ch.actualizationCount = 0 := hC
+  omega
+
+/-- **PureDecoherent and Mixed are mutually exclusive.** -/
+theorem pure_decoherent_xor_mixed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ¬ (IsPureDecoherent ch ∧ IsMixed ch) := by
+  rintro ⟨hP, ⟨_, hMb⟩⟩
+  have : ch.bracketedCount = 0 := hP
+  omega
+
+/-- **Trichotomy certificate.** Bundles regime trichotomy + two
+exclusivity lemmas. -/
+theorem trichotomy_predicates_certificate :
+    -- (a) Exhaustive: every chain is coherent, pure-decoherent, or mixed.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsCoherent ch ∨ IsPureDecoherent ch ∨ IsMixed ch) ∧
+    -- (b) Coherent excludes mixed.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ¬ (IsCoherent ch ∧ IsMixed ch)) ∧
+    -- (c) Pure-decoherent excludes mixed.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ¬ (IsPureDecoherent ch ∧ IsMixed ch)) :=
+  ⟨fun ch => chain_regime_trichotomy ch,
+   fun ch => coherent_xor_mixed ch,
+   fun ch => pure_decoherent_xor_mixed ch⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
