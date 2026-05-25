@@ -799,6 +799,19 @@ def actualizeAt_chain {P : Type u} {C : Type v}
   (RealityChain.singleton_actualization_count
     (actualizeAt_atSeam R m h_pot)).2
 
+/-- **The identity bracketed step (self-step) wrapped as a chain.** -/
+def reflBracketedChain {P : Type u} {C : Type v} (R : Reality P C) :
+    RealityChain P C R R :=
+  RealityChain.singleton (TrajectoryStep.bracketed (bracketed_refl R))
+
+@[simp] theorem reflBracketedChain_actualizationCount {P : Type u} {C : Type v}
+    (R : Reality P C) : (reflBracketedChain R).actualizationCount = 0 :=
+  (RealityChain.singleton_bracketed_count (bracketed_refl R)).1
+
+@[simp] theorem reflBracketedChain_bracketedCount {P : Type u} {C : Type v}
+    (R : Reality P C) : (reflBracketedChain R).bracketedCount = 1 :=
+  (RealityChain.singleton_bracketed_count (bracketed_refl R)).2
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
