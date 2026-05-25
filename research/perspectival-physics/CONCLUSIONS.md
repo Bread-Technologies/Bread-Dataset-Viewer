@@ -93,15 +93,38 @@ beyond disjoint union, or non-finite Wantable structure. Composition
 behaviour is fully verified at the bridge level:
 `finrank_V_prod_eq_mul`, `finrank_V_sum_eq_add`.
 
-**R6 Birkhoff disconnect for ALL n ≥ 2.** Proven this session.
-On any classical n-outcome GPT (n ≥ 2), no continuous path of bijective
-state-preserving linear maps connects `id` and the (01)-transposition.
+**R6 Birkhoff disconnect for ALL n ≥ 2, via TWO complementary
+arguments.** Proven this session.
+
+*Det-sign argument (transpositions only):* On any classical n-outcome
+GPT (n ≥ 2), no continuous path of bijective state-preserving linear
+maps connects `id` and the (01)-transposition.
 `classical_general_no_strict_path_id_to_swap01` is the headline theorem.
 Generalized via `swap01LinGen` (= `Matrix.toLin' ∘ Equiv.Perm.permMatrix ℝ ∘ Equiv.swap`)
 with one-line det computation through `LinearMap.det_toLin' +
 Matrix.det_permutation + Equiv.Perm.sign_swap`. The n=2/3/4/5 cases are
-named specializations. Hypothesis-free (auto-continuity is derived from
-the joint continuity field of the `StrictReversiblePath` structure).
+named specializations. Hypothesis-free.
+
+*Discreteness argument (ALL non-identity permutations, with vertex-
+preservation hypothesis on paths):*
+`classical_general_no_strict_vertex_preserving_path_id_to_perm`
+proves that under the assumption that intermediate maps preserve
+vertices, no strict path from `id` to any non-identity permutation
+exists. Built on `vertex_preserving_path_constant_on_vertex`
+(`IsPreconnected.constant_of_mapsTo` on `unitInterval`),
+`vertexSet_isDiscrete`, and `LinearMap.ext_on_range` with
+`vertices_span n`. Closes the gap that det-sign cannot reach (e.g.,
+the 3-cycle on `Fin 3` has det = +1 so det-sign sees no obstruction;
+discreteness DOES rule it out under vertex-preservation).
+
+*Critical mathematical correction documented in the file*: the naive
+reading "state-preserving + bijective ⇒ permutation matrix" is FALSE
+for n ≥ 3. Counterexample: `t · I + (1-t) · C` for `C` the 3-cycle
+permutation matrix on `Fin 3` is state-preserving and bijective
+throughout (det = `t³ + (1-t)³ > 0`), so id and the 3-cycle ARE
+connected by a fully valid `StrictReversiblePath` in `gpt 3`. The
+discreteness argument requires the additional vertex-preservation
+hypothesis on intermediate maps to rule out the 3-cycle case.
 For n=2 specifically: `classical_n2_strict_reversible_path_id_swap_empty`
 with a determinant-based IVT argument
 (`n2_disc_det`, `n2_disc_det_id = 1`, `n2_disc_det_swap = -1`,
@@ -122,6 +145,42 @@ classical witnesses `diagonalState` / `antiDiagonalState`) deliver the
 state-side of Hardy A4 inside the framework. The full multiplicative
 composition theorem requires the genuine GPT tensor product (R5,
 currently open).
+
+**L6 TransitiveAgency impossibility for Classical n ≥ 2 under vertex-
+preservation.** `classical_general_vertex_preserving_no_transitive_agency`
+combines the discreteness disconnect with `transitive_on_pure` to
+derive: no `TransitiveAgency` exists on Classical n (n ≥ 2) when its
+underlying strict paths are required to preserve vertices along the way.
+This is the framework's intended axiom refinement (per the user-
+authorized "metaphysics-fixed, axioms-adjustable" methodology): the
+pattern-stability metaphysics (Axiom IV) naturally motivates
+vertex-preservation along reversible paths.
+
+**CircleGPT positive existence.** `Perspectival/CircleGPT.lean`
+constructs the "Circle GPT" — a 2-dim continuous-symmetry toy with
+U(1)-rotation acting transitively on the parametric pure-state circle
+(`circlePoint α = (cos α, sin α, 1)` lifted to the `z = 1` slice of
+ℝ³). `circleStrictConnectedAgency` is a COMPLETE non-trivial
+`StrictConnectedAgency` instance with `avail = {rotStrictReversible θ
+| θ ∈ ℝ}` (a genuine 1-parameter family, not a singleton).
+`rotZ_transitive_on_circlePoints` proves rotZ acts transitively on the
+pure-state circle. `circleTransitiveAgency` is the full `TransitiveAgency`
+instance, parameterized by `pure_state_classification_statement` (every
+PureState equals some `circlePoint α`) — a standard Mathlib-reducible
+deferred lemma. Together with L6, this establishes the framework's
+classical-vs-quantum dichotomy at the formal level: classical n ≥ 2
+fails `TransitiveAgency` (under vertex-preservation); the continuous-
+symmetry toy CircleGPT supports it.
+
+**TransitiveAgency → Hardy A5 (strong form) bridge.**
+`TransitiveAgency.hardy_axiom5` (Continuity.lean) packages the agency-
+Hardy bridge: a TransitiveAgency provides, for any two pure states,
+a continuous path of state-preserving bijective linear maps from the
+identity to a transformation sending ρ₁ to ρ₂.
+`TransitiveAgency.hardy_axiom5_state_path` extracts the state-trajectory.
+`TransitiveAgency.avail_at_least_two` / `avail_at_least_n` give
+cardinality lower bounds: more distinct pure states force more
+distinct elements in `avail`.
 
 ## 3. What is framework-distinctive (not just recovered)
 
