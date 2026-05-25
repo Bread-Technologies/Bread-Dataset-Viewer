@@ -4349,6 +4349,18 @@ theorem one_npow_all_equal {P : Type u} {C : Type v} {R : Reality P C}
     ((1 : RealityChain' P C R R) ^ n) = ((1 : RealityChain' P C R R) ^ m) := by
   rw [one_pow, one_pow]
 
+/-- **Identity power has length zero.** -/
+theorem one_npow_length_zero {P : Type u} {C : Type v} {R : Reality P C}
+    (n : ℕ) :
+    ((1 : RealityChain' P C R R) ^ n).length = 0 := by
+  rw [one_pow]; rfl
+
+/-- **Identity power has count zero.** -/
+theorem one_npow_count_zero {P : Type u} {C : Type v} {R : Reality P C}
+    (n : ℕ) :
+    ((1 : RealityChain' P C R R) ^ n).actualizationCount = 0 := by
+  rw [one_pow]; rfl
+
 /-- **Loop power monotonicity certificate.** -/
 theorem loop_npow_monotonicity_certificate :
     -- Weak monotonicity.
