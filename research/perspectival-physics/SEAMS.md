@@ -186,6 +186,29 @@ dark matter models.
 
 **Formal correlate:** `MultiSectorWantable` in `Examples.lean`.
 
+## Seam 7 — Cosmological arrow / thermodynamic arrow unification
+(per entropy addendum)
+
+**Tier B description:** the universe exhibits a cosmological arrow
+(expansion direction) and a thermodynamic arrow (entropy increase
+direction); their alignment is treated as a separate puzzle in
+standard cosmology.
+
+**Tier A content:** both arrows are Tier B coarse-graining shadows of
+the SAME Axiom II asymmetric actualization-flow. The "past direction"
+is the direction of fewer actualized meetings under any sensible
+coarse-graining; the "expansion direction" is the direction in which
+the meeting-structure grows. They have a common root in Axiom II.
+
+**Empirical signature:** the alignment is *necessary*, not contingent.
+Cosmological scenarios that predict misalignment (e.g., Boltzmann-
+brain-dominated futures, oscillating universes with entropy
+reversal) are framework-incompatible.
+
+**Formal correlate:** the Tier A arrow-of-time (`past_monotone`,
+`no_return_to_potential`) is in place. The Tier B cosmological
+shadow requires a spacetime model not currently in the framework.
+
 ## Seam catalogue summary
 
 | Seam | Tier B description | Tier A content | Empirical signature |
@@ -196,6 +219,7 @@ dark matter models.
 | 4. Decoherence | Off-diagonal suppression | Accumulated partial actualization | Decoherence rate depends on environment Tier A density |
 | 5. Cosmological constant | QFT vacuum energy | Vacuum = structural absence of actualization | Observed Λ as natural Tier A magnitude |
 | 6. Dark matter | Single hidden species | Multi-sector perspectival families | Multi-component halo signatures |
+| 7. Arrow unification | Cosmological + thermo arrows align | Both shadows of Axiom II actualization-flow | Alignment necessary, not contingent |
 
 ## Status of each seam
 
@@ -213,6 +237,9 @@ dark matter models.
   ○ OPEN, Tier 3.
 - Seam 6 (Dark matter): structural Lean encoding via
   `MultiSectorWantable`; quantitative predictions open. ○ PARTIAL.
+- Seam 7 (Arrow unification): Tier A arrow-of-time is formally
+  in place; Tier B cosmological shadow requires spacetime model
+  not currently in the framework. ○ STRUCTURAL.
 
 The framework's program advances by closing more seams. Each seam,
 when closed in Lean, becomes a framework-distinctive prediction —
