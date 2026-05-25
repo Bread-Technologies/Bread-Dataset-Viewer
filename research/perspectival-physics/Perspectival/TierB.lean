@@ -918,6 +918,16 @@ theorem RealityChain'.append_length {P : Type u} {C : Type v} :
       rw [RealityChain'.append_length rest ch₂]
       omega
 
+/-- **Strict-chain `nil` count is zero.** -/
+@[simp] theorem RealityChain'.nil_actualizationCount {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (RealityChain'.nil (P := P) (C := C) R).actualizationCount = 0 := rfl
+
+/-- **Strict-chain `nil` length is zero.** -/
+@[simp] theorem RealityChain'.nil_length {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (RealityChain'.nil (P := P) (C := C) R).length = 0 := rfl
+
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
 transition R₁ → R₂ cannot be a bracketed step; if it's at all
