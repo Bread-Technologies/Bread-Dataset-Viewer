@@ -3393,6 +3393,31 @@ theorem loop_length_one {P : Type u} {C : Type v}
     {R : Reality P C} :
     (1 : RealityChain' P C R R).length = 0 := rfl
 
+/-- **Loop monoid npow length: n * ch.length.** -/
+theorem loop_npow_length {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    (ch ^ n).length = n * ch.length := by
+  induction n with
+  | zero =>
+    rw [pow_zero, loop_one_eq_nil, RealityChain'.nil_length]
+    omega
+  | succ k ih =>
+    rw [pow_succ, loop_length_mul, ih, Nat.succ_mul]
+
+/-- **Worked example: loop monoid power notation on Bool.** Showing
+that the Mathlib `Monoid` `^` notation works on loop chains. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    tierAEventCount (base ^ 3) = 0
+      ∧ (base ^ 3).length = 3 := by
+  intro base
+  refine ⟨loop_npow_tierAEventCount base 3, ?_⟩
+  rw [loop_npow_length]
+  show 3 * (RealityChain'.singleton _).length = 3
+  rw [RealityChain'.singleton_length]
+
 /-- **Loop monoid morphism certificate.** All three count measures
 behave as monoid morphisms (RealityChain' R R → ℕ multiplicative-
 to-additive) on the loop monoid. -/
