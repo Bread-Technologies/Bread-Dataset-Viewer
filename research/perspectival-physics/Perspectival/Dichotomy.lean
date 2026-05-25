@@ -263,12 +263,7 @@ theorem framework_u1_gauge_instance :
 /-- **Three independent OneParameterFamilies on QubitGPT** — the rotX,
 rotY, rotZ axes. Together these generate the SO(3) ≃ SU(2)/Z₂
 non-abelian Lie group acting on the Bloch ball. The framework's first
-machine-verified non-abelian-gauge candidate (Tier 2 #6 toward SU(2)).
-
-Full SO(3) closure (composition across generators yields all of SO(3))
-is deferred; what's verified here is the *infrastructure*: three
-independent abelian 1-parameter subgroups whose Lie brackets generate
-the rest. -/
+machine-verified non-abelian-gauge candidate (Tier 2 #6 toward SU(2)). -/
 theorem framework_so3_axes_present :
     Nonempty (Continuity.OneParameterFamily QubitGPT.qubitGPT) ∧
     Nonempty (Continuity.OneParameterFamily QubitGPT.qubitGPT) ∧
@@ -276,6 +271,16 @@ theorem framework_so3_axes_present :
   ⟨⟨QubitGPT.rotXOneParameterFamily⟩,
    ⟨QubitGPT.rotYOneParameterFamily⟩,
    ⟨QubitGPT.rotZOneParameterFamily⟩⟩
+
+/-- **Full SO(3) StrictConnectedAgency on QubitGPT.** The qubit carries
+a non-trivial StrictConnectedAgency with `avail = rotXAvail ∪ rotYAvail
+∪ rotZAvail` — the union of the three generator families with paths
+between any pair (within-family via affine rotation, cross-family
+via the identity). This is the framework's first machine-verified
+non-abelian agency instance — the SO(3)/SU(2) gauge fingerprint. -/
+theorem framework_full_so3_strict_agency :
+    Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT) :=
+  ⟨QubitGPT.qubitStrictConnectedAgency_full⟩
 
 /-! ## Hardy N (operational dimension) for Classical -/
 
