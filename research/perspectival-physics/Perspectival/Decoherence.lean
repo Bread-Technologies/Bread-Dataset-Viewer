@@ -3404,6 +3404,29 @@ theorem loop_npow_length {P : Type u} {C : Type v}
   | succ k ih =>
     rw [pow_succ, loop_length_mul, ih, Nat.succ_mul]
 
+/-- **loopPower agrees with Monoid npow on counts.** Both produce
+loops with count 0. (Note: as raw chains, `loopPower ch n` and `ch ^ n`
+may differ in their internal association — loopPower is right-
+associated, Monoid `^` is recursively `ch * (ch ^ (n-1))` style. They
+have the same length and count, since both equal n*ch.length and 0
+respectively.) -/
+theorem loopPower_npow_count_agree {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    tierAEventCount (loopPower ch n) = tierAEventCount (ch ^ n) := by
+  rw [loopPower_tierAEventCount, loop_npow_tierAEventCount]
+
+/-- **loopPower agrees with Monoid npow on length.** -/
+theorem loopPower_npow_length_agree {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    (loopPower ch n).length = (ch ^ n).length := by
+  rw [loopPower_length, loop_npow_length]
+
+/-- **loopPower and Monoid npow are decoherence-equivalent.** -/
+theorem loopPower_npow_equivalent {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    DecoherenceEquivalent (loopPower ch n) (ch ^ n) :=
+  loopPower_npow_count_agree ch n
+
 /-- **Worked example: loop monoid power notation on Bool.** Showing
 that the Mathlib `Monoid` `^` notation works on loop chains. -/
 example (R : Reality Bool Bool) :
