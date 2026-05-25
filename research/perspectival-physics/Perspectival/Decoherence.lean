@@ -4528,6 +4528,16 @@ example (R : Reality Bool Bool) :
   show 7 * (RealityChain'.singleton _).length = 7
   rw [RealityChain'.singleton_length]
 
+/-- **Worked example: base^100 still has count 0.** Demonstrates that
+the Boltzmann brain dissolution holds at arbitrary scale. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (base ^ 100).actualizationCount = 0 := by
+  intro base
+  exact loop_npow_tierAEventCount base 100
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
