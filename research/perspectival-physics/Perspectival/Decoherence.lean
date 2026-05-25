@@ -824,6 +824,32 @@ theorem coherent_complexity_eq_length {P : Type u} {C : Type v}
     trajectoryComplexity ch = ch.length :=
   coherent_complexity ch h
 
+/-- **Tier-A-content is endpoint-determined modulo coherence.** Two
+strict chains between the same endpoints either both have count = 0
+(both coherent, equal Tier A content), or both have count > 0 (both
+decoherent — but their counts need NOT be equal!). -/
+theorem tier_A_status_endpoint_determined {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    (tierAEventCount ch₁ = 0 ↔ tierAEventCount ch₂ = 0) :=
+  path_independent_coherence ch₁ ch₂
+
+/-- **Equal-tier-A-event-count is NOT endpoint-determined.** Counter-
+example: refl-bracketed strict chain vs. nil strict chain. Both have
+count = 0 (both coherent) but length differs (1 vs 0), so complexity
+differs (1 vs 0). The point: coherence STATUS is path-independent,
+but complexity (or even length) is path-DEPENDENT. -/
+example (P : Type u) (C : Type v) (R : Reality P C) :
+    let ch₁ : RealityChain' P C R R := RealityChain'.nil R
+    let ch₂ : RealityChain' P C R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    trajectoryComplexity ch₁ ≠ trajectoryComplexity ch₂ := by
+  intro ch₁ ch₂
+  -- ch₁ has complexity 0, ch₂ has complexity 1.
+  show (0 : ℕ) ≠ 1
+  decide
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
