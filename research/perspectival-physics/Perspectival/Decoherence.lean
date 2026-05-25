@@ -3233,6 +3233,34 @@ theorem bracketed_determined_by_length_count {P : Type u} {C : Type v}
     ch.bracketedCount = ch.length - ch.actualizationCount := by
   have h := ch.counts_sum; omega
 
+/-- **Trivial chain characterization.** A chain has length 0 iff
+both count and bracketed are 0. -/
+theorem trivial_chain_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.length = 0 ↔ ch.actualizationCount = 0 ∧ ch.bracketedCount = 0 := by
+  have h := ch.counts_sum
+  constructor
+  · intro h_len; omega
+  · intro ⟨h₁, h₂⟩; omega
+
+/-- **Trivial chain has nil-like behavior.** A length-0 chain
+trivially has all measures 0 and trivially preserves past. -/
+theorem trivial_chain_nil_like {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h_len : ch.length = 0) :
+    ch.actualizationCount = 0
+      ∧ ch.bracketedCount = 0
+      ∧ trajectoryComplexity ch = 0
+      ∧ R₁ = R₂ := by
+  have h_sum := ch.counts_sum
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · omega
+  · omega
+  · unfold trajectoryComplexity; omega
+  · apply (coherent_kernel_iff_endpoints_eq ch).mp
+    show ch.actualizationCount = 0
+    omega
+
 /-- **Any-two-determines-third certificate.** Any two of the trio
 (count, bracketed, length) determine the third. -/
 theorem any_two_determines_third_certificate :
