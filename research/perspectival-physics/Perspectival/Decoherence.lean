@@ -1141,6 +1141,15 @@ example (P : Type u) (C : Type v) (R : Reality P C) :
   show ((0, 0) : ℕ × ℕ) ≠ (0, 1)
   decide
 
+/-- **Hierarchy theorem: density-eq → DecoherenceEquivalent.** The
+density-equivalence is finer than DecoherenceEquivalent (refinement
+direction). -/
+theorem density_refines_decoherence_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : ch₁.actualizationDensity = ch₂.actualizationDensity) :
+    DecoherenceEquivalent ch₁ ch₂ :=
+  density_eq_implies_equivalent h
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
