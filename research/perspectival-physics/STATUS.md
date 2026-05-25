@@ -579,6 +579,12 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.boltzmann_brain_dissolution_shadow` — TIER4 #19 structural shadow | `Decoherence.lean` | ✓ (a) **dissolution shadow** |
 | `Decoherence.coherent_kernel_iff_endpoints_eq`, `_submonoid_certificate` — kernel of counts homomorphism | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.decoherence_module_super_certificate` — 8-fact ultimate bundle (loops + kernel + path-independence + functoriality) | `Decoherence.lean` | ✓ (a) **ULTIMATE BUNDLE** |
+| `Decoherence.decoherence_framework_master_certificate` — 10-fact MASTER framework certificate | `Decoherence.lean` | ✓ (a) **MASTER BUNDLE** |
+| `Decoherence.complexity_extremes_certificate`, `complexity_range_certificate` — complexity bounds + extremals | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.bounded_trajectory_certificate`, `rate_bound_certificate` — uniform bounds | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.rate_corner_certificate`, `rate_region_characterization_certificate`, `decoherence_phase_space_certificate` — phase-space structure | `Decoherence.lean` | ✓ (a) **phase space** |
+| `Decoherence.loop_unified_measures_certificate`, `loop_npow_linearity_certificate` — unified loop measures | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.singleton_chain_certificate`, `nil_chain_measure_certificate` — singleton/nil measure bundles | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.coherent_chain_invariant_past`, `loop_preserves_past`, `coherent_invariant_past_certificate` — coherent chains preserve past | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.loop_prepend_preserves_count`, `loop_append_preserves_count`, `loop_insertion_certificate` — loops are transparent to counts | `Decoherence.lean` | ✓ (a) **loop transparency** |
 | `Decoherence.loop_conjugation_preserves_count`, `_equivalent`, `loop_submonoid_trivial_action` — loop submonoid acts trivially on classes | `Decoherence.lean` | ✓ (a) |
