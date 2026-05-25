@@ -4726,6 +4726,45 @@ theorem rate_lattice_constraint {P : Type u} {C : Type v}
     ∃ (k n : ℕ), actualizationRate ch = (k, n) ∧ k ≤ n :=
   ⟨ch.actualizationCount, ch.length, rfl, ch.actualizationCount_le_length⟩
 
+/-- **Rate diagonal: k = n iff pure-decoherent.** -/
+theorem rate_diagonal_iff_pure_decoherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 = (actualizationRate ch).2 ↔
+    ch.bracketedCount = 0 :=
+  rate_count_eq_length_iff_pure_decoherent ch
+
+/-- **Rate x-axis: k = 0 iff coherent.** -/
+theorem rate_x_axis_iff_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 = 0 ↔ ch.actualizationCount = 0 :=
+  rate_count_eq_zero_iff_coherent ch
+
+/-- **Rate region characterization certificate.** -/
+theorem rate_region_characterization_certificate :
+    -- Diagonal (k = n) is pure-decoherent region.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = (actualizationRate ch).2 ↔
+      ch.bracketedCount = 0) ∧
+    -- x-axis (k = 0) is coherent region.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = 0 ↔ ch.actualizationCount = 0) ∧
+    -- Interior (0 < k < n) is mixed region.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      0 < (actualizationRate ch).1 ∧ (actualizationRate ch).1 < (actualizationRate ch).2 ↔
+      0 < ch.actualizationCount ∧ 0 < ch.bracketedCount) :=
+  ⟨fun ch => rate_diagonal_iff_pure_decoherent ch,
+   fun ch => rate_x_axis_iff_coherent ch,
+   fun ch => by
+     show 0 < ch.actualizationCount ∧ ch.actualizationCount < ch.length ↔
+          0 < ch.actualizationCount ∧ 0 < ch.bracketedCount
+     have h := ch.counts_sum
+     constructor
+     · rintro ⟨h_pos, h_lt⟩; refine ⟨h_pos, ?_⟩; omega
+     · rintro ⟨h_pos_c, h_pos_b⟩; refine ⟨h_pos_c, ?_⟩; omega⟩
+
 /-- **Rate at endpoints is constrained.** For any chain ch : R₁ → R₂,
 the rate point (count, length) lies in the lattice region {(k, n) : k ≤ n}. -/
 theorem rate_lattice_certificate :
