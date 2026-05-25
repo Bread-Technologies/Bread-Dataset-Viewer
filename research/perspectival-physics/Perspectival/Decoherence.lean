@@ -4718,6 +4718,26 @@ theorem complexity_range_at_fixed_length {P : Type u} {C : Type v}
       ∧ trajectoryComplexity ch ≤ 2 * ch.length :=
   ⟨complexity_ge_length ch, complexity_le_twice_length ch⟩
 
+/-- **Complexity range certificate.** Bundles the range with the
+extremal characterizations. -/
+theorem complexity_range_certificate :
+    -- Range bounds.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length ≤ trajectoryComplexity ch
+        ∧ trajectoryComplexity ch ≤ 2 * ch.length) ∧
+    -- Lower bound achieved iff coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      trajectoryComplexity ch = ch.length ↔ ch.actualizationCount = 0) ∧
+    -- Upper bound achieved iff pure-decoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      trajectoryComplexity ch = 2 * ch.length ↔ ch.bracketedCount = 0) :=
+  ⟨fun ch => complexity_range_at_fixed_length ch,
+   fun ch => complexity_eq_length_iff_coherent ch,
+   fun ch => complexity_eq_twice_length_iff_pure_decoherent ch⟩
+
 /-- **Complexity extremes certificate.** Coherent chains minimize complexity
 and pure-decoherent chains maximize complexity at any fixed length. -/
 theorem complexity_extremes_certificate :
