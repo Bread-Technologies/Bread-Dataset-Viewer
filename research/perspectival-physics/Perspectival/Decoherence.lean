@@ -5143,6 +5143,19 @@ theorem coherent_class_endpoint_determined {P : Type u} {C : Type v}
     ch₂.actualizationCount = 0 :=
   (same_endpoint_same_status ch₁ ch₂).mp h_coherent
 
+/-- **Path-independence certificate.** Status is endpoint-determined. -/
+theorem path_independence_certificate :
+    -- Status is path-independent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- Coherence transfers between chains.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 → ch₂.actualizationCount = 0) :=
+  ⟨fun ch₁ ch₂ => same_endpoint_same_status ch₁ ch₂,
+   fun ch₁ ch₂ h => coherent_class_endpoint_determined ch₁ ch₂ h⟩
+
 /-- **Rate region trichotomy certificate.** -/
 theorem rate_region_trichotomy_certificate :
     -- Trichotomy holds for every chain.
