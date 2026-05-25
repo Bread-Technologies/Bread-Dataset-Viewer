@@ -535,6 +535,25 @@ example (P : Type u) (C : Type v) :
     BracketedTransition (trivialReality P C) (trivialReality P C) :=
   bracketed_refl _
 
+/-- **Concrete actualization on `trivialReality`.** Applying
+`actualizeAt` to a single meeting m yields a non-trivial Reality
+state with exactly one actualized meeting and all others potential.
+The (trivialReality, actualizeAt trivialReality m) pair is at the
+seam — a concrete worked instance of the architectural seam predicate. -/
+example (P : Type u) (C : Type v)
+    [DecidableEq (Meeting P C)] (m : Meeting P C) :
+    AtSeam (trivialReality P C) (actualizeAt (trivialReality P C) m) :=
+  actualizeAt_atSeam (trivialReality P C) m rfl
+
+/-- **Concrete trajectory step on `trivialReality`.** The single-event
+trajectory: starting from the trivial Reality, the first actualization
+realizes the actualization-step in the trajectory dichotomy. -/
+example (P : Type u) (C : Type v)
+    [DecidableEq (Meeting P C)] (m : Meeting P C) :
+    TrajectoryStep P C (trivialReality P C)
+                       (actualizeAt (trivialReality P C) m) :=
+  TrajectoryStep.actualization (actualizeAt_atSeam (trivialReality P C) m rfl)
+
 /-! ## Summary: the bracketing operation
 
 This module formalizes the Tier A → Tier B bracketing operation.
