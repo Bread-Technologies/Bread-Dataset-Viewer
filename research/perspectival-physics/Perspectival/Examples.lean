@@ -3853,7 +3853,7 @@ example : ∀ x : ℝ, Wantable.complement (Wantable.complement x) = x :=
   Wantable.complement_involutive
 
 /-- A single Wantable Bool state has a trivial PerfectWitness. -/
-example : Perspectival.Distinguish.PerfectWitness
+noncomputable example : Perspectival.Distinguish.PerfectWitness
             (G := Perspectival.WantableGPT.gpt Bool)
             (fun _ : Fin 1 => Perspectival.WantableGPT.vertex Bool true) :=
   Perspectival.Distinguish.perfectWitness_singleton
@@ -7125,7 +7125,7 @@ example : Module.finrank ℝ (Perspectival.WantableGPT.V (Bool ⊕ Fin 3))
 
 /-- New: a singleton perfect witness on a one-state subset (constructed
 from any state in `gpt W`). -/
-example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
+noncomputable example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W]
     (ρ : Perspectival.WantableGPT.V W)
     (hρ : ρ ∈ Perspectival.WantableGPT.states W) :
     Perspectival.Distinguish.PerfectWitness
@@ -9574,7 +9574,7 @@ example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     AddCommGroup (Perspectival.WantableGPT.V W) := inferInstance
 
 /-- Module instance on V W. -/
-example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
+noncomputable example {W : Type u} [Wantable W] [Fintype W] [DecidableEq W] :
     Module ℝ (Perspectival.WantableGPT.V W) := inferInstance
 
 /-- WantableGPT vertexBasis on Bool. -/
@@ -10040,11 +10040,11 @@ example : Monoid (Perspectival.GPT.Transform
                     (Perspectival.WantableGPT.gpt (Bool × Bool))
                     (Perspectival.WantableGPT.gpt (Bool × Bool))) := inferInstance
 
-example : Monoid (Perspectival.GPT.Transform
+noncomputable example : Monoid (Perspectival.GPT.Transform
                     (Perspectival.Classical.gpt 5)
                     (Perspectival.Classical.gpt 5)) := inferInstance
 
-example : Monoid (Perspectival.GPT.Transform
+noncomputable example : Monoid (Perspectival.GPT.Transform
                     (Perspectival.Classical.gpt 10)
                     (Perspectival.Classical.gpt 10)) := inferInstance
 
@@ -16817,3 +16817,11 @@ example : PatternStableWantable (Fin 2) :=
         intro h
         have : (0 : Fin 2) = 1 := h
         exact absurd this (by decide))
+
+/-- For Fin 2, complement = swap means PTrans.complement ≠ 1. -/
+example : (PTrans.complement : PTrans (Fin 2)) ≠ 1 := by
+  apply stable_nontrivial_implies_complement_ne_one (W := Fin 2) 0
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  intro h
+  have : (0 : Fin 2) = 1 := h
+  exact absurd this (by decide)

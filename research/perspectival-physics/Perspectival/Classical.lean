@@ -32,6 +32,8 @@ import Mathlib.LinearAlgebra.Determinant
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import Mathlib.LinearAlgebra.Matrix.Permutation
+import Mathlib.Topology.Instances.Matrix
 
 namespace Perspectival
 namespace Classical
@@ -2780,6 +2782,361 @@ theorem classical_n3_strict_reversible_path_id_swap01_empty :
       isEmpty_iff]
   intro p
   exact classical_n3_no_strict_path_id_to_swap01 p
+
+/-! ## R6 GENERAL n: disconnect via `LinearMap.det` invariant
+
+The n=3 closure (`n3_det_zero_implies_not_injective`) used the bridge
+between the hand-rolled `n3_disc_det` and Mathlib's `Matrix.det` via
+`Matrix.det_fin_three`. The n=3-specific Leibniz expansion was the
+only n-dependent step.
+
+In this section we generalize to ARBITRARY `n ≥ 0` by working directly
+with `LinearMap.det` (no hand-rolled discriminant). The chain is:
+
+  `LinearMap.det R = 0`
+  ⇒ `¬ IsUnit (LinearMap.det R)` (since `0` is not a unit)
+  ⇒ `¬ IsUnit R`                  (`LinearMap.isUnit_det`)
+  ⇒ `LinearMap.ker R ≠ ⊥`        (`LinearMap.isUnit_iff_ker_eq_bot`)
+  ⇒ `¬ Function.Injective R`     (`LinearMap.ker_eq_bot`)
+
+None of the four implications depend on `n`. The base space `V n =
+Fin n → ℝ` is automatically finite-dimensional for any `n`, so the
+Mathlib infrastructure applies uniformly.
+
+This is the *n-generic* half of the R6 disconnect. The remaining
+specialization to a concrete pair of `StrictReversibles` of opposite
+sign (and a `StrictReversiblePath` between them) requires choosing the
+two endpoints; we do this below for general `n ≥ 2` via the
+permutation matrix of `Equiv.swap 0 1` on `Fin n`, giving the
+(01)-transposition as a `StrictReversible` with `LinearMap.det = -1`.
+-/
+
+/-- **General-n version of `n3_det_zero_implies_not_injective`.**
+Any linear endomorphism of `V n` with vanishing `LinearMap.det` fails
+to be injective. State-preservation is NOT used and is omitted from
+the hypothesis. -/
+theorem det_zero_implies_not_injective_gen
+    (R : V n →ₗ[ℝ] V n) (hdet : LinearMap.det R = 0) :
+    ¬ Function.Injective R := by
+  -- Step 1: `LinearMap.det R = 0` is not a unit.
+  have hNotUnitR : ¬ IsUnit R := by
+    intro hUR
+    have hUdet : IsUnit (LinearMap.det R) := LinearMap.isUnit_det R hUR
+    rw [hdet] at hUdet
+    exact not_isUnit_zero hUdet
+  -- Step 2: not a unit ⇔ ker ≠ ⊥ on a finite-dimensional space.
+  have hkerNeBot : LinearMap.ker R ≠ ⊥ := by
+    intro hker
+    exact hNotUnitR ((LinearMap.isUnit_iff_ker_eq_bot R).mpr hker)
+  -- Step 3: ker = ⊥ ⇔ Injective.
+  intro hinj
+  exact hkerNeBot (LinearMap.ker_eq_bot.mpr hinj)
+
+/-- **Matrix version of the same fact.** For any `n`, vanishing
+`Matrix.det (LinearMap.toMatrix' R)` implies `R` is not injective. -/
+theorem matrix_det_zero_implies_not_injective_gen
+    (R : V n →ₗ[ℝ] V n)
+    (hMat : Matrix.det (LinearMap.toMatrix' R) = 0) :
+    ¬ Function.Injective R := by
+  apply det_zero_implies_not_injective_gen (n := n) R
+  rw [← LinearMap.det_toMatrix' R]
+  exact hMat
+
+/-! ### General-n continuity of `LinearMap.det` along paths
+
+For any jointly-continuous family `γ : unitInterval → V n →ₗ V n` of
+linear maps, the determinant `t ↦ LinearMap.det (γ t)` is continuous.
+
+Mechanism: factor through the matrix representation:
+  - `LinearMap.det (γ t) = Matrix.det (LinearMap.toMatrix' (γ t))`
+    (`LinearMap.det_toMatrix'`)
+  - Each matrix entry `(LinearMap.toMatrix' (γ t)) i j = (γ t)
+    (Pi.single j 1) i` is continuous in `t` by joint continuity.
+  - `Matrix.det` is continuous in matrix entries
+    (`Continuous.matrix_det`).
+-/
+
+/-- The matrix-coefficient `(LinearMap.toMatrix' (γ t)) i j` is
+continuous in `t` along a jointly-continuous family. -/
+theorem n_matrix_entry_continuous_of_joint
+    (γ : unitInterval → V n →ₗ[ℝ] V n)
+    (hcont : Continuous (fun p : unitInterval × V n => γ p.1 p.2))
+    (i j : Fin n) :
+    Continuous (fun t => (LinearMap.toMatrix' (γ t)) i j) := by
+  -- toMatrix'_apply unfolds to (γ t) (Pi.single j 1) i.
+  simp only [LinearMap.toMatrix'_apply]
+  have hpair : Continuous (fun t : unitInterval => (t, (Pi.single j 1 : V n))) :=
+    Continuous.prodMk continuous_id continuous_const
+  have h1 : Continuous (fun t : unitInterval => γ t (Pi.single j 1)) :=
+    hcont.comp hpair
+  exact (continuous_apply i).comp h1
+
+/-- The full matrix `t ↦ LinearMap.toMatrix' (γ t)` is continuous as a
+function `unitInterval → Matrix (Fin n) (Fin n) ℝ` along any jointly
+continuous family. -/
+theorem n_matrix_continuous_of_joint
+    (γ : unitInterval → V n →ₗ[ℝ] V n)
+    (hcont : Continuous (fun p : unitInterval × V n => γ p.1 p.2)) :
+    Continuous (fun t => LinearMap.toMatrix' (γ t)) := by
+  -- A `Matrix m n R` is a `m → n → R`; continuity ⇔ pointwise continuity.
+  refine continuous_pi (fun i => continuous_pi (fun j => ?_))
+  exact n_matrix_entry_continuous_of_joint (n := n) γ hcont i j
+
+/-- **`LinearMap.det` is continuous along any jointly continuous family
+of linear maps `V n →ₗ V n`, for ANY `n`.** -/
+theorem linmap_det_path_continuous_gen
+    (γ : unitInterval → V n →ₗ[ℝ] V n)
+    (hcont : Continuous (fun p : unitInterval × V n => γ p.1 p.2)) :
+    Continuous (fun t => LinearMap.det (γ t)) := by
+  -- Rewrite LinearMap.det in terms of Matrix.det.
+  have hrw : (fun t => LinearMap.det (γ t))
+              = (fun t => Matrix.det (LinearMap.toMatrix' (γ t))) := by
+    funext t; exact (LinearMap.det_toMatrix' (γ t)).symm
+  rw [hrw]
+  -- Apply Continuous.matrix_det to the continuous matrix-valued path.
+  exact (n_matrix_continuous_of_joint (n := n) γ hcont).matrix_det
+
+/-! ### General-n disconnect from differing det values -/
+
+/-- IVT specialization: any continuous `[0,1] → ℝ` with positive value
+at `0` and negative value at `1` attains zero. (Generalization of
+`ivt_path_one_to_neg_one` to non-unit boundary values.) -/
+theorem ivt_path_pos_to_neg
+    (f : unitInterval → ℝ) (hf : Continuous f)
+    (h0 : 0 < f 0) (h1 : f 1 < 0) :
+    ∃ t : unitInterval, f t = 0 := by
+  have hOC : Set.OrdConnected (Set.range f) :=
+    (isPreconnected_range hf).ordConnected
+  have hpos : f 0 ∈ Set.range f := ⟨0, rfl⟩
+  have hneg : f 1 ∈ Set.range f := ⟨1, rfl⟩
+  have hmem : (0 : ℝ) ∈ Set.Icc (f 1) (f 0) := ⟨le_of_lt h1, le_of_lt h0⟩
+  exact hOC.out hneg hpos hmem
+
+/-- **General-n R6 disconnect skeleton.** Given any jointly continuous
+family `γ` of linear endomorphisms of `V n`, bijective at every time,
+with positive `LinearMap.det` at `t = 0` and negative `LinearMap.det`
+at `t = 1`: contradiction.
+
+This is the *invariant-based* disconnect; pick any concrete pair of
+`StrictReversibles` with opposite-sign det to instantiate. -/
+theorem classical_no_continuous_bijective_path_across_det_sign_gen
+    (γ : unitInterval → V n →ₗ[ℝ] V n)
+    (hcont : Continuous (fun p : unitInterval × V n => γ p.1 p.2))
+    (hbij : ∀ t : unitInterval, Function.Bijective (γ t))
+    (hpos : 0 < LinearMap.det (γ 0))
+    (hneg : LinearMap.det (γ 1) < 0) :
+    False := by
+  -- Determinant is continuous.
+  have hdetCont : Continuous (fun t => LinearMap.det (γ t)) :=
+    linmap_det_path_continuous_gen (n := n) γ hcont
+  -- IVT: some t with det = 0.
+  obtain ⟨t, ht⟩ :=
+    ivt_path_pos_to_neg (fun t => LinearMap.det (γ t)) hdetCont hpos hneg
+  -- That t has γ t not injective.
+  have hnotInj : ¬ Function.Injective (γ t) :=
+    det_zero_implies_not_injective_gen (n := n) (γ t) ht
+  -- But γ t is bijective, hence injective.
+  exact hnotInj (hbij t).1
+
+/-- **General-n R6 disconnect, `StrictReversiblePath` form.** Given a
+`StrictReversiblePath` between two `StrictReversibles` of opposite-sign
+determinant, contradiction. -/
+theorem classical_no_strict_path_across_det_sign_gen
+    {R₁ R₂ : Perspectival.Continuity.StrictReversible (gpt n)}
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt n) R₁ R₂)
+    (hpos : 0 < LinearMap.det R₁.toLin)
+    (hneg : LinearMap.det R₂.toLin < 0) :
+    False := by
+  apply classical_no_continuous_bijective_path_across_det_sign_gen (n := n) p.γ
+    p.continuous p.bijective_along
+  · rw [p.start]; exact hpos
+  · rw [p.finish]; exact hneg
+
+/-! ### Concrete general-n endpoints: identity and (0 1)-swap
+
+The identity on `V n` has `LinearMap.det = 1` for any `n`. We package
+the (0 1)-transposition as a `StrictReversible` for any `n ≥ 2`.
+
+We define it via the permutation matrix of `Equiv.swap (0 : Fin n) 1`
+and `Matrix.toLin'`, which gives an immediate bridge for `LinearMap.det`
+via `Matrix.det_permutation` and `Equiv.Perm.sign_swap`.
+-/
+
+/-- The (0 1)-swap permutation on `Fin n` (for `n ≥ 2`). -/
+noncomputable def swap01Perm (h : 1 < n) : Equiv.Perm (Fin n) :=
+  Equiv.swap (⟨0, by omega⟩ : Fin n) ⟨1, by omega⟩
+
+/-- The (0 1)-swap as a linear map on `V n`, defined as
+`Matrix.toLin'` of the permutation matrix. -/
+noncomputable def swap01LinGen (h : 1 < n) : V n →ₗ[ℝ] V n :=
+  Matrix.toLin' (Equiv.Perm.permMatrix ℝ (swap01Perm (n := n) h))
+
+/-- `LinearMap.det` of `swap01LinGen h` equals `-1`. -/
+theorem swap01LinGen_det (h : 1 < n) :
+    LinearMap.det (swap01LinGen (n := n) h) = -1 := by
+  -- swap01LinGen h = Matrix.toLin' (permMatrix); use LinearMap.det_toLin'.
+  have hi0 : (⟨0, by omega⟩ : Fin n) ≠ ⟨1, by omega⟩ := by
+    intro h_eq
+    have : (0 : ℕ) = 1 := by
+      have := Fin.val_eq_of_eq h_eq
+      simpa using this
+    exact absurd this (by decide)
+  unfold swap01LinGen
+  rw [LinearMap.det_toLin' (Equiv.Perm.permMatrix ℝ (swap01Perm (n := n) h))]
+  unfold swap01Perm
+  rw [Matrix.det_permutation, Equiv.Perm.sign_swap hi0]
+  show ((-1 : ℤˣ) : ℝ) = -1
+  push_cast
+  rfl
+
+/-- `swap01LinGen h` is continuous. (Matrix-defined linear map: each
+output coordinate is a polynomial / fixed linear combination of input
+coordinates.) -/
+theorem swap01LinGen_continuous (h : 1 < n) :
+    Continuous (swap01LinGen (n := n) h) := by
+  -- swap01LinGen h v = v ∘ swap01Perm h pointwise.
+  have hreduce : ∀ v : V n, swap01LinGen (n := n) h v
+                = v ∘ (swap01Perm (n := n) h) := by
+    intro v
+    show Matrix.toLin' (Equiv.Perm.permMatrix ℝ (swap01Perm (n := n) h)) v = _
+    rw [Matrix.toLin'_apply]
+    exact Matrix.permMatrix_mulVec (σ := swap01Perm (n := n) h) (v := v)
+  -- The function `fun v => v ∘ σ` is continuous because each output coord is
+  -- the input coord at a fixed index.
+  have hpi : Continuous (fun v : V n => v ∘ (swap01Perm (n := n) h)) := by
+    apply continuous_pi
+    intro j
+    exact continuous_apply ((swap01Perm (n := n) h) j)
+  exact (Continuous.congr hpi (fun v => (hreduce v).symm))
+
+/-- Computation: `swap01LinGen h v = v ∘ swap01Perm h` for all v. -/
+theorem swap01LinGen_apply (h : 1 < n) (v : V n) :
+    swap01LinGen (n := n) h v = v ∘ (swap01Perm (n := n) h) := by
+  show Matrix.toLin' (Equiv.Perm.permMatrix ℝ (swap01Perm (n := n) h)) v = _
+  rw [Matrix.toLin'_apply]
+  exact Matrix.permMatrix_mulVec (σ := swap01Perm (n := n) h) (v := v)
+
+/-- `swap01LinGen h` preserves states. The map sends `v` to a reindexed
+copy `v ∘ σ` for `σ = swap01Perm h`. Sum and nonnegativity preserved. -/
+theorem swap01LinGen_preserves_states (h : 1 < n)
+    (v : V n) (hv : v ∈ states n) : swap01LinGen (n := n) h v ∈ states n := by
+  refine ⟨?_, ?_⟩
+  · intro j
+    rw [swap01LinGen_apply (n := n) h v]
+    show 0 ≤ v ((swap01Perm (n := n) h) j)
+    exact hv.1 _
+  · rw [swap01LinGen_apply (n := n) h v]
+    show ∑ j, v ((swap01Perm (n := n) h) j) = 1
+    rw [Equiv.sum_comp (swap01Perm (n := n) h) v]
+    exact hv.2
+
+/-- `swap01LinGen h` preserves the unit functional. -/
+theorem swap01LinGen_preserves_unit (h : 1 < n) :
+    (unitFn n).comp (swap01LinGen (n := n) h) = unitFn n := by
+  apply LinearMap.ext
+  intro v
+  show ∑ j, swap01LinGen (n := n) h v j = ∑ j, v j
+  rw [swap01LinGen_apply (n := n) h v]
+  show ∑ j, v ((swap01Perm (n := n) h) j) = ∑ j, v j
+  exact Equiv.sum_comp _ v
+
+/-- `swap01LinGen h` is bijective. (It's the linear map of an invertible
+matrix — the permutation matrix of a permutation.) -/
+theorem swap01LinGen_bijective (h : 1 < n) :
+    Function.Bijective (swap01LinGen (n := n) h) := by
+  -- swap01LinGen h applied twice = id (since the swap is an involution).
+  have hinvol : ∀ v : V n,
+      swap01LinGen (n := n) h (swap01LinGen (n := n) h v) = v := by
+    intro v
+    rw [swap01LinGen_apply (n := n) h v,
+        swap01LinGen_apply (n := n) h (v ∘ (swap01Perm (n := n) h))]
+    funext j
+    show v ((swap01Perm (n := n) h) ((swap01Perm (n := n) h) j)) = v j
+    unfold swap01Perm
+    rw [Equiv.swap_apply_self]
+  refine ⟨?_, ?_⟩
+  · intro u v huv
+    have h2 : swap01LinGen (n := n) h (swap01LinGen (n := n) h u)
+            = swap01LinGen (n := n) h (swap01LinGen (n := n) h v) := by rw [huv]
+    rw [hinvol, hinvol] at h2
+    exact h2
+  · intro v
+    exact ⟨swap01LinGen (n := n) h v, hinvol v⟩
+
+/-- `swap01LinGen h` as a `Reversible` on Classical n-GPT (for any `n ≥ 2`). -/
+noncomputable def swap01ReversibleGen (h : 1 < n) :
+    Perspectival.Continuity.Reversible (gpt n) where
+  toLin := swap01LinGen (n := n) h
+  continuous_toLin := swap01LinGen_continuous (n := n) h
+  preserves_states := swap01LinGen_preserves_states (n := n) h
+  preserves_unit := swap01LinGen_preserves_unit (n := n) h
+
+/-- `swap01LinGen h` as a `StrictReversible` (bijective). -/
+noncomputable def swap01StrictReversibleGen (h : 1 < n) :
+    Perspectival.Continuity.StrictReversible (gpt n) where
+  toReversible := swap01ReversibleGen (n := n) h
+  isEquiv := swap01LinGen_bijective (n := n) h
+
+/-- `LinearMap.det` of the identity on `V n` equals `1`. -/
+theorem linmap_det_id_gen : LinearMap.det (LinearMap.id : V n →ₗ[ℝ] V n) = 1 :=
+  LinearMap.det_id
+
+/-- **Main R6 disconnect, general n ≥ 2.** There is no
+`StrictReversiblePath` from the identity to the (01)-transposition on
+Classical `n`-GPT, for any `n ≥ 2`. -/
+theorem classical_general_no_strict_path_id_to_swap01
+    (h : 1 < n)
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt n)
+            (Perspectival.Continuity.StrictReversible.id (gpt n))
+            (swap01StrictReversibleGen (n := n) h)) :
+    False := by
+  apply classical_no_strict_path_across_det_sign_gen (n := n) p
+  · -- det of id = 1 > 0
+    show 0 < LinearMap.det
+          (Perspectival.Continuity.StrictReversible.id (gpt n)).toLin
+    rw [show (Perspectival.Continuity.StrictReversible.id (gpt n)).toLin
+            = (LinearMap.id : V n →ₗ[ℝ] V n) from rfl,
+        linmap_det_id_gen]
+    norm_num
+  · -- det of swap01 = -1 < 0
+    show LinearMap.det (swap01StrictReversibleGen (n := n) h).toLin < 0
+    rw [show (swap01StrictReversibleGen (n := n) h).toLin
+            = swap01LinGen (n := n) h from rfl,
+        swap01LinGen_det (n := n) h]
+    norm_num
+
+/-- **IsEmpty form of the general-n R6 disconnect.** -/
+theorem classical_general_strict_path_id_swap01_empty (h : 1 < n) :
+    IsEmpty (Perspectival.Continuity.StrictReversiblePath (gpt n)
+              (Perspectival.Continuity.StrictReversible.id (gpt n))
+              (swap01StrictReversibleGen (n := n) h)) := by
+  rw [isEmpty_iff]
+  intro p
+  exact classical_general_no_strict_path_id_to_swap01 (n := n) h p
+
+/-! ### Specializations to small `n` (n = 4, n = 5)
+
+The general-n theorem `classical_general_no_strict_path_id_to_swap01`
+specializes immediately to any concrete `n ≥ 2`. We instantiate at
+`n = 4` and `n = 5` to demonstrate. -/
+
+/-- **n=4 R6 disconnect**: no `StrictReversiblePath` from the identity
+to the (01)-transposition on Classical n=4 GPT. -/
+theorem classical_n4_no_strict_path_id_to_swap01
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt 4)
+            (Perspectival.Continuity.StrictReversible.id (gpt 4))
+            (swap01StrictReversibleGen (n := 4) (by norm_num))) :
+    False :=
+  classical_general_no_strict_path_id_to_swap01 (n := 4) (by norm_num) p
+
+/-- **n=5 R6 disconnect**: no `StrictReversiblePath` from the identity
+to the (01)-transposition on Classical n=5 GPT. -/
+theorem classical_n5_no_strict_path_id_to_swap01
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt 5)
+            (Perspectival.Continuity.StrictReversible.id (gpt 5))
+            (swap01StrictReversibleGen (n := 5) (by norm_num))) :
+    False :=
+  classical_general_no_strict_path_id_to_swap01 (n := 5) (by norm_num) p
 
 end Classical
 end Perspectival
