@@ -1865,6 +1865,68 @@ theorem distinct_loopPower_distinct_length {P : Type u} {C : Type v}
         (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n).length :=
   reflBracketed_loopPower_distinct_lengths R h
 
+/-! ## Bracketed-count monoid morphism (dual to tierAEventCount)
+
+The `bracketedCount` is the counterpart of `tierAEventCount`,
+counting Tier B (reversible-limit) steps instead of Tier A
+actualization steps. It is also a monoid morphism. -/
+
+/-- **`bracketedCount` is a monoid morphism.** -/
+theorem bracketedCount_monoid_morphism {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).bracketedCount
+      = ch₁.bracketedCount + ch₂.bracketedCount :=
+  RealityChain'.append_bracketedCount ch₁ ch₂
+
+/-- **`bracketedCount` of nil is zero.** -/
+theorem bracketedCount_nil {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (RealityChain'.nil (P := P) (C := C) R).bracketedCount = 0 := rfl
+
+/-- **`length` is a monoid morphism.** -/
+theorem length_monoid_morphism {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).length = ch₁.length + ch₂.length :=
+  RealityChain'.append_length ch₁ ch₂
+
+/-- **`length` of nil is zero.** -/
+theorem length_nil {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (RealityChain'.nil (P := P) (C := C) R).length = 0 := rfl
+
+/-- **Trio-of-morphisms certificate.** All three count-style measures
+(tierAEventCount, bracketedCount, length) are monoid morphisms with
+zero on nil. -/
+theorem trio_of_morphisms_certificate :
+    -- tierAEventCount morphism
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂)
+        = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0) ∧
+    -- bracketedCount morphism
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      (ch₁.append ch₂).bracketedCount
+        = ch₁.bracketedCount + ch₂.bracketedCount) ∧
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      (RealityChain'.nil (P := P) (C := C) R).bracketedCount = 0) ∧
+    -- length morphism
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      (ch₁.append ch₂).length = ch₁.length + ch₂.length) ∧
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      (RealityChain'.nil (P := P) (C := C) R).length = 0) :=
+  ⟨fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂,
+   fun R => tierAEventCount_unit R,
+   fun ch₁ ch₂ => bracketedCount_monoid_morphism ch₁ ch₂,
+   fun R => bracketedCount_nil R,
+   fun ch₁ ch₂ => length_monoid_morphism ch₁ ch₂,
+   fun R => length_nil R⟩
+
 /-! ## Chain monoid axioms (category-of-Realities structure)
 
 The strict chains between Reality states form the morphisms of a
