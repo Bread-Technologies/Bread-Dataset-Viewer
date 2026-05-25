@@ -297,6 +297,22 @@ theorem coherent_compose_eq {P : Type u} {C : Type v}
 -- which AtSeam alone doesn't imply. Use `actualizeAt_strict_step`
 -- when constructing strict actualization steps from pointwise events.)
 
+/-- **Decoherence-incompatible trajectories.** If two trajectories
+have the same Reality endpoints AND one is coherent (count = 0)
+while the other has positive count, that's a contradiction (by the
+iff): both can't simultaneously connect the same endpoints. -/
+theorem coherent_and_decoherent_distinct_endpoints
+    {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch_coh : RealityChain' P C R₁ R₂) (ch_deco : RealityChain' P C R₁ R₂)
+    (h_coh : ch_coh.actualizationCount = 0)
+    (h_deco : 0 < ch_deco.actualizationCount) : False := by
+  -- ch_coh's coherence + iff says R₁ = R₂.
+  have h_eq : R₁ = R₂ := ch_coh.zero_actualization_implies_eq h_coh
+  -- ch_deco's positive count + iff says R₁ ≠ R₂.
+  have h_ne : R₁ ≠ R₂ := ch_deco.pos_count_implies_ne h_deco
+  exact h_ne h_eq
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
