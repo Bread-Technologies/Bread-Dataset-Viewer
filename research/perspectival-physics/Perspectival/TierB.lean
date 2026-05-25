@@ -713,6 +713,26 @@ theorem RealityChain.distinct_endpoints_implies_actualization
 -- alone is the substantive content; reverse direction deferred to
 -- future work.)
 
+/-- **`RealityChain.singleton` of a bracketed step has count = 0.** A
+single-step chain consisting of a bracketed step has zero
+actualization count and bracketedCount = 1. -/
+theorem RealityChain.singleton_bracketed_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h_br : BracketedTransition R₁ R₂) :
+    (RealityChain.singleton (TrajectoryStep.bracketed h_br)).actualizationCount = 0
+      ∧ (RealityChain.singleton (TrajectoryStep.bracketed h_br)).bracketedCount = 1 := by
+  refine ⟨?_, ?_⟩
+  · simp [RealityChain.singleton, RealityChain.actualizationCount]
+  · simp [RealityChain.singleton, RealityChain.bracketedCount]
+
+/-- **`RealityChain.singleton` of an actualization step has count = 1.** -/
+theorem RealityChain.singleton_actualization_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h_seam : AtSeam R₁ R₂) :
+    (RealityChain.singleton (TrajectoryStep.actualization h_seam)).actualizationCount = 1
+      ∧ (RealityChain.singleton (TrajectoryStep.actualization h_seam)).bracketedCount = 0 := by
+  refine ⟨?_, ?_⟩
+  · simp [RealityChain.singleton, RealityChain.actualizationCount]
+  · simp [RealityChain.singleton, RealityChain.bracketedCount]
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
