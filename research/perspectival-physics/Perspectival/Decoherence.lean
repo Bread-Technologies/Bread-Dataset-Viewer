@@ -5589,6 +5589,27 @@ theorem quick_ref_complexity_append {P : Type u} {C : Type v}
       trajectoryComplexity ch₁ + trajectoryComplexity ch₂ :=
   trajectoryComplexity_append ch₁ ch₂
 
+/-- **Quick reference: DE refl.** -/
+theorem quick_ref_DE_refl {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    DecoherenceEquivalent ch ch :=
+  DecoherenceEquivalent_refl ch
+
+/-- **Quick reference: DE symm.** -/
+theorem quick_ref_DE_symm {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂) :
+    DecoherenceEquivalent ch₂ ch₁ :=
+  DecoherenceEquivalent_symm h
+
+/-- **Quick reference: DE trans.** -/
+theorem quick_ref_DE_trans {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ ch₃ : RealityChain' P C R₁ R₂}
+    (h₁₂ : DecoherenceEquivalent ch₁ ch₂)
+    (h₂₃ : DecoherenceEquivalent ch₂ ch₃) :
+    DecoherenceEquivalent ch₁ ch₃ :=
+  DecoherenceEquivalent_trans h₁₂ h₂₃
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
