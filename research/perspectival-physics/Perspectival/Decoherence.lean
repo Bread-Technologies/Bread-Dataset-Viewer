@@ -3022,5 +3022,42 @@ theorem coherent_regime_inhabited :
   ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
    RealityChain'.nil _, rfl, rfl⟩
 
+/-- **Tier A monotonicity is strict iff extension has actualization.**
+Extending a chain INCREASES tierAEventCount strictly iff the
+extension has at least one actualization step. -/
+theorem tier_A_strict_monotone_iff {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount ch₁ < tierAEventCount (ch₁.append ch₂) ↔
+    0 < tierAEventCount ch₂ := by
+  rw [tierAEventCount_append]
+  omega
+
+/-- **Tier A equality preserved iff extension is coherent.** Extending
+a chain preserves tierAEventCount iff the extension is coherent. -/
+theorem tier_A_equality_iff_coherent_extension {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount (ch₁.append ch₂) = tierAEventCount ch₁ ↔
+    tierAEventCount ch₂ = 0 := by
+  rw [tierAEventCount_append]
+  omega
+
+/-- **Strict-monotonicity certificate.** Bundles the strict/equality
+conditions on tierAEventCount under chain extension. -/
+theorem tier_A_strict_monotonicity_certificate :
+    -- (a) Strict iff extension actualizes.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount ch₁ < tierAEventCount (ch₁.append ch₂) ↔
+      0 < tierAEventCount ch₂) ∧
+    -- (b) Equality iff extension is coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂) = tierAEventCount ch₁ ↔
+      tierAEventCount ch₂ = 0) :=
+  ⟨fun ch₁ ch₂ => tier_A_strict_monotone_iff ch₁ ch₂,
+   fun ch₁ ch₂ => tier_A_equality_iff_coherent_extension ch₁ ch₂⟩
+
 end Decoherence
 end Perspectival
