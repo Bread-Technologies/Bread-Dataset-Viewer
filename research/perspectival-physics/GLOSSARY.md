@@ -156,6 +156,43 @@ the centralizer of `Wantable.complement` (viewed as a permutation) in
 exactly the Z/2-equivariant permutations of the outcome set. Lean:
 `Transformations.lean :: mem_range_toEquivPermHom_iff`.
 
+## Entropy / coarse-graining (per addendum)
+
+Per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`, the framework adopts
+anti-realism about entropy. The following terminology is load-bearing:
+
+**Coarse-graining** — an observer's count of distinguishable
+macrostates over some space of microstates. The coarse-graining is
+structurally grounded in real multiplicities (real subjectivism),
+not arbitrary.
+
+**Entropy (framework reading)** — the observer-relative
+coarse-graining of distinguishable states; Jaynes-style subjectivist
+quantity. NOT a substantial property of the universe; NOT an
+observer-independent absolute. Always reference the coarse-graining
+when speaking of entropy ("under this coarse-graining, X
+distinguishable macrostates" is the framework-native form).
+
+**Subjectivist (framework usage)** — perspective-relative; real
+multiplicities exist; structural constraints on consistent
+value-assignments are real. Not "anything goes" — that is bad
+subjectivism, which nobody defends. The framework owns the word;
+realist-respectability relabeling is drift.
+
+**Many-to-one collapse** — the operation of mapping multiple
+microstates to a single one. Mechanically forbidden under conservative
+dynamics (Picard-Lindelöf applied to time-reversal-symmetric ODEs).
+The kT ln 2 erasure cost is the mechanical price of forcing such a
+collapse via nonconservative dynamics. NOT the cost of "destroying
+information-substance."
+
+**Both-halves framing** — the framework's account of the Second Law
+requires both the subjectivist coarse-graining count (Jaynes) and the
+mechanical impossibility of many-to-one collapse (WBT 2024).
+Subjectivist where subjectivist (count); mechanical where mechanical
+(cost of forcing collapse). Together they yield the Second Law as
+necessary, not contingent.
+
 ## Cross-references
 
 - For per-theorem status see `STATUS.md`.

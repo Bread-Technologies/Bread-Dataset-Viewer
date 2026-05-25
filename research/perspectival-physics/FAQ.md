@@ -197,6 +197,59 @@ The user's published paper (Witkowski, Brown, Truong, Entropy 2024,
 impossible under conservative (reversible) dynamics, by Picard-
 Lindelöf. This is the same fact the two-tier architecture rests on.
 
+## Q13. What is entropy in the framework?
+
+**Framework answer:** Entropy is not a property the universe has;
+it is *subjectivist coarse-graining* (Jaynes). An observer's count of
+distinguishable macrostates over their coarse-graining IS the entropy.
+Different perspectives use different coarse-grainings; different
+coarse-grainings yield different values. This is real subjectivism —
+the multiplicities are real (physical construction determines them);
+the count is perspective-relative.
+
+The framework owns the word "subjectivism" rather than relabeling to
+gain realist respectability. See
+`ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` for the full statement and
+the discipline of catching substantialist drift.
+
+## Q14. How does the framework derive the Second Law?
+
+**Framework answer:** Via a both-halves argument:
+1. **Subjectivist count (Jaynes):** entropy = observer-relative count
+   of distinguishable macrostates.
+2. **Physical construction:** what counts as distinguishable is
+   structurally determined (not arbitrary).
+3. **Many-to-one collapse:** reducing the count requires collapsing
+   the coarse-graining — a many-to-one map on phase space.
+4. **Mechanical impossibility:** many-to-one is forbidden under
+   conservative dynamics (Picard-Lindelöf, WBT 2024).
+5. **kT ln 2 cost:** forcing the collapse via nonconservative dynamics
+   costs at least kT ln 2 per bit (Landauer).
+
+Therefore observer-relative entropy does not decrease under
+conservative dynamics, and forcing a decrease costs kT ln 2 per bit.
+Subjectivist where subjectivist (count); mechanical where mechanical
+(cost of collapse). **The Second Law is necessary, not contingent,
+and grounded in the user's published paper, not in statistical-
+mechanical postulate.**
+
+See `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` and `SEAMS.md` Seam 3.
+
+## Q15. Past Hypothesis, Boltzmann brains, black hole entropy?
+
+**Framework answer:** All three are puzzles built on entropy-as-
+substance ontology. Once entropy is reframed as subjectivist coarse-
+graining (per addendum):
+- **Past Hypothesis dissolves** — "low entropy in past direction"
+  is constitutive of past, not a contingent fact.
+- **Boltzmann brains dissolve** — no substantial high-entropy
+  state-space to fluctuate.
+- **Black hole entropy reframes** — S = A/4 = dimensionality of
+  distinguishable-from-outside structure under outside-observer
+  coarse-graining; not horizon-substance.
+
+See `TIER4_DISSOLUTIONS.md` items #17-#22.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
@@ -205,4 +258,6 @@ honest commentary on what's been earned vs. what remains open, and
 `CONCLUSIONS.md` for an external-reader summary. The Lean modules
 are catalogued in `DEPS.md`. The publication-target writeup is in
 `PAPER_DRAFT.md`. For the v2 architectural correction specifically,
-see `ORIGINAL_PROMPT.md`, `SEAMS.md`, and `V2_AUDIT.md`.
+see `ORIGINAL_PROMPT.md`, `SEAMS.md`, and `V2_AUDIT.md`. For the
+entropy / coarse-graining addendum, see
+`ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`.
