@@ -927,6 +927,7 @@ theorem RealityChain'.append_length {P : Type u} {C : Type v} :
 @[simp] theorem RealityChain'.nil_length {P : Type u} {C : Type v}
     (R : Reality P C) :
     (RealityChain'.nil (P := P) (C := C) R).length = 0 := rfl
+-- (nil_bracketedCount defined later, after RealityChain'.bracketedCount.)
 
 /-- **A strict chain's count is bounded by its length.** Trivial
 arithmetic content: each step contributes at most 1 to the count. -/
@@ -1088,6 +1089,11 @@ def RealityChain'.bracketedCount {P : Type u} {C : Type v} :
         | TrajectoryStep.bracketed _ => 1
         | TrajectoryStep.actualization _ => 0) +
       RealityChain'.bracketedCount rest
+
+/-- **Strict-chain `nil` bracketedCount is zero.** -/
+@[simp] theorem RealityChain'.nil_bracketedCount {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (RealityChain'.nil (P := P) (C := C) R).bracketedCount = 0 := rfl
 
 /-- **Strict-chain counts sum to length.** -/
 theorem RealityChain'.counts_sum {P : Type u} {C : Type v} :

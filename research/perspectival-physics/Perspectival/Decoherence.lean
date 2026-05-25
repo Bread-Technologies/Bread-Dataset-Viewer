@@ -594,6 +594,26 @@ theorem framework_decoherence_full_certificate :
     (R : Reality P C) :
     tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0 := rfl
 
+/-- **Worked example: a nil chain is coherent (count = 0).** -/
+example {P : Type u} {C : Type v} (R : Reality P C) :
+    tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0 := rfl
+
+/-- **Worked example: any nil chain has trajectoryComplexity = 0.** -/
+example {P : Type u} {C : Type v} (R : Reality P C) :
+    trajectoryComplexity (RealityChain'.nil (P := P) (C := C) R) = 0 := by
+  unfold trajectoryComplexity
+  simp
+
+/-- **Worked example: actualizeAt singleton chain has complexity = 2.** -/
+example {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    trajectoryComplexity
+      (RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)) = 2 := by
+  show 2 * _ + _ = 2
+  rfl
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
