@@ -590,6 +590,10 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.rate_count_invariant_under_equivalence`, `rate_length_not_invariant_under_equivalence` — what DE preserves and doesn't | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.loopPower_preserves_equivalence_class` — loops are transparent to all DE classes | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.coherent_witnesses_tier_B_reversibility`, `tier_B_reversibility_certificate` — coherent chains ARE the Tier B reversible limit | `Decoherence.lean` | ✓ (a) **Tier B reversibility formal** |
+| `Decoherence.framework_anti_realism_restatement` — 5-fact structural anti-realism bundle | `Decoherence.lean` | ✓ (a) **anti-realism formalized** |
+| `Decoherence.DecoherenceEquivalent_decidable`, `_setoid`, `DecoherenceQuotient`, `toDecoherenceClass`, `class_eq_iff_equivalent`, `class_projection_certificate` — quotient + canonical projection | `Decoherence.lean` | ✓ (a) **quotient structure** |
+| `TierA.tierA_foundational_certificate` — TierA preorder + past/future + no-return bundle | `TierA.lean` | ✓ (a) |
+| `TierB.tierB_foundational_certificate` — TierB bracketing + chain monoid + iff theorems bundle | `TierB.lean` | ✓ (a) |
 | `Decoherence.coherent_decompose`, `coherent_iff_both_factors_coherent`, `positive_count_iff_factor_positive`, `coherent_decomposition_certificate` — chain factorization preserves coherent status | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.rate_count_eq_length_iff_pure_decoherent`, `rate_count_eq_zero_iff_coherent` — iff bound characterizations | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.bracketedCount_monoid_morphism`, `length_monoid_morphism`, `trio_of_morphisms_certificate`, `trio_sum_law` — all three measures as monoid morphisms | `Decoherence.lean` | ✓ (a) **trio algebra** |
