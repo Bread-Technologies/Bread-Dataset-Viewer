@@ -1699,5 +1699,49 @@ preserve pure potential states — making explicit a Tier A commitment
 that became visible at Tier B (per the v2 architecture audit).
 -/
 
+/-! ## TierB foundational certificate -/
+
+/-- **TierB foundational certificate.** Bundles the framework's
+Tier B foundational content (bracketing + trajectory algebra) into
+a single Lean expression. -/
+theorem tierB_foundational_certificate :
+    -- (1) BracketedTransition is reflexive.
+    (∀ {P : Type} {C : Type} (R : Reality P C), BracketedTransition R R) ∧
+    -- (2) BracketedTransition is symmetric.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C},
+      BracketedTransition R₁ R₂ → BracketedTransition R₂ R₁) ∧
+    -- (3) BracketedTransition is transitive.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C},
+      BracketedTransition R₁ R₂ → BracketedTransition R₂ R₃ →
+      BracketedTransition R₁ R₃) ∧
+    -- (4) Bracketing preserves past.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C},
+      BracketedTransition R₁ R₂ → past R₁ = past R₂) ∧
+    -- (5) Chain monoid: associativity.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ R₄ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+        (ch₃ : RealityChain' P C R₃ R₄),
+      (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃)) ∧
+    -- (6) Chain monoid: identity laws.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (RealityChain'.nil R₁).append ch = ch ∧
+      ch.append (RealityChain'.nil R₂) = ch) ∧
+    -- (7) Strict chains witness RealitySuccessor.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (_ch : RealityChain' P C R₁ R₂), RealitySuccessor R₁ R₂) ∧
+    -- (8) Count = 0 ↔ R₁ = R₂ for strict chains.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 ↔ R₁ = R₂) :=
+  ⟨fun R => bracketed_refl R,
+   fun h => bracketed_symm h,
+   fun h₁ h₂ => bracketed_trans h₁ h₂,
+   fun h => bracketed_past_invariant h,
+   fun ch₁ ch₂ ch₃ => RealityChain'.append_assoc ch₁ ch₂ ch₃,
+   fun ch => ⟨RealityChain'.nil_append ch, RealityChain'.append_nil ch⟩,
+   fun ch => ch.implies_successor,
+   fun ch => Iff.symm ch.eq_iff_zero_count⟩
+
 end TierB
 end Perspectival
