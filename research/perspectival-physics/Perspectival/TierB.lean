@@ -469,6 +469,29 @@ theorem RealityChain.counts_sum {P : Type u} {C : Type v} :
           have h := RealityChain.counts_sum rest
           omega
 
+/-- **A chain with zero actualization steps has only bracketed steps.**
+This is the "no-seam-crossings" condition: the chain stays entirely
+within Tier B. -/
+theorem RealityChain.zero_actualization_all_bracketed {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂),
+      ch.actualizationCount = 0 →
+      ch.bracketedCount = ch.length
+  | _, _, RealityChain.nil _ => fun _ => rfl
+  | _, _, RealityChain.cons step rest => by
+      intro h_zero
+      cases step with
+      | bracketed _ =>
+          -- Bracketed step contributes 0 to actualization, 1 to bracketed.
+          show 1 + rest.bracketedCount = 1 + rest.length
+          have h_rest_zero : rest.actualizationCount = 0 := by
+            simp [RealityChain.actualizationCount] at h_zero
+            exact h_zero
+          have h := RealityChain.zero_actualization_all_bracketed rest h_rest_zero
+          omega
+      | actualization _ =>
+          -- An actualization step contributes 1, contradicting zero count.
+          simp [RealityChain.actualizationCount] at h_zero
+
 /-! **Note on chain successor properties.** The trajectory-step
 relation's actualization arm uses `AtSeam` only (a witness of *some*
 new actualization). To conclude `RealitySuccessor R₁ R₂` from a chain,
