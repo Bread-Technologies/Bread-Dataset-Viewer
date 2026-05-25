@@ -194,8 +194,8 @@ unifying claim across semantic and physical levels.
 
 ### Next critical-path priorities
 
-1. **R6 general-n** — Mathlib infrastructure ready; ~250-400 lines of Matrix.det plumbing. See R6_GENERAL_N_SCOPING.md.
-2. **R7 Lie-group bridge** — needs Mathlib LieGroup wiring. Higher-leverage than R6 general-n.
+1. ~~**R6 general-n**~~ — **DONE this session**: `classical_general_no_strict_path_id_to_swap01` for any n ≥ 2 via `Matrix.toLin' ∘ Equiv.Perm.permMatrix`. R6 program-level claim fully established.
+2. **R7 Lie-group bridge** — needs Mathlib LieGroup wiring. Now the single biggest remaining piece; the positive complement (quantum DOES support StrictConnectedAgency) is the open piece.
 3. **PatternStableWantable formulation (b)**: reachable-closure / orbit-cardinality non-trivial stability predicate. Would discriminate Bool (orbit > 1 under complement) from Fin 3 (orbit = 1 under id-complement).
 4. **u(1) toy formalization**: per TIER2_GAUGE_SCOPING.md, the smallest non-trivial Lie-group gauge instance.
 5. **gptTensor**: tensor-product-of-GPTs construction, S1 tomographic locality.
