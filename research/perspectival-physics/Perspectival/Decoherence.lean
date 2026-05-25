@@ -3455,6 +3455,26 @@ theorem loop_pow_mul_tierAEventCount {P : Type u} {C : Type v}
     tierAEventCount ((ch ^ m) ^ n) = tierAEventCount (ch ^ (m * n)) := by
   rw [← pow_mul]
 
+/-- **Worked example: (base^2)^3 = base^6 on Bool loop.** Demonstrates
+the power-composition law on a concrete Bool loop. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    ((base ^ 2) ^ 3).length = (base ^ 6).length := by
+  intro base
+  rw [← pow_mul]
+
+/-- **Worked example: pow_add length on Bool loop.** base^(2+3) has
+same length as base^2 * base^3 (= base^5). -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (base ^ (2 + 3)).length = (base ^ 2).length + (base ^ 3).length := by
+  intro base
+  exact loop_pow_add_length base 2 3
+
 /-- **Worked example: loop monoid power notation on Bool.** Showing
 that the Mathlib `Monoid` `^` notation works on loop chains. -/
 example (R : Reality Bool Bool) :
