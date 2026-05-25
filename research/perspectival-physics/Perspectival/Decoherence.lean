@@ -3858,6 +3858,53 @@ theorem tierAEventCount_loopMonoid_morphism {P : Type u} {C : Type v}
   ⟨fun ch₁ ch₂ => loop_tierAEventCount_mul ch₁ ch₂,
    loop_tierAEventCount_one⟩
 
+/-- **bracketedCount is a monoid morphism on loops.** -/
+theorem bracketedCount_loopMonoid_morphism {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    (∀ (ch₁ ch₂ : RealityChain' P C R R),
+      (ch₁ * ch₂).bracketedCount = ch₁.bracketedCount + ch₂.bracketedCount) ∧
+    (1 : RealityChain' P C R R).bracketedCount = 0 :=
+  ⟨fun ch₁ ch₂ => loop_bracketedCount_mul ch₁ ch₂,
+   loop_bracketedCount_one⟩
+
+/-- **length is a monoid morphism on loops.** -/
+theorem length_loopMonoid_morphism {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    (∀ (ch₁ ch₂ : RealityChain' P C R R),
+      (ch₁ * ch₂).length = ch₁.length + ch₂.length) ∧
+    (1 : RealityChain' P C R R).length = 0 :=
+  ⟨fun ch₁ ch₂ => loop_length_mul ch₁ ch₂,
+   loop_length_one⟩
+
+/-- **Three loop monoid morphisms certificate.** All three measures
+(tierAEventCount, bracketedCount, length) are monoid morphisms from
+the loop monoid to (ℕ, +, 0). -/
+theorem three_loopMonoid_morphisms_certificate :
+    -- tierAEventCount morphism.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      tierAEventCount (ch₁ * ch₂) = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      tierAEventCount (1 : RealityChain' P C R R) = 0) ∧
+    -- bracketedCount morphism.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      (ch₁ * ch₂).bracketedCount = ch₁.bracketedCount + ch₂.bracketedCount) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      (1 : RealityChain' P C R R).bracketedCount = 0) ∧
+    -- length morphism.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      (ch₁ * ch₂).length = ch₁.length + ch₂.length) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      (1 : RealityChain' P C R R).length = 0) :=
+  ⟨fun ch₁ ch₂ => loop_tierAEventCount_mul ch₁ ch₂,
+   fun {_ _ _} => loop_tierAEventCount_one,
+   fun ch₁ ch₂ => loop_bracketedCount_mul ch₁ ch₂,
+   fun {_ _ _} => loop_bracketedCount_one,
+   fun ch₁ ch₂ => loop_length_mul ch₁ ch₂,
+   fun {_ _ _} => loop_length_one⟩
+
 /-- **The loopMonoid integration is complete (Prop part).** Bundles
 the propositional facts about the loop monoid integration. The
 `Monoid (RealityChain' P C R R)` instance is registered separately
