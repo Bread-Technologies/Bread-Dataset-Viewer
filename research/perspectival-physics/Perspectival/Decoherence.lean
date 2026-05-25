@@ -1434,6 +1434,23 @@ example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
   · exact complexity_ge_length ch
   · exact complexity_le_twice_length ch
 
+/-- **Example: Bool trajectory hits decoherent bound (complexity = 2 * length).** -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let ch : RealityChain' Bool Bool R (actualizeAt R m) :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    trajectoryComplexity ch = 2 := by
+  intro R h_pot ch
+  show 2 * _ + _ = 2
+  rfl
+
+/-- **Example: Bool nil hits coherent bound (complexity = 0).** -/
+example (R : Reality Bool Bool) :
+    trajectoryComplexity (RealityChain'.nil R) = 0 := by
+  show 2 * _ + _ = 0
+  rfl
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
