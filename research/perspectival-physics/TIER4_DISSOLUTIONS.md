@@ -322,7 +322,7 @@ The dissolution of "decoherence is mysterious thermodynamic-style
 loss of coherence" reframes it as accumulated actualization at the
 system-environment interface (per Seam 4 in `SEAMS.md`). The Lean
 module `Perspectival/Decoherence.lean` provides the structural
-content (~1200 lines, fully build-verified):
+content (~2200 lines, fully build-verified):
 
 **Core measures:**
 - `actualizationRate` : (count, length) characterization along a
@@ -356,7 +356,21 @@ density-equivalence < trajectory equality (finest, deferred).
 `framework_decoherence_full_certificate`,
 `decoherence_monotonicity_certificate`,
 `decoherence_equivalence_certificate`,
-`trajectory_monoid_morphism_certificate`.
+`trajectory_monoid_morphism_certificate`,
+`decoherence_module_certificate` (4-fact clean summary),
+`decoherence_module_super_certificate` (8-fact ULTIMATE bundle).
+
+**Loop submonoid algebra** (end-of-session additions):
+- `loop_is_coherent`: every R → R chain has count = 0
+- `loopPower`: n-fold composition of a loop chain
+- `loopPower_length` (= n·ch.length), `_actualizationCount` (= 0),
+  `_bracketedCount` (= n·ch.bracketedCount), `_complexity` (= n·ch.length)
+- `loop_rate` and `loopPower_rate`: rate = (0, n·ch.length)
+- `loop_submonoid_certificate`, `loop_rate_certificate`
+- `nontrivial_loop_exists`, `anti_realism_loop_power_witness`
+- `boltzmann_brain_dissolution_shadow` (formal correlate of #19)
+- `coherent_kernel_iff_endpoints_eq`: kernel ↔ R₁ = R₂
+- `coherent_kernel_submonoid_certificate`
 
 **Open work** (Tier 2): continuous-time exponential-suppression
 dynamics, operational environment-density definition, quantitative
