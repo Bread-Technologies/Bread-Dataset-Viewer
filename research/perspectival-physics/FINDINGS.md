@@ -693,10 +693,22 @@ The full Lean theorem requires building rebit and qQM composites.
 
 Tier 1 status:
 - ✓ Axioms I-IV in Lean
-- ✓ Hardy reconstruction: A1, A3, A5 derivable; A4 partially (dimension
-  half DERIVABLE at general GPT level via gptTensor); A2 motivated.
+- ✓ Hardy reconstruction: A1, A3, A5 derivable; A4 dimension half +
+  N-multiplicativity forward direction (`gptTensor_distinguishable_*`)
+  DERIVABLE at general GPT level via gptTensor; A2 motivated.
 - ✓ Tsirelson 2√2
 - ✓ No-cloning, no-broadcasting
-- ✓ Complex Hilbert space PATH: classical/rebit/qubit/qQM trichotomy
-  constructed and qubit-forcing argument established at the structural
-  level (full formal theorem deferred to rebit+qQM composite construction).
+- ✓ Hardy QUADCHOTOMY: classical/rebit/qubit/qutrit GPT instances
+  constructed (`hardy_quadchotomy` theorem). qubit-forcing argument
+  via L7 closure (excludes classical) + TomographicLocality (excludes
+  rebit and qQM).
+
+**Tier 2 status: U(1) + SO(3) + SU(3) toehold (this session):**
+- ✓ U(1) gauge instance: `framework_u1_gauge_instance` via CircleGPT's
+  rotOneParameterFamily.
+- ✓ Full SO(3) StrictConnectedAgency on QubitGPT via
+  `qubitStrictConnectedAgency_full` (paths between rotX, rotY, rotZ
+  generator families through the identity). Framework-distinctive
+  first machine-verified non-abelian agency.
+- ~ SU(3) toehold: QutritGPT (K = 9 = N², N = 3) + λ₃ Gell-Mann
+  generator. Remaining 7 Gell-Mann generators DEFERRED.
