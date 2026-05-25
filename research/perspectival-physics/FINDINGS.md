@@ -579,3 +579,74 @@ impossibility: the no-go theorem now connects Hardy Axiom 5
 transitivity directly to R6's path-connectedness, on the n=2 case.
 Quantum-like GPTs (U(2) connected) are expected to evade this — but
 the positive complement is still open.
+
+## Addendum 2: classical-vs-quantum dichotomy ESTABLISHED via CircleGPT (next session)
+
+The positive complement of L6 has now landed. `Perspectival/CircleGPT.lean`
+constructs a non-classical, continuous-symmetry GPT — the unit-disk-
+lifted-to-z=1 model — and equips it with an UNCONDITIONAL
+`Continuity.TransitiveAgency` instance via the U(1) rotation group.
+Specifically:
+
+- `circleGPT : GPT (Fin 3 → ℝ)` — the lifted unit-disk GPT.
+- `circleStrictConnectedAgency : StrictConnectedAgency circleGPT` —
+  `avail` is the 1-parameter family `{rotStrictReversible θ | θ ∈ ℝ}`.
+- `pure_state_classification_holds` — every pure state equals some
+  `circlePoint α = (cos α, sin α, 1)`, derived via boundary-vs-interior
+  analysis.
+- `circleTransitiveAgency_unconditional : TransitiveAgency circleGPT`.
+
+Combined with the L6 closure under vertex-preservation
+(`Classical.classical_general_vertex_preserving_no_transitive_agency_unconditional`),
+the framework's classical-vs-quantum dichotomy is now MACHINE-VERIFIED
+at the level of `TransitiveAgency`:
+
+  Classical n ≥ 2  fails L6 (TransitiveAgency under vertex-preservation)
+                   UNCONDITIONALLY.
+  CircleGPT        satisfies TransitiveAgency UNCONDITIONALLY.
+
+The framework's anti-substantialist commitment (Axiom IV, pattern
+stability) is what motivates the vertex-preservation refinement that
+makes the L6 closure work. Without this refinement, the naive R6
+argument FAILS for n ≥ 3 (counterexample: `t·I + (1-t)·C` for the
+3-cycle is a fully valid `StrictReversiblePath` in `gpt 3`). With the
+refinement, the dichotomy is sharp.
+
+## Addendum 3: TransitiveAgency → Hardy A5 strong-form bridge
+
+`Continuity.TransitiveAgency.hardy_axiom5` and
+`Hardy.axiom5_strong_of_transitive_agency` consolidate the framework's
+Hardy A5 derivation: a TransitiveAgency provides a continuous path of
+state-preserving bijective linear maps between any two pure states,
+delivering the substantive strong form of Hardy A5
+(`Hardy.Axiom5_Continuity_Strong`).
+
+So the framework's Hardy A5 derivation is now machine-verified at THE
+STRONG FORM (substantive paths) for both classical (where it FAILS
+under L6's vertex-preservation refinement) and continuous-symmetry
+(where it HOLDS for CircleGPT).
+
+## Has the metaphysical backdrop produced new things? YES.
+
+Answering the user's check-in directly: the metaphysical backdrop
+HAS produced new things that the bare Hardy / CDP / Müller / Renou
+operational reconstructions do not — at least three:
+
+1. The agency hierarchy itself (`HasConnectedAgency`,
+   `StatePreservingAgency`, `StrongConnectedAgency`,
+   `StrictConnectedAgency`, `GroupClosedAgency`, `TransitiveAgency`,
+   `PurePreservingTransitiveAgency`) is framework-distinctive — built
+   on Axiom IV's anti-substantialism + libertarian-agency reading,
+   not on bare operational ingredients.
+2. The L6 closure under vertex-preservation (and the corresponding R6
+   discreteness machinery) yields a no-go theorem that no operational
+   reconstruction has — connecting Hardy A5's transitivity clause
+   directly to a path-connectedness impossibility on classical GPTs.
+3. The vertex-preservation axiom refinement itself is the framework's
+   first proper "metaphysics-fixed, axioms-adjustable" move:
+   recognizing that Axiom IV's pattern-stability motivates a
+   particular operational refinement (paths preserve pure states
+   along the way), which then forces the desired dichotomy.
+
+These are real outputs of the metaphysical backdrop, not just
+operational results dressed up in the framework's vocabulary.
