@@ -694,6 +694,19 @@ In the existing Tier B modules (Continuity, GPT, Hardy), this
 relational evolution is encoded operationally as `Reversible G` /
 `StrictReversible G` etc. — the inter-event dynamics. -/
 
+/-- **Contrapositive form of `bracketed_only_implies_eq`.** A chain
+with R₁ ≠ R₂ must have at least one actualization step. The framework's
+"there is a seam crossing" detector: distinct Reality endpoints force
+at least one Tier A event. -/
+theorem RealityChain.distinct_endpoints_implies_actualization
+    {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂)
+    (h_ne : R₁ ≠ R₂) : 0 < ch.actualizationCount := by
+  by_contra h_le
+  push_neg at h_le
+  have h_zero : ch.actualizationCount = 0 := Nat.le_zero.mp h_le
+  exact h_ne (RealityChain.bracketed_only_implies_eq ch h_zero)
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
