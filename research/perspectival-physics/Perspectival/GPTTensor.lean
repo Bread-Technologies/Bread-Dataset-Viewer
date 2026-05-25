@@ -366,15 +366,39 @@ e₁(ρ₁) · e₂(ρ₂)`. -/
   rw [TensorProduct.lift.tmul]
   rfl
 
-/-! The forward direction of Hardy A4 N-multiplicativity
-(N_AB ≥ N_A · N_B) would say: a product of distinguishability sets is
-a distinguishability set in gptTensor. The witness effect for the
-(i, j) pair is `productEffect e_i (G₂.unit)` (or similar). The
-verification that this is in `(gptTensor _ _).effects` is non-trivial:
-it requires showing 0 ≤ productEffect e ρ ≤ 1 for ALL ρ ∈ convexHull
-of products — by linearity, this reduces to ρ = ρ_A ⊗ ρ_B which is
-straightforward. Currently DEFERRED — the productEffect infrastructure
-is in place, the bounds-check is the open piece. -/
+/-! ### productEffect bounds on states of gptTensor
+
+To use productEffect as an effect in gptTensor, we need to show it
+satisfies `0 ≤ productEffect e ρ ≤ 1` for all ρ ∈ (gptTensor _ _).states
+= convexHull of products. Strategy:
+
+1. On a product state `ρ_A ⊗ ρ_B`: `productEffect e_A e_B (ρ_A ⊗ ρ_B)
+   = e_A(ρ_A) · e_B(ρ_B) ∈ [0, 1]·[0, 1] = [0, 1]`. ✓
+2. The set `{ρ | 0 ≤ productEffect ρ ≤ 1}` is convex (intersection
+   of half-spaces).
+3. Hence productEffect's bounds extend to the convex hull = (gptTensor).states. -/
+
+/-- The product effect is bounded `[0, 1]` on product states of two
+states. -/
+theorem productEffect_bounds_on_product
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    {e₁ : V₁ →ₗ[ℝ] ℝ} {e₂ : V₂ →ₗ[ℝ] ℝ}
+    (he₁ : e₁ ∈ G₁.effects) (he₂ : e₂ ∈ G₂.effects)
+    {ρ₁ : V₁} (hρ₁ : ρ₁ ∈ G₁.states)
+    {ρ₂ : V₂} (hρ₂ : ρ₂ ∈ G₂.states) :
+    0 ≤ productEffect e₁ e₂ (ρ₁ ⊗ₜ[ℝ] ρ₂) ∧
+    productEffect e₁ e₂ (ρ₁ ⊗ₜ[ℝ] ρ₂) ≤ 1 := by
+  rw [productEffect_tmul]
+  -- e₁ ρ₁ ∈ [0, 1] and e₂ ρ₂ ∈ [0, 1].
+  have h1 : 0 ≤ e₁ ρ₁ ∧ e₁ ρ₁ ≤ 1 := G₁.prob_in_unit_interval e₁ he₁ ρ₁ hρ₁
+  have h2 : 0 ≤ e₂ ρ₂ ∧ e₂ ρ₂ ≤ 1 := G₂.prob_in_unit_interval e₂ he₂ ρ₂ hρ₂
+  refine ⟨mul_nonneg h1.1 h2.1, ?_⟩
+  calc e₁ ρ₁ * e₂ ρ₂
+      ≤ 1 * e₂ ρ₂ := by exact mul_le_mul_of_nonneg_right h1.2 h2.1
+    _ ≤ 1 * 1     := by exact mul_le_mul_of_nonneg_left h2.2 (by norm_num)
+    _ = 1         := by ring
 
 end GPT
 end Perspectival
