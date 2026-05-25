@@ -1387,6 +1387,15 @@ class HasOneParameterAgency
     (G : GPT V) where
   family : OneParameterFamily G
 
+/-- **HasOneParameterAgency ⇒ family is non-trivial OR all elements are id.**
+The class itself doesn't enforce non-triviality, so we provide both
+forms. This packages the family extraction for downstream use. -/
+theorem HasOneParameterAgency.family_at_zero
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} [H : HasOneParameterAgency G] :
+    (H.family.f 0).toLin = LinearMap.id :=
+  H.family.zero
+
 /-- A GPT has *k-axis agency* if it admits `k` distinct
 `OneParameterFamily` instances — k independent 1-parameter subgroups.
 The framework's scaffold toward k-dim Lie group symmetry.
