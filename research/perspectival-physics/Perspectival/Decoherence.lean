@@ -733,6 +733,23 @@ theorem decoherent_chain_extension_decoherent {P : Type u} {C : Type v}
   have := tier_A_monotone_under_append ch₁ ch₂
   omega
 
+/-- **Length monotonicity under append.** Appending another chain can
+only INCREASE the length. Trivial but useful. -/
+theorem length_monotone_under_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    ch₁.length ≤ (ch₁.append ch₂).length := by
+  rw [RealityChain'.append_length]
+  omega
+
+/-- **Complexity monotonicity under append.** -/
+theorem complexity_monotone_under_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    trajectoryComplexity ch₁ ≤ trajectoryComplexity (ch₁.append ch₂) := by
+  rw [trajectoryComplexity_append]
+  omega
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
