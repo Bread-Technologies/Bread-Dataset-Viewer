@@ -3073,6 +3073,29 @@ theorem equivalence_pure_decoherent_iff_length_eq {P : Type u} {C : Type v}
   have h₂ := ch₂.counts_sum
   omega
 
+/-- **Loop powers preserve all DecoherenceEquivalent classes.** Given
+any chain ch : R₁ → R₂ and any loop powers at either endpoint, the
+resulting expanded chain is in the same DecoherenceEquivalent class
+as ch. This is the framework's "loops are transparent" content
+applied to powers. -/
+theorem loopPower_preserves_equivalence_class {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop_pre : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop_post : RealityChain' P C R₂ R₂)
+    (m n : Nat) :
+    DecoherenceEquivalent
+      ((loopPower loop_pre m).append (ch.append (loopPower loop_post n)))
+      ch := by
+  -- Both have same count, since loop powers have count 0.
+  show ((loopPower loop_pre m).append
+        (ch.append (loopPower loop_post n))).actualizationCount
+      = ch.actualizationCount
+  rw [RealityChain'.append_actualizationCount,
+      RealityChain'.append_actualizationCount,
+      loopPower_actualizationCount, loopPower_actualizationCount]
+  omega
+
 /-- **Rate length is NOT invariant under DecoherenceEquivalent in
 general.** Witnesses: nil chain vs singleton bracketed chain at R
 both have count 0 but different lengths (0 vs 1). -/
