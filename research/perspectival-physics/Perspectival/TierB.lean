@@ -739,6 +739,23 @@ theorem RealityChain.bracketed_chain_zero_count {P : Type u} {C : Type v}
         have h_br := h_all_bracketed (TrajectoryStep.actualization h_seam)
         exact absurd h_br (seam_breaks_bracketing h_seam)
 
+/-- **Single-step zero-count implies bracketed.** A 1-step chain has
+actualizationCount = 0 iff the step is a bracketed transition. -/
+theorem RealityChain.single_step_count_zero_iff_bracketed
+    {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep P C R₁ R₂) :
+    (RealityChain.singleton step).actualizationCount = 0
+    ↔ ∃ h, step = TrajectoryStep.bracketed h := by
+  constructor
+  · intro h
+    cases step with
+    | bracketed h_br => exact ⟨h_br, rfl⟩
+    | actualization h_seam =>
+        simp [RealityChain.singleton, RealityChain.actualizationCount] at h
+  · rintro ⟨h_br, h_eq⟩
+    rw [h_eq]
+    simp [RealityChain.singleton, RealityChain.actualizationCount]
+
 /-- **`RealityChain.singleton` of a bracketed step has count = 0.** A
 single-step chain consisting of a bracketed step has zero
 actualization count and bracketedCount = 1. -/
