@@ -4709,6 +4709,26 @@ theorem pure_decoherent_maximal_complexity {P : Type u} {C : Type v}
   rw [decoherent_complexity ch h, ← h_len]
   exact complexity_le_twice_length ch'
 
+/-- **Complexity extremes certificate.** Coherent chains minimize complexity
+and pure-decoherent chains maximize complexity at any fixed length. -/
+theorem complexity_extremes_certificate :
+    -- Coherent chains achieve minimum complexity at their length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 →
+      ∀ (ch' : RealityChain' P C R₁ R₂),
+        ch'.length = ch.length →
+        trajectoryComplexity ch ≤ trajectoryComplexity ch') ∧
+    -- Pure-decoherent chains achieve maximum complexity at their length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.bracketedCount = 0 →
+      ∀ (ch' : RealityChain' P C R₁ R₂),
+        ch'.length = ch.length →
+        trajectoryComplexity ch' ≤ trajectoryComplexity ch) :=
+  ⟨fun ch h => coherent_minimal_complexity ch h,
+   fun ch h => pure_decoherent_maximal_complexity ch h⟩
+
 /-- **Symmetry of loop characterization.** The implication count = 0 → R₁ = R₂
 goes both ways via the iff. -/
 theorem loop_characterization_iff_symm {P : Type u} {C : Type v}
