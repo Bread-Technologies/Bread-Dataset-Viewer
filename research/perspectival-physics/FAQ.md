@@ -250,6 +250,33 @@ graining (per addendum):
 
 See `TIER4_DISSOLUTIONS.md` items #17-#22.
 
+## Q16. How are multi-step trajectories formalized?
+
+**Framework answer:** Via the `RealityChain` inductive type in
+`Perspectival/TierB.lean`. A `RealityChain P C R₁ R_n` is a finite
+sequence of `TrajectoryStep`s linking Reality states from R₁ to R_n,
+where each step is either:
+- **bracketed** (Tier B reversible inter-event evolution), or
+- **actualization** (Tier A irreversible seam crossing).
+
+The chain admits three count functions:
+- `actualizationCount` : number of seam crossings
+- `bracketedCount` : number of reversible steps
+- `length` : total step count
+
+These satisfy `counts_sum` (`actualization + bracketed = length`) and
+`append additivity` (counts of `ch₁.append ch₂` are sums of
+component counts).
+
+**Key theorems:**
+- `bracketed_only_implies_eq` : a chain with 0 actualizations has
+  R₁ = R₂ (bare Tier B is trivial on Reality function).
+- `distinct_endpoints_implies_actualization` : R₁ ≠ R₂ forces at
+  least one seam crossing along the chain.
+
+These make the framework's "evolution + measurement" architecture
+operationally concrete and computable.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
