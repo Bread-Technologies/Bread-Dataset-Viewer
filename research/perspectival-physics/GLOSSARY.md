@@ -193,6 +193,49 @@ Subjectivist where subjectivist (count); mechanical where mechanical
 (cost of forcing collapse). Together they yield the Second Law as
 necessary, not contingent.
 
+## Decoherence (Seam 4) vocabulary
+
+**Trajectory chain.** `RealityChain' P C R₁ R₂` — a finite sequence
+of bracketed/actualization steps connecting Reality state R₁ to R₂.
+Carries witnesses of each transition.
+
+**Actualization count.** `tierAEventCount ch` — the number of
+actualization steps in a strict chain. The "Tier A irreversible
+content" of the trajectory.
+
+**Bracketed count.** `bracketedCount ch` — the number of bracketed
+(Tier B reversible-limit) steps in a strict chain.
+
+**Trajectory complexity.** `trajectoryComplexity ch` — weighted
+measure `2 * count + bracketed`. Distinguishes more chain types
+than count alone.
+
+**Coherent regime.** A chain with `actualizationCount = 0`. All
+steps are bracketed; the trajectory stays in the Tier B reversible
+limit.
+
+**Pure-decoherent regime.** A chain with `bracketedCount = 0`. All
+steps are actualizations; maximal Tier A irreversibility per step.
+
+**Mixed regime.** A chain with both positive actualization count
+and positive bracketed count.
+
+**DecoherenceEquivalent.** Two chains are decoherence-equivalent
+iff they have equal `tierAEventCount`. The equivalence relation
+captures the framework's anti-realism: only the count is
+path-independent across chains with same endpoints.
+
+**Loop chain.** A chain `RealityChain' P C R R` with equal endpoints.
+By the kernel characterization, every loop chain is coherent
+(count = 0).
+
+**Loop power.** `loopPower ch n` — the n-fold composition of a
+loop chain with itself.
+
+**Coherent kernel.** The set of chains with `tierAEventCount = 0`.
+Characterized exactly by endpoint equality
+(`coherent_kernel_iff_endpoints_eq`).
+
 ## Cross-references
 
 - For per-theorem status see `STATUS.md`.
