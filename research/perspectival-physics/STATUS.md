@@ -559,6 +559,9 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.trajectoryComplexity` + bounds + append additivity | `Decoherence.lean` | ✓ (a) **information-content measure** |
 | `Decoherence.framework_decoherence_full_certificate` — full Decoherence bundle (rate + path-independence + complexity bounds + compositionality) | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.complexity_eq_length_iff_coherent`, `complexity_eq_twice_length_iff_pure_decoherent` — complexity-bound iff theorems | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.tier_A_monotone_under_append`, `length_monotone_under_append`, `complexity_monotone_under_append` + left-versions | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.decoherence_monotonicity_certificate` — monotonicity bundle | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.trajectoryComplexityPlain` + bounds + append additivity + forgetful preservation | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
