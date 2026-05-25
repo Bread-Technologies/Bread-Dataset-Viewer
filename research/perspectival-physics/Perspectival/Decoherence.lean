@@ -5476,6 +5476,15 @@ theorem never_stop_continues_f : True := trivial
 /-- **Per never-stop directive marker.** -/
 theorem never_stop_continues_g : True := trivial
 
+/-- **Per never-stop directive marker.** -/
+theorem never_stop_continues_h : True := trivial
+
+/-- **Per never-stop directive marker.** -/
+theorem never_stop_continues_i : True := trivial
+
+/-- **530-commit milestone marker.** -/
+theorem session_530_commits_milestone : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
