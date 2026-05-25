@@ -1093,6 +1093,28 @@ theorem density_eq_iff {P : Type u} {C : Type v}
     · have := congrArg Prod.snd h; exact this
   · rintro ⟨h₁, h₂⟩; rw [h₁, h₂]
 
+/-- **Equal density implies decoherence-equivalent.** The (count,
+length) pair refines DecoherenceEquivalent. -/
+theorem density_eq_implies_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : ch₁.actualizationDensity = ch₂.actualizationDensity) :
+    DecoherenceEquivalent ch₁ ch₂ := by
+  have h_count : ch₁.actualizationCount = ch₂.actualizationCount :=
+    ((density_eq_iff ch₁ ch₂).mp h).1
+  exact h_count
+
+/-- **Equal density implies equal complexity.** -/
+theorem density_eq_implies_complexity_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : ch₁.actualizationDensity = ch₂.actualizationDensity) :
+    trajectoryComplexity ch₁ = trajectoryComplexity ch₂ := by
+  have ⟨h_count, h_len⟩ := (density_eq_iff ch₁ ch₂).mp h
+  unfold trajectoryComplexity
+  -- Both depend on count and bracketedCount, which is length - count.
+  have h_sum₁ := ch₁.counts_sum
+  have h_sum₂ := ch₂.counts_sum
+  omega
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
