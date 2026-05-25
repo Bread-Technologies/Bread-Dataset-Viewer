@@ -572,6 +572,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.density_eq_iff`, `density_refines_decoherence_equivalent` — density hierarchy | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.anti_realist_structural_realism` — content path-dependent + structure compositional | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.grand_decoherence_certificate` — 8-fact bundle (most comprehensive) | `Decoherence.lean` | ✓ (a) **comprehensive** |
+| `Decoherence.decoherence_module_certificate` — 4-fact final bundle (cleanest summary) | `Decoherence.lean` | ✓ (a) **final summary** |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
