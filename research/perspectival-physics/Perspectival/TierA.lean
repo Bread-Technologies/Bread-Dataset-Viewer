@@ -667,5 +667,19 @@ example [DecidableEq (Meeting Bool Bool)] (m₀ : Meeting Bool Bool) :
   show actualizeAt _ m₀ m₀ = MeetingStatus.Actualized
   simp
 
+/-- **Past disjointness.** Past and future of any Reality are
+disjoint — a concrete sanity check on Bool. -/
+example (R : Reality Bool Bool) : past R ∩ future R = ∅ :=
+  past_future_disjoint R
+
+/-- **Concrete `actualizeAt` lossy at status level.** Two different
+realities can map to the same actualizeAt result if they differ only
+at the targeted meeting. -/
+example [DecidableEq (Meeting Bool Bool)] (m : Meeting Bool Bool)
+    (R₁ R₂ : Reality Bool Bool)
+    (h : ∀ m' : Meeting Bool Bool, m' ≠ m → R₁ m' = R₂ m') :
+    actualizeAt R₁ m = actualizeAt R₂ m :=
+  actualizeAt_many_to_one R₁ R₂ m h
+
 end TierA
 end Perspectival
