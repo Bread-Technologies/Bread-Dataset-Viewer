@@ -204,6 +204,36 @@ theorem rate_count_le_length {P : Type u} {C : Type v}
   show ch.actualizationCount ≤ ch.length
   exact ch.actualizationCount_le_length
 
+/-- **Decoherence certificate.** Single Lean expression bundling the
+core results of this module — the framework's Seam 4 content
+formalized at the count-based structural level. -/
+theorem decoherence_certificate :
+    -- 1. Coherent regime characterized.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 →
+      actualizationRate ch = (0, ch.length)) ∧
+    -- 2. Decoherence regime characterized.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.bracketedCount = 0 →
+      actualizationRate ch = (ch.length, ch.length)) ∧
+    -- 3. Rate is compositional.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂)
+        (ch₂ : RealityChain' P C R₂ R₃),
+      actualizationRate (ch₁.append ch₂)
+        = ((actualizationRate ch₁).1 + (actualizationRate ch₂).1,
+           (actualizationRate ch₁).2 + (actualizationRate ch₂).2)) ∧
+    -- 4. Rate bounds.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 ≤ (actualizationRate ch).2) :=
+  ⟨fun ch h => coherent_regime ch h,
+   fun ch h => decoherence_regime ch h,
+   fun ch₁ ch₂ => concatenated_decoherence ch₁ ch₂,
+   fun ch => rate_count_le_length ch⟩
+
 /-! ## Decoherence framework summary
 
 This module provides the structural shadow of the framework's reading
