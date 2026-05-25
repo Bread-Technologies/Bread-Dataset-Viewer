@@ -1102,6 +1102,30 @@ theorem RealityChain'.counts_sum {P : Type u} {C : Type v} :
           have h := RealityChain'.counts_sum rest
           omega
 
+/-- **`bracketedCount` is preserved by the forgetful map.** -/
+theorem RealityChain'.toRealityChain_bracketedCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂),
+      ch.toRealityChain.bracketedCount = ch.bracketedCount
+  | _, _, RealityChain'.nil _ => rfl
+  | _, _, RealityChain'.cons _ rest => by
+      show RealityChain.bracketedCount _ = RealityChain'.bracketedCount _
+      simp only [RealityChain'.toRealityChain, RealityChain.bracketedCount,
+                 RealityChain'.bracketedCount]
+      rw [RealityChain'.toRealityChain_bracketedCount rest]
+
+/-- **Append additivity for strict-chain bracketedCount.** -/
+theorem RealityChain'.append_bracketedCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C}
+      (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      (ch₁.append ch₂).bracketedCount
+        = ch₁.bracketedCount + ch₂.bracketedCount
+  | _, _, _, RealityChain'.nil _, _ => by
+      simp [RealityChain'.append, RealityChain'.bracketedCount]
+  | _, _, _, RealityChain'.cons _ rest, ch₂ => by
+      simp only [RealityChain'.append, RealityChain'.bracketedCount]
+      rw [RealityChain'.append_bracketedCount rest ch₂]
+      omega
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
