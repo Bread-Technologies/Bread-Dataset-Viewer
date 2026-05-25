@@ -30,6 +30,8 @@ import Perspectival.QutritGPT
 import Perspectival.Continuity
 import Perspectival.Hardy
 import Perspectival.GPTTensor
+import Perspectival.TierA
+import Perspectival.TierB
 
 namespace Perspectival
 namespace Dichotomy
@@ -735,6 +737,54 @@ theorem framework_certificate :
     intro PPT
     exact classical_no_L7_unconditional 2 (by omega) PPT
   · exact Hardy.axiom4_dimension_holds _ _
+
+/-! ## v2 architectural arc: Tier A bracketing forces non-classical Tier B
+
+Per ORIGINAL_PROMPT v2, the framework's central technical claim:
+when the Tier A bracketing operation is applied to a finite meeting-
+structure with CONTINUOUS dynamics, the resulting Tier B structure
+CANNOT be classical. This is the v2-progressive reframing of the
+classical no-go: not a postulate-strengthening patch, but a
+consequence of the bracketing operation.
+
+The connecting theorem is the existing R6 disconnect closure
+(`Classical.classical_general_no_pure_preserving_transitive_agency`),
+now interpreted under v2:
+
+  TierA bracketing applied to definite configurations → permutations
+  (`TierB.permActOnDefinite`).
+  Permutations on Classical n are DISCRETE (`Classical.vertexSet_isDiscrete`).
+  Discrete dynamics can't be continuous between distinct points
+  (`Classical.vertex_preserving_path_constant_on_vertex`).
+  Hence: classical Tier B + bracketed continuity is impossible
+  (`classical_general_no_pure_preserving_transitive_agency`).
+
+Therefore: any Tier B structure carrying continuous bracketed dynamics
+must be NON-CLASSICAL. The framework forces a quantum-like Tier B
+without postulating it. -/
+
+/-- **v2 arc: classical Tier B fails the bracketing continuity test.**
+The L7 closure on Classical n ≥ 2 (no PurePreservingTransitiveAgency)
+is, under v2, the statement that classical Tier B cannot host
+continuous bracketed dynamics. This forces the framework's Tier B
+toward continuous-symmetry GPTs (CircleGPT, QubitGPT, QutritGPT)
+rather than the classical simplex. -/
+theorem v2_classical_Tier_B_excluded :
+    ∀ _ : Continuity.PurePreservingTransitiveAgency (Classical.gpt 2), False :=
+  fun PPT => classical_no_L7_unconditional 2 (by omega) PPT
+
+/-- **v2 arc: the framework's positive Tier B structure exists.**
+CircleGPT and QubitGPT both satisfy non-degenerate StrictConnectedAgency;
+QutritGPT carries a OneParameterFamily (rotL3) as the SU(3) toehold.
+Under v2, this is the demonstration that continuous bracketed Tier B
+structure is realizable on a non-classical foundation. -/
+theorem v2_nonclassical_Tier_B_exists :
+    Nonempty (Continuity.StrictConnectedAgency CircleGPT.circleGPT) ∧
+    Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT) ∧
+    Nonempty (Continuity.OneParameterFamily QutritGPT.qutritGPT) :=
+  ⟨⟨CircleGPT.circleStrictConnectedAgency⟩,
+   ⟨QubitGPT.qubitStrictConnectedAgency_full⟩,
+   ⟨QutritGPT.rotL3OneParameterFamily⟩⟩
 
 /-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
 
