@@ -616,6 +616,19 @@ example (θ θ' : ℝ) :
   framework_gauge_composition_linear
     (CircleGPT.rotReversible θ) (QubitGPT.rotZReversible θ')
 
+/-- **U(1) × SU(3)-toehold gauge composition on CircleGPT ⊗ QutritGPT.**
+A second worked example: rotZ θ on CircleGPT (U(1)) combined with
+rotL3 θ' on QutritGPT (λ₃-style Gell-Mann generator). -/
+example (θ θ' : ℝ) :
+    (∀ ρ ∈ (GPT.gptTensor CircleGPT.circleGPT QutritGPT.qutritGPT).states,
+      GPT.productTransform (CircleGPT.rotZ θ) (QutritGPT.rotL3 θ') ρ
+      ∈ (GPT.gptTensor CircleGPT.circleGPT QutritGPT.qutritGPT).states) ∧
+    (GPT.tensorUnit CircleGPT.circleGPT QutritGPT.qutritGPT).comp
+      (GPT.productTransform (CircleGPT.rotZ θ) (QutritGPT.rotL3 θ'))
+    = GPT.tensorUnit CircleGPT.circleGPT QutritGPT.qutritGPT :=
+  framework_gauge_composition_linear
+    (CircleGPT.rotReversible θ) (QutritGPT.rotL3Reversible θ')
+
 /-! ## Hardy reconstruction certificate for CircleGPT
 
 CircleGPT carries an unconditional TransitiveAgency, so the framework's
