@@ -4753,6 +4753,29 @@ theorem rate_origin_iff_length_zero {P : Type u} {C : Type v}
     have h_count := length_zero_count_zero ch h
     rw [h_count]
 
+/-- **Rate corner certificate.** Rate's special points:
+- (0, 0) corresponds to nil chain (length 0).
+- (0, n) for n > 0 corresponds to coherent chain of length n.
+- (n, n) corresponds to pure-decoherent chain of length n. -/
+theorem rate_corner_certificate :
+    -- (0, 0) iff length 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      actualizationRate ch = (0, 0) ↔ ch.length = 0) ∧
+    -- (0, length) iff coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 →
+      actualizationRate ch = (0, ch.length)) ∧
+    -- (length, length) iff pure-decoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.bracketedCount = 0 →
+      actualizationRate ch = (ch.length, ch.length)) :=
+  ⟨fun ch => rate_origin_iff_length_zero ch,
+   fun ch h => coherent_regime ch h,
+   fun ch h => decoherence_regime ch h⟩
+
 /-- **Rate region characterization certificate.** -/
 theorem rate_region_characterization_certificate :
     -- Diagonal (k = n) is pure-decoherent region.
