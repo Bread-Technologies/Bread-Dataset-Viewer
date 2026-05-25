@@ -5274,6 +5274,19 @@ theorem quick_ref_kernel_iff {P : Type u} {C : Type v}
     tierAEventCount ch = 0 ↔ R₁ = R₂ :=
   coherent_kernel_iff_endpoints_eq ch
 
+/-- **Quick reference: trichotomy.** -/
+theorem quick_ref_trichotomy {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount = 0 ∨ ch.bracketedCount = 0 ∨
+    (0 < ch.actualizationCount ∧ 0 < ch.bracketedCount) :=
+  trajectory_trichotomy ch
+
+/-- **Quick reference: chain witnesses RealitySuccessor.** -/
+theorem quick_ref_chain_successor {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    RealitySuccessor R₁ R₂ :=
+  ch.implies_successor
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
