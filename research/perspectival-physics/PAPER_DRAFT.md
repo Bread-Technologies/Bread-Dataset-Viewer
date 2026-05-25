@@ -1205,12 +1205,51 @@ framework has earned.
 
 `Dichotomy.framework_so3_axes_present` formalizes the next step:
 three independent `OneParameterFamily` instances (rotX, rotY, rotZ)
-on QubitGPT, together generating SO(3) ≃ SU(2)/Z₂ — the framework's
-first non-abelian-gauge candidate. Full SO(3) closure (composition
-across generators) is deferred.
+on QubitGPT, together generating SO(3) ≃ SU(2)/Z₂.
 
-What this delivers for Tier 2 #6: the framework's gauge-as-connection
-intuition is formally instantiated for U(1) (the smallest abelian Lie
-group) and partially instantiated for SU(2) (via the rotX/Y/Z
-axes-present theorem). The full SO(3)/SU(2) Lie-group structure (with
-composition closure on the avail set) is the next deferred piece.
+**A.14 Hardy QUADCHOTOMY and the qutrit instance.**
+`Perspectival/QutritGPT.lean` constructs the complex-QM 3-level
+system (qutrit, K = N² = 9 at N = 3) as the framework's fourth GPT
+instance, extending the K-trichotomy to a quadchotomy:
+
+  Classical n: K = N         (Classical.lean :: classical_hardy_K)
+  CircleGPT:   K = 3 = N(N+1)/2 (rebit)
+  QubitGPT:    K = 4 = N²       (qubit)
+  QutritGPT:   K = 9 = N²       (qutrit, this session)
+
+`Dichotomy.hardy_quadchotomy` captures all four signatures in a
+single theorem. The N² growth of complex QM from N=2 to N=3 is
+machine-verified.
+
+**A.15 Tier 2 gauge ladder + full SO(3) StrictConnectedAgency.**
+`QubitGPT.qubitStrictConnectedAgency_full` extends the qubit's
+StrictConnectedAgency to the full union of rotX, rotY, rotZ
+generators with paths between any pair (within-family via affine
+rotation, cross-family via the identity). This is the framework's
+first machine-verified non-abelian agency instance.
+
+`QutritGPT.rotL3` provides the framework's SU(3) toehold: the
+Gell-Mann λ₃-style phase rotation in the (0,1) Bloch plane, with
+full preservation/bijectivity/continuity proofs. Remaining 7
+Gell-Mann generators deferred.
+
+`Dichotomy.framework_gauge_ladder` packages all three Standard
+Model gauge factor witnesses in a single Lean theorem:
+
+  Nonempty (OneParameterFamily CircleGPT)      -- U(1)
+  ∧ Nonempty (StrictConnectedAgency QubitGPT)  -- SO(3) ≈ SU(2)/Z₂
+  ∧ Nonempty { R | ∃ θ, R = rotL3 θ }          -- SU(3) toehold
+
+The framework now has machine-verified instances of the structural
+infrastructure for all three Standard Model gauge factors. The
+*derivation* that they are forced (rather than postulated) remains
+the open Tier 2 piece.
+
+**A.16 Hardy A4 N-multiplicativity forward direction.**
+`Hardy.gptTensor_distinguishable_general` proves the general
+distinguishability lift: any pair of indices distinguishable in
+the components yields distinguishable composite states in
+`gptTensor G_A G_B`. Combined with `productEffect_in_effects`,
+this is the FORWARD direction of Hardy A4's N-mult half. The
+reverse direction (max distinguishability set size is N_A · N_B)
+remains open.
