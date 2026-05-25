@@ -5242,6 +5242,26 @@ theorem quick_ref_length_adds {P : Type u} {C : Type v}
     (ch₁.append ch₂).length = ch₁.length + ch₂.length :=
   RealityChain'.append_length ch₁ ch₂
 
+/-- **Quick reference: append is associative.** -/
+theorem quick_ref_append_assoc {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ R₄ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (ch₃ : RealityChain' P C R₃ R₄) :
+    (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃) :=
+  RealityChain'.append_assoc ch₁ ch₂ ch₃
+
+/-- **Quick reference: nil is left identity.** -/
+theorem quick_ref_nil_left_id {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (RealityChain'.nil R₁).append ch = ch :=
+  RealityChain'.nil_append ch
+
+/-- **Quick reference: nil is right identity.** -/
+theorem quick_ref_nil_right_id {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.append (RealityChain'.nil R₂) = ch :=
+  RealityChain'.append_nil ch
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
