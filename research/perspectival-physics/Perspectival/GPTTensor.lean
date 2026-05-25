@@ -312,5 +312,59 @@ This is the framework's machine-verified path toward Tier 1 #5
 qubit uniqueness as a Lean theorem would require constructing the
 rebit and qQM composites explicitly (currently open). -/
 
+/-! ## Hardy A4 operational dimension: product distinguishability
+
+The N-multiplicativity half of Hardy A4 says max distinguishability set
+size is multiplicative: N_AB = N_A · N_B. The full statement requires
+showing both directions (≥ and ≤), and the ≤ direction is genuinely
+deep. The ≥ direction (forward) is constructive: product effects of
+distinguishability sets give distinguishability sets on the composite.
+
+This section provides the FORWARD direction infrastructure: product
+effects. The full theorem N_AB = N_A · N_B is deferred (the ≤ direction
+requires more machinery). -/
+
+/-- The bilinear functional `(e_A, e_B) ↦ e_A ⊗ e_B`, then lifted to the
+tensor product space. This is the product effect: `(e_A ⊗ e_B) (ρ_A ⊗
+ρ_B) = e_A(ρ_A) · e_B(ρ_B)`. -/
+noncomputable def effectBilin
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (e₁ : V₁ →ₗ[ℝ] ℝ) (e₂ : V₂ →ₗ[ℝ] ℝ) :
+    V₁ →ₗ[ℝ] V₂ →ₗ[ℝ] ℝ where
+  toFun x :=
+    { toFun := fun y => e₁ x * e₂ y
+      map_add' := fun y₁ y₂ => by rw [LinearMap.map_add]; ring
+      map_smul' := fun c y => by
+        show e₁ x * e₂ (c • y) = c * (e₁ x * e₂ y)
+        rw [LinearMap.map_smul, smul_eq_mul]; ring }
+  map_add' x₁ x₂ := by
+    apply LinearMap.ext; intro y
+    show e₁ (x₁ + x₂) * e₂ y = e₁ x₁ * e₂ y + e₁ x₂ * e₂ y
+    rw [LinearMap.map_add]; ring
+  map_smul' c x := by
+    apply LinearMap.ext; intro y
+    show e₁ (c • x) * e₂ y = c * (e₁ x * e₂ y)
+    rw [LinearMap.map_smul, smul_eq_mul]; ring
+
+/-- The product effect: `e_AB := e_A ⊗ e_B` lifted to `V₁ ⊗[ℝ] V₂ →ₗ[ℝ] ℝ`. -/
+noncomputable def productEffect
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (e₁ : V₁ →ₗ[ℝ] ℝ) (e₂ : V₂ →ₗ[ℝ] ℝ) :
+    V₁ ⊗[ℝ] V₂ →ₗ[ℝ] ℝ :=
+  TensorProduct.lift (effectBilin e₁ e₂)
+
+/-- The product effect on product states: `(e₁ ⊗ e₂) (ρ₁ ⊗ ρ₂) =
+e₁(ρ₁) · e₂(ρ₂)`. -/
+@[simp] theorem productEffect_tmul
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    (e₁ : V₁ →ₗ[ℝ] ℝ) (e₂ : V₂ →ₗ[ℝ] ℝ) (ρ₁ : V₁) (ρ₂ : V₂) :
+    productEffect e₁ e₂ (ρ₁ ⊗ₜ[ℝ] ρ₂) = e₁ ρ₁ * e₂ ρ₂ := by
+  show TensorProduct.lift (effectBilin e₁ e₂) (ρ₁ ⊗ₜ[ℝ] ρ₂) = e₁ ρ₁ * e₂ ρ₂
+  rw [TensorProduct.lift.tmul]
+  rfl
+
 end GPT
 end Perspectival
