@@ -320,6 +320,26 @@ theorem coherent_compose_eq {P : Type u} {C : Type v}
     R₁ = R₃ :=
   (ch₁.append ch₂).zero_actualization_implies_eq (coherent_compose ch₁ ch₂ h₁ h₂)
 
+/-- **Coherent decomposition.** If the composition of two chains is
+coherent (count = 0), then both factors must be coherent
+(individually count = 0). The converse of `coherent_compose`. -/
+theorem coherent_decompose {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h_co : (ch₁.append ch₂).actualizationCount = 0) :
+    ch₁.actualizationCount = 0 ∧ ch₂.actualizationCount = 0 := by
+  rw [RealityChain'.append_actualizationCount] at h_co
+  omega
+
+/-- **Coherent iff both factors coherent.** Direct bi-implication. -/
+theorem coherent_iff_both_factors_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).actualizationCount = 0 ↔
+    ch₁.actualizationCount = 0 ∧ ch₂.actualizationCount = 0 :=
+  ⟨coherent_decompose ch₁ ch₂,
+   fun ⟨h₁, h₂⟩ => coherent_compose ch₁ ch₂ h₁ h₂⟩
+
 -- (A theorem like "singleton actualization step has positive count"
 -- is conceptually clear but constructing TrajectoryStep' from a bare
 -- AtSeam witness requires also providing a RealitySuccessor witness,
