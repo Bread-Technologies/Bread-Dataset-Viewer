@@ -4171,6 +4171,30 @@ example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
   intro R h_pot R' base act
   exact chain_compose_preserves_time_arrow base act
 
+/-! ## Final framework integration
+
+The Decoherence module's content integrates with the rest of the
+framework's v2 architecture:
+
+- **TierA (foundational):** Want, Meeting, Reality, RealitySuccessor,
+  actualization, past, future, WBT_structural_shadow. Time-arrow
+  preorder + no-return-to-potential.
+- **TierB (operational):** BracketedTransition, AtSeam,
+  measurement_is_actualization, RealityChain', count algebra, chain
+  monoid axioms. Tier B reversible-limit structure.
+- **Decoherence (THIS MODULE):** Trajectory algebra (count, bracketed,
+  length, complexity, rate), regime characterization, loop submonoid
+  as Mathlib Monoid, quotient algebra, anti-realism content,
+  Boltzmann brain shadow, no-Maxwell-demon, measurement-collapse
+  correlate, Tier B reversibility characterization, time-arrow
+  embedding, and 38+ named bundle certificates.
+- **Dichotomy:** Classical-vs-quantum framework certificates.
+- **Continuity:** Agency hierarchy, Hardy A5 derivation, R7 scaffold.
+
+The framework's v2 architecture is now formally encoded across these
+5 Lean modules, plus per-GPT instances and Hardy/Wantable bridges.
+Together: ~10,000+ lines of build-verified Lean 4 + Mathlib v4.29.1. -/
+
 /-- **loopPower additive certificate.** All three measures
 (actualizationCount, length, complexity) are additive over loop power
 exponents. This is the structural shadow of: `loopPower ch m + loopPower ch n
