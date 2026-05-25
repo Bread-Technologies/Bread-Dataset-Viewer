@@ -14,6 +14,7 @@ import Perspectival.GPTTensor
 import Perspectival.Examples
 import Perspectival.CircleGPT
 import Perspectival.QubitGPT
+import Perspectival.QutritGPT
 import Perspectival.Dichotomy
 
 /-!
