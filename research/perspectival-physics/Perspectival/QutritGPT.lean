@@ -35,17 +35,28 @@ Status (this file):
     normalization proofs.
   ✓ `qutrit_hardy_K : Module.finrank ℝ (Fin 9 → ℝ) = 9` — the
     complex-QM Hardy signature `K = N² = 9` at `N = 3`.
-  ✓ One rotation generator family `rotL3 : ℝ → V →ₗ[ℝ] V`,
-    rotation in the (0, 1)-coordinate plane (the diagonal "λ3 phase"
-    on the qutrit at the Bloch level).  Shown to be linear, continuous,
-    state- and unit-preserving, bijective, with the standard
-    composition law.
-  ✓ `rotL3StrictReversible` packaging.
+  ✓ Three rotation generator families on the Bloch ball:
+      `rotL3 : ℝ → V →ₗ[ℝ] V`  rotates Bloch pair (0, 1)  (λ3-phase analog)
+      `rotL1 : ℝ → V →ₗ[ℝ] V`  rotates Bloch pair (0, 3)  (λ1 structural analog)
+      `rotL2 : ℝ → V →ₗ[ℝ] V`  rotates Bloch pair (3, 4)  (λ2 structural analog)
+    Each is shown to be linear, continuous, state- and unit-preserving,
+    bijective, with the standard SO(2) composition law.  Because rotL1
+    and rotL2 share coordinate 3, they do not commute; together with
+    rotL3 (which shares coordinate 0 with rotL1) we obtain three
+    one-parameter families generating a non-abelian subgroup of the
+    orthogonal group `O(8)` on the Bloch ball — a structural shadow of
+    SU(3) acting on the qutrit.
+  ✓ `rotL3StrictReversible`, `rotL1StrictReversible`,
+    `rotL2StrictReversible` packagings.
 
 Deferred (the harder pieces):
-  - The full set of 8 Gell-Mann-type generators (only one is defined
-    here; adding 7 more is mechanical but tedious).
-  - The SU(3) group product structure on these generators.
+  - The remaining 5 Gell-Mann-type generators (λ4..λ8); adding more
+    pair-rotations is mechanical but tedious.
+  - The genuine SU(3) Lie-algebra commutation relations.  The
+    pair-rotation forms here are *structural* analogs that preserve
+    the Bloch norm but do not realise the exact `λᵢ` conjugation
+    action — that would require coupling across more than two Bloch
+    coordinates per generator (mediated by SU(3) structure constants).
   - The genuine qutrit state body (a strict subset of the 8-ball with
     a complicated boundary determined by det(ρ) ≥ 0 conditions).  The
     outer-ball formulation here gives the correct K but is geometrically
@@ -460,6 +471,460 @@ noncomputable def rotL3StrictReversible (θ : ℝ) :
 
 @[simp] theorem rotL3StrictReversible_toLin (θ : ℝ) :
     (rotL3StrictReversible θ).toLin = rotL3 θ := rfl
+
+/-! ## A second rotation generator: the λ1-direction (Bloch pair (0,3))
+
+The Gell-Mann matrix `λ1` is the off-diagonal real generator on the
+(0,1)-block of the qutrit Hilbert space.  Its conjugation action on
+density matrices mixes Bloch coordinates non-trivially across two of
+the eight components.  Rather than encode the exact `λ1` Bloch
+action (which couples to `λ3` and `λ8` via the SU(3) structure
+constants), we use a *structurally analogous* rotation in a DIFFERENT
+pair of Bloch coordinates `(ρ 0, ρ 3)`.  This still gives an SO(2)
+subgroup of the orthogonal group on the 8-Bloch ball, hence remains a
+valid GPT symmetry of the outer-ball qutrit.
+
+This is a deliberate simplification (see the module header): the
+*structural* point — that the qutrit GPT carries multiple commuting /
+non-commuting one-parameter rotation families — is what matters for
+the Hardy/agency reconstruction.  The exact SU(3) Lie-algebra
+structure is deferred. -/
+
+/-- `rotL1 θ : V →ₗ[ℝ] V` is rotation by angle θ in the (0, 3)-coord
+plane, fixing coordinates 1, 2, 4..8.  Structural analog of the `λ1`
+Gell-Mann generator at the Bloch level. -/
+noncomputable def rotL1 (θ : ℝ) : V →ₗ[ℝ] V where
+  toFun ρ := fun i =>
+    if i = 0 then ρ 0 * Real.cos θ - ρ 3 * Real.sin θ
+    else if i = 3 then ρ 0 * Real.sin θ + ρ 3 * Real.cos θ
+    else ρ i
+  map_add' ρ σ := by
+    funext i
+    by_cases h0 : i = 0
+    · subst h0
+      show (ρ 0 + σ 0) * Real.cos θ - (ρ 3 + σ 3) * Real.sin θ =
+           (ρ 0 * Real.cos θ - ρ 3 * Real.sin θ) +
+           (σ 0 * Real.cos θ - σ 3 * Real.sin θ)
+      ring
+    · by_cases h3 : i = 3
+      · subst h3
+        show (ρ 0 + σ 0) * Real.sin θ + (ρ 3 + σ 3) * Real.cos θ =
+             (ρ 0 * Real.sin θ + ρ 3 * Real.cos θ) +
+             (σ 0 * Real.sin θ + σ 3 * Real.cos θ)
+        ring
+      · rw [if_neg h0, if_neg h3]
+        show ρ i + σ i = ((fun j : Fin 9 =>
+          if j = 0 then ρ 0 * Real.cos θ - ρ 3 * Real.sin θ
+          else if j = 3 then ρ 0 * Real.sin θ + ρ 3 * Real.cos θ
+          else ρ j) +
+          (fun j : Fin 9 =>
+          if j = 0 then σ 0 * Real.cos θ - σ 3 * Real.sin θ
+          else if j = 3 then σ 0 * Real.sin θ + σ 3 * Real.cos θ
+          else σ j)) i
+        rw [Pi.add_apply, if_neg h0, if_neg h3, if_neg h0, if_neg h3]
+  map_smul' c ρ := by
+    funext i
+    by_cases h0 : i = 0
+    · subst h0
+      show c * ρ 0 * Real.cos θ - c * ρ 3 * Real.sin θ =
+           c • (ρ 0 * Real.cos θ - ρ 3 * Real.sin θ)
+      show c * ρ 0 * Real.cos θ - c * ρ 3 * Real.sin θ =
+           c * (ρ 0 * Real.cos θ - ρ 3 * Real.sin θ)
+      ring
+    · by_cases h3 : i = 3
+      · subst h3
+        show c * ρ 0 * Real.sin θ + c * ρ 3 * Real.cos θ =
+             c • (ρ 0 * Real.sin θ + ρ 3 * Real.cos θ)
+        show c * ρ 0 * Real.sin θ + c * ρ 3 * Real.cos θ =
+             c * (ρ 0 * Real.sin θ + ρ 3 * Real.cos θ)
+        ring
+      · rw [if_neg h0, if_neg h3]
+        show c • ρ i = (c • (fun j : Fin 9 =>
+          if j = 0 then ρ 0 * Real.cos θ - ρ 3 * Real.sin θ
+          else if j = 3 then ρ 0 * Real.sin θ + ρ 3 * Real.cos θ
+          else ρ j)) i
+        rw [Pi.smul_apply]
+        rw [if_neg h0, if_neg h3]
+
+@[simp] theorem rotL1_apply_zero (θ : ℝ) (ρ : V) :
+    rotL1 θ ρ 0 = ρ 0 * Real.cos θ - ρ 3 * Real.sin θ := rfl
+
+@[simp] theorem rotL1_apply_three (θ : ℝ) (ρ : V) :
+    rotL1 θ ρ 3 = ρ 0 * Real.sin θ + ρ 3 * Real.cos θ := rfl
+
+theorem rotL1_apply_other (θ : ℝ) (ρ : V) (i : Fin 9)
+    (h0 : i ≠ 0) (h3 : i ≠ 3) : rotL1 θ ρ i = ρ i := by
+  show (if i = 0 then ρ 0 * Real.cos θ - ρ 3 * Real.sin θ
+        else if i = 3 then ρ 0 * Real.sin θ + ρ 3 * Real.cos θ
+        else ρ i) = ρ i
+  rw [if_neg h0, if_neg h3]
+
+@[simp] theorem rotL1_apply_one (θ : ℝ) (ρ : V) : rotL1 θ ρ 1 = ρ 1 :=
+  rotL1_apply_other θ ρ 1 (by decide) (by decide)
+@[simp] theorem rotL1_apply_two (θ : ℝ) (ρ : V) : rotL1 θ ρ 2 = ρ 2 :=
+  rotL1_apply_other θ ρ 2 (by decide) (by decide)
+@[simp] theorem rotL1_apply_four (θ : ℝ) (ρ : V) : rotL1 θ ρ 4 = ρ 4 :=
+  rotL1_apply_other θ ρ 4 (by decide) (by decide)
+@[simp] theorem rotL1_apply_five (θ : ℝ) (ρ : V) : rotL1 θ ρ 5 = ρ 5 :=
+  rotL1_apply_other θ ρ 5 (by decide) (by decide)
+@[simp] theorem rotL1_apply_six (θ : ℝ) (ρ : V) : rotL1 θ ρ 6 = ρ 6 :=
+  rotL1_apply_other θ ρ 6 (by decide) (by decide)
+@[simp] theorem rotL1_apply_seven (θ : ℝ) (ρ : V) : rotL1 θ ρ 7 = ρ 7 :=
+  rotL1_apply_other θ ρ 7 (by decide) (by decide)
+@[simp] theorem rotL1_apply_eight (θ : ℝ) (ρ : V) : rotL1 θ ρ 8 = ρ 8 :=
+  rotL1_apply_other θ ρ 8 (by decide) (by decide)
+
+/-- `rotL1 0 = id`. -/
+theorem rotL1_zero : rotL1 0 = LinearMap.id := by
+  apply LinearMap.ext; intro ρ
+  funext i
+  by_cases h0 : i = 0
+  · subst h0
+    show ρ 0 * Real.cos 0 - ρ 3 * Real.sin 0 = ρ 0
+    rw [Real.cos_zero, Real.sin_zero]; ring
+  · by_cases h3 : i = 3
+    · subst h3
+      show ρ 0 * Real.sin 0 + ρ 3 * Real.cos 0 = ρ 3
+      rw [Real.cos_zero, Real.sin_zero]; ring
+    · rw [rotL1_apply_other 0 ρ i h0 h3]; rfl
+
+/-- `rotL1 θ` preserves the (0,3)-norm squared. -/
+theorem rotL1_preserves_03_norm (θ : ℝ) (ρ : V) :
+    (rotL1 θ ρ) 0 ^ 2 + (rotL1 θ ρ) 3 ^ 2 = ρ 0 ^ 2 + ρ 3 ^ 2 := by
+  rw [rotL1_apply_zero, rotL1_apply_three]
+  have hc : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 := Real.cos_sq_add_sin_sq θ
+  nlinarith [hc]
+
+/-- `rotL1 θ` preserves the full Bloch norm. -/
+theorem rotL1_preserves_sqNorm (θ : ℝ) (ρ : V) :
+    sqNorm (rotL1 θ ρ) = sqNorm ρ := by
+  unfold sqNorm
+  have h03 := rotL1_preserves_03_norm θ ρ
+  rw [rotL1_apply_one, rotL1_apply_two, rotL1_apply_four,
+      rotL1_apply_five, rotL1_apply_six, rotL1_apply_seven]
+  linarith [h03]
+
+/-- `rotL1 θ` preserves the state space. -/
+theorem rotL1_preserves_states (θ : ℝ) (ρ : V) (hρ : ρ ∈ states) :
+    rotL1 θ ρ ∈ states := by
+  refine ⟨?_, ?_⟩
+  · rw [rotL1_apply_eight]; exact hρ.1
+  · rw [rotL1_preserves_sqNorm]; exact hρ.2
+
+/-- `rotL1 θ` preserves the unit functional. -/
+theorem rotL1_preserves_unit (θ : ℝ) :
+    unitLin.comp (rotL1 θ) = unitLin := by
+  apply LinearMap.ext; intro ρ
+  show (rotL1 θ ρ) 8 = ρ 8
+  rfl
+
+/-- `rotL1 θ` is continuous. -/
+theorem rotL1_continuous (θ : ℝ) : Continuous (rotL1 θ) := by
+  apply continuous_pi
+  intro i
+  by_cases h0 : i = 0
+  · subst h0
+    show Continuous (fun ρ : V => ρ 0 * Real.cos θ - ρ 3 * Real.sin θ)
+    exact ((continuous_apply 0).mul continuous_const).sub
+      ((continuous_apply 3).mul continuous_const)
+  · by_cases h3 : i = 3
+    · subst h3
+      show Continuous (fun ρ : V => ρ 0 * Real.sin θ + ρ 3 * Real.cos θ)
+      exact ((continuous_apply 0).mul continuous_const).add
+        ((continuous_apply 3).mul continuous_const)
+    · have h : (fun ρ : V => rotL1 θ ρ i) = fun ρ : V => ρ i := by
+        funext ρ; exact rotL1_apply_other θ ρ i h0 h3
+      rw [h]
+      exact continuous_apply i
+
+/-- Composition law: `rotL1 θ₁ ∘ rotL1 θ₂ = rotL1 (θ₁ + θ₂)`. -/
+theorem rotL1_comp (θ₁ θ₂ : ℝ) :
+    (rotL1 θ₁).comp (rotL1 θ₂) = rotL1 (θ₁ + θ₂) := by
+  apply LinearMap.ext; intro ρ
+  funext i
+  by_cases h0 : i = 0
+  · subst h0
+    show (rotL1 θ₁ (rotL1 θ₂ ρ)) 0 = (rotL1 (θ₁ + θ₂) ρ) 0
+    rw [rotL1_apply_zero (θ := θ₁), rotL1_apply_zero (θ := θ₂),
+        rotL1_apply_three (θ := θ₂), rotL1_apply_zero (θ := θ₁ + θ₂),
+        Real.cos_add, Real.sin_add]
+    ring
+  · by_cases h3 : i = 3
+    · subst h3
+      show (rotL1 θ₁ (rotL1 θ₂ ρ)) 3 = (rotL1 (θ₁ + θ₂) ρ) 3
+      rw [rotL1_apply_three (θ := θ₁), rotL1_apply_zero (θ := θ₂),
+          rotL1_apply_three (θ := θ₂), rotL1_apply_three (θ := θ₁ + θ₂),
+          Real.cos_add, Real.sin_add]
+      ring
+    · rw [rotL1_apply_other (θ₁ + θ₂) ρ i h0 h3]
+      show (rotL1 θ₁ (rotL1 θ₂ ρ)) i = ρ i
+      rw [rotL1_apply_other θ₁ (rotL1 θ₂ ρ) i h0 h3,
+          rotL1_apply_other θ₂ ρ i h0 h3]
+
+theorem rotL1_comp_neg (θ : ℝ) :
+    (rotL1 θ).comp (rotL1 (-θ)) = LinearMap.id := by
+  rw [rotL1_comp, add_neg_cancel, rotL1_zero]
+
+theorem rotL1_neg_comp (θ : ℝ) :
+    (rotL1 (-θ)).comp (rotL1 θ) = LinearMap.id := by
+  rw [rotL1_comp, neg_add_cancel, rotL1_zero]
+
+/-- `rotL1 θ` is bijective. -/
+theorem rotL1_bijective (θ : ℝ) : Function.Bijective (rotL1 θ) := by
+  refine ⟨?_, ?_⟩
+  · intro v w h
+    have hv : rotL1 (-θ) (rotL1 θ v) = v := by
+      have h_eq := congr_arg (fun (f : V →ₗ[ℝ] V) => f v) (rotL1_neg_comp θ)
+      simpa using h_eq
+    have hw : rotL1 (-θ) (rotL1 θ w) = w := by
+      have h_eq := congr_arg (fun (f : V →ₗ[ℝ] V) => f w) (rotL1_neg_comp θ)
+      simpa using h_eq
+    have h_app := congr_arg (rotL1 (-θ)) h
+    rw [hv, hw] at h_app
+    exact h_app
+  · intro v
+    refine ⟨rotL1 (-θ) v, ?_⟩
+    have h_eq := congr_arg (fun (f : V →ₗ[ℝ] V) => f v) (rotL1_comp_neg θ)
+    simpa using h_eq
+
+/-- `rotL1 θ` as a `Reversible qutritGPT`. -/
+noncomputable def rotL1Reversible (θ : ℝ) :
+    Perspectival.Continuity.Reversible qutritGPT where
+  toLin := rotL1 θ
+  continuous_toLin := rotL1_continuous θ
+  preserves_states := rotL1_preserves_states θ
+  preserves_unit := rotL1_preserves_unit θ
+
+/-- `rotL1 θ` as a `StrictReversible qutritGPT`. -/
+noncomputable def rotL1StrictReversible (θ : ℝ) :
+    Perspectival.Continuity.StrictReversible qutritGPT where
+  toReversible := rotL1Reversible θ
+  isEquiv := rotL1_bijective θ
+
+@[simp] theorem rotL1StrictReversible_toLin (θ : ℝ) :
+    (rotL1StrictReversible θ).toLin = rotL1 θ := rfl
+
+/-! ## A third rotation generator: the λ2-direction (Bloch pair (3,4))
+
+Structural analog of the `λ2` Gell-Mann generator: a rotation in a
+different Bloch pair `(ρ 3, ρ 4)`.  This rotation does not commute with
+`rotL1` (they share coordinate 3), so together with `rotL3` we obtain
+three one-parameter families that together generate a non-abelian
+subgroup of the orthogonal group `O(8)` acting on the Bloch ball. -/
+
+/-- `rotL2 θ : V →ₗ[ℝ] V` is rotation by angle θ in the (3, 4)-coord
+plane, fixing coordinates 0, 1, 2, 5, 6, 7, 8.  Structural analog of
+the `λ2` Gell-Mann generator at the Bloch level. -/
+noncomputable def rotL2 (θ : ℝ) : V →ₗ[ℝ] V where
+  toFun ρ := fun i =>
+    if i = 3 then ρ 3 * Real.cos θ - ρ 4 * Real.sin θ
+    else if i = 4 then ρ 3 * Real.sin θ + ρ 4 * Real.cos θ
+    else ρ i
+  map_add' ρ σ := by
+    funext i
+    by_cases h3 : i = 3
+    · subst h3
+      show (ρ 3 + σ 3) * Real.cos θ - (ρ 4 + σ 4) * Real.sin θ =
+           (ρ 3 * Real.cos θ - ρ 4 * Real.sin θ) +
+           (σ 3 * Real.cos θ - σ 4 * Real.sin θ)
+      ring
+    · by_cases h4 : i = 4
+      · subst h4
+        show (ρ 3 + σ 3) * Real.sin θ + (ρ 4 + σ 4) * Real.cos θ =
+             (ρ 3 * Real.sin θ + ρ 4 * Real.cos θ) +
+             (σ 3 * Real.sin θ + σ 4 * Real.cos θ)
+        ring
+      · rw [if_neg h3, if_neg h4]
+        show ρ i + σ i = ((fun j : Fin 9 =>
+          if j = 3 then ρ 3 * Real.cos θ - ρ 4 * Real.sin θ
+          else if j = 4 then ρ 3 * Real.sin θ + ρ 4 * Real.cos θ
+          else ρ j) +
+          (fun j : Fin 9 =>
+          if j = 3 then σ 3 * Real.cos θ - σ 4 * Real.sin θ
+          else if j = 4 then σ 3 * Real.sin θ + σ 4 * Real.cos θ
+          else σ j)) i
+        rw [Pi.add_apply, if_neg h3, if_neg h4, if_neg h3, if_neg h4]
+  map_smul' c ρ := by
+    funext i
+    by_cases h3 : i = 3
+    · subst h3
+      show c * ρ 3 * Real.cos θ - c * ρ 4 * Real.sin θ =
+           c • (ρ 3 * Real.cos θ - ρ 4 * Real.sin θ)
+      show c * ρ 3 * Real.cos θ - c * ρ 4 * Real.sin θ =
+           c * (ρ 3 * Real.cos θ - ρ 4 * Real.sin θ)
+      ring
+    · by_cases h4 : i = 4
+      · subst h4
+        show c * ρ 3 * Real.sin θ + c * ρ 4 * Real.cos θ =
+             c • (ρ 3 * Real.sin θ + ρ 4 * Real.cos θ)
+        show c * ρ 3 * Real.sin θ + c * ρ 4 * Real.cos θ =
+             c * (ρ 3 * Real.sin θ + ρ 4 * Real.cos θ)
+        ring
+      · rw [if_neg h3, if_neg h4]
+        show c • ρ i = (c • (fun j : Fin 9 =>
+          if j = 3 then ρ 3 * Real.cos θ - ρ 4 * Real.sin θ
+          else if j = 4 then ρ 3 * Real.sin θ + ρ 4 * Real.cos θ
+          else ρ j)) i
+        rw [Pi.smul_apply]
+        rw [if_neg h3, if_neg h4]
+
+@[simp] theorem rotL2_apply_three (θ : ℝ) (ρ : V) :
+    rotL2 θ ρ 3 = ρ 3 * Real.cos θ - ρ 4 * Real.sin θ := rfl
+
+@[simp] theorem rotL2_apply_four (θ : ℝ) (ρ : V) :
+    rotL2 θ ρ 4 = ρ 3 * Real.sin θ + ρ 4 * Real.cos θ := rfl
+
+theorem rotL2_apply_other (θ : ℝ) (ρ : V) (i : Fin 9)
+    (h3 : i ≠ 3) (h4 : i ≠ 4) : rotL2 θ ρ i = ρ i := by
+  show (if i = 3 then ρ 3 * Real.cos θ - ρ 4 * Real.sin θ
+        else if i = 4 then ρ 3 * Real.sin θ + ρ 4 * Real.cos θ
+        else ρ i) = ρ i
+  rw [if_neg h3, if_neg h4]
+
+@[simp] theorem rotL2_apply_zero (θ : ℝ) (ρ : V) : rotL2 θ ρ 0 = ρ 0 :=
+  rotL2_apply_other θ ρ 0 (by decide) (by decide)
+@[simp] theorem rotL2_apply_one (θ : ℝ) (ρ : V) : rotL2 θ ρ 1 = ρ 1 :=
+  rotL2_apply_other θ ρ 1 (by decide) (by decide)
+@[simp] theorem rotL2_apply_two (θ : ℝ) (ρ : V) : rotL2 θ ρ 2 = ρ 2 :=
+  rotL2_apply_other θ ρ 2 (by decide) (by decide)
+@[simp] theorem rotL2_apply_five (θ : ℝ) (ρ : V) : rotL2 θ ρ 5 = ρ 5 :=
+  rotL2_apply_other θ ρ 5 (by decide) (by decide)
+@[simp] theorem rotL2_apply_six (θ : ℝ) (ρ : V) : rotL2 θ ρ 6 = ρ 6 :=
+  rotL2_apply_other θ ρ 6 (by decide) (by decide)
+@[simp] theorem rotL2_apply_seven (θ : ℝ) (ρ : V) : rotL2 θ ρ 7 = ρ 7 :=
+  rotL2_apply_other θ ρ 7 (by decide) (by decide)
+@[simp] theorem rotL2_apply_eight (θ : ℝ) (ρ : V) : rotL2 θ ρ 8 = ρ 8 :=
+  rotL2_apply_other θ ρ 8 (by decide) (by decide)
+
+/-- `rotL2 0 = id`. -/
+theorem rotL2_zero : rotL2 0 = LinearMap.id := by
+  apply LinearMap.ext; intro ρ
+  funext i
+  by_cases h3 : i = 3
+  · subst h3
+    show ρ 3 * Real.cos 0 - ρ 4 * Real.sin 0 = ρ 3
+    rw [Real.cos_zero, Real.sin_zero]; ring
+  · by_cases h4 : i = 4
+    · subst h4
+      show ρ 3 * Real.sin 0 + ρ 4 * Real.cos 0 = ρ 4
+      rw [Real.cos_zero, Real.sin_zero]; ring
+    · rw [rotL2_apply_other 0 ρ i h3 h4]; rfl
+
+/-- `rotL2 θ` preserves the (3,4)-norm squared. -/
+theorem rotL2_preserves_34_norm (θ : ℝ) (ρ : V) :
+    (rotL2 θ ρ) 3 ^ 2 + (rotL2 θ ρ) 4 ^ 2 = ρ 3 ^ 2 + ρ 4 ^ 2 := by
+  rw [rotL2_apply_three, rotL2_apply_four]
+  have hc : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 := Real.cos_sq_add_sin_sq θ
+  nlinarith [hc]
+
+/-- `rotL2 θ` preserves the full Bloch norm. -/
+theorem rotL2_preserves_sqNorm (θ : ℝ) (ρ : V) :
+    sqNorm (rotL2 θ ρ) = sqNorm ρ := by
+  unfold sqNorm
+  have h34 := rotL2_preserves_34_norm θ ρ
+  rw [rotL2_apply_zero, rotL2_apply_one, rotL2_apply_two,
+      rotL2_apply_five, rotL2_apply_six, rotL2_apply_seven]
+  linarith [h34]
+
+/-- `rotL2 θ` preserves the state space. -/
+theorem rotL2_preserves_states (θ : ℝ) (ρ : V) (hρ : ρ ∈ states) :
+    rotL2 θ ρ ∈ states := by
+  refine ⟨?_, ?_⟩
+  · rw [rotL2_apply_eight]; exact hρ.1
+  · rw [rotL2_preserves_sqNorm]; exact hρ.2
+
+/-- `rotL2 θ` preserves the unit functional. -/
+theorem rotL2_preserves_unit (θ : ℝ) :
+    unitLin.comp (rotL2 θ) = unitLin := by
+  apply LinearMap.ext; intro ρ
+  show (rotL2 θ ρ) 8 = ρ 8
+  rfl
+
+/-- `rotL2 θ` is continuous. -/
+theorem rotL2_continuous (θ : ℝ) : Continuous (rotL2 θ) := by
+  apply continuous_pi
+  intro i
+  by_cases h3 : i = 3
+  · subst h3
+    show Continuous (fun ρ : V => ρ 3 * Real.cos θ - ρ 4 * Real.sin θ)
+    exact ((continuous_apply 3).mul continuous_const).sub
+      ((continuous_apply 4).mul continuous_const)
+  · by_cases h4 : i = 4
+    · subst h4
+      show Continuous (fun ρ : V => ρ 3 * Real.sin θ + ρ 4 * Real.cos θ)
+      exact ((continuous_apply 3).mul continuous_const).add
+        ((continuous_apply 4).mul continuous_const)
+    · have h : (fun ρ : V => rotL2 θ ρ i) = fun ρ : V => ρ i := by
+        funext ρ; exact rotL2_apply_other θ ρ i h3 h4
+      rw [h]
+      exact continuous_apply i
+
+/-- Composition law: `rotL2 θ₁ ∘ rotL2 θ₂ = rotL2 (θ₁ + θ₂)`. -/
+theorem rotL2_comp (θ₁ θ₂ : ℝ) :
+    (rotL2 θ₁).comp (rotL2 θ₂) = rotL2 (θ₁ + θ₂) := by
+  apply LinearMap.ext; intro ρ
+  funext i
+  by_cases h3 : i = 3
+  · subst h3
+    show (rotL2 θ₁ (rotL2 θ₂ ρ)) 3 = (rotL2 (θ₁ + θ₂) ρ) 3
+    rw [rotL2_apply_three (θ := θ₁), rotL2_apply_three (θ := θ₂),
+        rotL2_apply_four (θ := θ₂), rotL2_apply_three (θ := θ₁ + θ₂),
+        Real.cos_add, Real.sin_add]
+    ring
+  · by_cases h4 : i = 4
+    · subst h4
+      show (rotL2 θ₁ (rotL2 θ₂ ρ)) 4 = (rotL2 (θ₁ + θ₂) ρ) 4
+      rw [rotL2_apply_four (θ := θ₁), rotL2_apply_three (θ := θ₂),
+          rotL2_apply_four (θ := θ₂), rotL2_apply_four (θ := θ₁ + θ₂),
+          Real.cos_add, Real.sin_add]
+      ring
+    · rw [rotL2_apply_other (θ₁ + θ₂) ρ i h3 h4]
+      show (rotL2 θ₁ (rotL2 θ₂ ρ)) i = ρ i
+      rw [rotL2_apply_other θ₁ (rotL2 θ₂ ρ) i h3 h4,
+          rotL2_apply_other θ₂ ρ i h3 h4]
+
+theorem rotL2_comp_neg (θ : ℝ) :
+    (rotL2 θ).comp (rotL2 (-θ)) = LinearMap.id := by
+  rw [rotL2_comp, add_neg_cancel, rotL2_zero]
+
+theorem rotL2_neg_comp (θ : ℝ) :
+    (rotL2 (-θ)).comp (rotL2 θ) = LinearMap.id := by
+  rw [rotL2_comp, neg_add_cancel, rotL2_zero]
+
+/-- `rotL2 θ` is bijective. -/
+theorem rotL2_bijective (θ : ℝ) : Function.Bijective (rotL2 θ) := by
+  refine ⟨?_, ?_⟩
+  · intro v w h
+    have hv : rotL2 (-θ) (rotL2 θ v) = v := by
+      have h_eq := congr_arg (fun (f : V →ₗ[ℝ] V) => f v) (rotL2_neg_comp θ)
+      simpa using h_eq
+    have hw : rotL2 (-θ) (rotL2 θ w) = w := by
+      have h_eq := congr_arg (fun (f : V →ₗ[ℝ] V) => f w) (rotL2_neg_comp θ)
+      simpa using h_eq
+    have h_app := congr_arg (rotL2 (-θ)) h
+    rw [hv, hw] at h_app
+    exact h_app
+  · intro v
+    refine ⟨rotL2 (-θ) v, ?_⟩
+    have h_eq := congr_arg (fun (f : V →ₗ[ℝ] V) => f v) (rotL2_comp_neg θ)
+    simpa using h_eq
+
+/-- `rotL2 θ` as a `Reversible qutritGPT`. -/
+noncomputable def rotL2Reversible (θ : ℝ) :
+    Perspectival.Continuity.Reversible qutritGPT where
+  toLin := rotL2 θ
+  continuous_toLin := rotL2_continuous θ
+  preserves_states := rotL2_preserves_states θ
+  preserves_unit := rotL2_preserves_unit θ
+
+/-- `rotL2 θ` as a `StrictReversible qutritGPT`. -/
+noncomputable def rotL2StrictReversible (θ : ℝ) :
+    Perspectival.Continuity.StrictReversible qutritGPT where
+  toReversible := rotL2Reversible θ
+  isEquiv := rotL2_bijective θ
+
+@[simp] theorem rotL2StrictReversible_toLin (θ : ℝ) :
+    (rotL2StrictReversible θ).toLin = rotL2 θ := rfl
 
 end QutritGPT
 end Perspectival
