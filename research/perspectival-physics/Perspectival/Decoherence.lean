@@ -4858,6 +4858,24 @@ example (R : Reality Bool Bool) :
 example (R : Reality Unit Unit) :
     actualizationRate (RealityChain'.nil R) = (0, 0) := rfl
 
+/-- **Worked example: nil chain on Bool has all zero measures.** -/
+example (R : Reality Bool Bool) :
+    let ch := RealityChain'.nil R
+    ch.actualizationCount = 0
+      ∧ ch.bracketedCount = 0
+      ∧ ch.length = 0
+      ∧ trajectoryComplexity ch = 0 :=
+  ⟨rfl, rfl, rfl, rfl⟩
+
+/-- **Worked example: nil chain on Unit has all zero measures.** -/
+example (R : Reality Unit Unit) :
+    let ch := RealityChain'.nil R
+    ch.actualizationCount = 0
+      ∧ ch.bracketedCount = 0
+      ∧ ch.length = 0
+      ∧ trajectoryComplexity ch = 0 :=
+  ⟨rfl, rfl, rfl, rfl⟩
+
 /-- **Decoherence module's complete content** in one umbrella theorem.
 This is the framework's "everything" statement for Seam 4. -/
 theorem decoherence_complete_content :
