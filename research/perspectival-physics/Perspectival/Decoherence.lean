@@ -4100,6 +4100,30 @@ theorem loopPower_complexity_additive {P : Type u} {C : Type v}
       = trajectoryComplexity (loopPower ch (m + n)) := by
   rw [loopPower_complexity, loopPower_complexity, loopPower_complexity, Nat.add_mul]
 
+/-- **loopPower additive certificate.** All three measures
+(actualizationCount, length, complexity) are additive over loop power
+exponents. This is the structural shadow of: `loopPower ch m + loopPower ch n
+≡ loopPower ch (m+n)` (where ≡ tracks all measures simultaneously). -/
+theorem loopPower_additive_certificate :
+    -- count is additive (trivially, all 0).
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (m n : Nat),
+      (loopPower ch m).actualizationCount + (loopPower ch n).actualizationCount
+        = (loopPower ch (m + n)).actualizationCount) ∧
+    -- length is additive.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (m n : Nat),
+      (loopPower ch m).length + (loopPower ch n).length
+        = (loopPower ch (m + n)).length) ∧
+    -- complexity is additive.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (m n : Nat),
+      trajectoryComplexity (loopPower ch m) + trajectoryComplexity (loopPower ch n)
+        = trajectoryComplexity (loopPower ch (m + n))) :=
+  ⟨fun ch m n => loopPower_count_additive ch m n,
+   fun ch m n => loopPower_length_additive ch m n,
+   fun ch m n => loopPower_complexity_additive ch m n⟩
+
 /-- **Complexity-length bounds certificate.** -/
 theorem complexity_length_bounds_certificate :
     -- Lower bound: complexity ≥ length.
