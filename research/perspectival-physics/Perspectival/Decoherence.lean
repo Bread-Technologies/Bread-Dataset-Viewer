@@ -4839,6 +4839,17 @@ example (R : Reality Bool Bool) :
         + (RealityChain'.singleton _).length) = (0, 3)
   rw [RealityChain'.singleton_length]
 
+/-- **Worked example: Bool loop power 4 rate is (0, 4).** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    actualizationRate (base ^ 4) = (0, 4) := by
+  intro base
+  rw [loop_rate, loop_npow_length]
+  show (0, 4 * (RealityChain'.singleton _).length) = (0, 4)
+  rw [RealityChain'.singleton_length]
+
 /-- **Rate at fixed length certificate.** Combines fixed-length
 characterization with extremal cases. -/
 theorem rate_at_fixed_length_certificate :
