@@ -4661,6 +4661,21 @@ theorem loop_iff_unified_measures {P : Type u} {C : Type v}
     R₁ = R₂ ↔ tierAEventCount ch = 0 :=
   (coherent_kernel_iff_endpoints_eq ch).symm
 
+/-- **Reflexivity of loop characterization.** Any chain at R → R
+satisfies count = 0 (trivially equal endpoints). -/
+theorem loop_characterization_refl {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    tierAEventCount ch = 0 :=
+  loop_is_coherent ch
+
+/-- **Symmetry of loop characterization.** The implication count = 0 → R₁ = R₂
+goes both ways via the iff. -/
+theorem loop_characterization_iff_symm {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (tierAEventCount ch = 0 ↔ R₁ = R₂) ↔
+    (R₁ = R₂ ↔ tierAEventCount ch = 0) :=
+  ⟨Iff.symm, Iff.symm⟩
+
 /-- **Loop characterization certificate.** -/
 theorem loop_characterization_certificate :
     -- R₁ = R₂ ↔ count = 0 (kernel iff).
