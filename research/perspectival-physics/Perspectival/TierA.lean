@@ -628,5 +628,29 @@ What's NOT in this module:
     agency hierarchy) — those are Tier B content, see Continuity.lean.
 -/
 
+/-! ## Worked TierA examples on `Bool` -/
+
+/-- **Bool-typed Want.** A directed perspective from True (one
+side) toward False (the other). -/
+example : Want Bool Bool :=
+  ⟨True, False⟩
+
+/-- **Trivial existent.** Any Want is an Existent (definitionally). -/
+example (w : Want Bool Bool) : Existent Bool Bool := w
+
+/-- **A potential meeting.** -/
+example : Meeting Bool Bool :=
+  { initiator := ⟨True, False⟩
+    responder := ⟨False, True⟩
+    status := MeetingStatus.Potential }
+
+/-- **Actualizing the meeting changes status to Actualized.** -/
+example (m : Meeting Bool Bool) :
+    (actualize m).status = MeetingStatus.Actualized := rfl
+
+/-- **Idempotence on a concrete instance.** -/
+example (m : Meeting Bool Bool) :
+    actualize (actualize m) = actualize m := axiom_II_idempotent m
+
 end TierA
 end Perspectival
