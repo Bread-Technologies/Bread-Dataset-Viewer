@@ -172,13 +172,11 @@ part of Tier 1 #5 as stated.
 ## 6. Honest catalog: tractable vs blocked
 
 **Tractable (months, plausible Lean targets):**
-- (1) `gptTensor` construction.
-- (2) Local-tomography predicate and its proof for the constructed
-  tensor.
-- (3) qQM exclusion via local tomography (essentially a port of known
-  results into our predicate language).
+- (1) ~~`gptTensor` construction.~~ **DONE** — `Perspectival/GPTTensor.lean`.
+- (2) ~~Local-tomography predicate and its proof for the constructed tensor.~~ **DONE** — `TomographicLocality` + `gptTensor_tomographic_local`.
+- (3) ~~qQM exclusion via local tomography.~~ **DONE** at the structural level (documented in `GPTTensor.lean`'s comment block); rebit also excluded by the same argument (K_AB = K_A · K_B fails for both).
 - A Lean-encoded statement of Renou's network scenario as a GPT
-  configuration — not a derivation, but a precise formal target.
+  configuration — not a derivation, but a precise formal target. **OPEN.**
 
 **Blocked on R6/R7 (the agency-connectedness gap):**
 - (4) Connectedness of the reversible group from agency — currently
