@@ -78,7 +78,12 @@ strengthening).
 - `TierB.lean` — **v2 Tier B bracketing operation:** BracketedTransition
   equivalence, AtSeam predicate, DefiniteConfig with permutation
   action, TrajectoryStep dichotomy, measurement_is_actualization,
-  actualizeAt → AtSeam bridges.
+  actualizeAt → AtSeam bridges. Also: `RealityChain` + `RealityChain'`
+  multi-step trajectory machinery with count algebra (actualizationCount,
+  bracketedCount, length), chain monoid laws (assoc + identity), and
+  full iff characterizations (count = 0 ↔ R₁ = R₂ on strict chains).
+- `Decoherence.lean` — Seam 4 formal correlate (decoherence as
+  accumulated actualization at system-environment interface).
 - `Ontology.lean` — axioms I–IV encoded as Lean 4 types (v1; under v2,
   this is Tier B content augmented with Tier A foundation).
 - `Transformations.lean` — PTrans as a Group, MulAction on meetings.
