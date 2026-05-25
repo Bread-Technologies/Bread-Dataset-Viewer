@@ -696,6 +696,27 @@ theorem RealityChain'.toRealityChain_length {P : Type u} {C : Type v} :
                  RealityChain'.length]
       rw [RealityChain'.toRealityChain_length rest]
 
+/-- **Actualization count for strict chains.** -/
+def RealityChain'.actualizationCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C}, RealityChain' P C R₁ R₂ → ℕ
+  | _, _, RealityChain'.nil _ => 0
+  | _, _, RealityChain'.cons step rest =>
+      (match step.step with
+        | TrajectoryStep.bracketed _ => 0
+        | TrajectoryStep.actualization _ => 1) +
+      RealityChain'.actualizationCount rest
+
+/-- **Actualization count preserved by forgetful map.** -/
+theorem RealityChain'.toRealityChain_actualizationCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂),
+      ch.toRealityChain.actualizationCount = ch.actualizationCount
+  | _, _, RealityChain'.nil _ => rfl
+  | _, _, RealityChain'.cons _ rest => by
+      show RealityChain.actualizationCount _ = RealityChain'.actualizationCount _
+      simp only [RealityChain'.toRealityChain, RealityChain.actualizationCount,
+                 RealityChain'.actualizationCount]
+      rw [RealityChain'.toRealityChain_actualizationCount rest]
+
 /-- **A bracketed step preserves both potential and actualized status
 of every meeting.** Restated: the entire meeting-status function is
 unchanged across a bracketed step. -/
