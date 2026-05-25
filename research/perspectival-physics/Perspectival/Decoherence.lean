@@ -3183,6 +3183,22 @@ theorem no_maxwell_demon_strict {P : Type u} {C : Type v}
     tierAEventCount ch₁ < tierAEventCount (ch₁.append ch₂) :=
   (tier_A_strict_monotone_iff ch₁ ch₂).mpr h
 
+/-- **Length monotonicity under extension.** Like count, length is
+monotonic under chain extension. -/
+theorem length_monotone_under_extension {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    ch₁.length ≤ (ch₁.append ch₂).length :=
+  length_monotone_under_append ch₁ ch₂
+
+/-- **Bracketed-count monotonicity under extension.** -/
+theorem bracketedCount_monotone_under_extension {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    ch₁.bracketedCount ≤ (ch₁.append ch₂).bracketedCount := by
+  rw [RealityChain'.append_bracketedCount]
+  omega
+
 /-- **No-Maxwell-demon certificate.** The framework's "Tier A
 irreversibility persists under chain composition" content. -/
 theorem no_maxwell_demon_certificate :
