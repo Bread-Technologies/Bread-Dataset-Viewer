@@ -1765,6 +1765,32 @@ theorem loop_insertion_certificate :
    fun loop ch => loop_prepend_equivalent loop ch,
    fun ch loop => loop_append_equivalent ch loop⟩
 
+/-! ## Loops are NOT resets — past is preserved
+
+A subtle but important structural fact: while loop chains have
+equal endpoints (R₁ = R₂), they are NOT "resets" of past
+actualizations. The framework's no-return-to-potential theorem
+guarantees that ALL meetings actualized at R₁ remain actualized at
+R₂ = R₁ (trivially, since R₁ = R₂). Loop chains are extensions in
+time, not undoings of past content. -/
+
+/-- **Loop chains preserve all past actualizations.** A loop chain
+cannot "un-actualize" any meeting — the no-return-to-potential
+theorem is respected. This is trivial for loops (R₁ = R₂) but is
+the framework's structural commitment that "going around in time"
+doesn't reset the irreversible past. -/
+theorem loops_preserve_actualized {P : Type u} {C : Type v}
+    {R : Reality P C} (_ch : RealityChain' P C R R) :
+    ∀ m, R m = MeetingStatus.Actualized → R m = MeetingStatus.Actualized :=
+  fun _ h => h
+
+/-- **No loop "resets" a successor.** For any loop chain, the
+RealitySuccessor relation holds reflexively (R → R), which means
+no actualized meeting becomes potential along the loop. -/
+theorem loops_are_not_resets {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    RealitySuccessor R R := ch.implies_successor
+
 /-! ## Loop submonoid acts trivially on decoherence equivalence
 
 The combined structural fact: the loop submonoid (chains R → R) acts
