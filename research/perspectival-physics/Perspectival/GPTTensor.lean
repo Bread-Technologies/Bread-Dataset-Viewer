@@ -543,6 +543,56 @@ theorem productTransform_preserves_states
   -- Conclude: convexHull productGenerators ⊆ T.
   exact convexHull_min hgen_sub hT_convex hρ
 
+/-- **productTransform preserves the unit functional on gptTensor.** If
+`f` preserves `G₁.unit` and `g` preserves `G₂.unit`, then
+`productTransform f g` preserves `tensorUnit G₁ G₂`. -/
+theorem productTransform_preserves_unit
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    {f₁ : V₁ →ₗ[ℝ] V₁} {f₂ : V₂ →ₗ[ℝ] V₂}
+    (h₁ : G₁.unit.comp f₁ = G₁.unit)
+    (h₂ : G₂.unit.comp f₂ = G₂.unit) :
+    (tensorUnit G₁ G₂).comp (productTransform f₁ f₂) = tensorUnit G₁ G₂ := by
+  -- The tensor algebra characterization: linear map agree iff agree on simple
+  -- tensors. Apply both sides to ρ₁ ⊗ ρ₂.
+  apply LinearMap.ext
+  intro x
+  -- Tensor induction on x.
+  refine TensorProduct.induction_on x ?_ ?_ ?_
+  · -- x = 0
+    simp
+  · -- x = ρ₁ ⊗ ρ₂
+    intro ρ₁ ρ₂
+    show tensorUnit G₁ G₂ (productTransform f₁ f₂ (ρ₁ ⊗ₜ[ℝ] ρ₂))
+       = tensorUnit G₁ G₂ (ρ₁ ⊗ₜ[ℝ] ρ₂)
+    rw [productTransform_tmul, tensorUnit_tmul, tensorUnit_tmul]
+    -- G₁.unit (f₁ ρ₁) = G₁.unit ρ₁ via h₁; similarly for h₂.
+    have eq1 : G₁.unit (f₁ ρ₁) = G₁.unit ρ₁ := by
+      have := congr_fun (congr_arg DFunLike.coe h₁) ρ₁
+      simpa using this
+    have eq2 : G₂.unit (f₂ ρ₂) = G₂.unit ρ₂ := by
+      have := congr_fun (congr_arg DFunLike.coe h₂) ρ₂
+      simpa using this
+    rw [eq1, eq2]
+  · -- x = a + b
+    intro a b ha hb
+    show tensorUnit G₁ G₂ (productTransform f₁ f₂ (a + b))
+       = tensorUnit G₁ G₂ (a + b)
+    rw [show productTransform f₁ f₂ (a + b)
+          = productTransform f₁ f₂ a + productTransform f₁ f₂ b
+        from LinearMap.map_add _ _ _]
+    show tensorUnit G₁ G₂ (productTransform f₁ f₂ a + productTransform f₁ f₂ b)
+       = tensorUnit G₁ G₂ (a + b)
+    rw [show tensorUnit G₁ G₂ (productTransform f₁ f₂ a + productTransform f₁ f₂ b)
+          = tensorUnit G₁ G₂ (productTransform f₁ f₂ a)
+          + tensorUnit G₁ G₂ (productTransform f₁ f₂ b)
+        from LinearMap.map_add _ _ _]
+    rw [show tensorUnit G₁ G₂ (a + b)
+          = tensorUnit G₁ G₂ a + tensorUnit G₁ G₂ b
+        from LinearMap.map_add _ _ _]
+    exact congr_arg₂ (· + ·) ha hb
+
 
 end GPT
 end Perspectival
