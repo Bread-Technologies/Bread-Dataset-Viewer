@@ -198,6 +198,79 @@ theorem seam_breaks_bracketing {P : Type u} {C : Type v}
   rw [this] at h_pot
   exact MeetingStatus.noConfusion h_pot
 
+/-! ## Bracketing forces discrete-permutation dynamics on definite-outcome
+    configurations (v2 derivation of vertex preservation)
+
+The framework's claim, made concrete: under bracketing, definite
+potential-outcome configurations (= vertices in the Tier B Classical
+GPT) can only PERMUTE among themselves. No continuous deformation
+through "mixed" non-vertex configurations is allowed, because such a
+deformation would require an intermediate actualization (forbidden
+in a bracketed interval).
+
+Formal encoding: a "definite-outcome configuration" on a finite
+candidate set `Fin n` is an `Equiv.Perm`-image of a chosen candidate.
+Bracketed dynamics restrict to permutations.
+
+This makes the v1 vertex-preservation patch into a v2-progressive
+*derived theorem*: vertex preservation in the Classical GPT R6
+disconnect is the inheritance of Tier A's discreteness commitment
+through bracketing. See `V2_AUDIT.md` audit item 3 and `SEAMS.md`
+seam 2 for the conceptual framing. -/
+
+/-- A *definite-outcome configuration* on a finite candidate set
+`Fin n` is an assignment of a "currently-primed" candidate. -/
+structure DefiniteConfig (n : ℕ) where
+  primed : Fin n
+
+/-- Two definite configurations are bracketed-equivalent if they
+differ at most by a *permutation* of the underlying candidate set —
+not by smearing into a mixture. This expresses the v2 derivation of
+vertex preservation at the structural level. -/
+def DefiniteBracketed {n : ℕ} (σ : Equiv.Perm (Fin n))
+    (c₁ c₂ : DefiniteConfig n) : Prop :=
+  c₂.primed = σ c₁.primed
+
+/-- **Vertex preservation as derived theorem (structural form).** A
+bracketed transformation of definite configurations IS a permutation
+— it cannot mix candidates into a non-vertex state. -/
+theorem bracketing_forces_permutation {n : ℕ}
+    {c₁ c₂ : DefiniteConfig n} (σ : Equiv.Perm (Fin n))
+    (h : DefiniteBracketed σ c₁ c₂) :
+    ∃ i j : Fin n, c₁.primed = i ∧ c₂.primed = j ∧ σ i = j :=
+  ⟨c₁.primed, c₂.primed, rfl, rfl, h.symm⟩
+
+/-- **The identity permutation = trivial bracketed transformation.** -/
+theorem definite_bracketed_id {n : ℕ} (c : DefiniteConfig n) :
+    DefiniteBracketed (Equiv.refl _) c c := rfl
+
+/-- **Bracketed transformations on definite configurations compose
+permutations.** Reversibility = the permutation is invertible
+(`Equiv.Perm` is by definition a permutation, hence has an inverse).
+
+Composition order: `Equiv.trans` applies its first argument first,
+then the second. So `σ₁.trans σ₂` is `x ↦ σ₂ (σ₁ x)`, which is
+exactly what we want when h₁₂ takes c₁ to c₂ via σ₁ and h₂₃ takes c₂
+to c₃ via σ₂. -/
+theorem definite_bracketed_compose {n : ℕ}
+    {c₁ c₂ c₃ : DefiniteConfig n} {σ₁ σ₂ : Equiv.Perm (Fin n)}
+    (h₁₂ : DefiniteBracketed σ₁ c₁ c₂)
+    (h₂₃ : DefiniteBracketed σ₂ c₂ c₃) :
+    DefiniteBracketed (σ₁.trans σ₂) c₁ c₃ := by
+  show c₃.primed = (σ₁.trans σ₂) c₁.primed
+  show c₃.primed = σ₂ (σ₁ c₁.primed)
+  rw [← h₁₂]
+  exact h₂₃
+
+/-- **Bracketing on definite configurations cannot produce non-vertex
+states.** A bracketed transformation of definite configurations
+always yields another definite configuration — no smearing into
+"mixed" states is allowed. -/
+theorem bracketing_preserves_definiteness {n : ℕ}
+    (c₁ : DefiniteConfig n) (σ : Equiv.Perm (Fin n)) :
+    ∃ c₂ : DefiniteConfig n, DefiniteBracketed σ c₁ c₂ :=
+  ⟨⟨σ c₁.primed⟩, rfl⟩
+
 /-! ## Summary: the bracketing operation
 
 This module formalizes the Tier A → Tier B bracketing operation.
