@@ -1079,6 +1079,29 @@ theorem RealityChain'.append_singleton_right {P : Type u} {C : Type v} :
         = ch.append (RealityChain'.cons step (RealityChain'.nil R₃))
   | _, _, _, _, _ => rfl
 
+/-- **`bracketedCount` for strict chains.** -/
+def RealityChain'.bracketedCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C}, RealityChain' P C R₁ R₂ → ℕ
+  | _, _, RealityChain'.nil _ => 0
+  | _, _, RealityChain'.cons step rest =>
+      (match step.step with
+        | TrajectoryStep.bracketed _ => 1
+        | TrajectoryStep.actualization _ => 0) +
+      RealityChain'.bracketedCount rest
+
+/-- **Strict-chain counts sum to length.** -/
+theorem RealityChain'.counts_sum {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount + ch.bracketedCount = ch.length
+  | _, _, RealityChain'.nil _ => rfl
+  | _, _, RealityChain'.cons step rest => by
+      simp only [RealityChain'.actualizationCount, RealityChain'.bracketedCount,
+                 RealityChain'.length]
+      cases step.step <;>
+        · simp only
+          have h := RealityChain'.counts_sum rest
+          omega
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
