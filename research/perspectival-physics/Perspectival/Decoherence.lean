@@ -1493,6 +1493,30 @@ example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
     show 1 + 2 = 3
     rfl
 
+/-! ## Connection to TIER4 dissolutions
+
+The Decoherence module's content connects to several TIER4
+dissolutions documented in `TIER4_DISSOLUTIONS.md`:
+
+- **#19 Boltzmann brains:** the framework's count-based decoherence
+  makes "decoherence happens to substances" reasoning incoherent.
+  Decoherence is a relational property of trajectories, not a
+  fluctuation-statistics of substantial state-spaces.
+
+- **#20 Black hole entropy:** same anti-realism applies. S = A/4 is
+  the dimensionality of distinguishable-from-outside structure (a
+  trajectory-relative measure), not horizon-substance.
+
+- **#21 Verlinde / holographic principle:** entropic gravity reframes
+  as structural relations among coarse-grainings. The trajectory
+  algebra here is a discrete analog.
+
+- **#22 Arrow unification:** the past_grows_under_chain content
+  IS the structural shadow of arrow-unification.
+
+- **#23 Decoherence formalized:** this entire module.
+-/
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
