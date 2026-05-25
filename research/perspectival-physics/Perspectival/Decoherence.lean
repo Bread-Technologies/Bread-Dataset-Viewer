@@ -1381,6 +1381,24 @@ example (R : Reality Bool Bool) :
   · rw [tierAEventCount_append]; rfl
   · rw [RealityChain'.append_length]; rfl
 
+/-- **Example: mixed Bool trajectory.** Bracketed + actualization
+gives count = 1, length = 2. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)]
+    (h_pot : (fun _ => MeetingStatus.Potential : Reality Bool Bool) m
+            = MeetingStatus.Potential) :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let ch₁ : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let ch₂ : RealityChain' Bool Bool R (actualizeAt R m) :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    tierAEventCount (ch₁.append ch₂) = 1
+      ∧ (ch₁.append ch₂).length = 2 := by
+  intro R ch₁ ch₂
+  refine ⟨?_, ?_⟩
+  · rw [tierAEventCount_append]; rfl
+  · rw [RealityChain'.append_length]; rfl
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
