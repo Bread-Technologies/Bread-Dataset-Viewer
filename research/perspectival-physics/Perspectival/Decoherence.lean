@@ -4982,6 +4982,25 @@ theorem decoherence_total_session_commitment : True := trivial
 /-- **474-commit session marker.** -/
 theorem session_474_commits_marker : True := trivial
 
+/-- **At length 2, count ranges from 0 to 2.** Concrete characterization
+of small-length cases. -/
+theorem length_two_count_range {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.length = 2) :
+    ch.actualizationCount = 0
+      ∨ ch.actualizationCount = 1
+      ∨ ch.actualizationCount = 2 := by
+  have h_le := ch.actualizationCount_le_length
+  omega
+
+/-- **At length 3, count ranges from 0 to 3.** -/
+theorem length_three_count_range {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.length = 3) :
+    ch.actualizationCount ≤ 3 := by
+  have h_le := ch.actualizationCount_le_length
+  omega
+
 /-- **Decoherence module at 6000 lines: comprehensive status.** -/
 theorem decoherence_at_6000_lines_status :
     -- All core measures defined.
