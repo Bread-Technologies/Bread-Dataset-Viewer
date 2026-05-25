@@ -584,6 +584,12 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.loop_conjugation_preserves_count`, `_equivalent`, `loop_submonoid_trivial_action` — loop submonoid acts trivially on classes | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.decoherence_class_partition`, `loop_class_concentration`, `decoherence_class_partition_certificate` — DecoherenceEquivalent classes indexed by counts | `Decoherence.lean` | ✓ (a) **class partition** |
 | `Decoherence.loop_prepend_density_changes_length`, `_density_differs_when_positive_length` — density refines DecoherenceEquivalent under loop insertion | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.collapse_is_singleton_actualization`, `singleton_actualization_at_seam`, `measurement_actualization_collapse_certificate` — formal correlate of QM measurement/collapse | `Decoherence.lean` | ✓ (a) **measurement = actualization** |
+| `Decoherence.active_passive_certificate` — active/passive step partition | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.tier_A_strict_monotonicity_certificate` — strict monotonicity iff extension actualizes | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.rate_count_invariant_under_equivalence`, `rate_length_not_invariant_under_equivalence` — what DE preserves and doesn't | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.loopPower_preserves_equivalence_class` — loops are transparent to all DE classes | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.coherent_witnesses_tier_B_reversibility`, `tier_B_reversibility_certificate` — coherent chains ARE the Tier B reversible limit | `Decoherence.lean` | ✓ (a) **Tier B reversibility formal** |
 | `Decoherence.coherent_decompose`, `coherent_iff_both_factors_coherent`, `positive_count_iff_factor_positive`, `coherent_decomposition_certificate` — chain factorization preserves coherent status | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.rate_count_eq_length_iff_pure_decoherent`, `rate_count_eq_zero_iff_coherent` — iff bound characterizations | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.bracketedCount_monoid_morphism`, `length_monoid_morphism`, `trio_of_morphisms_certificate`, `trio_sum_law` — all three measures as monoid morphisms | `Decoherence.lean` | ✓ (a) **trio algebra** |
