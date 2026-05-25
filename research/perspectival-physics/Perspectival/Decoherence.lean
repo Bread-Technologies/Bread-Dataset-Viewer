@@ -1406,6 +1406,75 @@ theorem loop_submonoid_certificate :
    fun ch n => loopPower_length ch n,
    fun ch n => loopPower_equivalent_nil ch n⟩
 
+/-- **Every Reality admits a non-trivial loop chain.** Given any
+Reality R, there exists a strict chain R → R with positive length —
+the reflexive-bracketed chain. This shows the loop submonoid is
+always non-degenerate. -/
+theorem nontrivial_loop_exists {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    ∃ (ch : RealityChain' P C R R),
+      ch.actualizationCount = 0 ∧ 0 < ch.length := by
+  refine ⟨RealityChain'.singleton
+    (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R)), ?_, ?_⟩
+  · show (RealityChain'.singleton _).actualizationCount = 0
+    rw [RealityChain'.singleton_actualizationCount]; rfl
+  · show 0 < (RealityChain'.singleton _).length
+    rw [RealityChain'.singleton_length]; omega
+
+/-- **Loop chain `(R → R)` has a non-degenerate power lattice.** For any
+n ≥ 0, the n-fold power of the reflexive-bracketed loop has length n. -/
+theorem reflBracketed_loopPower_length {P : Type u} {C : Type v}
+    (R : Reality P C) (n : Nat) :
+    (loopPower (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n).length = n := by
+  rw [loopPower_length]
+  show n * (RealityChain'.singleton _).length = n
+  rw [RealityChain'.singleton_length]
+  omega
+
+/-- **Reflexive-bracketed power: coherent at every n.** -/
+theorem reflBracketed_loopPower_coherent {P : Type u} {C : Type v}
+    (R : Reality P C) (n : Nat) :
+    (loopPower (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n).actualizationCount = 0 :=
+  loopPower_actualizationCount _ n
+
+/-- **Distinct lengths witness path-dependent content (loop version).**
+For any Reality R and any two distinct n, m, the n-fold and m-fold
+reflexive-bracketed powers have different lengths — providing a
+concrete family of decoherence-equivalent but length-distinct loops
+at the same endpoint. -/
+theorem reflBracketed_loopPower_distinct_lengths {P : Type u} {C : Type v}
+    (R : Reality P C) {m n : Nat} (h : m ≠ n) :
+    (loopPower (RealityChain'.singleton
+       (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) m).length ≠
+    (loopPower (RealityChain'.singleton
+       (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n).length := by
+  rw [reflBracketed_loopPower_length, reflBracketed_loopPower_length]
+  exact h
+
+/-- **Concrete anti-realism witness: loop powers.** A worked
+instantiation showing the anti-realism content has explicit infinite
+witness families. For any Reality R, the loop powers `loopPower
+(reflBracketed R) n` for n = 0, 1, 2, ... are all decoherence-
+equivalent (to nil), but their lengths are all distinct. -/
+theorem anti_realism_loop_power_witness {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    ∀ (m n : Nat), m ≠ n →
+      DecoherenceEquivalent
+        (loopPower (RealityChain'.singleton
+          (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) m)
+        (loopPower (RealityChain'.singleton
+          (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n) ∧
+      (loopPower (RealityChain'.singleton
+         (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) m).length ≠
+      (loopPower (RealityChain'.singleton
+         (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n).length := by
+  intro m n h
+  refine ⟨?_, ?_⟩
+  · exact loopPower_all_equivalent _ m n
+  · exact reflBracketed_loopPower_distinct_lengths R h
+
 /-! ## Anti-realist monoid morphism interpretation
 
 The framework's anti-realism: only the COUNT (= number of seam
