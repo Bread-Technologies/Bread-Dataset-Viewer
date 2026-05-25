@@ -329,6 +329,32 @@ actualization events at the system-environment interface.
 These open extensions are documented as Tier 2 work. The current
 module establishes the count-based structural shadow.
 
+## Q19. What does the framework's trajectory algebra say about decoherence?
+
+**Framework answer:** A trajectory through Reality (a `RealityChain'`)
+has a *count* of actualization steps (= seam crossings) and a
+*length* (= total step count). These together define the
+`actualizationRate` (count, length) pair, which characterizes how
+much Tier A irreversibility happens per unit trajectory.
+
+**Compositional structure** (`concatenated_decoherence`):
+rate(ch₁ ++ ch₂) = rate(ch₁) + rate(ch₂) coordinate-wise. Decoherence
+accumulates additively under trajectory composition.
+
+**Regime characterization:**
+- **Coherent regime** (`count = 0`): rate (0, n). The trajectory stays
+  entirely in Tier B reversible-limit; no decoherence.
+- **Decoherence regime** (`bracketed = 0`): rate (n, n). Every step
+  is a seam crossing; maximal decoherence per step.
+
+**Framework prediction** (Seam 4): environments rich in actualization
+content decohere systems faster than statistical-decoherence-time
+models alone predict. Testable via correlating decoherence rates
+with environmental "actualization density" (operational definition
+deferred).
+
+See `Perspectival/Decoherence.lean` for the full Lean machinery.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
