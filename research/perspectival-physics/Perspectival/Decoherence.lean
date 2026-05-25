@@ -5526,6 +5526,18 @@ theorem quick_ref_distinct_endpoints_pos_count {P : Type u} {C : Type v}
     0 < ch.actualizationCount :=
   ch.distinct_endpoints_implies_actualization h
 
+/-- **Quick reference: ne iff positive count.** -/
+theorem quick_ref_ne_iff_pos_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    R₁ ≠ R₂ ↔ 0 < ch.actualizationCount :=
+  ch.ne_iff_pos_count
+
+/-- **Quick reference: equal iff zero count.** -/
+theorem quick_ref_eq_iff_zero_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    R₁ = R₂ ↔ ch.actualizationCount = 0 :=
+  ch.eq_iff_zero_count
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
