@@ -1469,6 +1469,15 @@ def actualizeAt_chain {P : Type u} {C : Type v}
   (RealityChain.singleton_actualization_count
     (actualizeAt_atSeam R m h_pot)).2
 
+/-- **`actualizeAt_chain` length is 1.** -/
+@[simp] theorem actualizeAt_chain_length {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    (actualizeAt_chain R m h_pot).length = 1 := by
+  show 1 + RealityChain.length _ = 1
+  simp [RealityChain.length]
+
 /-- **The identity bracketed step (self-step) wrapped as a chain.** -/
 def reflBracketedChain {P : Type u} {C : Type v} (R : Reality P C) :
     RealityChain P C R R :=
