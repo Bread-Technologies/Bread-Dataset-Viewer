@@ -149,8 +149,11 @@ properties. The framework predicts environments rich in Tier A
 content (lots of irreversible interactions) decohere systems faster
 than statistical models predict. **Testable in principle.**
 
-**Formal correlate:** not yet formalized in Lean. A future module
-`Decoherence.lean` would encode this.
+**Formal correlate:** partial — `RealityChain'.actualizationDensity`
+in `Perspectival/TierB.lean` provides the count-based measure of
+"actualization density" along a strict trajectory. A full
+`Decoherence.lean` module would extend this with the exponential-
+suppression framework. Currently STRUCTURAL.
 
 ## Seam 5 — Cosmological constant (Tier 3)
 
@@ -232,7 +235,8 @@ shadow requires a spacetime model not currently in the framework.
 - Seam 3 (Erasure): structural shadow in
   `axiom_II_actualization_irreversible`; dynamical content cited
   to Witkowski-Brown-Truong 2024. ✓ STRUCTURAL.
-- Seam 4 (Decoherence): not yet formalized. ○ OPEN.
+- Seam 4 (Decoherence): partial — `actualizationDensity` count-based
+  measure in TierB.lean. ✓ STRUCTURAL.
 - Seam 5 (Cosmological constant): philosophical sketch only.
   ○ OPEN, Tier 3.
 - Seam 6 (Dark matter): structural Lean encoding via
