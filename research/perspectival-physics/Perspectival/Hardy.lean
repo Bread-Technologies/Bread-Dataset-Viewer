@@ -199,6 +199,19 @@ theorem axiom4_state_exists_holds
     Axiom4_Composite_State_Exists GA GB :=
   fun _ hρA _ hρB => GPT.gptTensor_tmul_mem_states GA GB hρA hρB
 
+/-- **Hardy A4 BOTH HALVES at the general GPT level.** The framework
+delivers both the dimension multiplicativity (K_AB = K_A · K_B) and
+the product-state existence at the general GPT level. The OPEN piece
+is the N-multiplicativity (operational dim), with the forward
+direction now provided by `gptTensor_distinguishable_*` above. -/
+theorem axiom4_dimension_and_state_holds
+    {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
+    [AddCommGroup VB] [Module ℝ VB]
+    (GA : GPT VA) (GB : GPT VB) :
+    Axiom4_Composite_Dimension GA GB ∧
+    Axiom4_Composite_State_Exists GA GB :=
+  ⟨axiom4_dimension_holds GA GB, axiom4_state_exists_holds GA GB⟩
+
 /-- **Hardy A4 N-multiplicativity, forward direction (1-element
 witness).** If `(ρ₁, ρ₂)` is distinguishable in `G₁` and `σ ∈ G₂.states`,
 then `(ρ₁ ⊗ σ, ρ₂ ⊗ σ)` is distinguishable in `gptTensor G₁ G₂`.
