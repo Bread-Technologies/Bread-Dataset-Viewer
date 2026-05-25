@@ -637,6 +637,28 @@ example {P : Type u} {C : Type v} (R : Reality P C) :
   show 1 + 1 = 2
   rfl
 
+/-! ## Anti-realism content (per entropy addendum)
+
+The framework's anti-realism about entropy applies analogously to
+decoherence: decoherence is not a substantial property of the system
+in isolation; it is the relational structure of system-environment
+actualization counts. The trajectory complexity measure here is
+a count-based proxy for the framework's reading of decoherence
+information content. -/
+
+/-- **Anti-realism on decoherence-rate.** The trajectory rate is not
+a property of the endpoints alone (despite path-independent
+coherence); it depends on the trajectory's composition. Distinct
+trajectories between the same endpoints can have different
+trajectory-complexity, though their coherence status (count = 0 or > 0)
+agrees by `path_independent_coherence`. -/
+theorem trajectory_rate_path_dependence {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    -- Coherence status agrees (= path-independent),
+    -- but trajectoryComplexity may differ.
+    (ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) :=
+  path_independent_coherence ch₁ ch₂
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
