@@ -1209,6 +1209,27 @@ example (P : Type u) (C : Type v)
     simp
   trivial
 
+/-- **Worked example: strict-chain `actualizeAt_strict_step` is a
+TrajectoryStep' with positive count.** -/
+example (P : Type u) (C : Type v)
+    [DecidableEq (Meeting P C)] (R : Reality P C)
+    (m : Meeting P C) (h_pot : R m = MeetingStatus.Potential) :
+    (RealityChain'.singleton (actualizeAt_strict_step R m h_pot)).actualizationCount = 1 := by
+  show (match (actualizeAt_strict_step R m h_pot).step with
+        | TrajectoryStep.bracketed _ => 0
+        | TrajectoryStep.actualization _ => 1) = 1
+  rfl
+
+/-- **Worked example: strict-chain `TrajectoryStep'.bracketed` is a
+TrajectoryStep' with zero count.** -/
+example (P : Type u) (C : Type v) (R : Reality P C) :
+    (RealityChain'.singleton
+        (TrajectoryStep'.bracketed (bracketed_refl R))).actualizationCount = 0 := by
+  show (match (TrajectoryStep'.bracketed (bracketed_refl R)).step with
+        | TrajectoryStep.bracketed _ => 0
+        | TrajectoryStep.actualization _ => 1) = 0
+  rfl
+
 /-- **Worked example: a 3-step trajectory mixing arms.** Refl-bracketed,
 then actualize, then refl-bracketed-on-the-new-state. Demonstrates
 that the trajectory machinery composes consistently with R changing
