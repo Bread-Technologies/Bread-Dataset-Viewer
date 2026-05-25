@@ -4886,6 +4886,16 @@ theorem nil_chain_measure_certificate :
         ∧ trajectoryComplexity (RealityChain'.nil (P := P) (C := C) R) = 0) :=
   fun R => ⟨rfl, rfl, rfl, rfl⟩
 
+/-- **Singleton bracketed has rate (0, 1).** -/
+theorem singleton_bracketed_rate {P : Type u} {C : Type v} (R : Reality P C) :
+    actualizationRate (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) = (0, 1) := by
+  show ((RealityChain'.singleton _).actualizationCount,
+        (RealityChain'.singleton _).length) = (0, 1)
+  rw [RealityChain'.singleton_actualizationCount,
+      RealityChain'.singleton_length]
+  rfl
+
 /-- **Singleton bracketed chain measure certificate.** A bracketed
 singleton on any R has count 0, bracketed 1, length 1, complexity 1. -/
 theorem singleton_bracketed_measure_certificate :
