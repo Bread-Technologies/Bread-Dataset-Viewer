@@ -840,6 +840,17 @@ example (P : Type u) (C : Type v)
     show (actualizeAt_chain R m₁ h_pot₁).actualizationCount
         + (actualizeAt_chain R₁ m₂ h_pot₂').actualizationCount = 2
     simp
+  -- ch.bracketedCount = 0 similarly.
+  have h_brk : ch.bracketedCount = 0 := by
+    show (ch₁.append ch₂).bracketedCount = 0
+    rw [RealityChain.append_bracketedCount]
+    show (actualizeAt_chain R m₁ h_pot₁).bracketedCount
+        + (actualizeAt_chain R₁ m₂ h_pot₂').bracketedCount = 0
+    simp
+  -- And ch.length = 2.
+  have h_len : ch.length = 2 := by
+    rw [show ch.length = ch.actualizationCount + ch.bracketedCount from
+        (RealityChain.counts_sum ch).symm, h_count, h_brk]
   trivial
 
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
