@@ -536,6 +536,26 @@ theorem complexity_ge_length {P : Type u} {C : Type v}
   have h_sum := ch.counts_sum
   omega
 
+/-- **`complexity = length` iff coherent.** -/
+theorem complexity_eq_length_iff_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    trajectoryComplexity ch = ch.length ↔ ch.actualizationCount = 0 := by
+  unfold trajectoryComplexity
+  have h_sum := ch.counts_sum
+  constructor
+  · intro h; omega
+  · intro h; omega
+
+/-- **`complexity = 2 * length` iff pure decoherent.** -/
+theorem complexity_eq_twice_length_iff_pure_decoherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    trajectoryComplexity ch = 2 * ch.length ↔ ch.bracketedCount = 0 := by
+  unfold trajectoryComplexity
+  have h_sum := ch.counts_sum
+  constructor
+  · intro h; omega
+  · intro h; omega
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
