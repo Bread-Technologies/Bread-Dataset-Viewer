@@ -855,6 +855,34 @@ theorem RealityChain'.eq_iff_zero_count {P : Type u} {C : Type v}
     exact (ch.pos_count_implies_ne h_pos) h_eq
   · exact ch.zero_actualization_implies_eq
 
+/-- **Strict chain `singleton`.** -/
+def RealityChain'.singleton {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep' P C R₁ R₂) :
+    RealityChain' P C R₁ R₂ :=
+  RealityChain'.cons step (RealityChain'.nil R₂)
+
+/-- **Strict chain length of singleton.** -/
+@[simp] theorem RealityChain'.singleton_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep' P C R₁ R₂) :
+    (RealityChain'.singleton step).length = 1 := by
+  show 1 + RealityChain'.length _ = 1
+  simp [RealityChain'.length]
+
+/-- **Strict chain actualization count of singleton.** -/
+@[simp] theorem RealityChain'.singleton_actualizationCount
+    {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep' P C R₁ R₂) :
+    (RealityChain'.singleton step).actualizationCount
+      = (match step.step with
+         | TrajectoryStep.bracketed _ => 0
+         | TrajectoryStep.actualization _ => 1) := by
+  show (match step.step with
+        | TrajectoryStep.bracketed _ => 0
+        | TrajectoryStep.actualization _ => 1)
+      + RealityChain'.actualizationCount (RealityChain'.nil _)
+      = _
+  simp [RealityChain'.actualizationCount]
+
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
 transition R₁ → R₂ cannot be a bracketed step; if it's at all
