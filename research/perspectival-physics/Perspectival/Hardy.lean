@@ -199,6 +199,28 @@ theorem axiom4_state_exists_holds
     Axiom4_Composite_State_Exists GA GB :=
   fun _ hρA _ hρB => GPT.gptTensor_tmul_mem_states GA GB hρA hρB
 
+/-- **Hardy A4 N-multiplicativity, forward direction (1-element
+witness).** If `(ρ₁, ρ₂)` is distinguishable in `G₁` and `σ ∈ G₂.states`,
+then `(ρ₁ ⊗ σ, ρ₂ ⊗ σ)` is distinguishable in `gptTensor G₁ G₂`.
+The witness effect is `productEffect e_1 (G₂.unit)`. This is the
+forward direction of Hardy A4's N-multiplicativity: distinguishability
+in one factor lifts to distinguishability in the product. -/
+theorem gptTensor_distinguishable_left
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    {ρ₁ ρ₂ : V₁} (h : Distinguishable G₁ ρ₁ ρ₂)
+    {σ : V₂} (hσ : σ ∈ G₂.states) :
+    Distinguishable (GPT.gptTensor G₁ G₂)
+      (ρ₁ ⊗ₜ[ℝ] σ) (ρ₂ ⊗ₜ[ℝ] σ) := by
+  obtain ⟨e₁, he₁_in, he₁_ρ₁, he₁_ρ₂⟩ := h
+  refine ⟨GPT.productEffect e₁ G₂.unit,
+    GPT.productEffect_in_effects he₁_in G₂.unit_is_effect, ?_, ?_⟩
+  · -- productEffect (ρ₁ ⊗ σ) = e₁(ρ₁) · G₂.unit(σ) = 1 · 1 = 1
+    rw [GPT.productEffect_tmul, he₁_ρ₁, G₂.states_normalized σ hσ]; ring
+  · -- productEffect (ρ₂ ⊗ σ) = e₁(ρ₂) · G₂.unit(σ) = 0 · 1 = 0
+    rw [GPT.productEffect_tmul, he₁_ρ₂]; ring
+
 /-- **Axiom 5 — Continuity of reversible transformations.**
 There exists a continuous reversible transformation on a system
 between any two pure states of that system.

@@ -455,5 +455,6 @@ theorem productEffect_in_effects
   intro ρ hρ
   exact productEffect_bounds_on_tensorStates he₁ he₂ hρ
 
+
 end GPT
 end Perspectival
