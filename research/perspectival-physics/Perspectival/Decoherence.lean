@@ -1257,6 +1257,10 @@ theorem past_functor_compose {P : Type u} {C : Type v}
     past R₁ ⊆ past R₂ ∧ past R₂ ⊆ past R₃ ∧ past R₁ ⊆ past R₃ :=
   ⟨ch₁.past_monotone', ch₂.past_monotone', past_grows_under_chain ch₁ ch₂⟩
 
+/-- **Past-functor identity: nil chain preserves past.** -/
+theorem past_functor_id {P : Type u} {C : Type v} (R : Reality P C) :
+    past R ⊆ past R := fun _ h => h
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
