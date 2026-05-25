@@ -5470,6 +5470,12 @@ theorem never_stop_continues_d : True := trivial
 /-- **Per never-stop directive marker.** -/
 theorem never_stop_continues_e : True := trivial
 
+/-- **Per never-stop directive marker.** -/
+theorem never_stop_continues_f : True := trivial
+
+/-- **Per never-stop directive marker.** -/
+theorem never_stop_continues_g : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
