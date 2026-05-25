@@ -240,6 +240,33 @@ def Axiom5_Continuity_Strong (G : GPT V) [TopologicalSpace V] : Prop :=
       (∀ t : unitInterval, ∀ ρ ∈ G.states, γ t ρ ∈ G.states) ∧
       (∀ t : unitInterval, Function.Bijective (γ t))
 
+/-- **Axiom 5 strong form WITH pure-state preservation along the path.**
+The framework's intended axiom refinement: the path of state-preserving
+bijective linear maps should ALSO preserve pure states (extreme points
+of the state space) along the way.
+
+This refinement is motivated by Axiom IV (particulars as stable patterns):
+a stable particular pattern should not "smear out" to a mixture along
+reversible dynamics. Without this refinement, Classical n ≥ 2 satisfies
+the bare `Axiom5_Continuity_Strong` (via non-vertex-preserving paths
+like `t·I + (1-t)·swap`); WITH this refinement, Classical n ≥ 2 fails
+the axiom (per the L7 closure in `Classical.lean`).
+
+This is the framework's first concrete operational consequence of the
+"metaphysics-fixed, axioms-adjustable" methodology. -/
+def Axiom5_Continuity_Strong_Pure (G : GPT V) [TopologicalSpace V] : Prop :=
+  ∀ ρ₁ ρ₂ : V,
+    IsExtreme ℝ G.states {ρ₁} → IsExtreme ℝ G.states {ρ₂} →
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      γ 0 = LinearMap.id ∧
+      γ 1 ρ₁ = ρ₂ ∧
+      (∀ t : unitInterval, ∀ ρ ∈ G.states, γ t ρ ∈ G.states) ∧
+      (∀ t : unitInterval, Function.Bijective (γ t)) ∧
+      -- The refinement: the path preserves extreme points along the way.
+      (∀ t : unitInterval, ∀ ρ, IsExtreme ℝ G.states {ρ} →
+        IsExtreme ℝ G.states {γ t ρ})
+
 /-- **Bridge theorem.** `Axiom5_Continuity_Strong G` is derivable from
 a `TransitiveAgency G`, provided that pure states in the GPT sense
 (membership in states + extremality) come with state-space membership.
