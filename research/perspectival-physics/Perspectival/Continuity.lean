@@ -1109,6 +1109,34 @@ theorem TransitiveAgency.trivial_impossible
   rw [h_avail]
   rfl
 
+/-! ### Positive existence: trivial TransitiveAgency when pure states are unique
+
+The negative results above show classical n ≥ 2 has no TransitiveAgency.
+The POSITIVE complement: any GPT whose pure states are unique (i.e.,
+all pure states coincide) admits a trivial TransitiveAgency, since the
+identity is sufficient to "transport" any pure state to itself.
+
+This is degenerate (no non-trivial dynamics) but confirms that
+`TransitiveAgency` is a satisfiable predicate. Non-degenerate positive
+existence — a GPT with multiple pure states where TransitiveAgency
+holds — requires e.g. the qubit (U(2) acts transitively on pure states),
+which is R4 in the roadmap. -/
+
+/-- If a GPT has at most one pure state, the trivial strict agency
+extends to a `TransitiveAgency`. -/
+def TransitiveAgency.ofUniquePureState
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V)
+    (h_unique : ∀ ρ₁ ρ₂ : V, PureState G ρ₁ → PureState G ρ₂ → ρ₁ = ρ₂) :
+    TransitiveAgency G where
+  toStrictConnectedAgency := trivialStrictAgency G
+  transitive_on_pure := by
+    intro ρ₁ ρ₂ hp₁ hp₂
+    have heq : ρ₁ = ρ₂ := h_unique ρ₁ ρ₂ hp₁ hp₂
+    refine ⟨StrictReversible.id G, rfl, ?_⟩
+    show (LinearMap.id : V →ₗ[ℝ] V) ρ₁ = ρ₂
+    exact heq
+
 /-! ### TransitiveAgency → Hardy Axiom 5 (strong form)
 
 The deepest bridge in the agency hierarchy: a `TransitiveAgency` G
