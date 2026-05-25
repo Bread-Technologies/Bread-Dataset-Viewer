@@ -934,6 +934,41 @@ theorem DecoherenceEquivalent_iff_tier_A {P : Type u} {C : Type v}
     DecoherenceEquivalent ch₁ ch₂ ↔ tierAEventCount ch₁ = tierAEventCount ch₂ :=
   Iff.rfl
 
+/-! ## Compositional behavior under DecoherenceEquivalent
+
+DecoherenceEquivalent is preserved by trajectory concatenation in
+both arguments, making it a congruence on the chain monoid. -/
+
+/-- **DecoherenceEquivalent is congruent under append (left).** If
+two chains are decoherence-equivalent and we append the same chain
+to each, the results are still decoherence-equivalent. -/
+theorem DecoherenceEquivalent_append_left {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂)
+    (ch_post : RealityChain' P C R₂ R₃) :
+    DecoherenceEquivalent (ch₁.append ch_post) (ch₂.append ch_post) := by
+  show (ch₁.append ch_post).actualizationCount
+      = (ch₂.append ch_post).actualizationCount
+  rw [RealityChain'.append_actualizationCount,
+      RealityChain'.append_actualizationCount]
+  show ch₁.actualizationCount + _ = ch₂.actualizationCount + _
+  rw [h]
+
+/-- **DecoherenceEquivalent is congruent under append (right).** -/
+theorem DecoherenceEquivalent_append_right {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch_pre : RealityChain' P C R₁ R₂)
+    {ch₁ ch₂ : RealityChain' P C R₂ R₃}
+    (h : DecoherenceEquivalent ch₁ ch₂) :
+    DecoherenceEquivalent (ch_pre.append ch₁) (ch_pre.append ch₂) := by
+  show (ch_pre.append ch₁).actualizationCount
+      = (ch_pre.append ch₂).actualizationCount
+  rw [RealityChain'.append_actualizationCount,
+      RealityChain'.append_actualizationCount]
+  show _ + ch₁.actualizationCount = _ + ch₂.actualizationCount
+  rw [h]
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
