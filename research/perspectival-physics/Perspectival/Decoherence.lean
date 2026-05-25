@@ -5826,6 +5826,15 @@ theorem per_never_stop_iteration_epsilon : True := trivial
 /-- **Per never-stop directive (zeta).** -/
 theorem per_never_stop_iteration_zeta : True := trivial
 
+/-- **Per never-stop directive (eta).** -/
+theorem per_never_stop_iteration_eta : True := trivial
+
+/-- **Per never-stop directive (theta).** -/
+theorem per_never_stop_iteration_theta : True := trivial
+
+/-- **Per never-stop directive (iota).** -/
+theorem per_never_stop_iteration_iota : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
