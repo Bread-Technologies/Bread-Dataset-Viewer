@@ -1218,6 +1218,23 @@ instance (priority := 60) TransitiveAgency.ofPurePreserving
     [PPT : PurePreservingTransitiveAgency G] : TransitiveAgency G :=
   PPT.toTransitiveAgency
 
+/-! **Note on positive existence for L7.**
+
+A naive `PurePreservingTransitiveAgency.ofUniquePureState` constructor
+attempt fails because the L7 axiom requires that EVERY
+`StrictReversiblePath` between elements of `avail` preserves pure
+states along the way — not just the specific path provided by
+`strict_paths`. Even on trivial-agency GPTs, one can construct
+StrictReversiblePaths that don't preserve pure states (via interior
+maps).
+
+The proper positive-existence story for L7 requires either (i)
+refactoring the path notion to a `PurePreservingStrictReversiblePath`
+structure, or (ii) restricting the L7 quantifier to the
+agency-supplied path. The current formulation captures the strongest
+no-go consequence (the L7 closure on Classical n ≥ 2, conditional on
+reverse R1) but leaves positive instantiation for future work. -/
+
 /-! ### Cardinality lower bounds from TransitiveAgency
 
 A `TransitiveAgency` on a GPT with multiple distinct pure states
