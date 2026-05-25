@@ -3968,6 +3968,29 @@ theorem complexity_length_bounds {P : Type u} {C : Type v}
       ∧ trajectoryComplexity ch ≤ 2 * ch.length :=
   ⟨complexity_ge_length ch, complexity_le_twice_length ch⟩
 
+/-- **Chains have no rewind operation (no_return_to_potential at chain level).**
+For any strict chain `ch : R₁ → R₂` and any meeting m that is actualized
+at R₁, it remains actualized at R₂. The framework's "no rewind" content
+at the trajectory level. -/
+theorem chain_no_rewind {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    {m : Meeting P C} (h_act : R₁ m = MeetingStatus.Actualized) :
+    R₂ m = MeetingStatus.Actualized :=
+  no_return_to_potential ch.implies_successor h_act
+
+/-- **No-rewind certificate at the trajectory level.** -/
+theorem chain_no_rewind_certificate :
+    -- Once actualized, remains actualized along chains.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (m : Meeting P C),
+      R₁ m = MeetingStatus.Actualized →
+      R₂ m = MeetingStatus.Actualized) ∧
+    -- Past growth follows from this.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂), past R₁ ⊆ past R₂) :=
+  ⟨fun ch _m h_act => chain_no_rewind ch h_act,
+   fun ch => ch.past_monotone'⟩
+
 /-- **Complexity-length bounds certificate.** -/
 theorem complexity_length_bounds_certificate :
     -- Lower bound: complexity ≥ length.
