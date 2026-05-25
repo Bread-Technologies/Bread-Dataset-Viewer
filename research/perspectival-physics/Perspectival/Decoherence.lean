@@ -4538,6 +4538,17 @@ example (R : Reality Bool Bool) :
   intro base
   exact loop_npow_tierAEventCount base 100
 
+/-- **Worked example: nil-power equals nil.** -/
+example (R : Reality Bool Bool) (n : ℕ) :
+    ((1 : RealityChain' Bool Bool R R) ^ n) = (1 : RealityChain' Bool Bool R R) :=
+  one_pow n
+
+/-- **Worked example: arbitrary loop power one is the loop.** -/
+example (R : Reality Bool Bool)
+    (ch : RealityChain' Bool Bool R R) :
+    ch ^ 1 = ch :=
+  pow_one ch
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
