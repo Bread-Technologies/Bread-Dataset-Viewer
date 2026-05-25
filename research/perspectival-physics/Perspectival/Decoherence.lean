@@ -3769,6 +3769,63 @@ theorem distinct_counts_distinct_quotient {P : Type u} {C : Type v}
   distinct_class_distinct_quotient ch₁ ch₂
     (distinct_counts_distinct_classes ch₁ ch₂ h)
 
+/-- **Decoherence framework MASTER certificate.** A single Lean
+theorem bundling EVERY major structural result of the Decoherence
+module's loop submonoid + quotient algebra into one referenceable
+object. Includes 10 facts:
+1. Loop submonoid: R → R chains have count 0.
+2. Coherent kernel: count = 0 ↔ R₁ = R₂.
+3. Trio sum law: count + bracketed = length.
+4. Path-independent coherence: status depends on endpoints.
+5. Monoid morphism: counts add under append.
+6. Mathlib Monoid: loops at R form a Monoid.
+7. Loop power preserves coherence: (ch ^ n) has count 0.
+8. Quotient embeds into ℕ: count is injective on quotient.
+9. Boltzmann brain shadow: loop powers all coherent.
+10. No Maxwell demon: count monotonic under extension. -/
+theorem decoherence_framework_master_certificate :
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R), tierAEventCount ch = 0) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch = 0 ↔ R₁ = R₂) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch + ch.bracketedCount = ch.length) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂)
+        = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    -- (6) loopMonoid is registered as instance — implicit content
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      ch₁ * ch₂ = ch₁.append ch₂) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      tierAEventCount (ch ^ n) = 0) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (q₁ q₂ : DecoherenceQuotient R₁ R₂),
+      q₁.count = q₂.count → q₁ = q₂) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : Nat),
+      tierAEventCount (loopPower ch n) = 0) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂)) :=
+  ⟨fun ch => loop_is_coherent ch,
+   fun ch => coherent_kernel_iff_endpoints_eq ch,
+   fun ch => trio_sum_law ch,
+   fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂,
+   fun ch₁ ch₂ => loop_mul_eq_append ch₁ ch₂,
+   fun ch n => loop_npow_tierAEventCount ch n,
+   fun q₁ q₂ h => DecoherenceQuotient.count_injective q₁ q₂ h,
+   fun ch n => loopPower_tierAEventCount ch n,
+   fun ch₁ ch₂ => no_maxwell_demon ch₁ ch₂⟩
+
 /-- **Class projection certificate.** Bundles the canonical projection
 content. -/
 theorem class_projection_certificate :
