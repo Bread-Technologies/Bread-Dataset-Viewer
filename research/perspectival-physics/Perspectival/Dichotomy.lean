@@ -277,6 +277,32 @@ theorem framework_so3_axes_present :
    ⟨QubitGPT.rotYOneParameterFamily⟩,
    ⟨QubitGPT.rotZOneParameterFamily⟩⟩
 
+/-! ## Hardy N (operational dimension) for Classical -/
+
+/-- **Vertex map is injective.** Distinct indices give distinct vertices. -/
+private theorem vertex_injective (n : ℕ) :
+    Function.Injective (Classical.vertex n) := by
+  intro i j hij
+  by_contra h
+  have h1 : Classical.vertex n i i = 1 := by
+    show (if i = i then (1 : ℝ) else 0) = 1; simp
+  have h2 : Classical.vertex n j i = 0 := by
+    show (if j = i then (1 : ℝ) else 0) = 0
+    rw [if_neg (fun heq => h heq.symm)]
+  have heq := congr_fun hij i
+  rw [h1, h2] at heq
+  exact absurd heq one_ne_zero
+
+/-- **Classical Hardy N lower bound**: the Classical n-outcome GPT has
+at least an `n`-element distinguishability set, namely the vertices. -/
+theorem classical_hardy_N_at_least (n : ℕ) :
+    ∃ S : Finset (Classical.V n), S.card = n ∧
+      Hardy.DistinguishabilitySet (Classical.gpt n) S := by
+  refine ⟨(Finset.univ : Finset (Fin n)).image (Classical.vertex n), ?_, ?_⟩
+  · rw [Finset.card_image_of_injective _ (vertex_injective n)]
+    simp
+  · exact Classical.vertex_distinguishability_set n
+
 /-! ## Hardy A4 dimension applies to all three trichotomy points -/
 
 /-- The Hardy A4 dimension multiplicativity holds for any pair of GPT
