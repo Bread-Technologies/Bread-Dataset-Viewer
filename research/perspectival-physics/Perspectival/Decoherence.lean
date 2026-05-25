@@ -4424,6 +4424,24 @@ theorem rate_length_is_length {P : Type u} {C : Type v}
     {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
     (actualizationRate ch).2 = ch.length := rfl
 
+/-- **Chain of length 1 has either 0 or 1 count.** A chain of length 1
+is a singleton, which is either bracketed (count 0) or actualization
+(count 1). -/
+theorem length_one_count_dichotomy {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.length = 1) :
+    ch.actualizationCount = 0 ∨ ch.actualizationCount = 1 := by
+  have h_le := ch.actualizationCount_le_length
+  omega
+
+/-- **Chain of length 0 has 0 count.** Trivial: empty chain. -/
+theorem length_zero_count_zero {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.length = 0) :
+    ch.actualizationCount = 0 := by
+  have h_le := ch.actualizationCount_le_length
+  omega
+
 /-- **The framework's 400-commit milestone summary.** A consolidating
 statement that the decoherence module's content is comprehensive at
 the count-based discrete level. This theorem doesn't add new content
