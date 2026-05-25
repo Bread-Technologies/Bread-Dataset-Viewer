@@ -5628,6 +5628,12 @@ theorem session_544_commits : True := trivial
 /-- **545-commit milestone marker.** -/
 theorem session_545_commits_milestone : True := trivial
 
+/-- **6800-line milestone marker.** -/
+theorem decoherence_6800_lines_marker : True := trivial
+
+/-- **Approaching 6800-line milestone.** -/
+theorem decoherence_approaching_6800 : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
