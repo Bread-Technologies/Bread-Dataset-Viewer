@@ -4320,6 +4320,22 @@ theorem loop_pow_pow_commute {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (m n : ℕ) :
     Commute (ch ^ m) (ch ^ n) := Commute.pow_pow_self ch m n
 
+/-- **Loop power length is monotonic in exponent.** -/
+theorem loop_npow_length_monotone {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) {m n : ℕ}
+    (h : m ≤ n) :
+    (ch ^ m).length ≤ (ch ^ n).length := by
+  rw [loop_npow_length, loop_npow_length]
+  exact Nat.mul_le_mul_right ch.length h
+
+/-- **Loop power length is strictly monotonic for positive-length loops.** -/
+theorem loop_npow_length_strict_monotone {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R)
+    (h_pos : 0 < ch.length) {m n : ℕ} (h : m < n) :
+    (ch ^ m).length < (ch ^ n).length := by
+  rw [loop_npow_length, loop_npow_length]
+  exact (Nat.mul_lt_mul_right h_pos).mpr h
+
 /-- **Grading certificate.** Length is a ℕ-valued grading function
 on the chain monoid, with composition increasing additively and
 nil being the unit. -/
