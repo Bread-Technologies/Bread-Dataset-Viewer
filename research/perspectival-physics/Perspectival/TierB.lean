@@ -1017,6 +1017,33 @@ appending nil on the left gives back the right chain. -/
         | RealityChain.cons s r, c => RealityChain.cons s (r.append c)) = ch
   rfl
 
+/-- **Append with nil-right is also identity for strict chains.**
+Proved by induction on the left chain. -/
+theorem RealityChain'.append_nil {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂),
+      ch.append (RealityChain'.nil R₂) = ch
+  | _, _, RealityChain'.nil R => by
+      show RealityChain'.append (RealityChain'.nil R) (RealityChain'.nil R)
+        = RealityChain'.nil R
+      rfl
+  | _, _, RealityChain'.cons step rest => by
+      show RealityChain'.cons step (rest.append (RealityChain'.nil _))
+        = RealityChain'.cons step rest
+      rw [RealityChain'.append_nil rest]
+
+/-- **Append with nil-right is also identity for plain chains.** -/
+theorem RealityChain.append_nil {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂),
+      ch.append (RealityChain.nil R₂) = ch
+  | _, _, RealityChain.nil R => by
+      show RealityChain.append (RealityChain.nil R) (RealityChain.nil R)
+        = RealityChain.nil R
+      rfl
+  | _, _, RealityChain.cons step rest => by
+      show RealityChain.cons step (rest.append (RealityChain.nil _))
+        = RealityChain.cons step rest
+      rw [RealityChain.append_nil rest]
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
