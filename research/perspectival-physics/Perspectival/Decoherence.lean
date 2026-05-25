@@ -3178,6 +3178,54 @@ theorem four_chain_count_addition {P : Type u} {C : Type v}
       RealityChain'.append_actualizationCount,
       RealityChain'.append_actualizationCount]
 
+/-- **The canonical projection to DecoherenceQuotient.** Every chain
+maps to its decoherence-equivalence class via `Quotient.mk`. -/
+def toDecoherenceClass {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    DecoherenceQuotient R₁ R₂ :=
+  Quotient.mk _ ch
+
+/-- **Equivalent chains have same class.** -/
+theorem toDecoherenceClass_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂) :
+    toDecoherenceClass ch₁ = toDecoherenceClass ch₂ :=
+  Quotient.sound h
+
+/-- **Same class implies decoherence-equivalent.** -/
+theorem class_eq_implies_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : toDecoherenceClass ch₁ = toDecoherenceClass ch₂) :
+    DecoherenceEquivalent ch₁ ch₂ :=
+  Quotient.exact h
+
+/-- **Class equality iff equivalence.** -/
+theorem class_eq_iff_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    toDecoherenceClass ch₁ = toDecoherenceClass ch₂ ↔
+    DecoherenceEquivalent ch₁ ch₂ :=
+  ⟨class_eq_implies_equivalent, toDecoherenceClass_equivalent⟩
+
+/-- **Class projection certificate.** Bundles the canonical projection
+content. -/
+theorem class_projection_certificate :
+    -- (a) Every chain has a class.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ∃ (q : DecoherenceQuotient R₁ R₂), q = toDecoherenceClass ch) ∧
+    -- (b) Equivalent chains have same class.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      DecoherenceEquivalent ch₁ ch₂ →
+      toDecoherenceClass ch₁ = toDecoherenceClass ch₂) ∧
+    -- (c) Class projection's count agrees with chain count.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (toDecoherenceClass ch).count = tierAEventCount ch) :=
+  ⟨fun ch => ⟨toDecoherenceClass ch, rfl⟩,
+   fun _ch₁ _ch₂ h => toDecoherenceClass_equivalent h,
+   fun _ => rfl⟩
+
 /-- **Tier B reversibility certificate.** Bundles the coherent-chain
 characterization. -/
 theorem tier_B_reversibility_certificate :
