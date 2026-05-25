@@ -5195,6 +5195,19 @@ theorem quick_ref_count_le_length {P : Type u} {C : Type v}
     ch.actualizationCount ≤ ch.length :=
   ch.actualizationCount_le_length
 
+/-- **Quick reference: bracketed is always ≤ length.** -/
+theorem quick_ref_bracketed_le_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.bracketedCount ≤ ch.length :=
+  length_ge_bracketed ch
+
+/-- **Quick reference: complexity is between length and 2*length.** -/
+theorem quick_ref_complexity_bounds {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.length ≤ trajectoryComplexity ch
+      ∧ trajectoryComplexity ch ≤ 2 * ch.length :=
+  ⟨complexity_ge_length ch, complexity_le_twice_length ch⟩
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
