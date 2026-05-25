@@ -3122,6 +3122,17 @@ theorem coherent_witnesses_tier_B_reversibility {P : Type u} {C : Type v}
     omega
   · exact coherent_complexity ch h_co
 
+/-- **Decoherence content non-negativity.** All counts are
+non-negative — a trivial fact (counts are ℕ) but useful as a
+named theorem for citation. -/
+theorem decoherence_content_non_negative {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    0 ≤ tierAEventCount ch
+      ∧ 0 ≤ ch.bracketedCount
+      ∧ 0 ≤ ch.length
+      ∧ 0 ≤ trajectoryComplexity ch :=
+  ⟨Nat.zero_le _, Nat.zero_le _, Nat.zero_le _, Nat.zero_le _⟩
+
 /-- **Tier B reversibility certificate.** Bundles the coherent-chain
 characterization. -/
 theorem tier_B_reversibility_certificate :
