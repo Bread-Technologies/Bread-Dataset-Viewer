@@ -1692,6 +1692,28 @@ theorem loop_insertion_length_increases {P : Type u} {C : Type v}
     (loop.append ch).length = loop.length + ch.length :=
   RealityChain'.append_length loop ch
 
+/-- **Loop conjugation preserves count.** Sandwiching a chain by
+loops on both sides preserves the actualization count. -/
+theorem loop_conjugation_preserves_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop_pre : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop_post : RealityChain' P C R₂ R₂) :
+    tierAEventCount (loop_pre.append (ch.append loop_post))
+      = tierAEventCount ch := by
+  rw [loop_prepend_preserves_count loop_pre (ch.append loop_post),
+      loop_append_preserves_count ch loop_post]
+
+/-- **Loop conjugation is decoherence-equivalent.** -/
+theorem loop_conjugation_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop_pre : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop_post : RealityChain' P C R₂ R₂) :
+    DecoherenceEquivalent
+      (loop_pre.append (ch.append loop_post)) ch :=
+  loop_conjugation_preserves_count loop_pre ch loop_post
+
 /-- **Loop-insertion certificate.** Bundles the loop-insertion content. -/
 theorem loop_insertion_certificate :
     -- (a) Prepending a loop preserves count.
