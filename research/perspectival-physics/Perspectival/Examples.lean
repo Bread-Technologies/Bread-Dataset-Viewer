@@ -16794,3 +16794,26 @@ example {W : Type u} [Wantable W] [DecidableEq W] :
     (PTrans.complement : PTrans W) ≠ 1 := by
   intro ⟨w, hw⟩
   exact stable_nontrivial_implies_complement_ne_one w hw
+
+/-! ## Fin 2 has Stable_nontrivial (analogous to Bool) -/
+
+/-- For Fin 2 with swap-complement, 0 ≠ complement 0 = 1. -/
+example : (0 : Fin 2) ≠ Wantable.complement (0 : Fin 2) := by
+  intro h
+  have : (0 : Fin 2) = 1 := h
+  exact absurd this (by decide)
+
+/-- Fin 2 with swap-complement has Stable_nontrivial. -/
+example : PatternStableWantable.Stable_nontrivial (0 : Fin 2) := by
+  rw [PatternStableWantable.stable_nontrivial_iff]
+  intro h
+  have : (0 : Fin 2) = 1 := h
+  exact absurd this (by decide)
+
+/-- Fin 2 has a NON-TRIVIAL PatternStableWantable instance. -/
+example : PatternStableWantable (Fin 2) :=
+  PatternStableWantable.ofStableNontrivialWitness (W := Fin 2) 0
+    (by rw [PatternStableWantable.stable_nontrivial_iff]
+        intro h
+        have : (0 : Fin 2) = 1 := h
+        exact absurd this (by decide))
