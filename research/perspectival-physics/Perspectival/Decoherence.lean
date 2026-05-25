@@ -4028,6 +4028,26 @@ example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
   · -- DE: prepending the loop preserves equivalence class.
     exact loop_prepend_equivalent (base ^ 2) act
 
+/-- **Worked example: base^5 has count 0 via Monoid power.** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (base ^ 5).actualizationCount = 0 := by
+  intro base
+  exact loop_npow_tierAEventCount base 5
+
+/-- **Worked example: base^5 has length 5 via Monoid power.** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (base ^ 5).length = 5 := by
+  intro base
+  rw [loop_npow_length]
+  show 5 * (RealityChain'.singleton _).length = 5
+  rw [RealityChain'.singleton_length]
+
 /-- **Complexity-length bounds certificate.** -/
 theorem complexity_length_bounds_certificate :
     -- Lower bound: complexity ≥ length.
