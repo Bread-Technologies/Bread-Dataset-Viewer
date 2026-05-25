@@ -1922,6 +1922,17 @@ instance DecoherenceEquivalent_decidable {P : Type u} {C : Type v}
     Decidable (DecoherenceEquivalent ch₁ ch₂) :=
   inferInstanceAs (Decidable (ch₁.actualizationCount = ch₂.actualizationCount))
 
+/-- **Strict chains form a Setoid under DecoherenceEquivalent.** The
+quotient `RealityChain' P C R₁ R₂ / DecoherenceEquivalent` is a
+natural-number-indexed lattice (indexed by counts). -/
+instance DecoherenceEquivalent_setoid {P : Type u} {C : Type v}
+    (R₁ R₂ : Reality P C) :
+    Setoid (RealityChain' P C R₁ R₂) where
+  r := DecoherenceEquivalent
+  iseqv := ⟨fun ch => DecoherenceEquivalent_refl ch,
+            fun h => DecoherenceEquivalent_symm h,
+            fun h₁₂ h₂₃ => DecoherenceEquivalent_trans h₁₂ h₂₃⟩
+
 /-- **Trio-of-morphisms certificate.** All three count-style measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms with
 zero on nil. -/
