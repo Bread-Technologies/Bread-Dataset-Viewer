@@ -1904,6 +1904,16 @@ theorem trio_sum_law {P : Type u} {C : Type v}
     tierAEventCount ch + ch.bracketedCount = ch.length :=
   ch.counts_sum
 
+/-- **Count commutativity on loops.** For two loop chains at the
+same R, the count of their composition (in either order) is the
+same: both are zero. -/
+theorem loop_count_commutative {P : Type u} {C : Type v}
+    {R : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R R) :
+    tierAEventCount (ch₁.append ch₂) = tierAEventCount (ch₂.append ch₁) := by
+  rw [tierAEventCount_append, tierAEventCount_append]
+  omega
+
 /-- **Trio-of-morphisms certificate.** All three count-style measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms with
 zero on nil. -/
