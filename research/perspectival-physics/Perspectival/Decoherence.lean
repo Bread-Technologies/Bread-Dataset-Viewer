@@ -3915,6 +3915,21 @@ theorem triple_compose_preserves_equivalence {P : Type u} {C : Type v}
       ((ch₁.append ch₂).append ch₃) ((ch₁'.append ch₂').append ch₃') :=
   compose_preserves_equivalence (compose_preserves_equivalence h₁ h₂) h₃
 
+/-- **Loop monoid is inhabited.** -/
+instance loopMonoid_inhabited {P : Type u} {C : Type v} (R : Reality P C) :
+    Inhabited (RealityChain' P C R R) :=
+  ⟨RealityChain'.nil R⟩
+
+/-- **Loop monoid default is nil.** -/
+theorem loopMonoid_default_nil {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    (default : RealityChain' P C R R) = RealityChain'.nil R := rfl
+
+/-- **Loop monoid default has count 0.** -/
+theorem loopMonoid_default_count {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    tierAEventCount (default : RealityChain' P C R R) = 0 := rfl
+
 /-- **Three-level anti-realism witness.** The framework's anti-realism
 content holds at multiple levels:
 1. STATUS (path-independent): coherence depends only on endpoints.
