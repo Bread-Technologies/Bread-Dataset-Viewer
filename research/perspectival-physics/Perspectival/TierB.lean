@@ -1158,6 +1158,18 @@ theorem RealityChain'.bare_tier_B_density {P : Type u} {C : Type v}
   show (ch.actualizationCount, ch.length) = (0, ch.length)
   rw [h]
 
+/-- **Pure-actualization density: a chain with no bracketed steps
+has density (length, length).** Models a "free-fall" actualization
+trajectory where every step crosses a seam. -/
+theorem RealityChain'.pure_actualization_density {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.bracketedCount = 0) :
+    ch.actualizationDensity = (ch.length, ch.length) := by
+  show (ch.actualizationCount, ch.length) = (ch.length, ch.length)
+  have h_sum := ch.counts_sum
+  rw [h] at h_sum
+  rw [← h_sum]; simp
+
 /-- **Worked example: chain-monoid associativity on concrete trajectory.**
 Demonstrates that `(ch₁ ++ ch₂) ++ ch₃ = ch₁ ++ (ch₂ ++ ch₃)` holds
 strictly for RealityChain'. -/
