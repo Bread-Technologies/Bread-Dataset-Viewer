@@ -12,6 +12,7 @@ import Perspectival.Distinguish
 import Perspectival.WantableGPT
 import Perspectival.Examples
 import Perspectival.CircleGPT
+import Perspectival.Dichotomy
 
 /-!
 # Perspectival Physics

@@ -3905,6 +3905,259 @@ theorem classical_general_no_pure_preserving_transitive_agency_conditional
   exact classical_general_vertex_preserving_no_transitive_agency_unconditional
     (n := n) h T hvp_paths
 
+/-! ### Reverse R1: every pure state of Classical n is a vertex
+
+This is the converse of `vertex_is_pure`. Together they establish that
+the pure states of the classical n-outcome GPT are *exactly* the
+vertices of the simplex. The classical statement from convex analysis
+is: the extreme points of the standard simplex `Δⁿ⁻¹ ⊂ ℝⁿ` are exactly
+its `n` vertices.
+
+Proof strategy (contrapositive):
+  * If a state `ρ` has **at most one** strictly-positive coordinate,
+    then since `∑ ρ k = 1` that coordinate must equal `1` and all
+    others vanish — so `ρ` is a vertex.
+  * If `ρ` has **two or more** strictly-positive coordinates at
+    indices `i ≠ j`, then set
+      `ε := min(ρ i, ρ j) / 2 > 0`,
+      `ρ' := ρ + ε·(e_i - e_j)`,
+      `ρ'' := ρ - ε·(e_i - e_j)`.
+    Both `ρ'`, `ρ''` lie in `states n` (nonneg coords preserved by
+    construction; sums unchanged). And
+      `ρ = (1/2) ρ' + (1/2) ρ''  ∈  openSegment ℝ ρ' ρ''`,
+    with `ρ' ≠ ρ`. By extremality of `{ρ}`, this forces `ρ' = ρ`,
+    contradiction.
+-/
+
+/-- **Reverse R1 (every pure state of Classical n is a vertex).**
+The converse of `vertex_is_pure`. Combined, the pure states of
+`gpt n` are exactly the `n` vertices `vertex n i`. -/
+theorem pure_state_of_classical_is_vertex (n : ℕ) (ρ : V n)
+    (hρ_pure : Perspectival.Continuity.PureState (gpt n) ρ) :
+    ρ ∈ vertexSet n := by
+  obtain ⟨hρ_state, hρ_ext⟩ := hρ_pure
+  -- hρ_state : ρ ∈ states n  (nonneg and sums to 1)
+  obtain ⟨hρ_nonneg, hρ_sum⟩ := hρ_state
+  -- Suppose for contradiction ρ has two strictly-positive coordinates.
+  by_cases htwo : ∃ i j : Fin n, i ≠ j ∧ 0 < ρ i ∧ 0 < ρ j
+  · exfalso
+    obtain ⟨i, j, hij, hρi, hρj⟩ := htwo
+    -- Set ε := min(ρ i, ρ j) / 2 > 0.
+    set ε : ℝ := min (ρ i) (ρ j) / 2 with hε_def
+    have hmin_pos : 0 < min (ρ i) (ρ j) := lt_min hρi hρj
+    have hε_pos : 0 < ε := by
+      show 0 < min (ρ i) (ρ j) / 2
+      linarith
+    have hε_le_i : ε ≤ ρ i := by
+      show min (ρ i) (ρ j) / 2 ≤ ρ i
+      have h1 : min (ρ i) (ρ j) ≤ ρ i := min_le_left _ _
+      linarith
+    have hε_le_j : ε ≤ ρ j := by
+      show min (ρ i) (ρ j) / 2 ≤ ρ j
+      have h1 : min (ρ i) (ρ j) ≤ ρ j := min_le_right _ _
+      linarith
+    -- Define ρ' (add ε at i, subtract ε at j) and ρ'' (the opposite).
+    let ρ' : V n := fun k => if k = i then ρ k + ε
+                              else if k = j then ρ k - ε else ρ k
+    let ρ'' : V n := fun k => if k = i then ρ k - ε
+                               else if k = j then ρ k + ε else ρ k
+    -- Helper: evaluating ρ' at each kind of index.
+    have hρ'_i : ρ' i = ρ i + ε := by
+      show (if i = i then ρ i + ε else if i = j then ρ i - ε else ρ i) = ρ i + ε
+      simp
+    have hρ'_j : ρ' j = ρ j - ε := by
+      show (if j = i then ρ j + ε else if j = j then ρ j - ε else ρ j) = ρ j - ε
+      rw [if_neg (Ne.symm hij), if_pos rfl]
+    have hρ'_other : ∀ k, k ≠ i → k ≠ j → ρ' k = ρ k := by
+      intro k hki hkj
+      show (if k = i then ρ k + ε else if k = j then ρ k - ε else ρ k) = ρ k
+      rw [if_neg hki, if_neg hkj]
+    have hρ''_i : ρ'' i = ρ i - ε := by
+      show (if i = i then ρ i - ε else if i = j then ρ i + ε else ρ i) = ρ i - ε
+      simp
+    have hρ''_j : ρ'' j = ρ j + ε := by
+      show (if j = i then ρ j - ε else if j = j then ρ j + ε else ρ j) = ρ j + ε
+      rw [if_neg (Ne.symm hij), if_pos rfl]
+    have hρ''_other : ∀ k, k ≠ i → k ≠ j → ρ'' k = ρ k := by
+      intro k hki hkj
+      show (if k = i then ρ k - ε else if k = j then ρ k + ε else ρ k) = ρ k
+      rw [if_neg hki, if_neg hkj]
+    -- Pointwise nonneg for ρ'.
+    have hρ'_nonneg : ∀ k, 0 ≤ ρ' k := by
+      intro k
+      by_cases hki : k = i
+      · subst hki; rw [hρ'_i]; linarith [hρ_nonneg k]
+      · by_cases hkj : k = j
+        · subst hkj; rw [hρ'_j]; linarith
+        · rw [hρ'_other k hki hkj]; exact hρ_nonneg k
+    -- Pointwise nonneg for ρ''.
+    have hρ''_nonneg : ∀ k, 0 ≤ ρ'' k := by
+      intro k
+      by_cases hki : k = i
+      · subst hki; rw [hρ''_i]; linarith
+      · by_cases hkj : k = j
+        · subst hkj; rw [hρ''_j]; linarith [hρ_nonneg k]
+        · rw [hρ''_other k hki hkj]; exact hρ_nonneg k
+    -- Express ρ' k = ρ k + δi k - δj k pointwise, where δa k = ε if k = a else 0.
+    -- Then ∑ ρ' k = ∑ ρ k + ε - ε = ∑ ρ k = 1.
+    have hρ'_pointwise : ∀ k, ρ' k = ρ k + (if k = i then ε else 0) - (if k = j then ε else 0) := by
+      intro k
+      by_cases hki : k = i
+      · subst hki
+        have hkj : k ≠ j := hij
+        rw [hρ'_i, if_pos rfl, if_neg hkj]
+        ring
+      · by_cases hkj : k = j
+        · subst hkj
+          rw [hρ'_j, if_neg hki, if_pos rfl]
+          ring
+        · rw [hρ'_other k hki hkj, if_neg hki, if_neg hkj]
+          ring
+    have hρ''_pointwise : ∀ k, ρ'' k = ρ k - (if k = i then ε else 0) + (if k = j then ε else 0) := by
+      intro k
+      by_cases hki : k = i
+      · subst hki
+        have hkj : k ≠ j := hij
+        rw [hρ''_i, if_pos rfl, if_neg hkj]
+        ring
+      · by_cases hkj : k = j
+        · subst hkj
+          rw [hρ''_j, if_neg hki, if_pos rfl]
+          ring
+        · rw [hρ''_other k hki hkj, if_neg hki, if_neg hkj]
+          ring
+    -- Sum-preservation for ρ'.
+    have hsum_ρ' : ∑ k, ρ' k = 1 := by
+      have hrw : ∑ k, ρ' k =
+          ∑ k, (ρ k + (if k = i then ε else 0) - (if k = j then ε else 0)) := by
+        apply Finset.sum_congr rfl
+        intro k _
+        exact hρ'_pointwise k
+      rw [hrw]
+      simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+      rw [hρ_sum]
+      have hi_sum : ∑ k, (if k = i then ε else (0 : ℝ)) = ε := by
+        rw [Finset.sum_ite_eq' Finset.univ i (fun _ => ε)]
+        simp
+      have hj_sum : ∑ k, (if k = j then ε else (0 : ℝ)) = ε := by
+        rw [Finset.sum_ite_eq' Finset.univ j (fun _ => ε)]
+        simp
+      rw [hi_sum, hj_sum]
+      ring
+    -- Sum-preservation for ρ''.
+    have hsum_ρ'' : ∑ k, ρ'' k = 1 := by
+      have hrw : ∑ k, ρ'' k =
+          ∑ k, (ρ k - (if k = i then ε else 0) + (if k = j then ε else 0)) := by
+        apply Finset.sum_congr rfl
+        intro k _
+        exact hρ''_pointwise k
+      rw [hrw]
+      simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+      rw [hρ_sum]
+      have hi_sum : ∑ k, (if k = i then ε else (0 : ℝ)) = ε := by
+        rw [Finset.sum_ite_eq' Finset.univ i (fun _ => ε)]
+        simp
+      have hj_sum : ∑ k, (if k = j then ε else (0 : ℝ)) = ε := by
+        rw [Finset.sum_ite_eq' Finset.univ j (fun _ => ε)]
+        simp
+      rw [hi_sum, hj_sum]
+      ring
+    have hρ'_state : ρ' ∈ states n := ⟨hρ'_nonneg, hsum_ρ'⟩
+    have hρ''_state : ρ'' ∈ states n := ⟨hρ''_nonneg, hsum_ρ''⟩
+    -- ρ = (1/2) ρ' + (1/2) ρ''.
+    have hρ_midpoint : (1/2 : ℝ) • ρ' + (1/2 : ℝ) • ρ'' = ρ := by
+      funext k
+      show (1/2 : ℝ) * ρ' k + (1/2 : ℝ) * ρ'' k = ρ k
+      by_cases hki : k = i
+      · subst hki; rw [hρ'_i, hρ''_i]; ring
+      · by_cases hkj : k = j
+        · subst hkj; rw [hρ'_j, hρ''_j]; ring
+        · rw [hρ'_other k hki hkj, hρ''_other k hki hkj]; ring
+    -- ρ' ≠ ρ (at index i, ρ' i = ρ i + ε > ρ i).
+    have hρ'_ne_ρ : ρ' ≠ ρ := by
+      intro h
+      have hi : ρ' i = ρ i := congr_fun h i
+      rw [hρ'_i] at hi
+      linarith
+    -- ρ ∈ openSegment ℝ ρ' ρ''.
+    have hρ_open : ρ ∈ openSegment ℝ ρ' ρ'' := by
+      refine ⟨1/2, 1/2, by norm_num, by norm_num, by norm_num, hρ_midpoint⟩
+    -- Apply extremality: ρ ∈ {ρ}, openSegment ⇒ ρ' ∈ {ρ} ⇒ ρ' = ρ.
+    have hρ'_eq : ρ' ∈ ({ρ} : Set (V n)) :=
+      hρ_ext.left_mem_of_mem_openSegment hρ'_state hρ''_state
+        (Set.mem_singleton _) hρ_open
+    rw [Set.mem_singleton_iff] at hρ'_eq
+    exact hρ'_ne_ρ hρ'_eq
+  · -- No two distinct coords are both > 0. ρ has at most one positive coord.
+    push_neg at htwo
+    -- htwo : ∀ i j, i ≠ j → 0 < ρ i → ¬ 0 < ρ j
+    -- Since ρ is nonneg, this means: at most one i has ρ i ≠ 0.
+    -- Since ∑ = 1, there is exactly one such i, and ρ i = 1.
+    -- Case: n = 0. Then no states (empty sum cannot equal 1).
+    by_cases hn : n = 0
+    · subst hn
+      -- Sum over Fin 0 is 0, but hρ_sum says it's 1.
+      exfalso
+      rw [show (Finset.univ : Finset (Fin 0)) = ∅ from rfl, Finset.sum_empty] at hρ_sum
+      exact zero_ne_one hρ_sum
+    · -- n ≥ 1. Pick the maximum-coordinate index. Actually, since sum > 0,
+      -- some coordinate is > 0. Pick that one and show it's the only one.
+      -- ∑ ρ = 1 > 0, so some k has ρ k > 0.
+      have h_exists_pos : ∃ k : Fin n, 0 < ρ k := by
+        by_contra hc
+        push_neg at hc
+        -- hc : ∀ k, ρ k ≤ 0. Combined with hρ_nonneg: ρ k = 0 for all k.
+        have hzero : ∀ k, ρ k = 0 := fun k => le_antisymm (hc k) (hρ_nonneg k)
+        have hsum0 : ∑ k, ρ k = 0 := by
+          apply Finset.sum_eq_zero
+          intro k _
+          exact hzero k
+        rw [hsum0] at hρ_sum
+        exact zero_ne_one hρ_sum
+      obtain ⟨i, hi_pos⟩ := h_exists_pos
+      -- Every other coord is 0.
+      have h_others_zero : ∀ k : Fin n, k ≠ i → ρ k = 0 := by
+        intro k hki
+        have h2 : ρ k ≤ 0 := htwo i k (Ne.symm hki) hi_pos
+        exact le_antisymm h2 (hρ_nonneg k)
+      -- Since ∑ = 1, ρ i = 1.
+      have hρi_one : ρ i = 1 := by
+        have hsum_split : ρ i + ∑ k ∈ Finset.univ.erase i, ρ k = 1 := by
+          rw [← Finset.sum_erase_add _ _ (Finset.mem_univ i)] at hρ_sum
+          linarith
+        have h_others_sum : ∑ k ∈ Finset.univ.erase i, ρ k = 0 := by
+          apply Finset.sum_eq_zero
+          intro k hk
+          have hki : k ≠ i := (Finset.mem_erase.mp hk).1
+          exact h_others_zero k hki
+        linarith
+      -- ρ = vertex n i.
+      refine ⟨i, ?_⟩
+      funext k
+      by_cases hki : k = i
+      · subst hki
+        show vertex n k k = ρ k
+        rw [hρi_one]
+        show (if k = k then (1 : ℝ) else 0) = 1
+        simp
+      · show vertex n i k = ρ k
+        rw [h_others_zero k hki]
+        show (if i = k then (1 : ℝ) else 0) = 0
+        rw [if_neg (fun h => hki h.symm)]
+
+/-- **L7 closure on Classical (unconditional).** No
+`PurePreservingTransitiveAgency` exists on Classical n for n ≥ 2.
+
+Uses `pure_state_of_classical_is_vertex` (reverse R1) to discharge the
+hypothesis in `classical_general_no_pure_preserving_transitive_agency_conditional`.
+-/
+theorem classical_general_no_pure_preserving_transitive_agency
+    {n : ℕ} (h : 1 < n)
+    (PPT : Perspectival.Continuity.PurePreservingTransitiveAgency (gpt n)) :
+    False :=
+  classical_general_no_pure_preserving_transitive_agency_conditional
+    (n := n) h PPT (pure_state_of_classical_is_vertex n)
+
 end Classical
 end Perspectival
 
