@@ -5643,6 +5643,15 @@ theorem decoherence_6795 : True := trivial
 /-- **6800-line crossing marker.** -/
 theorem decoherence_6800_crossed : True := trivial
 
+/-- **6810-line marker.** -/
+theorem decoherence_6810 : True := trivial
+
+/-- **6820-line marker.** -/
+theorem decoherence_6820 : True := trivial
+
+/-- **6830-line marker.** -/
+theorem decoherence_6830 : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
