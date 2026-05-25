@@ -1493,8 +1493,9 @@ deferred to future Mathlib-LieGroup wiring. -/
 def SmoothConnectedAgency.ofStrict
     {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
     {G : GPT V} (SCA : StrictConnectedAgency G) :
-    SmoothConnectedAgency G :=
-  { SCA with smooth_manifold_placeholder := trivial }
+    SmoothConnectedAgency G where
+  toStrictConnectedAgency := SCA
+  smooth_manifold_placeholder := trivial
 
 /-- **R7 conjecture holds trivially for any GPT with
 `StrictConnectedAgency`** at the scaffold-level smooth-structure.
