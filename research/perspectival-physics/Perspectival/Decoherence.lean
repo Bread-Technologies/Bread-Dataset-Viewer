@@ -922,6 +922,18 @@ theorem DecoherenceEquivalent_tier_A {P : Type u} {C : Type v}
     (h : DecoherenceEquivalent ch₁ ch₂) :
     tierAEventCount ch₁ = tierAEventCount ch₂ := h
 
+/-- **Trajectories with same Tier A content are decoherence-equivalent.** -/
+theorem same_tier_A_implies_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂)
+    (h : tierAEventCount ch₁ = tierAEventCount ch₂) :
+    DecoherenceEquivalent ch₁ ch₂ := h
+
+/-- **DecoherenceEquivalent iff equal tierAEventCount.** Iff form. -/
+theorem DecoherenceEquivalent_iff_tier_A {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    DecoherenceEquivalent ch₁ ch₂ ↔ tierAEventCount ch₁ = tierAEventCount ch₂ :=
+  Iff.rfl
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
