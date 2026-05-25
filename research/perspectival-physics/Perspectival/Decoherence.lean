@@ -4086,6 +4086,20 @@ theorem loopPower_count_additive {P : Type u} {C : Type v}
   rw [loopPower_actualizationCount, loopPower_actualizationCount,
       loopPower_actualizationCount]
 
+/-- **Loop power length additive (true linear scaling).** -/
+theorem loopPower_length_additive {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : Nat) :
+    (loopPower ch m).length + (loopPower ch n).length
+      = (loopPower ch (m + n)).length := by
+  rw [loopPower_length, loopPower_length, loopPower_length, Nat.add_mul]
+
+/-- **Loop power complexity additive.** -/
+theorem loopPower_complexity_additive {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : Nat) :
+    trajectoryComplexity (loopPower ch m) + trajectoryComplexity (loopPower ch n)
+      = trajectoryComplexity (loopPower ch (m + n)) := by
+  rw [loopPower_complexity, loopPower_complexity, loopPower_complexity, Nat.add_mul]
+
 /-- **Complexity-length bounds certificate.** -/
 theorem complexity_length_bounds_certificate :
     -- Lower bound: complexity ≥ length.
