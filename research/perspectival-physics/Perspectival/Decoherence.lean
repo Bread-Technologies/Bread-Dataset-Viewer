@@ -272,6 +272,25 @@ theorem actualizationRatePlain_append {P : Type u} {C : Type v}
     (R : Reality P C) :
     actualizationRatePlain (RealityChain.nil (P := P) (C := C) R) = (0, 0) := rfl
 
+/-- **The "no-decoherence" certificate: a coherent trajectory has
+zero-count rate, which propagates additively.** Concatenating two
+coherent trajectories yields a coherent trajectory. -/
+theorem coherent_compose {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h₁ : ch₁.actualizationCount = 0) (h₂ : ch₂.actualizationCount = 0) :
+    (ch₁.append ch₂).actualizationCount = 0 := by
+  rw [RealityChain'.append_actualizationCount, h₁, h₂]
+
+/-- **Coherent composition + endpoints equal.** Two coherent
+trajectories composed yield R₁ = R₃ via the iff. -/
+theorem coherent_compose_eq {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h₁ : ch₁.actualizationCount = 0) (h₂ : ch₂.actualizationCount = 0) :
+    R₁ = R₃ :=
+  (ch₁.append ch₂).zero_actualization_implies_eq (coherent_compose ch₁ ch₂ h₁ h₂)
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
