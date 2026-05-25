@@ -4442,6 +4442,25 @@ theorem length_zero_count_zero {P : Type u} {C : Type v}
   have h_le := ch.actualizationCount_le_length
   omega
 
+/-- **Bracketed count bounded by length-bracketed.** -/
+theorem length_bounded_bracketed_certificate :
+    -- Length 0 implies bracketed 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 0 → ch.bracketedCount = 0) ∧
+    -- Length 1 implies bracketed 0 or 1.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 1 →
+      ch.bracketedCount = 0 ∨ ch.bracketedCount = 1) ∧
+    -- Length ≤ n implies bracketed ≤ n (general).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length ≤ n → ch.bracketedCount ≤ n) :=
+  ⟨fun ch h => by have := length_ge_bracketed ch; omega,
+   fun ch h => by have := length_ge_bracketed ch; omega,
+   fun ch n h => by have := length_ge_bracketed ch; omega⟩
+
 /-- **Length-bounded count certificate.** Bundles small-length
 characterizations: length 0 → count 0, length 1 → count ≤ 1. -/
 theorem length_bounded_count_certificate :
