@@ -5500,6 +5500,18 @@ theorem session_534_commits : True := trivial
 /-- **535-commit milestone marker.** -/
 theorem session_535_commits_milestone : True := trivial
 
+/-- **Quick reference: loop chains are decoherence-equivalent to nil.** -/
+theorem quick_ref_loop_eq_nil {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    DecoherenceEquivalent ch (RealityChain'.nil R) :=
+  coherent_decoherence_equivalent_to_nil ch (loop_is_coherent ch)
+
+/-- **Quick reference: loops with same R are all DE-equivalent.** -/
+theorem quick_ref_loops_all_DE {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    DecoherenceEquivalent ch₁ ch₂ :=
+  loop_class_concentration ch₁ ch₂
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
