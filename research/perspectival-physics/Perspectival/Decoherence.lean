@@ -2557,6 +2557,23 @@ example (R : Reality Bool Bool) :
   show (0, 4 * (RealityChain'.singleton _).length) = (0, 4)
   rw [RealityChain'.singleton_length]
 
+/-- **Example: 10-fold reflBracketed Bool loop is coherent with length 10.** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (loopPower base 10).actualizationCount = 0
+      ∧ (loopPower base 10).length = 10
+      ∧ trajectoryComplexity (loopPower base 10) = 10
+      ∧ actualizationRate (loopPower base 10) = (0, 10) := by
+  intro base
+  refine ⟨loopPower_actualizationCount base 10, ?_, ?_, ?_⟩
+  · rw [loopPower_length]; rfl
+  · rw [loopPower_complexity]; rfl
+  · rw [loopPower_rate]
+    show (0, 10 * (RealityChain'.singleton _).length) = (0, 10)
+    rw [RealityChain'.singleton_length]
+
 /-! ## Higher-arity composition examples
 
 Compositions involving 3+ chains demonstrate the associativity and
