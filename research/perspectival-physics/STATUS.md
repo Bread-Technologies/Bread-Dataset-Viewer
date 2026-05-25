@@ -542,6 +542,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `v2_QM_from_richer_Tier_B` — non-classical Tier B realized by richer carriers | `Dichotomy.lean` | ✓ (a) |
 | `framework_v2_certificate`, `framework_v2_extended_certificate` — consolidated v2 facts | `Dichotomy.lean` | ✓ (a) |
 | `framework_v2_trajectory_certificate` — multi-step trajectory bundle | `Dichotomy.lean` | ✓ (a) |
+| `framework_v2_strict_chain_certificate` — strict-chain full-iff bundle (successor + arrow + iff) | `Dichotomy.lean` | ✓ (a) |
 | `bracketed_implies_successor`, `TrajectoryStep'`, `RealityChain'` + `implies_successor` + `past_monotone'` + `no_return_along_chain` — strict chains carry time-ordering | `TierB.lean` | ✓ (a) |
 | `actualizeAt_strict_step`, `TrajectoryStep'.bracketed` — strict-step constructors | `TierB.lean` | ✓ (a) |
 | `RealityChain'.ne_iff_pos_count`, `RealityChain'.eq_iff_zero_count` — full iff theorems via threading past-growth through chain | `TierB.lean` | ✓ (a) **strict-chain iff complete** |
