@@ -566,6 +566,10 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.coherent_append_preserves_past`, `tier_A_status_endpoint_determined`, `coherent_equal_tier_A` | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.DecoherenceEquivalent` + refl/symm/trans + append congruence (`_left`/`_right`/`_both`) | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.decoherence_equivalence_certificate` — equivalence+congruence bundle | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.trajectory_monoid_morphism_certificate` — bundled monoid morphism facts | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.chain_witness_preorder`, `nil_witness_refl`, `chain_compose_witnesses_trans` — chain as preorder witness | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.past_grows_under_chain`, `past_functor_compose`, `past_functor_id` — past as covariant functor | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.density_eq_iff`, `density_refines_decoherence_equivalent` — density hierarchy | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
