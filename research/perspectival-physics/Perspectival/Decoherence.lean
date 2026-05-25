@@ -4923,6 +4923,24 @@ example (R₁ R₂ : Reality Bool Bool) (ch : RealityChain' Bool Bool R₁ R₂)
     tierAEventCount ch = 0 ↔ R₁ = R₂ :=
   coherent_kernel_iff_endpoints_eq ch
 
+/-- **Using no_maxwell_demon: chain extension never decreases count.** -/
+example (R₁ R₂ R₃ : Reality Bool Bool)
+    (ch₁ : RealityChain' Bool Bool R₁ R₂)
+    (ch₂ : RealityChain' Bool Bool R₂ R₃) :
+    tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂) :=
+  no_maxwell_demon ch₁ ch₂
+
+/-- **Using path_independent_coherence: same endpoints means same status.** -/
+example (R₁ R₂ : Reality Bool Bool)
+    (ch₁ ch₂ : RealityChain' Bool Bool R₁ R₂) :
+    ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0 :=
+  path_independent_coherence ch₁ ch₂
+
+/-- **Using trio_sum_law: count + bracketed = length.** -/
+example (R₁ R₂ : Reality Bool Bool) (ch : RealityChain' Bool Bool R₁ R₂) :
+    tierAEventCount ch + ch.bracketedCount = ch.length :=
+  trio_sum_law ch
+
 /-- **Singleton chain certificate.** Bundles singleton bracketed and
 actualization measure certificates for full reference. -/
 theorem singleton_chain_certificate :
