@@ -707,6 +707,12 @@ theorem RealityChain.distinct_endpoints_implies_actualization
   have h_zero : ch.actualizationCount = 0 := Nat.le_zero.mp h_le
   exact h_ne (RealityChain.bracketed_only_implies_eq ch h_zero)
 
+-- (An iff form `zero_actualization_iff_eq` would require threading
+-- past-growth through the chain via `no_return_to_potential` +
+-- `proper_past_growth_implies_actualization`. Forward direction
+-- alone is the substantive content; reverse direction deferred to
+-- future work.)
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
