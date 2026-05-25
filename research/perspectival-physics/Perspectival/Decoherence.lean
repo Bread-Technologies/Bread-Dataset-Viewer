@@ -5183,6 +5183,18 @@ anti-realism + Boltzmann + no-Maxwell + Tier B reversibility +
 measurement-collapse + monoid + categories + phase space + bundles. -/
 theorem decoherence_at_6300_lines_summary : True := trivial
 
+/-- **Quick reference: any chain has count + bracketed = length.** -/
+theorem quick_ref_trio_sum {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount + ch.bracketedCount = ch.length :=
+  ch.counts_sum
+
+/-- **Quick reference: count is always ≤ length.** -/
+theorem quick_ref_count_le_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount ≤ ch.length :=
+  ch.actualizationCount_le_length
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
