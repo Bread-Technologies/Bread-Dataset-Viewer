@@ -800,6 +800,30 @@ theorem coherent_append_preserves_past {P : Type u} {C : Type v}
 -- values; deferred to future work. The weaker `past_monotone'`
 -- already establishes the subset direction.)
 
+/-! ## Comparison theorems
+
+These compare trajectory measures across trajectories with the same
+endpoints. -/
+
+/-- **Two coherent trajectories between same endpoints have equal
+tier A event count (both = 0).** -/
+theorem coherent_equal_tier_A {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R₁ R₂)
+    (h₁ : ch₁.actualizationCount = 0)
+    (h₂ : ch₂.actualizationCount = 0) :
+    tierAEventCount ch₁ = tierAEventCount ch₂ := by
+  show ch₁.actualizationCount = ch₂.actualizationCount
+  rw [h₁, h₂]
+
+/-- **Among coherent trajectories between fixed endpoints, complexity
+equals length.** -/
+theorem coherent_complexity_eq_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    trajectoryComplexity ch = ch.length :=
+  coherent_complexity ch h
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
