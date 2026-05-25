@@ -1961,6 +1961,23 @@ theorem DecoherenceQuotient.count_injective {P : Type u} {C : Type v}
       show ch₁.actualizationCount = ch₂.actualizationCount
       exact h
 
+/-- **Loop quotient is a singleton (count = 0).** For loops (R₁ = R₂),
+the decoherence quotient has a single class — the count-0 class. -/
+theorem DecoherenceQuotient.loop_count_zero {P : Type u} {C : Type v}
+    {R : Reality P C} (q : DecoherenceQuotient R R) :
+    q.count = 0 := by
+  induction q using Quotient.inductionOn with
+  | _ ch => exact loop_is_coherent ch
+
+/-- **Loop quotient is trivial.** All elements of `DecoherenceQuotient R R`
+are equal (to the class of nil). -/
+theorem DecoherenceQuotient.loop_quotient_trivial {P : Type u} {C : Type v}
+    {R : Reality P C} (q₁ q₂ : DecoherenceQuotient R R) :
+    q₁ = q₂ :=
+  DecoherenceQuotient.count_injective q₁ q₂
+    (by rw [DecoherenceQuotient.loop_count_zero,
+            DecoherenceQuotient.loop_count_zero])
+
 /-- **Trio-of-morphisms certificate.** All three count-style measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms with
 zero on nil. -/
