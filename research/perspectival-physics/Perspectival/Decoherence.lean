@@ -584,6 +584,16 @@ theorem framework_decoherence_full_certificate :
    fun ch => ⟨complexity_ge_length ch, complexity_le_twice_length ch⟩,
    fun ch₁ ch₂ => trajectoryComplexity_append ch₁ ch₂⟩
 
+/-- **A trajectory's Tier A content equals its `tierAEventCount`.** -/
+@[simp] theorem tier_A_content_eq_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    tierAEventCount ch = ch.actualizationCount := rfl
+
+/-- **Nil chain has zero Tier A content.** -/
+@[simp] theorem tier_A_content_nil {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0 := rfl
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
