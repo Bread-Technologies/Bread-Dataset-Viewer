@@ -4152,6 +4152,25 @@ theorem chain_time_arrow_certificate :
   ⟨fun ch => chain_witnesses_time_arrow ch,
    fun ch₁ ch₂ => chain_compose_preserves_time_arrow ch₁ ch₂⟩
 
+/-- **Worked example: chain at R witnesses RealitySuccessor R R.** -/
+example (R : Reality Bool Bool) :
+    RealitySuccessor R R :=
+  chain_witnesses_time_arrow (RealityChain'.nil R)
+
+/-- **Worked example: composed chains witness the composed time arrow.** -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let R' := actualizeAt R m
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let act : RealityChain' Bool Bool R R' :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    RealitySuccessor R R' := by
+  intro R h_pot R' base act
+  exact chain_compose_preserves_time_arrow base act
+
 /-- **loopPower additive certificate.** All three measures
 (actualizationCount, length, complexity) are additive over loop power
 exponents. This is the structural shadow of: `loopPower ch m + loopPower ch n
