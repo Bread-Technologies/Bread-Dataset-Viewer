@@ -312,6 +312,31 @@ theorem definite_bracketed_iff_perm {n : ℕ}
     refine ⟨σ, ?_⟩
     exact h.symm
 
+/-- **`DefiniteConfig n` is canonically equivalent to `Fin n`.** The
+configuration carries exactly the information of its primed index. -/
+def definiteConfigEquivFin (n : ℕ) : DefiniteConfig n ≃ Fin n where
+  toFun := DefiniteConfig.primed
+  invFun := fun i => ⟨i⟩
+  left_inv := fun _ => rfl
+  right_inv := fun _ => rfl
+
+@[simp] theorem definiteConfigEquivFin_apply (n : ℕ) (c : DefiniteConfig n) :
+    definiteConfigEquivFin n c = c.primed := rfl
+
+@[simp] theorem definiteConfigEquivFin_symm_apply (n : ℕ) (i : Fin n) :
+    (definiteConfigEquivFin n).symm i = ⟨i⟩ := rfl
+
+/-- **The DefiniteConfig action by permutations matches the natural
+permutation action on `Fin n`.** Under the equivalence
+`definiteConfigEquivFin`, `permActOnDefinite σ` corresponds to applying
+`σ` directly to `Fin n`. This is the structural identification of the
+bare bracketed Tier B carrier with the classical n-simplex's vertex
+index set. -/
+theorem permActOnDefinite_via_equiv {n : ℕ}
+    (σ : Equiv.Perm (Fin n)) (c : DefiniteConfig n) :
+    definiteConfigEquivFin n (permActOnDefinite σ c)
+    = σ (definiteConfigEquivFin n c) := rfl
+
 /-! ## Tier-B trajectories: bracketed intervals + actualization events
 
 A complete framework-trajectory through Reality is a sequence of
