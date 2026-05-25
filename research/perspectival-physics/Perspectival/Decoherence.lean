@@ -3199,6 +3199,22 @@ theorem bracketedCount_monotone_under_extension {P : Type u} {C : Type v}
   rw [RealityChain'.append_bracketedCount]
   omega
 
+/-- **Loop chains are entirely bracketed.** Every step in a loop chain
+is a bracketed transition (since count = 0). -/
+theorem loop_chain_all_bracketed {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    ch.bracketedCount = ch.length := by
+  have h_co := loop_is_coherent ch
+  have h_sum := ch.counts_sum
+  omega
+
+/-- **Loop chains have complexity = length.** Since they're entirely
+bracketed, the complexity equals the length. -/
+theorem loop_complexity_eq_length {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    trajectoryComplexity ch = ch.length :=
+  coherent_complexity ch (loop_is_coherent ch)
+
 /-- **Complexity strict monotonicity.** Extending a chain with a
 positive-length chain strictly increases complexity. -/
 theorem complexity_strict_monotone {P : Type u} {C : Type v}
