@@ -188,6 +188,22 @@ theorem decoherent_plus_coherent {P : Type u} {C : Type v}
   have h_co₂ := coherent_regime ch₂ h₂
   rw [h_deco₁, h_co₂]; simp
 
+/-! ## Rate bounds
+
+The actualization rate is bounded by the trivial bounds 0 ≤ count ≤ length. -/
+
+/-- **Rate's count is non-negative.** Trivial since it's a `ℕ`. -/
+theorem rate_count_nonneg {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    0 ≤ (actualizationRate ch).1 := Nat.zero_le _
+
+/-- **Rate's count is bounded above by length.** -/
+theorem rate_count_le_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 ≤ (actualizationRate ch).2 := by
+  show ch.actualizationCount ≤ ch.length
+  exact ch.actualizationCount_le_length
+
 /-! ## Decoherence framework summary
 
 This module provides the structural shadow of the framework's reading
