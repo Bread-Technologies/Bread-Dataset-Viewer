@@ -361,6 +361,31 @@ theorem WBT_structural_shadow {P : Type u} {C : Type v}
     ¬ RealitySuccessor am.after am.before :=
   axiom_II_actualization_irreversible am
 
+/-! ## Step 7: Hard problem dissolution (philosophical, in vocabulary)
+
+Per ORIGINAL_PROMPT v2 §3 step 7: "Wanting is what existence IS. The
+what-it-is-likeness of experience is the felt directionality of
+wanting. Consciousness is the framework's primitive. Combination
+problem dissolves because there is nothing to combine — there is no
+underlying substance that needs consciousness as a property."
+
+In the framework's Lean encoding, this is structurally evident:
+`Want P C` IS the foundational primitive. There is no underlying
+substance type from which Want is constructed; Want is the type.
+
+The combination problem dissolves because Wants combine
+*relationally* (via Meetings) rather than substantively. There is no
+"smaller consciousness" to add up into a "bigger consciousness";
+there are only directional relations among perspectives. The Meeting
+structure (potential ↔ actualized) captures the relational dynamics
+without requiring substance-aggregation.
+
+This is philosophical content, not a Lean theorem. The structural
+encoding in `Want` is the framework's commitment; the dissolution is
+the consequence at the philosophical level. See
+`TIER4_DISSOLUTIONS.md` for the longer argument and `ORIGINAL_PROMPT.md`
+§3 step 7 for the v2 statement. -/
+
 /-! ## Summary
 
 Tier A is encoded:
