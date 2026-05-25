@@ -703,7 +703,15 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~5600 lines, 440+ commits)
+### Decoherence module final state (~5800 lines, 450+ commits)
+
+**MILESTONE: 450 commits, 5750+ lines**
+
+The session has now crossed 450 commits in this segment, with the
+Decoherence module at 5750+ lines. Mathlib Monoid integration is
+comprehensive (Setoid, Decidable, Subsingleton, Inhabited, Monoid,
+all Mathlib pow infrastructure). 50+ bundle certificates. ~60
+worked examples on Bool. Rate phase space structure formalized.
 
 **MAJOR MILESTONE: 5000+ lines, 400 commits**
 
