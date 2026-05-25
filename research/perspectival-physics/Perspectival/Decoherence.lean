@@ -1914,6 +1914,14 @@ theorem loop_count_commutative {P : Type u} {C : Type v}
   rw [tierAEventCount_append, tierAEventCount_append]
   omega
 
+/-- **DecoherenceEquivalent is decidable.** Since it reduces to ℕ
+equality (which is decidable), DecoherenceEquivalent is also
+decidable. This is computational content for trajectory comparisons. -/
+instance DecoherenceEquivalent_decidable {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    Decidable (DecoherenceEquivalent ch₁ ch₂) :=
+  inferInstanceAs (Decidable (ch₁.actualizationCount = ch₂.actualizationCount))
+
 /-- **Trio-of-morphisms certificate.** All three count-style measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms with
 zero on nil. -/
