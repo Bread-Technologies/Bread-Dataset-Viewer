@@ -250,12 +250,17 @@ theorem axiom5_strong_of_transitive_agency
                                    `productState` construction in
                                    Examples.lean, not auto-derived from
                                    I–IV alone.
-  Axiom 5 (Continuity)           — DERIVABLE — formally proven as
-                                   `hardy_axiom5_of_agency` in
-                                   Continuity.lean, conditional on the
-                                   `HasConnectedAgency` postulate
-                                   (the framework's libertarian-agency
-                                   refinement of Axiom IV).
+  Axiom 5 (Continuity)           — DERIVABLE — formally proven in
+                                   two forms:
+                                   (i) `hardy_axiom5_of_agency` in
+                                       Continuity.lean, conditional on the
+                                       `HasConnectedAgency` postulate.
+                                   (ii) `axiom5_strong_of_transitive_agency`
+                                        above, derives `Axiom5_Continuity_Strong`
+                                        from `TransitiveAgency` —
+                                        the framework's strongest formal
+                                        bridge between the agency hierarchy
+                                        and a substantive form of Hardy A5.
 
 The Hardy axioms 1, 3, 5 are formally derivable in the framework
 (with A5 conditional on the agency strengthening). Axiom 4 is
