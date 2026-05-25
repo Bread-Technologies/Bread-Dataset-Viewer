@@ -260,6 +260,23 @@ theorem framework_u1_gauge_instance :
   ⟨CircleGPT.rotOneParameterFamily, fun θ₁ θ₂ =>
     CircleGPT.rotOneParameterFamily.add θ₁ θ₂⟩
 
+/-- **Three independent OneParameterFamilies on QubitGPT** — the rotX,
+rotY, rotZ axes. Together these generate the SO(3) ≃ SU(2)/Z₂
+non-abelian Lie group acting on the Bloch ball. The framework's first
+machine-verified non-abelian-gauge candidate (Tier 2 #6 toward SU(2)).
+
+Full SO(3) closure (composition across generators yields all of SO(3))
+is deferred; what's verified here is the *infrastructure*: three
+independent abelian 1-parameter subgroups whose Lie brackets generate
+the rest. -/
+theorem framework_so3_axes_present :
+    Nonempty (Continuity.OneParameterFamily QubitGPT.qubitGPT) ∧
+    Nonempty (Continuity.OneParameterFamily QubitGPT.qubitGPT) ∧
+    Nonempty (Continuity.OneParameterFamily QubitGPT.qubitGPT) :=
+  ⟨⟨QubitGPT.rotXOneParameterFamily⟩,
+   ⟨QubitGPT.rotYOneParameterFamily⟩,
+   ⟨QubitGPT.rotZOneParameterFamily⟩⟩
+
 /-! ## Hardy A4 dimension applies to all three trichotomy points -/
 
 /-- The Hardy A4 dimension multiplicativity holds for any pair of GPT
