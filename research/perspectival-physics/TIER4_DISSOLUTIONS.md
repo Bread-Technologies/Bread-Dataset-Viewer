@@ -306,6 +306,25 @@ Tier A foundation. The puzzle "why are they aligned?" presupposes
 they could fail to align; under v2 + entropy-addendum, they have
 the same root and the alignment is *necessary*.
 
+### #23. Decoherence formalized (Seam 4 — partial Lean correlate)
+
+The dissolution of "decoherence is mysterious thermodynamic-style
+loss of coherence" reframes it as accumulated actualization at the
+system-environment interface (per Seam 4 in `SEAMS.md`). The Lean
+module `Perspectival/Decoherence.lean` provides the structural
+content:
+
+- `actualizationRate` : (count, length) characterization along a
+  strict trajectory chain.
+- `coherent_regime` (count = 0): zero seam crossings, no decoherence.
+- `decoherence_regime` (bracketed = 0): maximal rate, full Tier A.
+- Compositional structure: rates compose under trajectory append.
+
+**Open work** (Tier 2): continuous-time exponential-suppression
+dynamics, operational environment-density definition, quantitative
+predictions vs. statistical decoherence-time models. See
+`Perspectival/Decoherence.lean` for the documented open items.
+
 ## What the three dissolutions share
 
 In each case the canonical question hides a smuggled external vantage:
