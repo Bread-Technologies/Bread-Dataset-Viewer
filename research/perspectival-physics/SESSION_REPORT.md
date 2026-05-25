@@ -50,7 +50,16 @@ against ORIGINAL_PROMPT.md targets — *not* line/commit count chatter.
 
 **Framework-distinctive contributions this session:**
 
-- **R6 Birkhoff disconnect — Classical n=2 AND n=3 BOTH PROVEN**:
+- **R6 Birkhoff disconnect — Classical ALL n ≥ 2 PROVEN** (MAJOR FINAL MILESTONE):
+  - **`classical_general_no_strict_path_id_to_swap01`** — for any n ≥ 2,
+    no continuous bijective state-preserving path connects id to the (01)
+    transposition on Classical n GPT. Specializations: n=2/3/4/5.
+  - Generalized via `Matrix.toLin' ∘ Equiv.Perm.permMatrix ℝ ∘ Equiv.swap`
+    with one-line det computation using `LinearMap.det_toLin' + Matrix.det_permutation + Equiv.Perm.sign_swap`.
+  - The framework's R6 program-level claim is now fully established at
+    the Lean-verified level.
+
+Earlier session milestones (R6 step by step):
   - n=2: `classical_n2_strict_reversible_path_id_swap_empty` (hypothesis-free)
   - n=3: `classical_n3_no_strict_path_id_to_swap01` (UNCONDITIONAL, via Matrix.det bridge)
   - Sub-lemma `n3_det_zero_implies_not_injective` proven via
