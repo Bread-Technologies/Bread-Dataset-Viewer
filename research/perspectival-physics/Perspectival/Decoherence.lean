@@ -3915,6 +3915,34 @@ theorem triple_compose_preserves_equivalence {P : Type u} {C : Type v}
       ((ch₁.append ch₂).append ch₃) ((ch₁'.append ch₂').append ch₃') :=
   compose_preserves_equivalence (compose_preserves_equivalence h₁ h₂) h₃
 
+/-- **Three-level anti-realism witness.** The framework's anti-realism
+content holds at multiple levels:
+1. STATUS (path-independent): coherence depends only on endpoints.
+2. CONTENT (path-dependent): complexity can differ between equivalent
+   chains.
+3. STRUCTURE (chain-data distinct): even chains with equal measures
+   can be different inductive constructions.
+
+This theorem witnesses the level-1 and level-2 facts. Level 3 (chain-
+data distinction) is implicit in the chain data structure itself. -/
+theorem three_level_anti_realism_witness :
+    -- LEVEL 1: status is path-independent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- LEVEL 2: content is path-dependent (witness).
+    (∃ (P : Type) (C : Type) (R : Reality P C)
+        (ch₁ ch₂ : RealityChain' P C R R),
+      DecoherenceEquivalent ch₁ ch₂
+        ∧ trajectoryComplexity ch₁ ≠ trajectoryComplexity ch₂) :=
+  ⟨fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+    RealityChain'.nil _,
+    RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+    rfl,
+    by decide⟩⟩
+
 /-- **DE congruence certificate.** Bundles the chain-monoid congruence
 content for DecoherenceEquivalent. -/
 theorem decoherence_equivalent_congruence_certificate :
