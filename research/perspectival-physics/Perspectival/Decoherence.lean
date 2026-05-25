@@ -462,6 +462,20 @@ theorem zero_tier_A_implies_equal_endpoints {P : Type u} {C : Type v}
   rw [RealityChain'.singleton_actualizationCount]
   rfl
 
+/-- **Example: chaining n bracketed steps gives count = 0.** Useful
+sanity check that the framework's "Tier B is closed under composition"
+is computationally evident. -/
+example {P : Type u} {C : Type v} (R : Reality P C) :
+    tierAEventCount
+      ((RealityChain'.singleton (TierB.TrajectoryStep'.bracketed
+         (TierB.bracketed_refl R))).append
+       (RealityChain'.singleton (TierB.TrajectoryStep'.bracketed
+         (TierB.bracketed_refl R)))) = 0 := by
+  show (RealityChain'.append _ _).actualizationCount = 0
+  rw [RealityChain'.append_actualizationCount]
+  -- Each singleton bracketed contributes 0.
+  rfl
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
