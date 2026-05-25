@@ -443,5 +443,17 @@ theorem productEffect_bounds_on_tensorStates
   -- Conclude convexHull ⊆ T.
   exact convexHull_min hgen_sub hT_convex hρ
 
+/-- **Product effect is an effect on gptTensor.** Combining the bounds-on-
+product theorem with the convex-hull extension. -/
+theorem productEffect_in_effects
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    {e₁ : V₁ →ₗ[ℝ] ℝ} {e₂ : V₂ →ₗ[ℝ] ℝ}
+    (he₁ : e₁ ∈ G₁.effects) (he₂ : e₂ ∈ G₂.effects) :
+    productEffect e₁ e₂ ∈ (gptTensor G₁ G₂).effects := by
+  intro ρ hρ
+  exact productEffect_bounds_on_tensorStates he₁ he₂ hρ
+
 end GPT
 end Perspectival
