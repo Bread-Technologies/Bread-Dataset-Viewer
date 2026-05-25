@@ -366,5 +366,15 @@ e₁(ρ₁) · e₂(ρ₂)`. -/
   rw [TensorProduct.lift.tmul]
   rfl
 
+/-! The forward direction of Hardy A4 N-multiplicativity
+(N_AB ≥ N_A · N_B) would say: a product of distinguishability sets is
+a distinguishability set in gptTensor. The witness effect for the
+(i, j) pair is `productEffect e_i (G₂.unit)` (or similar). The
+verification that this is in `(gptTensor _ _).effects` is non-trivial:
+it requires showing 0 ≤ productEffect e ρ ≤ 1 for ALL ρ ∈ convexHull
+of products — by linearity, this reduces to ρ = ρ_A ⊗ ρ_B which is
+straightforward. Currently DEFERRED — the productEffect infrastructure
+is in place, the bounds-check is the open piece. -/
+
 end GPT
 end Perspectival
