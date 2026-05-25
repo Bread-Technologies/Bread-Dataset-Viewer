@@ -4336,6 +4336,19 @@ theorem loop_npow_length_strict_monotone {P : Type u} {C : Type v}
   rw [loop_npow_length, loop_npow_length]
   exact (Nat.mul_lt_mul_right h_pos).mpr h
 
+/-- **Loop power count of non-trivial base is still zero.** Even if
+the base has positive length, the count remains 0. -/
+theorem loop_npow_nontrivial_count_zero {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R)
+    (_h : 0 < ch.length) (n : ℕ) :
+    tierAEventCount (ch ^ n) = 0 := loop_npow_tierAEventCount ch n
+
+/-- **Identity has loop powers all equal to identity.** -/
+theorem one_npow_all_equal {P : Type u} {C : Type v} {R : Reality P C}
+    (n m : ℕ) :
+    ((1 : RealityChain' P C R R) ^ n) = ((1 : RealityChain' P C R R) ^ m) := by
+  rw [one_pow, one_pow]
+
 /-- **Loop power monotonicity certificate.** -/
 theorem loop_npow_monotonicity_certificate :
     -- Weak monotonicity.
