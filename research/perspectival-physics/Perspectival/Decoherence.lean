@@ -4886,6 +4886,29 @@ theorem nil_chain_measure_certificate :
         ∧ trajectoryComplexity (RealityChain'.nil (P := P) (C := C) R) = 0) :=
   fun R => ⟨rfl, rfl, rfl, rfl⟩
 
+/-- **Singleton bracketed chain measure certificate.** A bracketed
+singleton on any R has count 0, bracketed 1, length 1, complexity 1. -/
+theorem singleton_bracketed_measure_certificate :
+    ∀ {P : Type} {C : Type} (R : Reality P C),
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))).actualizationCount = 0
+        ∧ (RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))).bracketedCount = 1
+        ∧ (RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))).length = 1
+        ∧ trajectoryComplexity (RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) = 1 := by
+  intro P C R
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [RealityChain'.singleton_actualizationCount]; rfl
+  · rw [RealityChain'.singleton_bracketedCount]; rfl
+  · rw [RealityChain'.singleton_length]
+  · show 2 * (RealityChain'.singleton _).actualizationCount
+        + (RealityChain'.singleton _).bracketedCount = 1
+    rw [RealityChain'.singleton_actualizationCount,
+        RealityChain'.singleton_bracketedCount]
+    rfl
+
 /-- **Decoherence module's complete content** in one umbrella theorem.
 This is the framework's "everything" statement for Seam 4. -/
 theorem decoherence_complete_content :
