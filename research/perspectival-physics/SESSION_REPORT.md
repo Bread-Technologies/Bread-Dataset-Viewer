@@ -703,7 +703,16 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~3550 lines, 320+ commits)
+### Decoherence module final state (~3800 lines, 330+ commits)
+
+**Mathlib Monoid integration (final wave):**
+- `loopMonoid` : Mathlib `Monoid` instance for `RealityChain' P C R R`
+- `loop_mul_eq_append`, `loop_one_eq_nil` : bridge to chain operations
+- `loop_npow_tierAEventCount` / `loop_npow_length` : Monoid `^` notation
+- `loop_npow_equivalent_one` : Monoid powers are coherent
+- `loop_monoid_morphism_certificate` : 3 measures × {mul, one}
+- `loopPower_npow_count_agree` / `_length_agree` / `_equivalent` :
+  custom `loopPower` agrees with Mathlib `^`
 
 **Final certificate inventory:**
 - `decoherence_module_super_certificate` — 8-fact ultimate bundle
