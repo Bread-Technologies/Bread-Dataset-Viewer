@@ -1126,6 +1126,13 @@ theorem RealityChain'.append_bracketedCount {P : Type u} {C : Type v} :
       rw [RealityChain'.append_bracketedCount rest ch₂]
       omega
 
+/-- **Singleton chain length is exactly 1.** Computable simp fact. -/
+@[simp] theorem RealityChain'.singleton_length_eq_one {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep' P C R₁ R₂) :
+    (RealityChain'.singleton step).length = 1 := by
+  show 1 + RealityChain'.length _ = 1
+  simp [RealityChain'.length]
+
 /-- **Worked example: chain-monoid associativity on concrete trajectory.**
 Demonstrates that `(ch₁ ++ ch₂) ++ ch₃ = ch₁ ++ (ch₂ ++ ch₃)` holds
 strictly for RealityChain'. -/
