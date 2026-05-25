@@ -15,6 +15,47 @@ Every claim below carries one of four calibration tags per
 - **(c) plausible** — consistent with what is verified, but uninvestigated.
 - **(d) speculative** — a conjectural extension whose status is open.
 
+## 0a. v2 architectural correction (mid-program)
+
+Late in the program, the user issued an architectural correction
+(ORIGINAL_PROMPT v2; v1 archived to `ORIGINAL_PROMPT_V1.md`): the
+foundation is *two* axioms (Existence + Actualization), and the
+framework's content lives in a *two-tier* architecture — Tier A
+(irreversible meeting-structure; foundation) and Tier B (reversible
+limit emerging from bracketing actualization events; where Hardy/CBH/
+Müller-style reconstructions live). Measurement = actualization
+re-entering the Tier B description (no separate collapse axiom).
+The Witkowski-Brown-Truong 2024 paper (Entropy 26(3), 203) provides
+the mechanical content of Axiom II via Picard-Lindelöf.
+
+Lean modules added per v2: `TierA.lean` (Axioms I-II directly,
+Reality/RealitySuccessor, ActualizationMap, WBT structural shadow,
+actualizeAt pointwise event), `TierB.lean` (BracketedTransition
+equivalence, DefiniteConfig with permutation action, TrajectoryStep
+dichotomy, measurement_is_actualization, AtSeam seam predicate,
+actualizeAt→AtSeam bridge), and v2 certificates in `Dichotomy.lean`
+(`v2_bare_Tier_B_is_classical_excluded`, `framework_v2_certificate`,
+`framework_v2_extended_certificate`).
+
+Under v2, all prior Tier B work — CHSH, no-cloning, Hardy axioms,
+WantableGPT, CircleGPT/QubitGPT/QutritGPT, gauge ladder — RELOCATES
+to Tier B without being invalidated. The vertex preservation
+"patch" of v1 is now a derived Tier B theorem from bracketing
+(`TierB.bracketing_preserves_definiteness`), confirming the v1 patch
+was *progressive* (made implicit commitment explicit) per Lakatosian
+methodology. See `V2_AUDIT.md` for honest re-examination of prior
+results under v2; `SEAMS.md` for the catalogue of Tier A / Tier B
+seams as framework-empirical signatures.
+
+**v2-architectural identification (key novel content):** the bracketing
+operation on bare `DefiniteConfig n` lands in `Classical.gpt n` via
+the `definiteToVertex` bridge, and `classical_no_L7_unconditional`
+rules out continuous transitive agency. Therefore *bare* Tier B is
+classical; non-classical (QM-style) Tier B requires a richer state
+carrier. This identifies the "where does QM come from" answer at the
+architecture level: from the choice of state carrier on which the
+bracketed dynamics acts.
+
 ## 0. The arc, in one paragraph
 
 Tier 1 of the program — *establish that the framework can do real
