@@ -5574,6 +5574,21 @@ theorem quick_ref_rate_second {P : Type u} {C : Type v}
     {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
     (actualizationRate ch).2 = ch.length := rfl
 
+/-- **Quick reference: tierAEventCount of append equals sum.** -/
+theorem quick_ref_tier_A_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount (ch₁.append ch₂) = tierAEventCount ch₁ + tierAEventCount ch₂ :=
+  tierAEventCount_append ch₁ ch₂
+
+/-- **Quick reference: trajectoryComplexity of append equals sum.** -/
+theorem quick_ref_complexity_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    trajectoryComplexity (ch₁.append ch₂) =
+      trajectoryComplexity ch₁ + trajectoryComplexity ch₂ :=
+  trajectoryComplexity_append ch₁ ch₂
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
