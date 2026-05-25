@@ -1070,6 +1070,15 @@ theorem RealityChain'.append_assoc {P : Type u} {C : Type v} :
         = RealityChain'.cons step (rest.append (ch₂.append ch₃))
       rw [RealityChain'.append_assoc rest ch₂ ch₃]
 
+/-- **Append-singleton-right.** A chain extended by a singleton step
+equals the chain followed by cons'ing the step at the end. -/
+theorem RealityChain'.append_singleton_right {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C}
+      (ch : RealityChain' P C R₁ R₂) (step : TrajectoryStep' P C R₂ R₃),
+      ch.append (RealityChain'.singleton step)
+        = ch.append (RealityChain'.cons step (RealityChain'.nil R₃))
+  | _, _, _, _, _ => rfl
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
