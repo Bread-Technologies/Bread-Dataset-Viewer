@@ -573,6 +573,12 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.anti_realist_structural_realism` — content path-dependent + structure compositional | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.grand_decoherence_certificate` — 8-fact bundle (most comprehensive) | `Decoherence.lean` | ✓ (a) **comprehensive** |
 | `Decoherence.decoherence_module_certificate` — 4-fact final bundle (cleanest summary) | `Decoherence.lean` | ✓ (a) **final summary** |
+| `Decoherence.loop_is_coherent`, `loopPower`, `loopPower_length/_tierAEventCount/_bracketedCount/_complexity` — loop chain algebra | `Decoherence.lean` | ✓ (a) **loop submonoid** |
+| `Decoherence.loop_submonoid_certificate`, `loop_rate_certificate` — bundled loop content | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.nontrivial_loop_exists`, `anti_realism_loop_power_witness` — infinite witness family | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.boltzmann_brain_dissolution_shadow` — TIER4 #19 structural shadow | `Decoherence.lean` | ✓ (a) **dissolution shadow** |
+| `Decoherence.coherent_kernel_iff_endpoints_eq`, `_submonoid_certificate` — kernel of counts homomorphism | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.decoherence_module_super_certificate` — 8-fact ultimate bundle (loops + kernel + path-independence + functoriality) | `Decoherence.lean` | ✓ (a) **ULTIMATE BUNDLE** |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
