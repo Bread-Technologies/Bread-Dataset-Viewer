@@ -928,6 +928,19 @@ theorem RealityChain'.append_length {P : Type u} {C : Type v} :
     (R : Reality P C) :
     (RealityChain'.nil (P := P) (C := C) R).length = 0 := rfl
 
+/-- **A strict chain's count is bounded by its length.** Trivial
+arithmetic content: each step contributes at most 1 to the count. -/
+theorem RealityChain'.actualizationCount_le_length {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount ≤ ch.length
+  | _, _, RealityChain'.nil _ => by simp
+  | _, _, RealityChain'.cons step rest => by
+      simp only [RealityChain'.actualizationCount, RealityChain'.length]
+      have h := RealityChain'.actualizationCount_le_length rest
+      cases step.step with
+      | bracketed _ => simp; omega
+      | actualization _ => simp; omega
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
