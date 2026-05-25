@@ -3164,6 +3164,40 @@ theorem equal_measures_implies_equivalent {P : Type u} {C : Type v}
     (h_count : ch₁.actualizationCount = ch₂.actualizationCount) :
     DecoherenceEquivalent ch₁ ch₂ := h_count
 
+/-- **No Maxwell demon.** Chain extension never decreases
+`tierAEventCount`. There is no "magic" chain extension that
+"un-actualizes" past events. -/
+theorem no_maxwell_demon {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂) :=
+  tier_A_monotone_under_append ch₁ ch₂
+
+/-- **No Maxwell demon: strict version.** Chain extension that
+includes at least one actualization step STRICTLY increases the
+count. -/
+theorem no_maxwell_demon_strict {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h : 0 < tierAEventCount ch₂) :
+    tierAEventCount ch₁ < tierAEventCount (ch₁.append ch₂) :=
+  (tier_A_strict_monotone_iff ch₁ ch₂).mpr h
+
+/-- **No-Maxwell-demon certificate.** The framework's "Tier A
+irreversibility persists under chain composition" content. -/
+theorem no_maxwell_demon_certificate :
+    -- (a) Monotonicity: extension never decreases count.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂)) ∧
+    -- (b) Strict: extension with actualization strictly increases count.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      0 < tierAEventCount ch₂ →
+      tierAEventCount ch₁ < tierAEventCount (ch₁.append ch₂)) :=
+  ⟨fun ch₁ ch₂ => no_maxwell_demon ch₁ ch₂,
+   fun ch₁ ch₂ h => no_maxwell_demon_strict ch₁ ch₂ h⟩
+
 /-- **Equal complexity + equal length implies equal counts.** Since
 complexity = 2*count + bracketed and length = count + bracketed,
 knowing both gives count uniquely. -/
