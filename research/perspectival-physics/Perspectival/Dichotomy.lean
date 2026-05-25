@@ -736,5 +736,34 @@ theorem framework_certificate :
     exact classical_no_L7_unconditional 2 (by omega) PPT
   · exact Hardy.axiom4_dimension_holds _ _
 
+/-! ## Reading guide
+
+This module is the framework's cross-cutting machine-verified summary.
+Key landmarks:
+
+  • `framework_dichotomy_existential` — single Lean expression of the
+    classical-vs-quantum L7 dichotomy.
+  • `hardy_quadchotomy` — four GPT instances at distinct K-signatures.
+  • `framework_hardy_signatures_verified` — K and N (≥) bounds across all
+    three trichotomy points.
+  • `framework_gauge_ladder` / `framework_gauge_ladder_oneparam` — the
+    U(1) + SO(3) + SU(3)-toehold gauge structure.
+  • `framework_gauge_composition_linear` — productTransform preserves
+    states + unit on gptTensor; pairwise gauge composition examples
+    follow.
+  • `circle_full_hardy_reconstruction` — CircleGPT satisfies four of
+    five Hardy axioms (everything except A2) unconditionally.
+  • `qubit_full_hardy_reconstruction` — same for QubitGPT, conditional
+    on TransitiveAgency.
+  • `framework_certificate` — the single Lean expression bundling
+    the major Tier 1 + Tier 2 baby step results.
+
+The framework's program is substantially complete at this level.
+Remaining work (rebit/qQM explicit constructions, R7 full Lie-group
+bridge, full SU(3) Lie algebra, Standard Model gauge derivation, Tier
+3 cosmology / Tier 4 dissolutions) is documented in `ROADMAP.md` and
+the per-tier scoping notes (`TIER1_5_HILBERT.md`, `TIER2_GAUGE_SCOPING.md`,
+`TIER3_DARK_MATTER.md`, `TIER4_DISSOLUTIONS.md`). -/
+
 end Dichotomy
 end Perspectival
