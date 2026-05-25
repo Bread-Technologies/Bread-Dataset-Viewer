@@ -1945,7 +1945,7 @@ count function descends to a well-defined function on the quotient. -/
 def DecoherenceQuotient.count {P : Type u} {C : Type v}
     {R₁ R₂ : Reality P C} : DecoherenceQuotient R₁ R₂ → ℕ :=
   Quotient.lift (fun ch => tierAEventCount ch)
-    (fun ch₁ ch₂ h => h)
+    (fun _ _ h => h)
 
 /-- **Count is injective on the decoherence quotient.** This shows
 the quotient embeds into ℕ via the count. -/
