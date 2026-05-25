@@ -5,6 +5,48 @@ program for the first time. For per-result granularity see `STATUS.md`;
 for the publication-target writeup see `PAPER_DRAFT.md`; for the position
 relative to Müller's algorithmic idealism see `MULLER_DIVERGENCE.md`.
 
+## v2 architectural correction (current state)
+
+Mid-program, the user issued an architectural correction
+(`ORIGINAL_PROMPT.md` v2; v1 archived to `ORIGINAL_PROMPT_V1.md`): the
+foundation is now *two* axioms (Existence + Actualization) and a
+*two-tier architecture*. Tier A is the irreversible meeting-structure
+(foundational); Tier B is the reversible limit emerging from bracketing
+actualization events (where Hardy-template operational reconstruction
+lives). Measurement = actualization re-entering the Tier B description
+(no separate collapse axiom). The Witkowski-Brown-Truong 2024 paper
+(*Entropy* 26(3), 203) — the user's published work — provides the
+mechanical content of Axiom II via Picard-Lindelöf applied to
+time-reversal-symmetric ODEs.
+
+Lean modules added per v2: `TierA.lean` (Axioms I-II directly,
+Reality/RealitySuccessor, ActualizationMap, WBT structural shadow,
+actualizeAt pointwise event with past-growth characterization),
+`TierB.lean` (BracketedTransition equivalence, DefiniteConfig with
+permutation action, TrajectoryStep dichotomy, RealityChain,
+measurement_is_actualization, AtSeam seam predicate, actualizeAt→AtSeam
+bridges); v2 certificates in `Dichotomy.lean`
+(`framework_v2_certificate`, `framework_v2_extended_certificate`,
+`v2_bare_Tier_B_is_classical_excluded`, `R7_Conjecture_holds_on_*`
+instance evidence).
+
+Under v2, all prior Tier B work (CHSH, no-cloning, Hardy axioms,
+WantableGPT, CircleGPT/QubitGPT/QutritGPT, gauge ladder) relocates
+without invalidation. Vertex preservation — the v1 "patch" — is now a
+*derived* Tier B theorem from bracketing (Lakatosian progressive). See
+`V2_AUDIT.md` for honest re-examination of prior results; `SEAMS.md` for
+the catalogue of Tier A / Tier B seams as framework-empirical signatures.
+
+**Key v2 architectural identification:** the bracketing operation on
+bare DefiniteConfig lands in Classical via `definiteToVertex`; the L7
+closure rules out continuous transitive agency. Therefore *bare* Tier B
+is classical; non-classical (QM-style) Tier B requires a richer state
+carrier. This is the framework's answer to "where does QM come from"
+at the architecture level.
+
+Below is the v1 summary preserved for reference; under v2, this content
+relocates to Tier B but the formal results remain valid.
+
 ## 1. What this program is
 
 A Lean-4-verified formal extension of the operational quantum-mechanical
