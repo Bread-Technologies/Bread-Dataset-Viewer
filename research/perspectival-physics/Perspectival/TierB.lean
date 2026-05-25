@@ -1170,6 +1170,25 @@ theorem RealityChain'.pure_actualization_density {P : Type u} {C : Type v}
   rw [h] at h_sum
   rw [← h_sum]; simp
 
+/-- **Append additivity for the density's first coordinate.** -/
+theorem RealityChain'.append_actualizationDensity_count {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).actualizationDensity.1
+      = ch₁.actualizationDensity.1 + ch₂.actualizationDensity.1 := by
+  show (ch₁.append ch₂).actualizationCount
+      = ch₁.actualizationCount + ch₂.actualizationCount
+  exact RealityChain'.append_actualizationCount ch₁ ch₂
+
+/-- **Append additivity for the density's second coordinate.** -/
+theorem RealityChain'.append_actualizationDensity_length {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    (ch₁.append ch₂).actualizationDensity.2
+      = ch₁.actualizationDensity.2 + ch₂.actualizationDensity.2 := by
+  show (ch₁.append ch₂).length = ch₁.length + ch₂.length
+  exact RealityChain'.append_length ch₁ ch₂
+
 /-- **Worked example: chain-monoid associativity on concrete trajectory.**
 Demonstrates that `(ch₁ ++ ch₂) ++ ch₃ = ch₁ ++ (ch₂ ++ ch₃)` holds
 strictly for RealityChain'. -/
