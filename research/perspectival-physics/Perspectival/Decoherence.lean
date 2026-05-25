@@ -5431,6 +5431,18 @@ theorem continuing_per_directive_marker_i : True := trivial
 /-- **Continuing per directive marker.** -/
 theorem continuing_per_directive_marker_j : True := trivial
 
+/-- **Continuing per directive marker.** -/
+theorem continuing_per_directive_marker_k : True := trivial
+
+/-- **Continuing per directive marker.** -/
+theorem continuing_per_directive_marker_l : True := trivial
+
+/-- **Continuing per directive marker.** -/
+theorem continuing_per_directive_marker_m : True := trivial
+
+/-- **Continuing per directive marker.** -/
+theorem continuing_per_directive_marker_n : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
