@@ -791,6 +791,16 @@ theorem RealityChain'.zero_actualization_implies_eq {P : Type u} {C : Type v}
   rw [RealityChain'.toRealityChain_actualizationCount]
   exact h_zero
 
+/-- **Strict chain analog of `distinct_endpoints_implies_actualization`.** -/
+theorem RealityChain'.distinct_endpoints_implies_actualization
+    {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h_ne : R₁ ≠ R₂) : 0 < ch.actualizationCount := by
+  by_contra h_le
+  push_neg at h_le
+  have h_zero : ch.actualizationCount = 0 := Nat.le_zero.mp h_le
+  exact h_ne (RealityChain'.zero_actualization_implies_eq ch h_zero)
+
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
 transition R₁ → R₂ cannot be a bracketed step; if it's at all
