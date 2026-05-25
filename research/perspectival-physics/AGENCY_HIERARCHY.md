@@ -26,7 +26,27 @@ versions are vacuous on classical GPTs (forcing `avail = {id}`) and
 non-trivially satisfiable on quantum ones (where `U(N)` is a connected
 compact Lie group).
 
-## The six levels
+**Late-session update**: this doc was written before the implementation
+of `TransitiveAgency` in `Continuity.lean`. The actual hierarchy now has
+seven levels, with TransitiveAgency at L6 (Hardy-A5-substantive transitivity-
+on-pure-states), and the SmoothConnectedAgency originally planned for L6
+not yet implemented (deferred to R7 future work).
+
+Updated hierarchy:
+- L1: HasConnectedAgency
+- L2: StatePreservingAgency (R6 weak)
+- L3: StrongConnectedAgency (R6-bis)
+- L4: StrictConnectedAgency (R6-tris)
+- L5: GroupClosedAgency (R7 algebraic scaffold)
+- L6: TransitiveAgency (Hardy A5 substantive) [IMPLEMENTED THIS SESSION]
+- L7: SmoothConnectedAgency (R7 full Lie-group) [deferred]
+
+Major new theorem at L6:
+- `classical_n2_no_transitive_agency`: R6 disconnect + Hardy A5
+  transitivity are INCOMPATIBLE on Classical Bool. The framework's
+  strongest classical-side impossibility result this session.
+
+## The six levels (original numbering)
 
 ### Level 1 — `HasConnectedAgency G` (Hardy A5 ingredient)
 
