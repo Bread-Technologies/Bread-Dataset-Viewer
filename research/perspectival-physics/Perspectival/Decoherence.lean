@@ -5342,6 +5342,20 @@ theorem quick_ref_loop_pow_complexity {P : Type u} {C : Type v}
     trajectoryComplexity (ch ^ n) = n * ch.length :=
   loop_npow_complexity ch n
 
+/-- **Quick reference: no Maxwell demon.** -/
+theorem quick_ref_no_maxwell {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂) :=
+  no_maxwell_demon ch₁ ch₂
+
+/-- **Quick reference: path-independent coherence.** -/
+theorem quick_ref_path_independent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0 :=
+  path_independent_coherence ch₁ ch₂
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
