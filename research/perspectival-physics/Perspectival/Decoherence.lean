@@ -210,6 +210,22 @@ theorem rate_count_le_length {P : Type u} {C : Type v}
 -- + `decoherent_plus_coherent` theorems above provide the composable
 -- machinery; instantiating on concrete types is a downstream exercise.)
 
+/-- **Plain-chain version of actualization rate.** For RealityChain
+(not strict), we use the plain count machinery. -/
+def actualizationRatePlain {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂) : ℕ × ℕ :=
+  (ch.actualizationCount, ch.length)
+
+/-- **Forgetful map preserves rate.** -/
+theorem actualizationRate_forget {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    actualizationRate ch = actualizationRatePlain ch.toRealityChain := by
+  show (ch.actualizationCount, ch.length)
+      = (ch.toRealityChain.actualizationCount, ch.toRealityChain.length)
+  refine Prod.ext ?_ ?_
+  · exact (RealityChain'.toRealityChain_actualizationCount ch).symm
+  · exact (RealityChain'.toRealityChain_length ch).symm
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
