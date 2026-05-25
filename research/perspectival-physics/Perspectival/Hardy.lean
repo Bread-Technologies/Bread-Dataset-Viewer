@@ -35,6 +35,7 @@ import Perspectival.GPT
 import Perspectival.Ontology
 import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Topology.UnitInterval
+import Perspectival.Continuity
 
 namespace Perspectival
 namespace Hardy
@@ -212,6 +213,25 @@ def Axiom5_Continuity_Strong (G : GPT V) [TopologicalSpace V] : Prop :=
       γ 1 ρ₁ = ρ₂ ∧
       (∀ t : unitInterval, ∀ ρ ∈ G.states, γ t ρ ∈ G.states) ∧
       (∀ t : unitInterval, Function.Bijective (γ t))
+
+/-- **Bridge theorem.** `Axiom5_Continuity_Strong G` is derivable from
+a `TransitiveAgency G`, provided that pure states in the GPT sense
+(membership in states + extremality) come with state-space membership.
+
+Concretely: if every `IsExtreme ℝ G.states {ρ}` corresponds to a
+`Continuity.PureState G ρ`, then `Axiom5_Continuity_Strong` holds.
+
+This is the framework's machine-verified Hardy A5 derivation from the
+agency hierarchy. -/
+theorem axiom5_strong_of_transitive_agency
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) (T : Continuity.TransitiveAgency G)
+    (h_pure_states : ∀ ρ, IsExtreme ℝ G.states {ρ} → ρ ∈ G.states) :
+    Axiom5_Continuity_Strong G := by
+  intro ρ₁ ρ₂ he₁ he₂
+  have hp₁ : Continuity.PureState G ρ₁ := ⟨h_pure_states ρ₁ he₁, he₁⟩
+  have hp₂ : Continuity.PureState G ρ₂ := ⟨h_pure_states ρ₂ he₂, he₂⟩
+  exact T.hardy_axiom5 ρ₁ ρ₂ hp₁ hp₂
 
 /-! ## Summary of categorizations (the actual research output of this file)
 
