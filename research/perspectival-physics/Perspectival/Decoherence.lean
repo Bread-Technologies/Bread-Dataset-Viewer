@@ -340,6 +340,38 @@ theorem coherent_iff_both_factors_coherent {P : Type u} {C : Type v}
   ⟨coherent_decompose ch₁ ch₂,
    fun ⟨h₁, h₂⟩ => coherent_compose ch₁ ch₂ h₁ h₂⟩
 
+/-- **Positive count iff at least one factor positive.** Contrapositive
+of `coherent_iff_both_factors_coherent`. -/
+theorem positive_count_iff_factor_positive {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    0 < (ch₁.append ch₂).actualizationCount ↔
+    0 < ch₁.actualizationCount ∨ 0 < ch₂.actualizationCount := by
+  rw [RealityChain'.append_actualizationCount]
+  omega
+
+/-- **Coherent-decomposition certificate.** Bundles the full coherent
+factorization content. -/
+theorem coherent_decomposition_certificate :
+    -- (a) Forward: both coherent implies composite coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      ch₁.actualizationCount = 0 → ch₂.actualizationCount = 0 →
+      (ch₁.append ch₂).actualizationCount = 0) ∧
+    -- (b) Backward: composite coherent implies both coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      (ch₁.append ch₂).actualizationCount = 0 →
+      ch₁.actualizationCount = 0 ∧ ch₂.actualizationCount = 0) ∧
+    -- (c) Positive count iff at least one factor positive.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      0 < (ch₁.append ch₂).actualizationCount ↔
+      0 < ch₁.actualizationCount ∨ 0 < ch₂.actualizationCount) :=
+  ⟨fun ch₁ ch₂ h₁ h₂ => coherent_compose ch₁ ch₂ h₁ h₂,
+   fun ch₁ ch₂ h => coherent_decompose ch₁ ch₂ h,
+   fun ch₁ ch₂ => positive_count_iff_factor_positive ch₁ ch₂⟩
+
 -- (A theorem like "singleton actualization step has positive count"
 -- is conceptually clear but constructing TrajectoryStep' from a bare
 -- AtSeam witness requires also providing a RealitySuccessor witness,
