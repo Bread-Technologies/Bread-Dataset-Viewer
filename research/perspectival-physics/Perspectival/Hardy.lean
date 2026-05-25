@@ -8,12 +8,41 @@ celebrated dichotomy: dropping continuity yields classical theory
 (K = N); keeping all five yields quantum theory (K = N²).
 
 This module states Hardy's axioms as predicates on `Perspectival.GPT`
-and **categorizes each one** with respect to our framework's axioms
-I–IV:
+and **categorizes each one** with respect to our framework's two
+axioms (v2: Existence + Actualization) and the bracketing operation
+that yields Tier B:
 
-    DERIVABLE — follows from I–IV (no additional postulate needed)
-    AUXILIARY — independent of I–IV; addable without contradiction
-    INCOMPATIBLE — in tension with I–IV; would require revision
+    DERIVABLE — follows from Tier A + bracketing (no additional
+                Tier B postulate needed)
+    AUXILIARY — independent of Tier A; addable as Tier B postulate
+                without contradiction
+    INCOMPATIBLE — in tension with Tier A; would require revision
+
+Under v2, Hardy's axioms are Tier B content. Each axiom is now
+re-categorized: how does the bracketing operation (Tier A → Tier B)
+constrain or yield it?
+
+  A1 Probabilities: DERIVABLE. Probability emerges from the
+    relational play of potential meetings — outcome frequencies are
+    Tier B observables of the underlying actualization rates.
+
+  A2 Simplicity (K-min): AUXILIARY. Hardy's selection principle
+    across theories. Under v2, motivated as: minimal Tier B
+    consistent with Tier A's actualization-density.
+
+  A3 Subspaces: DERIVABLE. Restriction to a sub-meeting-structure
+    yields a sub-Tier-B description by the bracketing operation.
+
+  A4 Composite systems: PARTIALLY DERIVABLE. Dimension half via
+    gptTensor; N-multiplicativity forward direction via
+    gptTensor_distinguishable_general. Full N-mult open.
+
+  A5 Continuity: DERIVABLE under v2's bracketing argument.
+    Continuous reversible transformations between pure states emerge
+    from bracketed dynamics on a continuous-meeting Tier A space.
+    Vertex preservation (the v1 patch) is now a DERIVED Tier B
+    theorem expressing the inheritance of Tier A's discreteness
+    commitment.
 
 Calibrated status of the present file:
   ✓ Axioms 1, 3, 4, 5 formulated as Lean predicates
