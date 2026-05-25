@@ -4577,6 +4577,12 @@ example (R : Reality Bool Bool)
     omega
   exact h
 
+/-- **Worked example: ch^2 * ch^3 = ch^5.** Direct application of pow_add. -/
+example (R : Reality Bool Bool)
+    (ch : RealityChain' Bool Bool R R) :
+    ch ^ 2 * ch ^ 3 = ch ^ 5 := by
+  rw [← pow_add]
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
