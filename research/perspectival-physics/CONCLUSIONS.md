@@ -279,6 +279,31 @@ depends on an ontology the framework refuses. This is philosophical
 argument, not derivation; it earns its keep only if Tier 1–3 succeed
 in making the underlying axioms do technical work elsewhere.
 
+**Hardy QUADCHOTOMY (latest session).** Beyond the classical/rebit/
+qubit trichotomy at N=2, the framework now machine-constructs the
+qutrit (`Perspectival/QutritGPT.lean`) with K = N² = 9 at N = 3,
+extending the Hardy K-signature ladder to a fourth instance
+(`Dichotomy.hardy_quadchotomy`). Three Gell-Mann-style rotation
+generators (rotL1, rotL2, rotL3) are formally constructed on the
+qutrit, providing the framework's SU(3) toehold.
+
+**Gauge ladder (latest session).** `Dichotomy.framework_gauge_ladder`
+captures all three Standard Model gauge factors at the framework's
+machine-verified infrastructure level: U(1) (CircleGPT
+rotOneParameterFamily), full non-abelian SO(3) (QubitGPT
+qubitStrictConnectedAgency_full), and SU(3) toehold (three Gell-Mann
+generators on QutritGPT). The DERIVATION that this specific gauge
+group structure is FORCED by the framework's axioms remains the open
+Tier 2 piece; the existence-of-each-factor pieces are now
+machine-verified.
+
+**Framework certificate (latest session).**
+`Dichotomy.framework_certificate` is a single Lean theorem bundling
+the framework's major results into one statement: Hardy quadchotomy
++ classical-vs-quantum L7 dichotomy + gauge ladder + Hardy A4
+dimension multiplicativity. This is the framework's "if you have to
+prove one theorem" statement of its current technical output.
+
 ## 4. What is open and the conjectured path
 
 **R6 general n.** The classical n = 2 disconnect (id ≠ swap through
