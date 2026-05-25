@@ -209,5 +209,19 @@ theorem hardy_trichotomy :
     Module.finrank ℝ (Fin 4 → ℝ) = 4 :=
   ⟨classical_hardy_K 2, circle_hardy_K, QubitGPT.qubit_hardy_K⟩
 
+/-- **Hardy trichotomy: continuous symmetry exists on both non-classical
+sides.** Both CircleGPT (rebit) and QubitGPT (qubit) carry non-degenerate
+`StrictConnectedAgency` instances with 1-parameter rotation subgroups
+in `avail`. Classical n ≥ 2 does NOT (L7 closure). -/
+theorem trichotomy_strict_agency :
+    Nonempty (Continuity.StrictConnectedAgency CircleGPT.circleGPT) ∧
+    Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT) ∧
+    (∀ _ : Continuity.PurePreservingTransitiveAgency
+            (Classical.gpt 2), False) := by
+  refine ⟨⟨CircleGPT.circleStrictConnectedAgency⟩,
+          ⟨QubitGPT.qubitStrictConnectedAgency⟩, ?_⟩
+  intro PPT
+  exact classical_no_L7_unconditional 2 (by omega) PPT
+
 end Dichotomy
 end Perspectival
