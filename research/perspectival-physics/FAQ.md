@@ -457,6 +457,33 @@ in the framework's reading; they're trajectory loops with zero net
 decoherence. See `Decoherence.boltzmann_brain_dissolution_shadow`
 for the formal correlate of TIER4 dissolution #19.
 
+## Q25. What is the DecoherenceQuotient?
+
+**Framework answer:** The `DecoherenceQuotient R₁ R₂` is the type
+of decoherence-equivalence classes of strict chains between Reality
+endpoints R₁ and R₂. Formally:
+
+```
+abbrev DecoherenceQuotient (R₁ R₂ : Reality P C) :=
+  Quotient (DecoherenceEquivalent_setoid R₁ R₂)
+```
+
+This quotient:
+- Has a well-defined `count` function (descended from `tierAEventCount`).
+- Embeds injectively into ℕ via that count
+  (`DecoherenceQuotient.count_injective`).
+- For loop endpoints (R₁ = R₂), the quotient is **trivial** —
+  contains a single class at count 0
+  (`DecoherenceQuotient.loop_quotient_trivial`).
+- For distinct endpoints (R₁ ≠ R₂), the quotient contains classes
+  indexed by positive natural numbers.
+
+This is the framework's formal expression of "the equivalence
+classes of trajectories form a natural-number-indexed hierarchy".
+The Tier B (reversible) limit corresponds to the count = 0 class
+at fixed endpoints; Tier A (irreversible) content lives in
+positive-count classes.
+
 ## Q24. What's the "super-certificate"?
 
 **Framework answer:**
