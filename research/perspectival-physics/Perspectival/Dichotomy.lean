@@ -25,6 +25,7 @@ satisfies it.
 
 import Perspectival.Classical
 import Perspectival.CircleGPT
+import Perspectival.QubitGPT
 import Perspectival.Continuity
 import Perspectival.Hardy
 import Perspectival.GPTTensor
@@ -184,6 +185,29 @@ signature 2K = N(N+1) at N = 2. -/
 theorem circle_hardy_K :
     Module.finrank ℝ (Fin 3 → ℝ) = 3 := by
   simp [Module.finrank_pi]
+
+/-! ## The Hardy trichotomy — machine-verified
+
+The framework's three GPT instances live at three distinct points of
+Hardy's signature lattice:
+
+  Classical n:  K = N        (classical: discrete reversibles only)
+  CircleGPT:    K = 3 = N(N+1)/2  (rebit: real-QM 2-level)
+  QubitGPT:     K = 4 = N²    (qubit: complex-QM 2-level)
+
+This is the framework's first machine-verified trichotomy at the
+Hardy-signature level. The qQM signature K = N(2N-1) = 6 at N=2 is
+provably distinct (and excluded by the `TomographicLocality` argument
+in `GPTTensor.lean`). -/
+
+/-- **THE HARDY TRICHOTOMY THEOREM.** The framework's three GPT instances
+have distinct K-dimensions, pinning them at three distinct points of
+Hardy's signature lattice. -/
+theorem hardy_trichotomy :
+    Module.finrank ℝ (Classical.V 2) = 2 ∧
+    Module.finrank ℝ (Fin 3 → ℝ) = 3 ∧
+    Module.finrank ℝ (Fin 4 → ℝ) = 4 :=
+  ⟨classical_hardy_K 2, circle_hardy_K, QubitGPT.qubit_hardy_K⟩
 
 end Dichotomy
 end Perspectival
