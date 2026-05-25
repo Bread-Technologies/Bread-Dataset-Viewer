@@ -5046,6 +5046,44 @@ theorem length_n_all_measures_bounded {P : Type u} {C : Type v}
 /-- **480-commit milestone marker.** -/
 theorem session_480_commits_marker : True := trivial
 
+/-- **Decoherence summary theorem in 5 sentences.**
+The framework's Seam 4 content per the entropy addendum says:
+(a) decoherence is the Tier B accumulated effect of Tier A actualization events;
+(b) coherence is endpoint-determined (path-independent status);
+(c) content is trajectory-determined (path-dependent complexity);
+(d) loops form a submonoid of coherent chains;
+(e) Boltzmann brain reasoning lacks purchase because closed loops have count 0. -/
+theorem decoherence_seam_4_summary :
+    -- (a) is encoded by `actualizationRate` definition.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = ch.actualizationCount) ∧
+    -- (b) path-independent coherence.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- (c) path-dependent content witness.
+    (∃ (P : Type) (C : Type) (R : Reality P C)
+        (ch₁ ch₂ : RealityChain' P C R R),
+      DecoherenceEquivalent ch₁ ch₂
+        ∧ trajectoryComplexity ch₁ ≠ trajectoryComplexity ch₂) ∧
+    -- (d) loop submonoid.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R), tierAEventCount ch = 0) ∧
+    -- (e) Boltzmann shadow.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : Nat),
+      tierAEventCount (loopPower ch n) = 0) :=
+  ⟨fun _ => rfl,
+   fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+    RealityChain'.nil _,
+    RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+    rfl, by decide⟩,
+   fun ch => loop_is_coherent ch,
+   fun ch n => loopPower_tierAEventCount ch n⟩
+
 /-- **Length-count range certificate.** -/
 theorem length_count_range_certificate :
     -- At length 0, count = 0.
