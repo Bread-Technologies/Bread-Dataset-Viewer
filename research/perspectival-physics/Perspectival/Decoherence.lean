@@ -4442,6 +4442,28 @@ theorem length_zero_count_zero {P : Type u} {C : Type v}
   have h_le := ch.actualizationCount_le_length
   omega
 
+/-- **Length-bounded count certificate.** Bundles small-length
+characterizations: length 0 → count 0, length 1 → count ≤ 1. -/
+theorem length_bounded_count_certificate :
+    -- Length 0 implies count 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 0 → ch.actualizationCount = 0) ∧
+    -- Length 1 implies count 0 or 1.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 1 →
+      ch.actualizationCount = 0 ∨ ch.actualizationCount = 1) ∧
+    -- Length ≤ n implies count ≤ n (general).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length ≤ n → ch.actualizationCount ≤ n) :=
+  ⟨fun ch h => length_zero_count_zero ch h,
+   fun ch h => length_one_count_dichotomy ch h,
+   fun ch n h => by
+     have h_le := ch.actualizationCount_le_length
+     omega⟩
+
 /-- **The framework's 400-commit milestone summary.** A consolidating
 statement that the decoherence module's content is comprehensive at
 the count-based discrete level. This theorem doesn't add new content
