@@ -4399,6 +4399,25 @@ theorem long_trajectory_measures_bounded {P : Type u} {C : Type v}
   · omega
   · omega
 
+/-- **Bounded-trajectory certificate.** Trajectories of bounded
+length have all measures uniformly bounded. -/
+theorem bounded_trajectory_certificate :
+    -- Count is bounded by length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length ≤ n → ch.actualizationCount ≤ n) ∧
+    -- Bracketed is bounded by length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length ≤ n → ch.bracketedCount ≤ n) ∧
+    -- Complexity is bounded by 2 * length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length ≤ n → trajectoryComplexity ch ≤ 2 * n) :=
+  ⟨fun ch n h => (long_trajectory_measures_bounded ch n h).1,
+   fun ch n h => (long_trajectory_measures_bounded ch n h).2.1,
+   fun ch n h => (long_trajectory_measures_bounded ch n h).2.2⟩
+
 /-- **Loop power monotonicity certificate.** -/
 theorem loop_npow_monotonicity_certificate :
     -- Weak monotonicity.
