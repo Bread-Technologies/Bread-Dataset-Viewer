@@ -10,6 +10,16 @@ available durable storage for the work. The research is unrelated to
 the dataset viewer; it is parked here because it is the authorized
 push target.
 
+**v2 architectural correction (current):** the framework is now
+two-tier — Tier A (irreversible meeting-structure foundation) and
+Tier B (reversible limit via bracketing actualization events). Two
+axioms only (Existence + Actualization). Measurement = actualization
+re-entering the Tier B description (no separate collapse axiom).
+Witkowski-Brown-Truong 2024 (Entropy 26(3), 203) provides the
+mechanical content of Axiom II via Picard-Lindelöf. See
+`ORIGINAL_PROMPT.md` (v2), `V2_AUDIT.md`, `SEAMS.md`, and the v2
+Lean modules `TierA.lean`, `TierB.lean`.
+
 **Headline results** (all machine-verified, no `sorry`):
 1. **Hardy QUADCHOTOMY**: four GPT instances at distinct Hardy K-
    signatures — classical (K=N), CircleGPT (rebit, K=N(N+1)/2),
@@ -51,7 +61,15 @@ strengthening).
 ## Layout
 
 **Lean code** (`Perspectival/`):
-- `Ontology.lean` — axioms I–IV encoded as Lean 4 types.
+- `TierA.lean` — **v2 Tier A foundation:** Want, Meeting, MeetingStatus,
+  Reality, RealitySuccessor, ActualizationMap, actualizeAt pointwise
+  event, WBT (Witkowski-Brown-Truong) structural shadow.
+- `TierB.lean` — **v2 Tier B bracketing operation:** BracketedTransition
+  equivalence, AtSeam predicate, DefiniteConfig with permutation
+  action, TrajectoryStep dichotomy, measurement_is_actualization,
+  actualizeAt → AtSeam bridges.
+- `Ontology.lean` — axioms I–IV encoded as Lean 4 types (v1; under v2,
+  this is Tier B content augmented with Tier A foundation).
 - `Transformations.lean` — PTrans as a Group, MulAction on meetings.
 - `Composition.lean` — disjoint-union, no-cross-system meetings.
 - `CHSH.lean` — Tsirelson 2√2 via Mathlib's CHSH module.
@@ -80,8 +98,13 @@ strengthening).
   Hardy trichotomy + quadchotomy, gauge ladder, framework_certificate.
 
 **Documentation**:
+- `ORIGINAL_PROMPT.md` — source of truth (v2 architecture); v1 archived
+  to `ORIGINAL_PROMPT_V1.md`.
 - `STATUS.md` — calibrated per-theorem catalog. **Read first.**
 - `FINDINGS.md` — honest commentary, limitations, open targets.
+- `V2_AUDIT.md` — honest re-examination of prior Tier B work under v2.
+- `SEAMS.md` — catalogue of Tier A / Tier B seams as framework
+  empirical signatures.
 - `CONCLUSIONS.md` — external-reader summary.
 - `FAQ.md` — concrete physics questions answered.
 - `GLOSSARY.md` — terminology with Lean cross-references.
