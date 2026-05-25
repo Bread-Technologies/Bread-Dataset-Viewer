@@ -801,6 +801,13 @@ theorem RealityChain'.distinct_endpoints_implies_actualization
   have h_zero : ch.actualizationCount = 0 := Nat.le_zero.mp h_le
   exact h_ne (RealityChain'.zero_actualization_implies_eq ch h_zero)
 
+-- (A potential iff `R₁ ≠ R₂ ↔ count > 0` would require the reverse
+-- direction `count > 0 → R₁ ≠ R₂`, which threads past-growth through
+-- the strict-chain. The strict-chain `is_successor` evidence means
+-- once a meeting is actualized in an early step, no_return_along_chain
+-- preserves it to the endpoint — making R₂ differ from R₁ at that
+-- actualized meeting. Full formalization deferred to future work.)
+
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
 transition R₁ → R₂ cannot be a bracketed step; if it's at all
