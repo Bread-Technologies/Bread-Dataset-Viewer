@@ -226,6 +226,24 @@ theorem actualizationRate_forget {P : Type u} {C : Type v}
   · exact (RealityChain'.toRealityChain_actualizationCount ch).symm
   · exact (RealityChain'.toRealityChain_length ch).symm
 
+/-- **Plain-chain coherent regime: same as strict.** -/
+theorem coherent_regime_plain {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    actualizationRatePlain ch = (0, ch.length) := by
+  show (ch.actualizationCount, ch.length) = (0, ch.length)
+  rw [h]
+
+/-- **Plain-chain decoherence regime: same as strict.** -/
+theorem decoherence_regime_plain {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂)
+    (h : ch.bracketedCount = 0) :
+    actualizationRatePlain ch = (ch.length, ch.length) := by
+  show (ch.actualizationCount, ch.length) = (ch.length, ch.length)
+  have h_sum := ch.counts_sum
+  rw [h] at h_sum
+  rw [← h_sum]; simp
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
