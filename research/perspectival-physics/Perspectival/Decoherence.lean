@@ -1115,6 +1115,32 @@ theorem density_eq_implies_complexity_eq {P : Type u} {C : Type v}
   have h_sum₂ := ch₂.counts_sum
   omega
 
+/-! ## Hierarchy of trajectory equivalences
+
+From coarsest to finest:
+1. DecoherenceEquivalent (count-equality alone).
+2. Density-equivalence (count + length equality).
+3. Trajectory equality (full structural identity, not formalized
+   here as it would require step-identity which is not generally
+   meaningful for chains constructed with `bracketed_refl` etc.).
+
+The framework's anti-realism: only (1) is endpoint-determined; (2)
+and (3) are trajectory-dependent. Different trajectories between
+the same endpoints can disagree at level (2) and (3) but agree at (1). -/
+
+/-- **The hierarchy: density-eq is strictly finer than DecoherenceEquivalent.**
+There exist DecoherenceEquivalent chains with different densities. -/
+example (P : Type u) (C : Type v) (R : Reality P C) :
+    let ch₁ : RealityChain' P C R R := RealityChain'.nil R
+    let ch₂ : RealityChain' P C R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    DecoherenceEquivalent ch₁ ch₂
+      ∧ ch₁.actualizationDensity ≠ ch₂.actualizationDensity := by
+  refine ⟨rfl, ?_⟩
+  show ((0, 0) : ℕ × ℕ) ≠ (0, 1)
+  decide
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
