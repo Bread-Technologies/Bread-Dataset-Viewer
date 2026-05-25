@@ -1005,6 +1005,28 @@ theorem decoherence_equivalence_certificate :
    DecoherenceEquivalent_trans,
    DecoherenceEquivalent_append_both⟩
 
+/-! ## Path quotient (conceptual)
+
+The DecoherenceEquivalent relation partitions strict chains
+(between fixed endpoints) into equivalence classes by tier A
+event count. Each class corresponds to a non-negative integer
+(the shared count), and the chain monoid descends to a monoid
+on equivalence classes (by congruence). This is the quotient
+chain monoid under decoherence-equivalence.
+
+Formal quotient construction deferred — requires Quotient setup
+which is heavier than the current scope. The structural content
+above (refl/symm/trans + congruence) is the foundation. -/
+
+/-- **The decoherence-equivalence class of a chain is determined by
+its tier A event count.** Two chains are decoherence-equivalent iff
+they have equal tier A content. (Re-statement of the iff theorem.) -/
+theorem class_determined_by_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    DecoherenceEquivalent ch₁ ch₂ ↔
+      tierAEventCount ch₁ = tierAEventCount ch₂ :=
+  DecoherenceEquivalent_iff_tier_A ch₁ ch₂
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
