@@ -502,6 +502,47 @@ theorem productTransform_comp
      = TensorProduct.map (g₁.comp f₁) (g₂.comp f₂)
   exact (TensorProduct.map_comp g₁ g₂ f₁ f₂).symm
 
+/-- **productTransform preserves states of gptTensor.** If `f` preserves
+`G₁.states` and `g` preserves `G₂.states`, then `productTransform f g`
+preserves the convex-hull state space `(gptTensor G₁ G₂).states`. -/
+theorem productTransform_preserves_states
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    {f₁ : V₁ →ₗ[ℝ] V₁} {f₂ : V₂ →ₗ[ℝ] V₂}
+    (h₁ : ∀ ρ ∈ G₁.states, f₁ ρ ∈ G₁.states)
+    (h₂ : ∀ σ ∈ G₂.states, f₂ σ ∈ G₂.states)
+    {ρ : V₁ ⊗[ℝ] V₂} (hρ : ρ ∈ (gptTensor G₁ G₂).states) :
+    productTransform f₁ f₂ ρ ∈ (gptTensor G₁ G₂).states := by
+  -- The image of (gptTensor G₁ G₂).states = convexHull productGenerators
+  -- under productTransform is again ⊆ convexHull productGenerators.
+  -- Strategy: show the preimage of (gptTensor _ _).states under
+  -- productTransform contains productGenerators, then use the fact that
+  -- gptTensor.states is convex.
+  show productTransform f₁ f₂ ρ ∈ tensorStates G₁ G₂
+  -- Define T := { x | productTransform f₁ f₂ x ∈ tensorStates G₁ G₂ }
+  set T : Set (V₁ ⊗[ℝ] V₂) :=
+    { x | productTransform f₁ f₂ x ∈ tensorStates G₁ G₂ }
+  -- Show T is convex (preimage of convex under linear).
+  have hT_convex : Convex ℝ T := by
+    intro x hx y hy a b ha hb hab
+    show productTransform f₁ f₂ (a • x + b • y) ∈ tensorStates G₁ G₂
+    rw [LinearMap.map_add, LinearMap.map_smul, LinearMap.map_smul]
+    -- productTransform f₁ f₂ x ∈ tensorStates G₁ G₂; similarly for y.
+    -- tensorStates is convex, so a · (image of x) + b · (image of y) is in tensorStates.
+    exact (tensorStates_convex G₁ G₂) hx hy ha hb hab
+  -- productGenerators ⊆ T.
+  have hgen_sub : productGenerators G₁ G₂ ⊆ T := by
+    intro x hx
+    obtain ⟨ρ₁, hρ₁, ρ₂, hρ₂, rfl⟩ := hx
+    show productTransform f₁ f₂ (ρ₁ ⊗ₜ[ℝ] ρ₂) ∈ tensorStates G₁ G₂
+    rw [productTransform_tmul]
+    -- (f₁ ρ₁) ⊗ (f₂ ρ₂) ∈ productGenerators ⊆ tensorStates.
+    apply subset_convexHull
+    exact ⟨f₁ ρ₁, h₁ ρ₁ hρ₁, f₂ ρ₂, h₂ ρ₂ hρ₂, rfl⟩
+  -- Conclude: convexHull productGenerators ⊆ T.
+  exact convexHull_min hgen_sub hT_convex hρ
+
 
 end GPT
 end Perspectival
