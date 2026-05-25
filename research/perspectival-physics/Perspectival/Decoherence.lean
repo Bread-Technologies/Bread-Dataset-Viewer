@@ -1185,6 +1185,26 @@ theorem trajectoryComplexity_unit {P : Type u} {C : Type v}
   unfold trajectoryComplexity
   simp
 
+/-- **Monoid morphism certificate.** Single Lean expression bundling
+the monoid morphism content for both measures. -/
+theorem trajectory_monoid_morphism_certificate :
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂)
+        = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      tierAEventCount (RealityChain'.nil R) = 0) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      trajectoryComplexity (ch₁.append ch₂)
+        = trajectoryComplexity ch₁ + trajectoryComplexity ch₂) ∧
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      trajectoryComplexity (RealityChain'.nil R) = 0) :=
+  ⟨fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂,
+   fun R => tierAEventCount_unit R,
+   fun ch₁ ch₂ => trajectoryComplexity_monoid_morphism ch₁ ch₂,
+   fun R => trajectoryComplexity_unit R⟩
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
