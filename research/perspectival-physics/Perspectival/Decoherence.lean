@@ -5028,6 +5028,21 @@ theorem length_n_complexity_range {P : Type u} {C : Type v}
   · omega
   · omega
 
+/-- **At fixed length, all measures bounded.** Combines count, bracketed,
+and complexity bounds at fixed length. -/
+theorem length_n_all_measures_bounded {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (n : ℕ)
+    (h : ch.length = n) :
+    ch.actualizationCount ≤ n
+      ∧ ch.bracketedCount ≤ n
+      ∧ n ≤ trajectoryComplexity ch
+      ∧ trajectoryComplexity ch ≤ 2 * n := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact length_n_count_range ch n h
+  · exact length_n_bracketed_range ch n h
+  · exact (length_n_complexity_range ch n h).1
+  · exact (length_n_complexity_range ch n h).2
+
 /-- **Length-count range certificate.** -/
 theorem length_count_range_certificate :
     -- At length 0, count = 0.
