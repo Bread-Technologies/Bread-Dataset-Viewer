@@ -2374,6 +2374,93 @@ theorem trichotomy_predicates_certificate :
    fun ch => coherent_xor_mixed ch,
    fun ch => pure_decoherent_xor_mixed ch⟩
 
+/-! ## Predicate ↔ rate phase-space bridges
+
+The trichotomy predicates align with three corners/edges of the
+`(count, length)` rate phase space:
+- IsCoherent  ↔  rate = (0, length)         (count = 0)
+- IsPureDecoherent ↔  rate = (length, length) (count = length)
+- IsMixed    ↔  0 < count < length          (interior of the simplex)
+
+These bridges connect the predicate API to the geometric phase-space
+picture from the rate certificates. -/
+
+/-- **IsCoherent ↔ rate is (0, length).** -/
+theorem IsCoherent.iff_rate_zero {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    IsCoherent ch ↔ actualizationRate ch = (0, ch.length) := by
+  constructor
+  · intro h
+    have h' : ch.actualizationCount = 0 := h
+    exact coherent_regime ch h'
+  · intro h
+    have h' : (actualizationRate ch).1 = 0 := by rw [h]
+    show ch.actualizationCount = 0
+    exact h'
+
+/-- **IsPureDecoherent ↔ rate is (length, length).** -/
+theorem IsPureDecoherent.iff_rate_full {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    IsPureDecoherent ch ↔ actualizationRate ch = (ch.length, ch.length) := by
+  constructor
+  · intro h
+    have h' : ch.bracketedCount = 0 := h
+    exact decoherence_regime ch h'
+  · intro h
+    -- (count, length) = (length, length) ⇒ count = length ⇒ bracketed = 0.
+    have h_count : (actualizationRate ch).1 = ch.length := by rw [h]
+    have h_count' : ch.actualizationCount = ch.length := h_count
+    have h_sum := ch.counts_sum
+    show ch.bracketedCount = 0
+    omega
+
+/-- **IsMixed ↔ 0 < count < length.** -/
+theorem IsMixed.iff_strict_interior {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    IsMixed ch ↔ 0 < ch.actualizationCount ∧ ch.actualizationCount < ch.length := by
+  constructor
+  · rintro ⟨hC, hB⟩
+    refine ⟨hC, ?_⟩
+    have h_sum := ch.counts_sum
+    omega
+  · rintro ⟨hC, hlt⟩
+    refine ⟨hC, ?_⟩
+    have h_sum := ch.counts_sum
+    omega
+
+/-- **IsMixed implies length ≥ 2.** A mixed chain has both an
+actualizing step AND a bracketed step, so its length is at least 2. -/
+theorem IsMixed.length_ge_two {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch : RealityChain' P C R₁ R₂}
+    (h : IsMixed ch) : 2 ≤ ch.length := by
+  obtain ⟨hC, hB⟩ := h
+  have h_sum := ch.counts_sum
+  omega
+
+/-- **Phase-space bridge certificate.** Bundles the three rate-predicate
+equivalences. -/
+theorem rate_predicate_bridge_certificate :
+    -- (a) IsCoherent ↔ rate = (0, length).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsCoherent ch ↔ actualizationRate ch = (0, ch.length)) ∧
+    -- (b) IsPureDecoherent ↔ rate = (length, length).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsPureDecoherent ch ↔ actualizationRate ch = (ch.length, ch.length)) ∧
+    -- (c) IsMixed ↔ 0 < count < length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsMixed ch ↔ 0 < ch.actualizationCount ∧ ch.actualizationCount < ch.length) ∧
+    -- (d) Mixed chains have length ≥ 2.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        {ch : RealityChain' P C R₁ R₂},
+      IsMixed ch → 2 ≤ ch.length) :=
+  ⟨fun ch => IsCoherent.iff_rate_zero ch,
+   fun ch => IsPureDecoherent.iff_rate_full ch,
+   fun ch => IsMixed.iff_strict_interior ch,
+   fun h => IsMixed.length_ge_two h⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
