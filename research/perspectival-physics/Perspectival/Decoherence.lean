@@ -3199,6 +3199,18 @@ theorem bracketedCount_monotone_under_extension {P : Type u} {C : Type v}
   rw [RealityChain'.append_bracketedCount]
   omega
 
+/-- **Complexity strict monotonicity.** Extending a chain with a
+positive-length chain strictly increases complexity. -/
+theorem complexity_strict_monotone {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h : 0 < ch₂.length) :
+    trajectoryComplexity ch₁ < trajectoryComplexity (ch₁.append ch₂) := by
+  rw [trajectoryComplexity_append]
+  -- complexity ch₂ ≥ length ch₂ > 0.
+  have h_ge := complexity_ge_length ch₂
+  omega
+
 /-- **Master monotonicity certificate.** All three count measures
 (tier A, bracketed, length) are monotonic under chain extension. -/
 theorem master_monotonicity_certificate :
