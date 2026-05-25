@@ -4383,6 +4383,22 @@ example (R : Reality Bool Bool) :
   intro base
   rw [← pow_mul]
 
+/-- **Long-trajectory length bound.** Any chain of length n has all
+measures ≤ 2n (since complexity ≤ 2*length). -/
+theorem long_trajectory_measures_bounded {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (n : ℕ)
+    (h : ch.length ≤ n) :
+    ch.actualizationCount ≤ n
+      ∧ ch.bracketedCount ≤ n
+      ∧ trajectoryComplexity ch ≤ 2 * n := by
+  have h_count := ch.actualizationCount_le_length
+  have h_brk := length_ge_bracketed ch
+  have h_comp := complexity_le_twice_length ch
+  refine ⟨?_, ?_, ?_⟩
+  · omega
+  · omega
+  · omega
+
 /-- **Loop power monotonicity certificate.** -/
 theorem loop_npow_monotonicity_certificate :
     -- Weak monotonicity.
