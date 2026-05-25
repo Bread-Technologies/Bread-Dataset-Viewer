@@ -16687,6 +16687,7 @@ example :
 
 /-- Construction: build a PatternStableWantable using `Stable_nontrivial`
 as the stability predicate, given a witness of non-trivial stability. -/
+@[reducible]
 def PatternStableWantable.ofStableNontrivialWitness {W : Type u}
     [Wantable W] [DecidableEq W]
     (w_witness : W)
