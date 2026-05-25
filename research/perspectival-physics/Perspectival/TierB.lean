@@ -962,6 +962,25 @@ theorem RealityChain'.distinct_endpoints_implies_length_pos
   have h_zero : ch.length = 0 := Nat.le_zero.mp h_le
   exact h_ne (ch.length_zero_implies_eq h_zero)
 
+/-- **Length-1 strict chain with positive count: equivalent to single
+actualization step.** A 1-step chain has count = 1 iff its underlying
+step is an actualization. -/
+theorem RealityChain'.length_one_count_one_iff_actualization
+    {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep' P C R₁ R₂) :
+    (RealityChain'.singleton step).actualizationCount = 1
+    ↔ ∃ h, step.step = TrajectoryStep.actualization h := by
+  rw [RealityChain'.singleton_actualizationCount]
+  constructor
+  · intro h
+    cases h_eq : step.step with
+    | bracketed _ =>
+        rw [h_eq] at h
+        simp at h
+    | actualization h_seam => exact ⟨h_seam, rfl⟩
+  · rintro ⟨_, h_eq⟩
+    rw [h_eq]
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
