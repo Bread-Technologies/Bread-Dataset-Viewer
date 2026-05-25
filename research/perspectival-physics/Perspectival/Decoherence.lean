@@ -1555,6 +1555,36 @@ For external readers tracing the v2 architecture:
 The framework's full v2 architecture is encoded across these 5 modules
 (plus the per-instance GPT files), all build-clean. -/
 
+/-! ## Final concrete certificate
+
+The framework's complete decoherence content in a single named theorem
+that bundles every key claim. -/
+
+/-- **Final Decoherence module certificate.** A single Lean expression
+witnessing the framework's full decoherence reading per
+`ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` Seam 4. -/
+theorem decoherence_module_certificate :
+    -- (a) Trajectory measures exist and behave compositionally.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch ≤ ch.length) ∧
+    -- (b) Coherence status is path-independent (key anti-realism).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- (c) Decoherence content composes additively.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂)
+        = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    -- (d) Past grows monotonically along chains (arrow of time).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂), past R₁ ⊆ past R₂) :=
+  ⟨fun ch => ch.actualizationCount_le_length,
+   fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂,
+   fun ch => ch.past_monotone'⟩
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
