@@ -1547,6 +1547,67 @@ theorem boltzmann_brain_dissolution_shadow {P : Type u} {C : Type v}
    by rw [loop_rate ch],
    fun n => loopPower_tierAEventCount ch n⟩
 
+/-! ## Coherent chains as kernel of the counts homomorphism
+
+The map `tierAEventCount : RealityChain' P C R₁ R₂ → ℕ` is a monoid
+morphism (under append → +). The "kernel" — chains with count = 0 —
+captures exactly the coherent chains. This section formalizes that
+identification.
+
+Note: since RealityChain' is two-sorted (parameterized by R₁, R₂),
+this is technically a groupoid-style kernel, not a strict monoid
+kernel. But within each fiber `(R, R)`, the kernel is a sub-monoid
+of loops. -/
+
+/-- **Coherent kernel characterization.** A strict chain belongs to
+the "coherent kernel" (count = 0) iff its endpoints are equal. -/
+theorem coherent_kernel_iff_endpoints_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    tierAEventCount ch = 0 ↔ R₁ = R₂ :=
+  ⟨ch.zero_actualization_implies_eq, fun h => ch.eq_iff_zero_count.mp h⟩
+
+/-- **Coherent kernel is closed under composition (when fiber matches).**
+If two chains both have count 0 and can compose, their composition
+has count 0. -/
+theorem coherent_kernel_closed_under_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+    (h₁ : tierAEventCount ch₁ = 0) (h₂ : tierAEventCount ch₂ = 0) :
+    tierAEventCount (ch₁.append ch₂) = 0 := by
+  rw [tierAEventCount_append, h₁, h₂]
+
+/-- **Coherent kernel contains nil.** -/
+theorem coherent_kernel_nil {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0 := rfl
+
+/-- **Coherent kernel kernel-monoid certificate.** Bundles the
+sub-monoid structure of coherent chains within each (R, R) fiber. -/
+theorem coherent_kernel_submonoid_certificate :
+    -- (a) Kernel: count = 0 iff endpoints equal.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch = 0 ↔ R₁ = R₂) ∧
+    -- (b) Closed under composition.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount ch₁ = 0 → tierAEventCount ch₂ = 0 →
+      tierAEventCount (ch₁.append ch₂) = 0) ∧
+    -- (c) Contains identity (nil).
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0) :=
+  ⟨fun ch => coherent_kernel_iff_endpoints_eq ch,
+   fun ch₁ ch₂ h₁ h₂ => coherent_kernel_closed_under_append ch₁ ch₂ h₁ h₂,
+   fun R => coherent_kernel_nil R⟩
+
+/-- **Counts homomorphism: image contains 0.** The coherent-kernel
+existence theorem: chains with count = 0 always exist (the nil
+chains witness this). -/
+theorem counts_image_contains_zero :
+    ∀ (P : Type) (C : Type) (R : Reality P C),
+      tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0 :=
+  fun _ _ R => coherent_kernel_nil R
+
 /-! ## Anti-realist monoid morphism interpretation
 
 The framework's anti-realism: only the COUNT (= number of seam
