@@ -234,6 +234,32 @@ theorem trichotomy_one_parameter_agency :
     Nonempty (Continuity.OneParameterFamily QubitGPT.qubitGPT) :=
   ⟨⟨CircleGPT.rotOneParameterFamily⟩, ⟨QubitGPT.rotZOneParameterFamily⟩⟩
 
+/-! ## Tier 2 #6 baby step: U(1) gauge instance via CircleGPT
+
+Per `TIER2_GAUGE_SCOPING.md` §7, the smallest non-trivial Lean-
+verifiable gauge instance is `u(1) ≃ (ℝ, +)` realized as a smooth
+1-parameter subgroup of `PTrans` on a `ContinuousWantable`.
+
+The framework's `CircleGPT` realizes exactly this: the
+`OneParameterFamily rotOneParameterFamily` is a continuous
+homomorphism `ℝ → StrictReversible circleGPT` whose image is the
+U(1) ≃ SO(2) rotation group acting on the Bloch disk. This IS the
+abelian Lie algebra `u(1)` of the simplest local symmetry — the
+framework's analogue of electromagnetism.
+
+Formal statement: the CircleGPT carries a U(1) one-parameter family
+of state-preserving bijective transformations with `rotZ(θ₁+θ₂) =
+rotZ(θ₁) ∘ rotZ(θ₂)` — the abelian group structure of u(1). -/
+
+/-- **U(1) gauge instance via CircleGPT** — the framework's machine-
+verified smallest non-trivial gauge example. -/
+theorem framework_u1_gauge_instance :
+    ∃ F : Continuity.OneParameterFamily CircleGPT.circleGPT,
+      ∀ θ₁ θ₂ : ℝ, (F.f (θ₁ + θ₂)).toLin
+                  = (F.f θ₁).toLin.comp (F.f θ₂).toLin :=
+  ⟨CircleGPT.rotOneParameterFamily, fun θ₁ θ₂ =>
+    CircleGPT.rotOneParameterFamily.add θ₁ θ₂⟩
+
 /-! ## Hardy A4 dimension applies to all three trichotomy points -/
 
 /-- The Hardy A4 dimension multiplicativity holds for any pair of GPT
