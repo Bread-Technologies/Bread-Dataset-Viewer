@@ -4336,6 +4336,20 @@ theorem loop_npow_length_strict_monotone {P : Type u} {C : Type v}
   rw [loop_npow_length, loop_npow_length]
   exact (Nat.mul_lt_mul_right h_pos).mpr h
 
+/-- **Loop power monotonicity certificate.** -/
+theorem loop_npow_monotonicity_certificate :
+    -- Weak monotonicity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (m n : ℕ),
+      m ≤ n → (ch ^ m).length ≤ (ch ^ n).length) ∧
+    -- Strict monotonicity for positive-length loops.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (m n : ℕ),
+      0 < ch.length → m < n →
+      (ch ^ m).length < (ch ^ n).length) :=
+  ⟨fun ch _ _ h => loop_npow_length_monotone ch h,
+   fun ch _ _ h_pos h => loop_npow_length_strict_monotone ch h_pos h⟩
+
 /-- **Grading certificate.** Length is a ℕ-valued grading function
 on the chain monoid, with composition increasing additively and
 nil being the unit. -/
