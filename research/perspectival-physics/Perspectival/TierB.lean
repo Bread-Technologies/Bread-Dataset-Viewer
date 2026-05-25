@@ -377,6 +377,60 @@ theorem measurement_is_actualization {P : Type u} {C : Type v}
   obtain ⟨m, h_before_pot, h_after_act⟩ := am.nontrivial
   exact ⟨m, h_before_pot, h_after_act⟩
 
+/-- **A bracketed step preserves both potential and actualized status
+of every meeting.** Restated: the entire meeting-status function is
+unchanged across a bracketed step. -/
+theorem bracketed_preserves_full_state {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : BracketedTransition R₁ R₂)
+    (m : Meeting P C) : R₁ m = R₂ m := by
+  -- Case on R₁ m: Potential or Actualized.
+  cases h_eq : R₁ m with
+  | Potential =>
+    -- bracketed preserves future-set, so R₂ m = Potential too.
+    have h_fut : R₂ m = MeetingStatus.Potential := by
+      have hsame : future R₁ = future R₂ :=
+        bracketed_future_invariant h
+      have hmem : m ∈ future R₁ := by
+        show R₁ m = MeetingStatus.Potential; exact h_eq
+      rw [hsame] at hmem
+      show R₂ m = MeetingStatus.Potential
+      exact hmem
+    exact h_fut.symm
+  | Actualized =>
+    -- bracketed preserves actualized-set.
+    have h_act : R₂ m = MeetingStatus.Actualized := (h m).mp h_eq
+    exact h_act.symm
+
+/-- **Reformulation of bracketed transitions:** R₁ and R₂ are
+bracketed-equivalent iff they are EQUAL as Reality states. -/
+theorem bracketed_iff_eq {P : Type u} {C : Type v}
+    (R₁ R₂ : Reality P C) :
+    BracketedTransition R₁ R₂ ↔ R₁ = R₂ := by
+  constructor
+  · intro h
+    funext m
+    exact bracketed_preserves_full_state h m
+  · intro h_eq
+    rw [h_eq]
+    exact bracketed_refl R₂
+
+/-! **Consequence:** the bracketed-transition relation, on Reality
+states regarded as functions to MeetingStatus, is just EQUALITY. This
+is a strong form of the bracketing operation: a bracketed interval
+has trivial dynamics on the Reality status function itself. The non-
+trivial Tier B dynamics live in the *configuration of meeting
+positions* (which meetings exist as candidates), not in the status
+function.
+
+This is the framework's structural sharpening: between actualization
+events, the Reality-state function is invariant; what evolves is the
+RELATIONAL configuration of meetings, which is governed by Tier B's
+reversible group action (e.g., permutations on definite configs).
+
+In the existing Tier B modules (Continuity, GPT, Hardy), this
+relational evolution is encoded operationally as `Reversible G` /
+`StrictReversible G` etc. — the inter-event dynamics. -/
+
 /-! ## Summary: the bracketing operation
 
 This module formalizes the Tier A → Tier B bracketing operation.
