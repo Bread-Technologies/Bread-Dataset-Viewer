@@ -277,6 +277,34 @@ component counts).
 These make the framework's "evolution + measurement" architecture
 operationally concrete and computable.
 
+## Q17. What's the difference between `RealityChain` and `RealityChain'`?
+
+**Framework answer:** Both are inductive types representing
+trajectories of Reality states linked by TrajectoryStep witnesses.
+The difference is in the steps themselves:
+
+- `RealityChain` uses bare `TrajectoryStep` (bracketed | actualization).
+  This does NOT generally imply `RealitySuccessor` along the endpoints
+  because the actualization arm carries only an `AtSeam` witness, which
+  doesn't preserve the actualized-set invariant.
+
+- `RealityChain'` uses `TrajectoryStep'` (step + is_successor pair).
+  Each step explicitly carries a `RealitySuccessor` witness, so chains
+  built from `TrajectoryStep'` automatically imply
+  `RealitySuccessor R₁ R_n` via `RealityChain'.implies_successor`.
+
+The strict version supports a substantial **iff theorem**:
+`R₁ ≠ R₂ ↔ actualizationCount > 0` (i.e., `eq_iff_zero_count`). The
+plain version only has the forward direction.
+
+**Constructors:** `TrajectoryStep'.bracketed` (any bracketed
+transition lifts) and `actualizeAt_strict_step` (any pointwise
+actualization at a potential meeting lifts).
+
+**Forgetful map:** `RealityChain'.toRealityChain` discards the
+successor evidence to recover a plain chain. Length and
+actualizationCount are preserved.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
