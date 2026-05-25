@@ -926,6 +926,31 @@ example (P : Type u) (C : Type v)
         (RealityChain.counts_sum ch).symm, h_count, h_brk]
   trivial
 
+/-- **Worked example: mixed bracketed/actualization chain.**
+Starting from R, do a refl-bracketed step (R → R) followed by an
+actualization (R → actualizeAt R m). Chain has actualizationCount = 1,
+bracketedCount = 1, length = 2. -/
+example (P : Type u) (C : Type v)
+    [DecidableEq (Meeting P C)] (R : Reality P C)
+    (m : Meeting P C) (h_pot : R m = MeetingStatus.Potential) :
+    True := by
+  let ch₁ : RealityChain P C R R := reflBracketedChain R
+  let ch₂ : RealityChain P C R (actualizeAt R m) := actualizeAt_chain R m h_pot
+  let ch : RealityChain P C R (actualizeAt R m) := ch₁.append ch₂
+  have h_act : ch.actualizationCount = 1 := by
+    show (ch₁.append ch₂).actualizationCount = 1
+    rw [RealityChain.append_actualizationCount]
+    show (reflBracketedChain R).actualizationCount
+        + (actualizeAt_chain R m h_pot).actualizationCount = 1
+    simp
+  have h_brk : ch.bracketedCount = 1 := by
+    show (ch₁.append ch₂).bracketedCount = 1
+    rw [RealityChain.append_bracketedCount]
+    show (reflBracketedChain R).bracketedCount
+        + (actualizeAt_chain R m h_pot).bracketedCount = 1
+    simp
+  trivial
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
