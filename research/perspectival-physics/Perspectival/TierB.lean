@@ -1139,13 +1139,24 @@ theorem RealityChain'.append_bracketedCount {P : Type u} {C : Type v} :
     (RealityChain'.singleton step).bracketedCount
       = (match step.step with
          | TrajectoryStep.bracketed _ => 1
-         | TrajectoryStep.actualization _ => 0) := by
-  show (match step.step with
-        | TrajectoryStep.bracketed _ => 1
-        | TrajectoryStep.actualization _ => 0)
-      + RealityChain'.bracketedCount (RealityChain'.nil _)
-      = _
-  simp [RealityChain'.bracketedCount]
+         | TrajectoryStep.actualization _ => 0)
+        + 0 := rfl
+
+/-- **Density-style content: actualization count divided by length
+characterizes the "seam-crossing rate" along a chain.** Useful for
+the decoherence framing (Seam 4 in SEAMS.md): a chain with high
+actualization density represents heavy environment-system actualization. -/
+def RealityChain'.actualizationDensity {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) : ℕ × ℕ :=
+  (ch.actualizationCount, ch.length)
+
+/-- **Bare-Tier-B density: bracketed-only chains have density (0, n).** -/
+theorem RealityChain'.bare_tier_B_density {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    ch.actualizationDensity = (0, ch.length) := by
+  show (ch.actualizationCount, ch.length) = (0, ch.length)
+  rw [h]
 
 /-- **Worked example: chain-monoid associativity on concrete trajectory.**
 Demonstrates that `(ch₁ ++ ch₂) ++ ch₃ = ch₁ ++ (ch₂ ++ ch₃)` holds
