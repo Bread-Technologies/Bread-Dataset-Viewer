@@ -235,11 +235,107 @@ theorem vertex_distinguishability_set :
     obtain ⟨j, _, rfl⟩ := Finset.mem_image.mp hρ₂
     exact vertices_distinguishable n i j (fun h => hne (by rw [h]))
 
--- NOTE: A natural follow-up theorem `vertex_is_extreme i : IsExtreme ℝ
--- (states n) {vertex n i}` (vertices are pure states) would tie this
--- module to `Continuity.PureState`. The proof requires coordinate-wise
--- analysis of an open-segment representation and is non-trivial; left
--- for follow-up. See ROADMAP.md R1.
+/-! ## Vertices are pure states (extreme points of the simplex)
+
+A vertex `vertex n i` of the classical simplex is an extreme point of
+`states n`: any open-segment decomposition `a • x + b • y = vertex n i`
+with `x, y ∈ states n` and `0 < a, 0 < b, a + b = 1` forces `x = y =
+vertex n i`. The proof is coordinate-wise:
+
+  * at coordinate `i`, `(vertex n i) i = 1`. Since `x i, y i ∈ [0,1]`
+    and `a + b = 1`, the convex combination equals `1` iff
+    `x i = y i = 1`.
+  * at coordinate `j ≠ i`, `(vertex n i) j = 0`. Since `x j, y j ≥ 0`
+    and `a, b > 0`, the convex combination equals `0` iff
+    `x j = y j = 0`.
+
+Combined with `∑ x j = ∑ y j = 1`, this forces `x = y = vertex n i`. -/
+
+/-- The vertex `vertex n i` is an extreme point of the standard simplex
+`states n`. -/
+theorem vertex_is_extreme (i : Fin n) :
+    IsExtreme ℝ (states n) {vertex n i} := by
+  refine ⟨?_, ?_⟩
+  · -- {vertex n i} ⊆ states n
+    intro v hv
+    rw [Set.mem_singleton_iff] at hv
+    rw [hv]
+    exact vertex_in_states n i
+  · -- Open-segment endpoints lie in {vertex n i}.
+    rintro x hx y hy z hz ⟨a, b, ha, hb, hab, hxy⟩
+    rw [Set.mem_singleton_iff] at hz
+    -- We show x = vertex n i (the symmetric argument handles y).
+    rw [Set.mem_singleton_iff]
+    -- Coordinate-wise: at index i, both x i and y i must be 1.
+    have hxi_le : x i ≤ 1 := by
+      have hsum_x := hx.2
+      have hpos : ∀ j ∈ Finset.univ, j ≠ i → 0 ≤ x j := fun j _ _ => hx.1 j
+      have h_others_nonneg : 0 ≤ ∑ j ∈ Finset.univ.erase i, x j :=
+        Finset.sum_nonneg (fun j _ => hx.1 j)
+      have : x i + ∑ j ∈ Finset.univ.erase i, x j = 1 := by
+        rw [← Finset.sum_erase_add _ _ (Finset.mem_univ i)] at hsum_x
+        linarith
+      linarith
+    have hyi_le : y i ≤ 1 := by
+      have hsum_y := hy.2
+      have h_others_nonneg : 0 ≤ ∑ j ∈ Finset.univ.erase i, y j :=
+        Finset.sum_nonneg (fun j _ => hy.1 j)
+      have : y i + ∑ j ∈ Finset.univ.erase i, y j = 1 := by
+        rw [← Finset.sum_erase_add _ _ (Finset.mem_univ i)] at hsum_y
+        linarith
+      linarith
+    -- Apply the open-segment equality at coordinate i.
+    have hxy_i : a * x i + b * y i = 1 := by
+      have := congr_fun hxy i
+      have hzi : vertex n i i = 1 := by
+        show (if i = i then (1 : ℝ) else 0) = 1
+        simp
+      rw [hz] at this
+      simpa [Pi.add_apply, Pi.smul_apply, smul_eq_mul, hzi] using this
+    -- From hxy_i = 1, x i ≤ 1, y i ≤ 1, a + b = 1, a, b > 0: x i = y i = 1.
+    have hxi_eq : x i = 1 := by
+      by_contra h
+      have hxi_lt : x i < 1 := lt_of_le_of_ne hxi_le h
+      have : a * x i + b * y i < a * 1 + b * 1 := by
+        have h1 : a * x i < a * 1 := by
+          have := mul_lt_mul_of_pos_left hxi_lt ha
+          linarith
+        have h2 : b * y i ≤ b * 1 := mul_le_mul_of_nonneg_left hyi_le hb.le
+        linarith
+      have : a * x i + b * y i < 1 := by
+        rw [mul_one, mul_one] at this
+        linarith
+      linarith [hxy_i]
+    -- Now at any other coordinate j ≠ i, x j = 0.
+    -- Since x is a state, x j ≥ 0; and x i = 1, ∑ x j = 1 ⇒ ∑_{j ≠ i} x j = 0.
+    have hx_others : ∀ j ∈ Finset.univ.erase i, x j = 0 := by
+      have hsum_x := hx.2
+      rw [← Finset.sum_erase_add _ _ (Finset.mem_univ i)] at hsum_x
+      have h_sum_eq_zero : ∑ j ∈ Finset.univ.erase i, x j = 0 := by
+        linarith
+      intro j hj
+      have hnn : ∀ k ∈ Finset.univ.erase i, 0 ≤ x k := fun k _ => hx.1 k
+      exact (Finset.sum_eq_zero_iff_of_nonneg hnn).mp h_sum_eq_zero j hj
+    -- Conclude x = vertex n i.
+    funext j
+    by_cases hji : j = i
+    · subst hji
+      show x j = vertex n j j
+      rw [hxi_eq]
+      show (1 : ℝ) = (if j = j then (1 : ℝ) else 0)
+      simp
+    · have hj_in : j ∈ Finset.univ.erase i :=
+        Finset.mem_erase.mpr ⟨hji, Finset.mem_univ _⟩
+      have : x j = 0 := hx_others j hj_in
+      rw [this]
+      show (0 : ℝ) = vertex n i j
+      show (0 : ℝ) = (if i = j then (1 : ℝ) else 0)
+      rw [if_neg (fun h => hji h.symm)]
+
+/-- **Vertices are pure states** of the Classical GPT. -/
+theorem vertex_is_pure (n : ℕ) (i : Fin n) :
+    Perspectival.Continuity.PureState (gpt n) (vertex n i) :=
+  ⟨vertex_in_states n i, vertex_is_extreme n i⟩
 
 /-- **Vertex decomposition for the classical GPT.** Every element of
 `V n = Fin n → ℝ` is its coordinate-wise vertex combination. -/
@@ -3731,6 +3827,31 @@ theorem classical_general_vertex_preserving_no_transitive_agency
   -- But R.toLin (vertex n 0) = vertex n 1 by hRρ.
   rw [hRρ] at h_v0
   exact hne h_v0.symm
+
+/-- **L6 closure (unconditional `PureState` hypotheses).** Combining
+`vertex_is_pure` with `classical_general_vertex_preserving_no_transitive_agency`
+gives the same impossibility result without needing the caller to supply
+`PureState` witnesses for `vertex n 0` and `vertex n 1` — they are
+discharged here. The remaining hypothesis (`hvp_paths`: paths preserve
+vertices coordinate-wise) is the genuine extra postulate.
+
+This is the cleanest statement of "no `TransitiveAgency` exists on
+Classical `n` (n ≥ 2) when the agency's strict paths preserve vertices
+along the way." -/
+theorem classical_general_vertex_preserving_no_transitive_agency_unconditional
+    {n : ℕ} (h : 1 < n)
+    (T : Perspectival.Continuity.TransitiveAgency (gpt n))
+    (hvp_paths :
+      ∀ R₁ R₂ : Perspectival.Continuity.StrictReversible (gpt n),
+        R₁ ∈ T.avail → R₂ ∈ T.avail →
+        ∀ (p : Perspectival.Continuity.StrictReversiblePath (gpt n) R₁ R₂)
+          (t : unitInterval) (i : Fin n),
+          p.γ t (vertex n i) ∈ vertexSet n) :
+    False :=
+  classical_general_vertex_preserving_no_transitive_agency (n := n) h T
+    (vertex_is_pure n ⟨0, by omega⟩)
+    (vertex_is_pure n ⟨1, by omega⟩)
+    hvp_paths
 
 end Classical
 end Perspectival

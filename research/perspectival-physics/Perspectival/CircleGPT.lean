@@ -34,19 +34,24 @@ Status:
   ✓ Transitivity of the rotation family on the parametric pure-state
     circle:  given α₁, α₂, the rotation by `α₂ - α₁` sends
     `(cos α₁, sin α₁, 1)` to `(cos α₂, sin α₂, 1)`.
-  ▲ The full `TransitiveAgency circleGPT` instance further requires a
-    pure-state CLASSIFICATION lemma:  every extreme point of the disk-
-    states is of the form `(cos α, sin α, 1)`.  This is the standard
-    `extremePoints_closedBall_eq_sphere` result transported through the
-    `z = 1` lift; we record the supporting facts but DEFER the final
-    `IsExtreme` characterization to a later session (marked
-    `DEFERRED-LEMMA` below).
+  ✓ **Pure-state classification (CLOSED).** Both directions are now
+    proven by direct convex-analytic argument:
+      • `circlePoint_is_pure_state α` (every `circlePoint α` is pure).
+      • `pure_state_classification ρ` (every pure state has the form
+        `circlePoint α`). Strategy: extremality + nearby-perturbation
+        argument forces `ρ 0² + ρ 1² = 1`, then `Real.arccos` produces
+        the angle.
+  ✓ `circleTransitiveAgency` is now an *unconditional* term —
+    `pure_state_classification_holds` discharges the hypothesis.
 -/
 
 import Perspectival.GPT
 import Perspectival.Continuity
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
+import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Analysis.Convex.Basic
+import Mathlib.Analysis.Convex.Extreme
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.UnitInterval
 
@@ -629,31 +634,341 @@ theorem rotAvail_transitive_on_circlePoints (α₁ α₂ : ℝ) :
   show rotZ (α₂ - α₁) (circlePoint α₁) = circlePoint α₂
   exact rotZ_transitive_on_circlePoints α₁ α₂
 
-/-! ## DEFERRED-LEMMA: pure-state classification
+/-! ## Pure-state classification for the Circle GPT
 
-The full `TransitiveAgency circleGPT` instance requires showing that
-every `Perspectival.Continuity.PureState circleGPT ρ` implies
-`ρ = circlePoint α` for some α — i.e., that the extreme points of the
-lifted closed unit disk are exactly the lifted unit circle.
+The full `TransitiveAgency circleGPT` instance requires the pure-state
+classification: every `PureState circleGPT ρ` satisfies `ρ = circlePoint α`
+for some `α`.
 
-Proof sketch:
-  • Extreme points of `states = {(x,y,1) : x²+y² ≤ 1}` correspond
-    bijectively to extreme points of `{(x,y) : x²+y² ≤ 1}` ⊂ ℝ² via
-    the projection `(x,y,1) ↔ (x,y)`.
-  • Mathlib's `StrictConvexSpace.extremePoints_closedBall_eq_sphere`
-    (Analysis.Convex.Strict.Extreme) identifies the latter as the
-    Euclidean unit circle.
-  • Every point of the Euclidean unit circle equals `(cos α, sin α)`
-    for some α.
+This section proves both directions:
 
-This file proves the PARAMETRIC direction
-(`rotAvail_transitive_on_circlePoints`); the deferred direction is
-`PureState ρ → ∃ α, ρ = circlePoint α`. -/
+  ✓ `circlePoint_is_pure_state` (easy direction): every `circlePoint α`
+    is a pure state. Uses strict convexity of `x ↦ x²` directly.
+  ✓ `pure_state_classification` (the hard direction): every pure state
+    equals some `circlePoint α`. Proof: extremality + boundary argument
+    forces `ρ 0² + ρ 1² = 1` (a strict-interior point can be written as
+    the midpoint of two distinct nearby states), then `Real.arccos`
+    produces the angle.
 
-/-- **Pure-state classification (statement, deferred proof).** -/
+Together these close the deferred lemma. -/
+
+/-- **Helper.** A point on the unit circle is `(cos α, sin α)` for some α.
+Specifically, given `x² + y² = 1` with `x, y ∈ ℝ`, the angle
+`α = arccos x` (if `y ≥ 0`) or `α = -arccos x` (if `y < 0`) works. -/
+theorem exists_angle_of_unit_circle (x y : ℝ) (h : x ^ 2 + y ^ 2 = 1) :
+    ∃ α : ℝ, x = Real.cos α ∧ y = Real.sin α := by
+  -- |x| ≤ 1 follows from x² ≤ x² + y² = 1.
+  have hx_le : x ^ 2 ≤ 1 := by nlinarith [sq_nonneg y]
+  have hxneg : -1 ≤ x := by nlinarith [sq_nonneg (x + 1), sq_nonneg (x - 1)]
+  have hxpos : x ≤ 1 := by nlinarith [sq_nonneg (x + 1), sq_nonneg (x - 1)]
+  -- y² = 1 - x²
+  have hy_sq : y ^ 2 = 1 - x ^ 2 := by linarith
+  by_cases hy : 0 ≤ y
+  · -- y ≥ 0: take α = arccos x.
+    refine ⟨Real.arccos x, ?_, ?_⟩
+    · exact (Real.cos_arccos hxneg hxpos).symm
+    · -- sin (arccos x) = √(1 - x²) = √(y²) = |y| = y.
+      rw [Real.sin_arccos]
+      rw [← hy_sq]
+      rw [Real.sqrt_sq_eq_abs]
+      exact (abs_of_nonneg hy).symm
+  · -- y < 0: take α = -arccos x.
+    have hy_neg : y < 0 := lt_of_not_ge hy
+    refine ⟨-(Real.arccos x), ?_, ?_⟩
+    · rw [Real.cos_neg]
+      exact (Real.cos_arccos hxneg hxpos).symm
+    · rw [Real.sin_neg, Real.sin_arccos]
+      rw [← hy_sq]
+      rw [Real.sqrt_sq_eq_abs]
+      rw [abs_of_neg hy_neg]
+      ring
+
+/-! ### Easy direction: every `circlePoint α` is a pure state -/
+
+/-- **Easy direction:** every parametric point `circlePoint α` is a
+pure state of the Circle GPT. -/
+theorem circlePoint_is_pure_state (α : ℝ) :
+    Perspectival.Continuity.PureState circleGPT (circlePoint α) := by
+  refine ⟨circlePoint_in_states α, ?_, ?_⟩
+  · -- {circlePoint α} ⊆ states
+    intro v hv
+    rw [Set.mem_singleton_iff] at hv
+    rw [hv]
+    exact circlePoint_in_states α
+  · -- Open-segment endpoints lie in {circlePoint α}.
+    rintro x hx y hy z hz ⟨a, b, ha, hb, hab, hxy⟩
+    rw [Set.mem_singleton_iff] at hz
+    rw [Set.mem_singleton_iff]
+    -- z = circlePoint α = a • x + b • y; want x = circlePoint α.
+    -- Both x and y are in states.
+    have hxa : (a * x 0 + b * y 0) ^ 2 + (a * x 1 + b * y 1) ^ 2 ≤ 1 :=
+      sq_add_sq_convex (x 0) (x 1) (y 0) (y 1) a b ha.le hb.le hab
+        hx.2 hy.2
+    -- (a * x 0 + b * y 0, a * x 1 + b * y 1, a * x 2 + b * y 2) = circlePoint α
+    have h0 : a * x 0 + b * y 0 = Real.cos α := by
+      have hh := congr_fun hxy 0
+      have hz0 : z 0 = Real.cos α := by rw [hz]; rfl
+      simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hh
+      rw [hz0] at hh
+      linarith
+    have h1 : a * x 1 + b * y 1 = Real.sin α := by
+      have hh := congr_fun hxy 1
+      have hz1 : z 1 = Real.sin α := by rw [hz]; rfl
+      simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul] at hh
+      rw [hz1] at hh
+      linarith
+    -- ‖a x + b y‖² = 1 (since z = circlePoint α lies on the unit circle).
+    have hnormeq : (a * x 0 + b * y 0) ^ 2 + (a * x 1 + b * y 1) ^ 2 = 1 := by
+      rw [h0, h1, Real.cos_sq_add_sin_sq]
+    -- We have ‖a x + b y‖² ≤ a ‖x‖² + b ‖y‖² ≤ a · 1 + b · 1 = 1.
+    -- Equality forces both inequalities to be equalities.
+    -- Specifically Jensen-equality (a ≠ 0, b ≠ 0) ⇒ x 0 = y 0 ∧ x 1 = y 1.
+    -- Direct computation: a*b*((x 0 - y 0)² + (x 1 - y 1)²) = 0.
+    have hjensen :
+        a * (x 0 ^ 2 + x 1 ^ 2) + b * (y 0 ^ 2 + y 1 ^ 2)
+          - ((a * x 0 + b * y 0) ^ 2 + (a * x 1 + b * y 1) ^ 2)
+        = a * b * ((x 0 - y 0) ^ 2 + (x 1 - y 1) ^ 2) := by
+      have hb_eq : b = 1 - a := by linarith
+      rw [hb_eq]; ring
+    have h_xsq : x 0 ^ 2 + x 1 ^ 2 ≤ 1 := hx.2
+    have h_ysq : y 0 ^ 2 + y 1 ^ 2 ≤ 1 := hy.2
+    -- a · (x 0² + x 1²) + b · (y 0² + y 1²) ≤ a + b = 1.
+    have h_upper :
+        a * (x 0 ^ 2 + x 1 ^ 2) + b * (y 0 ^ 2 + y 1 ^ 2) ≤ 1 := by
+      have h1' : a * (x 0 ^ 2 + x 1 ^ 2) ≤ a * 1 :=
+        mul_le_mul_of_nonneg_left h_xsq ha.le
+      have h2' : b * (y 0 ^ 2 + y 1 ^ 2) ≤ b * 1 :=
+        mul_le_mul_of_nonneg_left h_ysq hb.le
+      linarith
+    -- Combined: a*b*((x 0 - y 0)² + (x 1 - y 1)²) ≤ 0.
+    have hle_zero : a * b * ((x 0 - y 0) ^ 2 + (x 1 - y 1) ^ 2) ≤ 0 := by
+      linarith [hnormeq]
+    -- But a*b > 0 and ((x 0 - y 0)² + (x 1 - y 1)²) ≥ 0, so it must equal 0.
+    have hab_pos : 0 < a * b := mul_pos ha hb
+    have hsum_zero : (x 0 - y 0) ^ 2 + (x 1 - y 1) ^ 2 = 0 := by
+      have h_nn : 0 ≤ (x 0 - y 0) ^ 2 + (x 1 - y 1) ^ 2 := by
+        have := sq_nonneg (x 0 - y 0)
+        have := sq_nonneg (x 1 - y 1)
+        linarith
+      have hprod : a * b * ((x 0 - y 0) ^ 2 + (x 1 - y 1) ^ 2) = 0 := by
+        have hnonneg : 0 ≤ a * b * ((x 0 - y 0) ^ 2 + (x 1 - y 1) ^ 2) :=
+          mul_nonneg hab_pos.le h_nn
+        linarith
+      have hcancel := (mul_eq_zero.mp hprod).resolve_left (ne_of_gt hab_pos)
+      exact hcancel
+    -- Thus (x 0 - y 0)² = 0 and (x 1 - y 1)² = 0.
+    have h0_eq : x 0 = y 0 := by
+      have : (x 0 - y 0) ^ 2 = 0 := by
+        nlinarith [sq_nonneg (x 0 - y 0), sq_nonneg (x 1 - y 1)]
+      have hzero : x 0 - y 0 = 0 := by
+        exact pow_eq_zero_iff (by norm_num : (2 : ℕ) ≠ 0) |>.mp this
+      linarith
+    have h1_eq : x 1 = y 1 := by
+      have : (x 1 - y 1) ^ 2 = 0 := by
+        nlinarith [sq_nonneg (x 0 - y 0), sq_nonneg (x 1 - y 1)]
+      have hzero : x 1 - y 1 = 0 := by
+        exact pow_eq_zero_iff (by norm_num : (2 : ℕ) ≠ 0) |>.mp this
+      linarith
+    -- Also x 2 = 1 = y 2 (from state membership).
+    have h2_eq : x 2 = y 2 := by rw [hx.1, hy.1]
+    -- Now compute x = circlePoint α.
+    -- a x 0 + b y 0 = cos α, x 0 = y 0 ⇒ x 0 = cos α (since a + b = 1).
+    have h0x : x 0 = Real.cos α := by
+      have : a * x 0 + b * y 0 = (a + b) * x 0 := by rw [h0_eq]; ring
+      rw [hab, one_mul] at this
+      linarith [h0]
+    have h1x : x 1 = Real.sin α := by
+      have : a * x 1 + b * y 1 = (a + b) * x 1 := by rw [h1_eq]; ring
+      rw [hab, one_mul] at this
+      linarith [h1]
+    funext i
+    by_cases hi0 : i = 0
+    · subst hi0
+      show x 0 = circlePoint α 0
+      rw [h0x]; rfl
+    · by_cases hi1 : i = 1
+      · subst hi1
+        show x 1 = circlePoint α 1
+        rw [h1x]; rfl
+      · have hi2 : i = 2 := by
+          fin_cases i <;> first | rfl | (exact absurd rfl hi0) | (exact absurd rfl hi1)
+        subst hi2
+        show x 2 = circlePoint α 2
+        rw [hx.1]; rfl
+
+/-! ### Hard direction: every pure state is a `circlePoint` -/
+
+/-- **Helper.** Any state ρ with `ρ 0² + ρ 1² < 1` is NOT extreme:
+we can write ρ as the midpoint of two distinct nearby states obtained
+by perturbing the first coordinate. -/
+private theorem state_interior_not_extreme
+    (ρ : V) (hρ : ρ ∈ states) (hint : ρ 0 ^ 2 + ρ 1 ^ 2 < 1) :
+    ¬ IsExtreme ℝ states {ρ} := by
+  intro hext
+  -- Pick ε := min(1, (1 - ρ 0² - ρ 1²)/(2 · |ρ 0| + 1)) > 0.
+  -- We then construct two perturbed states whose midpoint is ρ but
+  -- which differ from ρ.
+  set c : ℝ := 1 - ρ 0 ^ 2 - ρ 1 ^ 2 with hc_def
+  have hc_pos : 0 < c := by simp only [hc_def]; linarith
+  set δ : ℝ := min 1 (c / (2 * |ρ 0| + 2)) with hδ_def
+  have h_denom_pos : 0 < 2 * |ρ 0| + 2 := by
+    have := abs_nonneg (ρ 0); linarith
+  have hδ_pos : 0 < δ := by
+    simp only [hδ_def]
+    exact lt_min (by norm_num) (div_pos hc_pos h_denom_pos)
+  have hδ_le_one : δ ≤ 1 := min_le_left _ _
+  have hδ_le_quot : δ ≤ c / (2 * |ρ 0| + 2) := min_le_right _ _
+  -- Define x⁺ = (ρ 0 + δ, ρ 1, 1) and x⁻ = (ρ 0 - δ, ρ 1, 1).
+  let xp : V := fun i => if i = 0 then ρ 0 + δ else if i = 1 then ρ 1 else 1
+  let xm : V := fun i => if i = 0 then ρ 0 - δ else if i = 1 then ρ 1 else 1
+  have hxp0 : xp 0 = ρ 0 + δ := by show (if (0:Fin 3) = 0 then _ else _) = _; rfl
+  have hxp1 : xp 1 = ρ 1 := by
+    show (if (1:Fin 3) = 0 then ρ 0 + δ else if (1:Fin 3) = 1 then ρ 1 else 1) = ρ 1
+    simp
+  have hxp2 : xp 2 = 1 := by
+    show (if (2:Fin 3) = 0 then ρ 0 + δ else if (2:Fin 3) = 1 then ρ 1 else 1) = 1
+    rfl
+  have hxm0 : xm 0 = ρ 0 - δ := by show (if (0:Fin 3) = 0 then _ else _) = _; rfl
+  have hxm1 : xm 1 = ρ 1 := by
+    show (if (1:Fin 3) = 0 then ρ 0 - δ else if (1:Fin 3) = 1 then ρ 1 else 1) = ρ 1
+    simp
+  have hxm2 : xm 2 = 1 := by
+    show (if (2:Fin 3) = 0 then ρ 0 - δ else if (2:Fin 3) = 1 then ρ 1 else 1) = 1
+    rfl
+  -- Show both xp, xm ∈ states. Bound (ρ 0 ± δ)² ≤ ρ 0² + 2|ρ 0|δ + δ².
+  have h_bound : ∀ s : ℝ, s = δ ∨ s = -δ →
+      (ρ 0 + s) ^ 2 + ρ 1 ^ 2 ≤ 1 := by
+    intro s hs
+    have hs_abs : |s| ≤ δ := by
+      rcases hs with rfl | rfl
+      · rw [abs_of_pos hδ_pos]
+      · rw [abs_neg]; rw [abs_of_pos hδ_pos]
+    have hs_sq : s ^ 2 ≤ δ ^ 2 := by
+      have : |s| ^ 2 ≤ δ ^ 2 :=
+        pow_le_pow_left₀ (abs_nonneg _) hs_abs 2
+      rwa [sq_abs] at this
+    have h_expand : (ρ 0 + s) ^ 2 = ρ 0 ^ 2 + 2 * ρ 0 * s + s ^ 2 := by ring
+    have h_cross : 2 * ρ 0 * s ≤ 2 * |ρ 0| * δ := by
+      have h_le1 : 2 * ρ 0 * s ≤ 2 * |ρ 0| * |s| := by
+        have h1' : ρ 0 * s ≤ |ρ 0 * s| := le_abs_self _
+        have h2' : |ρ 0 * s| = |ρ 0| * |s| := abs_mul _ _
+        linarith
+      have h_le2 : 2 * |ρ 0| * |s| ≤ 2 * |ρ 0| * δ := by
+        have := mul_le_mul_of_nonneg_left hs_abs
+          (by positivity : (0 : ℝ) ≤ 2 * |ρ 0|)
+        linarith
+      linarith
+    -- (ρ 0 + s)² + ρ 1² ≤ ρ 0² + 2|ρ 0|δ + δ² + ρ 1² = (1 - c) + 2|ρ 0|δ + δ².
+    -- δ ≤ c / (2|ρ 0| + 2), and δ ≤ 1. So 2|ρ 0|δ + δ² ≤ 2|ρ 0|δ + δ
+    -- ≤ (2|ρ 0| + 1)·δ ≤ (2|ρ 0| + 2)·δ ≤ c.
+    have hδ_sq_le_δ : δ ^ 2 ≤ δ := by
+      have : δ ^ 2 = δ * δ := sq δ
+      rw [this]
+      calc δ * δ ≤ δ * 1 := mul_le_mul_of_nonneg_left hδ_le_one hδ_pos.le
+        _ = δ := mul_one _
+    have h_combine : 2 * |ρ 0| * δ + δ ^ 2 ≤ c := by
+      have hsum_le : 2 * |ρ 0| * δ + δ ≤ (2 * |ρ 0| + 2) * δ := by
+        have habs_nn : 0 ≤ |ρ 0| := abs_nonneg _
+        nlinarith [hδ_pos]
+      have hquot_ineq : (2 * |ρ 0| + 2) * δ ≤ c := by
+        have := mul_le_mul_of_nonneg_left hδ_le_quot h_denom_pos.le
+        rw [mul_div_cancel₀ _ (ne_of_gt h_denom_pos)] at this
+        linarith
+      linarith
+    -- Now combine.
+    have : (ρ 0 + s) ^ 2 + ρ 1 ^ 2 ≤ ρ 0 ^ 2 + 2 * |ρ 0| * δ + δ ^ 2 + ρ 1 ^ 2 := by
+      rw [h_expand]
+      linarith
+    have : (ρ 0 + s) ^ 2 + ρ 1 ^ 2 ≤ ρ 0 ^ 2 + ρ 1 ^ 2 + c := by linarith
+    have hc_relation : ρ 0 ^ 2 + ρ 1 ^ 2 + c = 1 := by simp only [hc_def]; ring
+    linarith
+  have hxp_in : xp ∈ states := by
+    refine ⟨?_, ?_⟩
+    · rw [mem_states_iff] at hρ; rw [hxp2]
+    · rw [hxp0, hxp1]
+      have h := h_bound δ (Or.inl rfl)
+      linarith
+  have hxm_in : xm ∈ states := by
+    refine ⟨?_, ?_⟩
+    · rw [hxm2]
+    · rw [hxm0, hxm1]
+      have h := h_bound (-δ) (Or.inr rfl)
+      have h_neg : (ρ 0 - δ) = (ρ 0 + (-δ)) := by ring
+      rw [h_neg]
+      linarith
+  -- Compute the midpoint: (1/2) · xp + (1/2) · xm = ρ.
+  have h_mid : ((1 / 2 : ℝ)) • xp + ((1 / 2 : ℝ)) • xm = ρ := by
+    funext i
+    by_cases hi0 : i = 0
+    · subst hi0
+      show (1 / 2 : ℝ) * xp 0 + (1 / 2 : ℝ) * xm 0 = ρ 0
+      rw [hxp0, hxm0]; ring
+    · by_cases hi1 : i = 1
+      · subst hi1
+        show (1 / 2 : ℝ) * xp 1 + (1 / 2 : ℝ) * xm 1 = ρ 1
+        rw [hxp1, hxm1]; ring
+      · have hi2 : i = 2 := by
+          fin_cases i <;> first | rfl | (exact absurd rfl hi0) | (exact absurd rfl hi1)
+        subst hi2
+        show (1 / 2 : ℝ) * xp 2 + (1 / 2 : ℝ) * xm 2 = ρ 2
+        rw [hxp2, hxm2, hρ.1]; ring
+  -- ρ ∈ openSegment ℝ xp xm.
+  have h_in_open_seg : ρ ∈ openSegment ℝ xp xm :=
+    ⟨1 / 2, 1 / 2, by norm_num, by norm_num, by norm_num, h_mid⟩
+  -- By extremality of {ρ}, xp ∈ {ρ}, i.e., xp = ρ.
+  have hxp_eq : xp ∈ ({ρ} : Set V) :=
+    hext.left_mem_of_mem_openSegment hxp_in hxm_in (Set.mem_singleton _)
+      h_in_open_seg
+  rw [Set.mem_singleton_iff] at hxp_eq
+  -- But xp 0 = ρ 0 + δ ≠ ρ 0 since δ > 0.
+  have hxp0_eq : xp 0 = ρ 0 := by rw [hxp_eq]
+  rw [hxp0] at hxp0_eq
+  linarith
+
+/-- **Hard direction:** every pure state of the Circle GPT equals
+some `circlePoint α`. -/
+theorem pure_state_classification (ρ : V)
+    (hρ_pure : Perspectival.Continuity.PureState circleGPT ρ) :
+    ∃ α : ℝ, ρ = circlePoint α := by
+  obtain ⟨hρ_st, hρ_ext⟩ := hρ_pure
+  have hρ2 : ρ 2 = 1 := hρ_st.1
+  have hρ_le : ρ 0 ^ 2 + ρ 1 ^ 2 ≤ 1 := hρ_st.2
+  -- Show ρ 0² + ρ 1² = 1 by ruling out the strict case.
+  have hρ_eq : ρ 0 ^ 2 + ρ 1 ^ 2 = 1 := by
+    rcases lt_or_eq_of_le hρ_le with hlt | heq
+    · exfalso
+      exact state_interior_not_extreme ρ hρ_st hlt hρ_ext
+    · exact heq
+  -- Apply exists_angle.
+  obtain ⟨α, hcos, hsin⟩ := exists_angle_of_unit_circle (ρ 0) (ρ 1) hρ_eq
+  refine ⟨α, ?_⟩
+  funext i
+  by_cases hi0 : i = 0
+  · subst hi0
+    show ρ 0 = circlePoint α 0
+    rw [hcos]; rfl
+  · by_cases hi1 : i = 1
+    · subst hi1
+      show ρ 1 = circlePoint α 1
+      rw [hsin]; rfl
+    · have hi2 : i = 2 := by
+        fin_cases i <;> first | rfl | (exact absurd rfl hi0) | (exact absurd rfl hi1)
+      subst hi2
+      show ρ 2 = circlePoint α 2
+      rw [hρ2]; rfl
+
+/-- **Pure-state classification (statement form).** Combining
+`pure_state_classification` directly: every pure state of `circleGPT`
+arises as `circlePoint α` for some α. -/
 def pure_state_classification_statement : Prop :=
   ∀ ρ : V, Perspectival.Continuity.PureState circleGPT ρ →
     ∃ α : ℝ, ρ = circlePoint α
+
+/-- **The classification holds.** This closes the previously-deferred
+lemma. -/
+theorem pure_state_classification_holds :
+    pure_state_classification_statement :=
+  pure_state_classification
 
 /-! ## `TransitiveAgency`, parameterized by the deferred classification -/
 
@@ -677,6 +992,13 @@ noncomputable def circleTransitiveAgency
 
 /-- The avail set is nonempty. -/
 theorem rotAvail_nonempty : rotAvail.Nonempty := ⟨_, id_in_rotAvail⟩
+
+/-- **Unconditional `TransitiveAgency circleGPT`** — discharges the
+deferred classification hypothesis via `pure_state_classification_holds`. -/
+@[reducible]
+noncomputable def circleTransitiveAgency_unconditional :
+    Perspectival.Continuity.TransitiveAgency circleGPT :=
+  circleTransitiveAgency pure_state_classification_holds
 
 /-! ## Summary
 
