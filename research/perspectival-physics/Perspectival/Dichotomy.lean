@@ -123,7 +123,7 @@ the formal version of "classical theories don't have continuous
 symmetries; quantum-like theories do." -/
 theorem framework_dichotomy_existential :
     -- Negative: No PurePreservingTransitiveAgency on Classical 2.
-    (∀ PPT : Continuity.PurePreservingTransitiveAgency (Classical.gpt 2), False) ∧
+    (∀ _ : Continuity.PurePreservingTransitiveAgency (Classical.gpt 2), False) ∧
     -- Positive: Some TransitiveAgency on CircleGPT.
     Nonempty (Continuity.TransitiveAgency CircleGPT.circleGPT) := by
   refine ⟨?_, ?_⟩
