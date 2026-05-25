@@ -1346,6 +1346,11 @@ theorem grand_decoherence_certificate :
    fun _ _ h => DecoherenceEquivalent_tier_A h,
    fun ch₁ ch₂ => past_grows_under_chain ch₁ ch₂⟩
 
+-- (Redundant `framework_decoherence_claim` rewriting
+-- grand_decoherence_certificate as a flat 8-tuple omitted to keep
+-- the API clean; downstream consumers should use the original
+-- nested-And form directly.)
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
