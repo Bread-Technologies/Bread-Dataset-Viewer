@@ -548,6 +548,34 @@ theorem trichotomy_hardy_axiom4 :
    Hardy.axiom4_dimension_holds QubitGPT.qubitGPT QubitGPT.qubitGPT,
    Hardy.axiom4_dimension_holds CircleGPT.circleGPT QubitGPT.qubitGPT⟩
 
+/-! ## Gauge composition on gptTensor (R7 lightweight precursor)
+
+For Reversibles R₁ on G₁ and R₂ on G₂, the productTransform
+R₁.toLin R₂.toLin is a linear map on the tensor product that
+preserves states and the unit functional (via `GPT.productTransform_*`).
+The full Reversible packaging requires the continuity step, which is
+trivial in finite-dim but otherwise depends on the tensor topology;
+the linear-map level is fully proved. -/
+
+/-- **The framework's gauge composition (linear-map level).** For any
+Reversibles R₁, R₂ on the components, productTransform R₁.toLin R₂.toLin
+is a linear map on gptTensor that preserves both the state space and
+the unit functional. This is the linear-map content of "tensor product
+of reversibles is a reversible," modulo continuity. -/
+theorem framework_gauge_composition_linear
+    {V₁ V₂ : Type u} [AddCommGroup V₁] [Module ℝ V₁]
+    [AddCommGroup V₂] [Module ℝ V₂]
+    [TopologicalSpace V₁] [TopologicalSpace V₂]
+    {G₁ : GPT V₁} {G₂ : GPT V₂}
+    (R₁ : Continuity.Reversible G₁) (R₂ : Continuity.Reversible G₂) :
+    (∀ ρ ∈ (GPT.gptTensor G₁ G₂).states,
+      GPT.productTransform R₁.toLin R₂.toLin ρ ∈ (GPT.gptTensor G₁ G₂).states) ∧
+    (GPT.tensorUnit G₁ G₂).comp (GPT.productTransform R₁.toLin R₂.toLin)
+    = GPT.tensorUnit G₁ G₂ :=
+  ⟨fun _ hρ => GPT.productTransform_preserves_states R₁.preserves_states
+                R₂.preserves_states hρ,
+   GPT.productTransform_preserves_unit R₁.preserves_unit R₂.preserves_unit⟩
+
 /-! ## Framework certificate (full Tier 1 + Tier 2 baby step summary)
 
 A single theorem bundling the framework's major machine-verified
