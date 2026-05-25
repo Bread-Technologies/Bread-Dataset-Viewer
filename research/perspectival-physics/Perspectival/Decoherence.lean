@@ -4624,6 +4624,12 @@ theorem loop_npow_length_linear {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
     (ch ^ n).length = n * ch.length := loop_npow_length ch n
 
+/-- **Loop bracketed equals length on loops.** Since count = 0 on loops,
+bracketed must equal length. -/
+theorem loop_bracketed_eq_length_general {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    ch.bracketedCount = ch.length := loop_chain_all_bracketed ch
+
 /-- **Loop linearity certificate.** All measures (count, bracketed, length,
 complexity) scale linearly in the exponent on loops. -/
 theorem loop_npow_linearity_certificate :
