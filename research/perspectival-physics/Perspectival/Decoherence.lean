@@ -1351,6 +1351,36 @@ theorem grand_decoherence_certificate :
 -- the API clean; downstream consumers should use the original
 -- nested-And form directly.)
 
+/-! ## Examples on concrete types -/
+
+/-- **Example: decoherence content on Bool.** A concrete instantiation
+showing the trajectory algebra works on `Bool`-typed Wantables. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    tierAEventCount
+      (RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)) = 1 := by
+  intro R h_pot
+  show (RealityChain'.singleton _).actualizationCount = 1
+  rw [RealityChain'.singleton_actualizationCount]
+  rfl
+
+/-- **Example: composed Bool trajectory.** Two consecutive bracketed
+steps on Bool give a coherent (count = 0) trajectory of length 2. -/
+example (R : Reality Bool Bool) :
+    let ch₁ : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    let ch₂ : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    tierAEventCount (ch₁.append ch₂) = 0
+      ∧ (ch₁.append ch₂).length = 2 := by
+  intro ch₁ ch₂
+  refine ⟨?_, ?_⟩
+  · rw [tierAEventCount_append]; rfl
+  · rw [RealityChain'.append_length]; rfl
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
