@@ -4069,6 +4069,23 @@ theorem loopPower_one_length {P : Type u} {C : Type v}
   rw [RealityChain'.append_length, RealityChain'.nil_length]
   omega
 
+/-- **loopPower extensionality on count.** Two loop powers
+loopPower ch m and loopPower ch n have the same count (= 0). -/
+theorem loopPower_count_invariant {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : Nat) :
+    (loopPower ch m).actualizationCount = (loopPower ch n).actualizationCount := by
+  rw [loopPower_actualizationCount, loopPower_actualizationCount]
+
+/-- **Loop power telescopes via the chain monoid.** Composing two
+loop powers gives a power with summed exponents (in the count sense,
+since counts add). -/
+theorem loopPower_count_additive {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : Nat) :
+    (loopPower ch m).actualizationCount + (loopPower ch n).actualizationCount
+      = (loopPower ch (m + n)).actualizationCount := by
+  rw [loopPower_actualizationCount, loopPower_actualizationCount,
+      loopPower_actualizationCount]
+
 /-- **Complexity-length bounds certificate.** -/
 theorem complexity_length_bounds_certificate :
     -- Lower bound: complexity ≥ length.
