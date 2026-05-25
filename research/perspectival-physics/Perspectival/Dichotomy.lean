@@ -282,7 +282,21 @@ theorem framework_full_so3_strict_agency :
     Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT) :=
   ⟨QubitGPT.qubitStrictConnectedAgency_full⟩
 
-/-! ## Hardy N (operational dimension) for Classical -/
+/-! ## Classical fails Hardy A5 Strong Pure (framework-distinctive)
+
+The framework's refined Axiom 5 (`Hardy.Axiom5_Continuity_Strong_Pure`)
+includes path-preservation of pure states. Classical n ≥ 2 fails this
+refinement: by the discreteness disconnect on classical vertices,
+no continuous path of state-preserving bijective AND pure-state-
+preserving linear maps connects two distinct vertices to one another
+via the identity.
+
+The formal proof would: combine the L7 closure
+(`classical_general_no_pure_preserving_transitive_agency`) with the
+refined-A5 path data + a derivation of unit preservation on the
+strong-form path. Currently DEFERRED — `Axiom5_Strong_Pure` doesn't
+include unit-preservation as a clause, so the connection requires
+either strengthening the predicate or adding a derivation step. -/
 
 /-- **Vertex map is injective.** Distinct indices give distinct vertices. -/
 private theorem vertex_injective (n : ℕ) :
