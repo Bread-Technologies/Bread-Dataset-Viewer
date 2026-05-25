@@ -3475,6 +3475,25 @@ example (R : Reality Bool Bool) :
   intro base
   exact loop_pow_add_length base 2 3
 
+/-- **Loop monoid power on the identity element.** `1 ^ n = 1` in
+the loop monoid, since the identity is absorbing under power. -/
+theorem loop_one_pow {P : Type u} {C : Type v} {R : Reality P C} (n : ℕ) :
+    (1 : RealityChain' P C R R) ^ n = 1 := by
+  exact one_pow n
+
+/-- **Loop power length of identity element.** -/
+theorem loop_one_pow_length {P : Type u} {C : Type v}
+    {R : Reality P C} (n : ℕ) :
+    ((1 : RealityChain' P C R R) ^ n).length = 0 := by
+  rw [one_pow, loop_length_one]
+
+/-- **Loop power count of identity element.** -/
+theorem loop_one_pow_tierAEventCount {P : Type u} {C : Type v}
+    {R : Reality P C} (n : ℕ) :
+    tierAEventCount ((1 : RealityChain' P C R R) ^ n) = 0 := by
+  rw [one_pow]
+  exact loop_tierAEventCount_one
+
 /-- **Worked example: loop monoid power notation on Bool.** Showing
 that the Mathlib `Monoid` `^` notation works on loop chains. -/
 example (R : Reality Bool Bool) :
