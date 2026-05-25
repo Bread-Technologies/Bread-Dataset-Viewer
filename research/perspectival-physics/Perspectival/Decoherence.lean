@@ -3901,6 +3901,20 @@ theorem compose_preserves_equivalence {P : Type u} {C : Type v}
     DecoherenceEquivalent (ch₁.append ch₂) (ch₁'.append ch₂') :=
   DecoherenceEquivalent_append_both h₁ h₂
 
+/-- **Triple composition preserves equivalence.** If three pairs of
+equivalent chains compose, the results are decoherence-equivalent. -/
+theorem triple_compose_preserves_equivalence {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ R₄ : Reality P C}
+    {ch₁ ch₁' : RealityChain' P C R₁ R₂}
+    {ch₂ ch₂' : RealityChain' P C R₂ R₃}
+    {ch₃ ch₃' : RealityChain' P C R₃ R₄}
+    (h₁ : DecoherenceEquivalent ch₁ ch₁')
+    (h₂ : DecoherenceEquivalent ch₂ ch₂')
+    (h₃ : DecoherenceEquivalent ch₃ ch₃') :
+    DecoherenceEquivalent
+      ((ch₁.append ch₂).append ch₃) ((ch₁'.append ch₂').append ch₃') :=
+  compose_preserves_equivalence (compose_preserves_equivalence h₁ h₂) h₃
+
 /-- **Full loopPower / Monoid `^` agreement certificate.** All
 measures (count, length, bracketed, complexity) agree between
 the custom `loopPower` and the Mathlib Monoid `^` operation. -/
