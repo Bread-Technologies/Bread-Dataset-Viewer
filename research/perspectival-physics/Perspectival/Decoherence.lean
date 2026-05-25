@@ -3243,6 +3243,28 @@ theorem class_projection_certificate :
    fun _ch₁ _ch₂ h => toDecoherenceClass_equivalent h,
    fun _ => rfl⟩
 
+/-- **Worked derivation: nil chain is Tier B reversible.** A
+demonstration of the framework's structural content: given a nil
+chain, derive R = R, past invariance, etc. via direct computation. -/
+example (R : Reality Bool Bool) :
+    let nil_ch : RealityChain' Bool Bool R R := RealityChain'.nil R
+    R = R
+      ∧ past R = past R
+      ∧ nil_ch.bracketedCount = nil_ch.length
+      ∧ trajectoryComplexity nil_ch = nil_ch.length :=
+  ⟨rfl, rfl, rfl, rfl⟩
+
+/-- **Worked derivation: loop power is in the coherent class.** A
+demonstration that any loop power belongs to the coherent
+DecoherenceEquivalent class. -/
+example (R : Reality Bool Bool) (n : Nat) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    DecoherenceEquivalent (loopPower base n) (RealityChain'.nil R) := by
+  intro base
+  exact loopPower_equivalent_nil base n
+
 /-- **Both status and content derive from Tier A.** The framework's
 structural claim: status (count = 0 or > 0) and content (complexity,
 length) both derive from the same Tier A primitives, even though
