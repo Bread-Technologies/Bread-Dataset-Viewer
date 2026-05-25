@@ -669,6 +669,16 @@ theorem RealityChain'.no_return_along_chain {P : Type u} {C : Type v}
     R₂ m = MeetingStatus.Actualized :=
   TierA.no_return_to_potential ch.implies_successor h_act
 
+/-- **Forgetful map: RealityChain' → RealityChain.** A strict chain
+forgets to an ordinary chain by extracting the underlying step from
+each TrajectoryStep'. -/
+def RealityChain'.toRealityChain {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C}, RealityChain' P C R₁ R₂ →
+      RealityChain P C R₁ R₂
+  | _, _, RealityChain'.nil R => RealityChain.nil R
+  | _, _, RealityChain'.cons step rest =>
+      RealityChain.cons step.step rest.toRealityChain
+
 /-- **A bracketed step preserves both potential and actualized status
 of every meeting.** Restated: the entire meeting-status function is
 unchanged across a bracketed step. -/
