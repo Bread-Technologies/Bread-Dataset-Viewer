@@ -4613,6 +4613,12 @@ example (R : Reality Bool Bool)
   have h_comp : trajectoryComplexity ch = ch.length := loop_complexity_eq_length ch
   rw [h_comp]
 
+/-- **Loop complexity is linear in exponent (general statement).** -/
+theorem loop_npow_complexity_linear {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    trajectoryComplexity (ch ^ n) = n * trajectoryComplexity ch := by
+  rw [loop_npow_complexity, loop_complexity_eq_length]
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
