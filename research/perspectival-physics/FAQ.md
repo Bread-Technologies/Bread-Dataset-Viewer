@@ -506,6 +506,39 @@ This is the framework's "if you have to prove one theorem about
 Seam 4" statement. It's the canonical reference object for external
 citation of the Decoherence module.
 
+## Q26. What's "no Maxwell demon" in the framework?
+
+**Framework answer:** The theorem
+`Decoherence.no_maxwell_demon_certificate` formalizes the framework's
+claim that **chain extension never decreases the actualization
+count** (and STRICTLY increases it if the extension contains any
+actualization step).
+
+This is the framework's formal correlate of the impossibility of a
+Maxwell demon: there's no chain extension that "un-actualizes" past
+events. Combined with `no_return_to_potential` from TierA, this gives
+the framework's full irreversibility content at both the
+trajectory-level (chain monotonicity) and the meeting-level
+(potential-to-actualized one-way).
+
+Together they constitute the framework's Tier A irreversibility
+content per the entropy addendum.
+
+## Q27. How do coherent chains relate to Tier B reversibility?
+
+**Framework answer:** Per `tier_B_reversibility_certificate`,
+coherent chains (count = 0) ARE the formal correlate of Tier B
+reversibility:
+- R₁ = R₂ (endpoints equal — no "irreversible" content).
+- past R₁ = past R₂ (past invariant).
+- bracketedCount = length (all steps are passive/bracketed).
+- complexity = length (no Tier A scaling).
+
+This is the framework's reading of "Tier B is the reversible limit
+of Tier A": when count = 0, the chain has no Tier A irreversibility
+content, and the chain is the Tier B description of "no change of
+state".
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
