@@ -786,6 +786,29 @@ theorem v2_nonclassical_Tier_B_exists :
    ⟨QubitGPT.qubitStrictConnectedAgency_full⟩,
    ⟨QutritGPT.rotL3OneParameterFamily⟩⟩
 
+/-- **v2 certificate** — the framework's results expressed in v2
+architectural vocabulary. Bundles Tier A formalization, bracketing
+operation, vertex preservation as derived, classical Tier B exclusion,
+and non-classical Tier B realization. -/
+theorem framework_v2_certificate :
+    -- Bracketing yields permutation structure on definite configs.
+    (∀ {n : ℕ} (c₁ : TierB.DefiniteConfig n) (σ : Equiv.Perm (Fin n)),
+      ∃ c₂ : TierB.DefiniteConfig n, TierB.DefiniteBracketed σ c₁ c₂) ∧
+    -- Actualization is not bracketed.
+    (∀ {P : Type} {C : Type} (am : TierA.ActualizationMap P C),
+      ¬ TierB.BracketedTransition am.before am.after) ∧
+    -- Classical Tier B excluded by bracketed continuity (L7 closure).
+    (∀ _ : Continuity.PurePreservingTransitiveAgency
+            (Classical.gpt 2), False) ∧
+    -- Non-classical Tier B realized: CircleGPT (rebit), QubitGPT (qubit).
+    (Nonempty (Continuity.StrictConnectedAgency CircleGPT.circleGPT) ∧
+     Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT)) :=
+  ⟨fun c₁ σ => TierB.bracketing_preserves_definiteness c₁ σ,
+   fun am => TierB.actualization_not_bracketed am,
+   v2_classical_Tier_B_excluded,
+   ⟨⟨CircleGPT.circleStrictConnectedAgency⟩,
+    ⟨QubitGPT.qubitStrictConnectedAgency_full⟩⟩⟩
+
 /-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
 
 A triple-tensor instance — `gptTensor (gptTensor CircleGPT QubitGPT)
