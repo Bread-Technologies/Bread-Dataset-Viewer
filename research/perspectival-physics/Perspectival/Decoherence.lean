@@ -4505,6 +4505,29 @@ example (R : Reality Bool Bool) :
   intro base
   exact (Commute.pow_pow_self base 3 5).eq
 
+/-- **Worked example: base^3 has length 3 (concrete count).** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (base ^ 3).length = 3 := by
+  intro base
+  rw [loop_npow_length]
+  show 3 * (RealityChain'.singleton _).length = 3
+  rw [RealityChain'.singleton_length]
+
+/-- **Worked example: base^7 has count 0, length 7.** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (base ^ 7).actualizationCount = 0 ∧ (base ^ 7).length = 7 := by
+  intro base
+  refine ⟨loop_npow_tierAEventCount base 7, ?_⟩
+  rw [loop_npow_length]
+  show 7 * (RealityChain'.singleton _).length = 7
+  rw [RealityChain'.singleton_length]
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
