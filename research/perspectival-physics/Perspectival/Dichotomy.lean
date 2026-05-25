@@ -160,6 +160,16 @@ example :
     Hardy.Axiom4_Composite_Dimension CircleGPT.circleGPT CircleGPT.circleGPT :=
   Hardy.axiom4_dimension_holds CircleGPT.circleGPT CircleGPT.circleGPT
 
+/-- **Hardy A4 for two QubitGPTs**: dim multiplicativity = 16 = 4 · 4. -/
+example :
+    Hardy.Axiom4_Composite_Dimension QubitGPT.qubitGPT QubitGPT.qubitGPT :=
+  Hardy.axiom4_dimension_holds QubitGPT.qubitGPT QubitGPT.qubitGPT
+
+/-- **Hardy A4 for two QutritGPTs**: dim multiplicativity = 81 = 9 · 9. -/
+example :
+    Hardy.Axiom4_Composite_Dimension QutritGPT.qutritGPT QutritGPT.qutritGPT :=
+  Hardy.axiom4_dimension_holds QutritGPT.qutritGPT QutritGPT.qutritGPT
+
 /-! ## Hardy K-dimension for the framework's GPT instances
 
 The state-space dimension K is, in Hardy's language, the dim of the
