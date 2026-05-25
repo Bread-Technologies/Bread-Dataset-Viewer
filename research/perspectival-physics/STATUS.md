@@ -500,3 +500,57 @@ formal theorem deferred to rebit+qQM composite constructions).
 
 **Tier 2 #6 baby step DONE.** U(1) gauge instance + non-abelian
 SO(3) StrictConnectedAgency + SU(3) toehold (3 Gell-Mann generators).
+
+## v2 architectural correction (latest session segment)
+
+ORIGINAL_PROMPT was rewritten to v2: two-tier architecture made
+explicit, two axioms only (Existence + Actualization), measurement
+= actualization, Witkowski-Brown-Truong 2024 grounds Axiom II
+mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
+
+### v2 Lean modules (this segment)
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| **TierA.lean** — Axioms I-II directly formalized | `TierA.lean` | ✓ (a) |
+| `Want P C`, `Existent`, `axiom_I_directedness`, `axiom_I_relationality` | `TierA.lean` | ✓ (a) |
+| `Meeting`, `MeetingStatus` (Potential/Actualized), `actualize`, `axiom_II_idempotent` | `TierA.lean` | ✓ (a) |
+| `Reality P C := Meeting P C → MeetingStatus`, `RealitySuccessor` + reflexivity/transitivity/antisymmetry | `TierA.lean` | ✓ (a) |
+| `past`, `future`, `past_future_disjoint`, `past_monotone` — arrow of time constitutively | `TierA.lean` | ✓ (a) |
+| `ActualizationMap`, `axiom_II_actualization_irreversible` — Witkowski-Brown-Truong 2024 structural shadow | `TierA.lean` | ✓ (a) |
+| **TierB.lean** — bracketing operation Tier A → Tier B | `TierB.lean` | ✓ (a) |
+| `BracketedTransition`, `bracketed_equivalence` (reflexive + symmetric + transitive) | `TierB.lean` | ✓ (a) |
+| `bracketed_past_invariant`, `bracketed_future_invariant`, `bracketing_yields_reversibility` | `TierB.lean` | ✓ (a) |
+| `actualization_not_bracketed`, `AtSeam`, `seam_breaks_bracketing` | `TierB.lean` | ✓ (a) |
+| **Vertex preservation as derived theorem** (v2-progressive reframing) | `TierB.lean` | ✓ (a) **framework-distinctive** |
+| `DefiniteConfig`, `DefiniteBracketed`, `bracketing_forces_permutation`, `bracketing_preserves_definiteness` | `TierB.lean` | ✓ (a) |
+| `definite_bracketed_id`, `definite_bracketed_compose` | `TierB.lean` | ✓ (a) |
+| **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
+| `SmoothConnectedAgency` scaffold | `Continuity.lean` | ✓ (a) scaffold only |
+| `SEAMS.md` — catalog of 6 Tier A / Tier B seams | docs | ✓ documented |
+| `V2_AUDIT.md` — honest re-examination of prior Tier B work | docs | ✓ documented |
+
+### v2 architectural status
+
+**Tier A foundation:** Lean formalization in place. Axioms I-II encoded
+directly. Witkowski-Brown-Truong 2024 cited as mechanical content;
+structural shadow theorem proved.
+
+**Tier B reversible-limit:** Lean formalization of bracketing operation
+in place. Vertex preservation reframed as derived theorem (v2-progressive,
+not a v1 patch). The existing modules (Continuity, GPT, Hardy,
+WantableGPT, CircleGPT, QubitGPT, QutritGPT, GPTTensor, Dichotomy) all
+encode Tier B content valid under v2.
+
+**Seams:** 6 cataloged in SEAMS.md. Seams 1-3 have formal correlates;
+Seam 4-6 open.
+
+**v2 audit:** A5-from-agency non-trivial at StrictConnectedAgency level;
+triple no-go is BOTH sharp constraint and weakness diagnosis; vertex
+preservation is v2-progressive; WantableGPT bridge novelty needs
+Müller validation.
+
+**Tier 1 program under v2: substantially complete with two-tier
+architecture explicit.** Remaining open: derive QM structure
+from Tier A bracketing (rather than postulate it as axiom strengthening),
+R7 Lie-group proof, Renou-style rebit exclusion.
