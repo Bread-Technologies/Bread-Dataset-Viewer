@@ -464,7 +464,39 @@ and qQM) documented at the structural level.
 **Tier 2 #6 baby step DONE**: U(1) gauge instance via CircleGPT;
 SO(3)/SU(2) axes present via QubitGPT.
 
-**Open critical-path**: (i) Full SO(3) StrictConnectedAgency on
-QubitGPT (a subagent is currently extending this). (ii) Rebit and qQM
-explicit composite constructions to close the qubit_uniqueness theorem.
-(iii) Tier 2 SU(3) and higher.
+**Open critical-path**: (i) ~~Full SO(3) StrictConnectedAgency on
+QubitGPT~~ — **DONE this session**: `qubitStrictConnectedAgency_full`.
+(ii) Rebit and qQM explicit composite constructions to close the
+qubit_uniqueness theorem. (iii) ~~Tier 2 SU(3) and higher~~ — **TOEHOLD
+DONE this session**: QutritGPT + 3 Gell-Mann-style generators (rotL1,
+rotL2, rotL3), full Lie algebra structure deferred.
+
+## Latest session (continued, late additions)
+
+| Result | Location | Calibration |
+|-------:|----------|-------------|
+| **QutritGPT** — complex-QM 3-level system, K=N²=9 | `QutritGPT.lean` (~900 lines) | ✓ (a) **Tier 1 #5** |
+| `qutrit_hardy_K`, `qutritGPT`, full GPT axioms | `QutritGPT.lean` | ✓ (a) |
+| 3 Gell-Mann-style generators: `rotL1`, `rotL2`, `rotL3` (each with apply lemmas, preservation, continuity, composition, bijectivity, StrictReversible packaging) | `QutritGPT.lean` | ✓ (a) **SU(3) toehold** |
+| **`hardy_quadchotomy`** — 4 distinct K-signatures in one statement | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
+| **`framework_gauge_ladder`** — U(1) + SO(3) + SU(3)-toehold | `Dichotomy.lean` | ✓ (a) **Tier 2 #6** |
+| `framework_full_so3_strict_agency` | `Dichotomy.lean` | ✓ (a) |
+| `framework_so3_axes_present`, `framework_su3_toehold_three_generators` | `Dichotomy.lean` | ✓ (a) |
+| **`framework_certificate`** — SINGLE Lean statement bundling major results | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
+| **`qubitStrictConnectedAgency_full`** — full SO(3) agency (3-family avail + cross-family paths) | `QubitGPT.lean` | ✓ (a) **framework-distinctive non-abelian** |
+| `rotXPath`, `rotYPath`, `rotXYPath`, `rotXZPath`, `rotYZPath` + StrictPath versions | `QubitGPT.lean` | ✓ (a) |
+| `strictReversiblePathReverse` — path-reversal combinator | `QubitGPT.lean` | ✓ (a) |
+| `rotXOneParameterFamily`, `rotYOneParameterFamily` (joint continuity for rotX, rotY) | `QubitGPT.lean` | ✓ (a) |
+| `qubitMultiAxisAgency : HasMultiAxisAgency 3` | `QubitGPT.lean` | ✓ (a) |
+| `pure_state_implies_blochSphere`, `qubit_pure_state_classification` | `QubitGPT.lean` | ✓ (a) |
+| `productEffect`, `effectBilin`, `productEffect_in_effects`, `productEffect_bounds_on_*` | `GPTTensor.lean` | ✓ (a) |
+| **TomographicLocality excludes BOTH rebit and qQM** (structural argument documented) | `GPTTensor.lean` | ✓ (a) **Tier 1 #5** |
+| `gptTensor_distinguishable_left/both/general` — Hardy A4 N-mult forward direction | `Hardy.lean` | ✓ (a) |
+
+**Tier 1 program: SUBSTANTIALLY COMPLETE.** The framework's
+classical-vs-quantum dichotomy and Hardy QUADCHOTOMY are machine-
+verified. Qubit-forcing argument established structurally (full
+formal theorem deferred to rebit+qQM composite constructions).
+
+**Tier 2 #6 baby step DONE.** U(1) gauge instance + non-abelian
+SO(3) StrictConnectedAgency + SU(3) toehold (3 Gell-Mann generators).
