@@ -992,9 +992,11 @@ results that go beyond restating standard GPT content:
   ✓ R6 n=3 sign-of-det invariant: even/odd permutation discrimination
     via the 6-term Leibniz formula `n3_disc_det`, with `n3_disc_det_id = 1`,
     `n3_disc_det_swap01 = -1`, and IVT zero-crossing along any
-    continuous path. Conditional disconnect via
-    `classical_n3_no_strict_path_id_to_swap01_conditional`. (Closure
-    needs the `det = 0 ⇒ not injective` lemma.)
+    continuous path. **UNCONDITIONAL** disconnect now proven:
+    `classical_n3_no_strict_path_id_to_swap01`. The closing lemma
+    `n3_det_zero_implies_not_injective` is proved via the Mathlib
+    `Matrix.det` ↔ `LinearMap.det` bridge using `LinearMap.toMatrix'`,
+    `LinearMap.det_toMatrix'`, and `LinearMap.isUnit_iff_ker_eq_bot`.
   ✓ Triple no-go: bare WantableGPT bridge always lands classical
     (Section 6.1).
   ✓ Vertex-decomposition + structural identification of
