@@ -4753,6 +4753,23 @@ theorem rate_origin_iff_length_zero {P : Type u} {C : Type v}
     have h_count := length_zero_count_zero ch h
     rw [h_count]
 
+/-- **Rate visualization theorem.** The rate of a chain is a single
+point in the ℕ × ℕ "decoherence space" with coordinates (count, length).
+The relation count ≤ length defines a triangular region. Different
+chains plot to different points (or share points if they have same
+measures). -/
+theorem rate_visualization :
+    -- Every chain's rate is a point.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ∃ (p : ℕ × ℕ), actualizationRate ch = p) ∧
+    -- That point satisfies count ≤ length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 ≤ (actualizationRate ch).2) :=
+  ⟨fun ch => ⟨actualizationRate ch, rfl⟩,
+   fun ch => rate_count_le_length ch⟩
+
 /-- **Rate corner certificate.** Rate's special points:
 - (0, 0) corresponds to nil chain (length 0).
 - (0, n) for n > 0 corresponds to coherent chain of length n.
