@@ -226,13 +226,20 @@ The continuous-time / phase-space content requires Mathlib's
 ODE infrastructure + a proper decoherence-time framework — deferred
 to Tier 2.
 
-### P13 — Boltzmann brain reasoning has no purchase  [S]
+### P13 — Boltzmann brain reasoning has no purchase  [S + machine-verified shadow]
 
 The framework predicts that Boltzmann brain reasoning — which
 relies on substantial high-entropy state-spaces from which fluctuations
 occur — has no purchase under the framework's relational ontology.
 Cosmological models making Boltzmann brain predictions presuppose
 ontology the framework rejects.
+
+**Machine-verified structural shadow:**
+`Decoherence.boltzmann_brain_dissolution_shadow` proves that closed
+loop trajectories `RealityChain' P C R R` have zero net actualization
+content (count = 0) regardless of length, and that this property is
+preserved under arbitrary loop powers. The formal correlate of "loop
+recurrences carry no net decoherence-content".
 
 **Testability.** Indirect — affects how cosmological multiverse
 scenarios get evaluated.
