@@ -850,6 +850,29 @@ example (P : Type u) (C : Type v) (R : Reality P C) :
   show (0 : ℕ) ≠ 1
   decide
 
+/-- **Endpoint-determined status vs. path-dependent content.** Single
+Lean expression bundling the framework's anti-realism content:
+status (count = 0 or > 0) is endpoint-determined; complexity/length
+need not be. -/
+theorem decoherence_anti_realism :
+    -- Status is endpoint-determined.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- Content (complexity) is path-dependent: there exist coherent
+    -- chains with different complexity values.
+    (∃ (P : Type) (C : Type) (R : Reality P C)
+        (ch₁ ch₂ : RealityChain' P C R R),
+      ch₁.actualizationCount = 0 ∧ ch₂.actualizationCount = 0
+      ∧ trajectoryComplexity ch₁ ≠ trajectoryComplexity ch₂) :=
+  ⟨fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   -- Witness: P = C = Unit, R = arbitrary. Use nil vs refl-bracketed.
+   ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+    RealityChain'.nil _,
+    RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+    rfl, rfl, by decide⟩⟩
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
