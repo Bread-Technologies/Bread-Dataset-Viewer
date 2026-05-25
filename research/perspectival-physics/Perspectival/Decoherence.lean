@@ -3243,6 +3243,24 @@ theorem trivial_chain_iff {P : Type u} {C : Type v}
   · intro h_len; omega
   · intro ⟨h₁, h₂⟩; omega
 
+/-- **Coherent-iff-length-equals-bracketed.** -/
+theorem coherent_iff_length_eq_bracketed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount = 0 ↔ ch.length = ch.bracketedCount := by
+  have h := ch.counts_sum
+  constructor
+  · intro h_co; omega
+  · intro h_eq; omega
+
+/-- **Pure-decoherent-iff-length-equals-count.** -/
+theorem pure_decoherent_iff_length_eq_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.bracketedCount = 0 ↔ ch.length = ch.actualizationCount := by
+  have h := ch.counts_sum
+  constructor
+  · intro h_pd; omega
+  · intro h_eq; omega
+
 /-- **Trivial chain has nil-like behavior.** A length-0 chain
 trivially has all measures 0 and trivially preserves past. -/
 theorem trivial_chain_nil_like {P : Type u} {C : Type v}
