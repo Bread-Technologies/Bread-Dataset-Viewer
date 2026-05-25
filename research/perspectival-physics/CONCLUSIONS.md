@@ -346,6 +346,15 @@ the framework's major results into one statement: Hardy quadchotomy
 dimension multiplicativity. This is the framework's "if you have to
 prove one theorem" statement of its current technical output.
 
+**Decoherence module super-certificate (current session).**
+`Decoherence.decoherence_module_super_certificate` bundles eight
+headline results into a single Lean expression: regime trichotomy,
+counts monoid morphism, path-independent coherence, loop submonoid
+(every R → R chain is coherent), coherent-kernel characterization,
+past growth monotonicity, anti-realism witness, and Boltzmann brain
+dissolution shadow. This is the framework's Seam 4 formal-correlate
+content in one referenceable typed object.
+
 ## 4. What is open and the conjectured path
 
 **R6 general n.** The classical n = 2 disconnect (id ≠ swap through
