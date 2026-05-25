@@ -4913,6 +4913,16 @@ theorem singleton_actualization_rate {P : Type u} {C : Type v}
 documentation theorem to mark the milestone. -/
 theorem decoherence_6000_lines_marker : True := trivial
 
+/-- **Using `loop_is_coherent` directly: loops have count 0.** -/
+example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
+    tierAEventCount ch = 0 :=
+  loop_is_coherent ch
+
+/-- **Using kernel characterization: count = 0 iff endpoints equal.** -/
+example (R₁ R₂ : Reality Bool Bool) (ch : RealityChain' Bool Bool R₁ R₂) :
+    tierAEventCount ch = 0 ↔ R₁ = R₂ :=
+  coherent_kernel_iff_endpoints_eq ch
+
 /-- **Singleton chain certificate.** Bundles singleton bracketed and
 actualization measure certificates for full reference. -/
 theorem singleton_chain_certificate :
