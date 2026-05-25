@@ -233,6 +233,57 @@ theorem actualizeAt_is_successor {P : Type u} {C : Type v}
   · rw [if_pos h_eq]
   · rw [if_neg h_eq]; exact h_act
 
+/-! ### Order-independence of pointwise actualization
+
+A key structural fact: actualizing two distinct meetings yields the
+same Reality state regardless of the order. This is the elementary
+form of "commutativity of bracketed inter-event evolution" — when
+multiple actualization events occur in a bracketed interval, the
+final state doesn't depend on the order. (In the framework's
+two-tier reading: order-dependence would be a Tier B observable
+beyond the actualized-set count; the commutativity here says no
+such observable exists at the elementary Tier A level.) -/
+
+/-- **`actualizeAt` events commute pointwise.** Actualizing m₁ then
+m₂ yields the same Reality state as actualizing m₂ then m₁. -/
+theorem actualizeAt_comm {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m₁ m₂ : Meeting P C) :
+    actualizeAt (actualizeAt R m₁) m₂ = actualizeAt (actualizeAt R m₂) m₁ := by
+  funext m
+  by_cases h₁ : m = m₁
+  · subst h₁
+    -- Goal: actualizeAt (actualizeAt R m) m₂ m = actualizeAt (actualizeAt R m₂) m m
+    by_cases h₂ : m = m₂
+    · -- m = m₂ as well; both sides reduce to actualizeAt _ _ m = Actualized.
+      subst h₂
+      -- Goal: actualizeAt (actualizeAt R m) m m = actualizeAt (actualizeAt R m) m m
+      rfl
+    · -- m ≠ m₂; LHS: actualizeAt (actualizeAt R m) m₂ m
+      -- = actualizeAt R m m (by actualizeAt_other since m ≠ m₂)
+      -- = Actualized (by actualizeAt_self).
+      -- RHS: actualizeAt (actualizeAt R m₂) m m = Actualized (by actualizeAt_self).
+      rw [actualizeAt_other _ h₂, actualizeAt_self, actualizeAt_self]
+  · by_cases h₂ : m = m₂
+    · subst h₂
+      -- Goal: actualizeAt (actualizeAt R m₁) m m = actualizeAt (actualizeAt R m) m₁ m
+      rw [actualizeAt_self, actualizeAt_other _ h₁, actualizeAt_self]
+    · -- m ≠ m₁ and m ≠ m₂; both sides reduce to R m.
+      rw [actualizeAt_other _ h₂, actualizeAt_other _ h₁,
+          actualizeAt_other _ h₁, actualizeAt_other _ h₂]
+
+/-- **`actualizeAt` is idempotent.** Actualizing the same meeting
+twice yields the same Reality state. -/
+theorem actualizeAt_idempotent {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) :
+    actualizeAt (actualizeAt R m) m = actualizeAt R m := by
+  funext m'
+  by_cases h : m' = m
+  · subst h
+    rw [actualizeAt_self, actualizeAt_self]
+  · rw [actualizeAt_other _ h, actualizeAt_other _ h]
+
 /-! ## The arrow of time from Axioms I + II
 
 Past = the set of actualized meetings (definite, settled, irreversibly
