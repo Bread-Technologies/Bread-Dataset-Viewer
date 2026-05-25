@@ -104,6 +104,15 @@ that "explains" why Λ is small without deriving the exact value.
 Compatible with the framework's relational picture; not derived from
 I–IV.
 
+**Per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`**: the framework reads
+S = A/4 as the dimensionality of distinguishable-from-outside
+structure under the outside-observer's coarse-graining (not as
+horizon-substance storing information-stuff). The holographic bound
+is a structural relation among coarse-grainings, not a substantialist
+"information storage on horizon" claim. This is the same anti-
+substantialist hygiene the framework applies to QM and to entropy
+generally. See `TIER4_DISSOLUTIONS.md` item #20.
+
 ## Honest verdict
 
 The framework provides a *reading* of the cosmological-constant

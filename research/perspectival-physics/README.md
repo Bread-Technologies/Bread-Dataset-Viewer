@@ -111,6 +111,9 @@ strengthening).
 **Documentation**:
 - `ORIGINAL_PROMPT.md` — source of truth (v2 architecture); v1 archived
   to `ORIGINAL_PROMPT_V1.md`.
+- `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` — **active addendum**:
+  anti-realism about entropy and coarse-graining; supersedes v2
+  wherever they conflict. Read alongside the main prompt.
 - `STATUS.md` — calibrated per-theorem catalog. **Read first.**
 - `FINDINGS.md` — honest commentary, limitations, open targets.
 - `V2_AUDIT.md` — honest re-examination of prior Tier B work under v2.
