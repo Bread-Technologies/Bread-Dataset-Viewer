@@ -352,3 +352,64 @@ sharpened without sliding into the unfalsifiable hand-waving that
 plagues much foundations work.
 
 That is the honest state at the close of this session.
+
+## ADDENDUM: Subsequent session closure — DICHOTOMY ESTABLISHED
+
+After the above session-report closure, additional substantive work
+established the framework's classical-vs-quantum dichotomy at the
+formal level. The earlier "positive complement remains open" caveat
+NO LONGER HOLDS. The dichotomy is now fully machine-verified.
+
+### Major new closures
+
+1. **R6 general n ≥ 2 via det-sign.**
+   `classical_general_no_strict_path_id_to_swap01`: hypothesis-free.
+
+2. **R6 discreteness for ALL non-identity permutations** (under
+   vertex-preservation hypothesis on paths).
+   `classical_general_no_strict_vertex_preserving_path_id_to_perm`.
+   Closes the 3-cycle gap left by det-sign.
+
+3. **CRITICAL R6 mathematical correction.** Naive "state-preserving
+   + bijective ⇒ permutation" is FALSE for n ≥ 3 (counterexample:
+   `t·I + (1-t)·C`). Strengthened R6 requires vertex-preservation
+   hypothesis on paths — the framework's first concrete axiom
+   refinement under "metaphysics-fixed, axioms-adjustable."
+
+4. **R1 forward + reverse closed.**
+   `vertex_is_pure`, `pure_state_of_classical_is_vertex`.
+
+5. **L6 closure under vertex-preservation, UNCONDITIONAL.**
+   `classical_general_vertex_preserving_no_transitive_agency_unconditional`.
+
+6. **PurePreservingTransitiveAgency (L7) typeclass** in Continuity.lean.
+
+7. **L7 closure on Classical, UNCONDITIONAL.**
+   `classical_general_no_pure_preserving_transitive_agency`.
+
+8. **CircleGPT positive existence.** Full StrictConnectedAgency +
+   unconditional TransitiveAgency via U(1) rotations.
+
+9. **TransitiveAgency → Hardy A5 (strong-form) bridge.**
+   `axiom5_strong_of_transitive_agency`.
+
+10. **The Dichotomy Theorem.** `framework_dichotomy_existential` in
+    Perspectival/Dichotomy.lean — single Lean expression.
+
+### Has the metaphysical backdrop produced new things? YES.
+
+Direct answer to the user's check-in: the metaphysical backdrop has
+produced framework-distinctive items in this session that no other
+operational reconstruction has — agency hierarchy, L6/L7 closures
+on Classical, vertex-preservation axiom refinement, CircleGPT as
+positive existence, and the Dichotomy theorem.
+
+### Where Tier 1 stands now
+
+**Tier 1 (operational reconstruction): SUBSTANTIALLY COMPLETE with
+machine-verified dichotomy.** Hardy A5 derivable in two forms.
+Classical-vs-quantum dichotomy verified.
+
+Remaining open Tier 1 items: R7 Lie-group bridge (single biggest
+open piece now), gptTensor (Hardy A4 full closure, in progress),
+real-vs-complex QM exclusion.
