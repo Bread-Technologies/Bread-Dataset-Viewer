@@ -928,6 +928,36 @@ theorem RealityChain'.append_length {P : Type u} {C : Type v} :
     (R : Reality P C) :
     (RealityChain'.nil (P := P) (C := C) R).length = 0 := rfl
 
+/-- **Two-step strict chain example: actualize then bracketed.**
+Demonstrates strict-chain composition with both step kinds, where
+the cumulative successor is preserved through append. -/
+example (P : Type u) (C : Type v)
+    [DecidableEq (Meeting P C)] (R : Reality P C)
+    (m : Meeting P C) (h_pot : R m = MeetingStatus.Potential) :
+    True := by
+  let step₁ : TrajectoryStep' P C R (actualizeAt R m) :=
+    actualizeAt_strict_step R m h_pot
+  let step₂ : TrajectoryStep' P C (actualizeAt R m) (actualizeAt R m) :=
+    TrajectoryStep'.bracketed (bracketed_refl _)
+  let ch : RealityChain' P C R (actualizeAt R m) :=
+    (RealityChain'.singleton step₁).append (RealityChain'.singleton step₂)
+  -- ch.actualizationCount = 1 (the first step) + 0 (the second) = 1.
+  have h_count : ch.actualizationCount = 1 := by
+    show ((RealityChain'.singleton step₁).append
+          (RealityChain'.singleton step₂)).actualizationCount = 1
+    rw [RealityChain'.append_actualizationCount]
+    -- Both singletons reduce via rfl on the match.
+    show (match step₁.step with
+          | TrajectoryStep.bracketed _ => 0
+          | TrajectoryStep.actualization _ => 1)
+        + (match step₂.step with
+           | TrajectoryStep.bracketed _ => 0
+           | TrajectoryStep.actualization _ => 1) = 1
+    rfl
+  -- ch implies RealitySuccessor R (actualizeAt R m).
+  have h_succ : RealitySuccessor R (actualizeAt R m) := ch.implies_successor
+  trivial
+
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
 transition R₁ → R₂ cannot be a bracketed step; if it's at all
