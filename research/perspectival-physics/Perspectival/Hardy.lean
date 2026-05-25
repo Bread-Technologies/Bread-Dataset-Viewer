@@ -240,6 +240,9 @@ theorem framework_hardy_unconditional
   ⟨axiom1_holds GA, axiom3_holds GA,
    axiom4_dimension_holds GA GB, axiom4_state_exists_holds GA GB⟩
 
+-- framework_hardy_with_agency moved later in file (after
+-- axiom5_strong_of_transitive_agency is defined)
+
 /-- **Hardy A4 N-multiplicativity, forward direction (1-element
 witness).** If `(ρ₁, ρ₂)` is distinguishable in `G₁` and `σ ∈ G₂.states`,
 then `(ρ₁ ⊗ σ, ρ₂ ⊗ σ)` is distinguishable in `gptTensor G₁ G₂`.
@@ -408,6 +411,24 @@ theorem axiom5_strong_of_transitive_agency
   have hp₁ : Continuity.PureState G ρ₁ := ⟨h_pure_states ρ₁ he₁, he₁⟩
   have hp₂ : Continuity.PureState G ρ₂ := ⟨h_pure_states ρ₂ he₂, he₂⟩
   exact T.hardy_axiom5 ρ₁ ρ₂ hp₁ hp₂
+
+/-- **The framework's full Hardy A1, A3, A4, A5 (conditional on agency).**
+With a `TransitiveAgency` on G, four of the five Hardy axioms are
+derivable (A2 remains auxiliary). -/
+theorem framework_hardy_with_agency
+    {V VB : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    [AddCommGroup VB] [Module ℝ VB]
+    (G : GPT V) (GB : GPT VB)
+    (T : Continuity.TransitiveAgency G)
+    (h_pure_states : ∀ ρ, IsExtreme ℝ G.states {ρ} → ρ ∈ G.states) :
+    Axiom1_Probabilities G ∧
+    Axiom3_Subspaces G ∧
+    Axiom4_Composite_Dimension G GB ∧
+    Axiom4_Composite_State_Exists G GB ∧
+    Axiom5_Continuity_Strong G :=
+  ⟨axiom1_holds G, axiom3_holds G,
+   axiom4_dimension_holds G GB, axiom4_state_exists_holds G GB,
+   axiom5_strong_of_transitive_agency G T h_pure_states⟩
 
 /-! ## Summary of categorizations (the actual research output of this file)
 
