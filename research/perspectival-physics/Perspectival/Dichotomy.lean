@@ -26,6 +26,7 @@ satisfies it.
 import Perspectival.Classical
 import Perspectival.CircleGPT
 import Perspectival.QubitGPT
+import Perspectival.QutritGPT
 import Perspectival.Continuity
 import Perspectival.Hardy
 import Perspectival.GPTTensor
@@ -200,14 +201,26 @@ Hardy-signature level. The qQM signature K = N(2N-1) = 6 at N=2 is
 provably distinct (and excluded by the `TomographicLocality` argument
 in `GPTTensor.lean`). -/
 
-/-- **THE HARDY TRICHOTOMY THEOREM.** The framework's three GPT instances
-have distinct K-dimensions, pinning them at three distinct points of
-Hardy's signature lattice. -/
+/-- **THE HARDY TRICHOTOMY THEOREM.** The framework's three N=2 GPT
+instances have distinct K-dimensions, pinning them at three distinct
+points of Hardy's signature lattice at N=2. -/
 theorem hardy_trichotomy :
     Module.finrank ℝ (Classical.V 2) = 2 ∧
     Module.finrank ℝ (Fin 3 → ℝ) = 3 ∧
     Module.finrank ℝ (Fin 4 → ℝ) = 4 :=
   ⟨classical_hardy_K 2, circle_hardy_K, QubitGPT.qubit_hardy_K⟩
+
+/-- **THE HARDY QUADCHOTOMY THEOREM.** Extending the trichotomy to N=3
+via QutritGPT. The framework constructs FOUR GPT instances across two
+N-values, realizing the complex-QM K = N² growth from N=2 (K=4) to
+N=3 (K=9): -/
+theorem hardy_quadchotomy :
+    Module.finrank ℝ (Classical.V 2) = 2 ∧
+    Module.finrank ℝ (Fin 3 → ℝ) = 3 ∧
+    Module.finrank ℝ (Fin 4 → ℝ) = 4 ∧
+    Module.finrank ℝ (Fin 9 → ℝ) = 9 :=
+  ⟨classical_hardy_K 2, circle_hardy_K,
+   QubitGPT.qubit_hardy_K, QutritGPT.qutrit_hardy_K⟩
 
 /-- **Hardy trichotomy: continuous symmetry exists on both non-classical
 sides.** Both CircleGPT (rebit) and QubitGPT (qubit) carry non-degenerate
