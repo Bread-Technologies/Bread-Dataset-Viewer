@@ -3199,6 +3199,22 @@ theorem bracketedCount_monotone_under_extension {P : Type u} {C : Type v}
   rw [RealityChain'.append_bracketedCount]
   omega
 
+/-- **Master monotonicity certificate.** All three count measures
+(tier A, bracketed, length) are monotonic under chain extension. -/
+theorem master_monotonicity_certificate :
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount ch₁ ≤ tierAEventCount (ch₁.append ch₂)) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      ch₁.bracketedCount ≤ (ch₁.append ch₂).bracketedCount) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      ch₁.length ≤ (ch₁.append ch₂).length) :=
+  ⟨fun ch₁ ch₂ => no_maxwell_demon ch₁ ch₂,
+   fun ch₁ ch₂ => bracketedCount_monotone_under_extension ch₁ ch₂,
+   fun ch₁ ch₂ => length_monotone_under_extension ch₁ ch₂⟩
+
 /-- **No-Maxwell-demon certificate.** The framework's "Tier A
 irreversibility persists under chain composition" content. -/
 theorem no_maxwell_demon_certificate :
