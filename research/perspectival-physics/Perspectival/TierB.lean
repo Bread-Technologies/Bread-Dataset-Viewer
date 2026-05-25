@@ -391,6 +391,64 @@ theorem bracketed_and_seam_exclusive {P : Type u} {C : Type v}
     (h_seam : AtSeam R₁ R₂) : False :=
   seam_breaks_bracketing h_seam h_bracketed
 
+/-! ### Reality chains: multi-step trajectories
+
+A `RealityChain R₁ R_n` is a finite sequence of `TrajectoryStep`s
+linking Reality states. Concretely, it is a reflexive-transitive
+closure of the trajectory-step relation. This makes "evolution +
+measurement" sequences concretely encodable: any chain of Reality
+states alternates between bracketed intervals (Tier B reversible
+dynamics) and actualization events (Tier A irreversible seams). -/
+
+/-- `RealityChain R₁ R_n` is a chain of Reality states linked by
+TrajectoryStep, starting at R₁ and ending at R_n. -/
+inductive RealityChain (P : Type u) (C : Type v) :
+    Reality P C → Reality P C → Type (max u v)
+  | nil (R : Reality P C) : RealityChain P C R R
+  | cons {R₁ R₂ R₃ : Reality P C}
+      (step : TrajectoryStep P C R₁ R₂)
+      (rest : RealityChain P C R₂ R₃) :
+      RealityChain P C R₁ R₃
+
+/-- Any single TrajectoryStep is a 1-step RealityChain. -/
+def RealityChain.singleton {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep P C R₁ R₂) :
+    RealityChain P C R₁ R₂ :=
+  RealityChain.cons step (RealityChain.nil R₂)
+
+/-- Concatenation of RealityChains. -/
+def RealityChain.append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain P C R₁ R₂) (ch₂ : RealityChain P C R₂ R₃) :
+    RealityChain P C R₁ R₃ := by
+  induction ch₁ with
+  | nil _ => exact ch₂
+  | cons step _ ih => exact RealityChain.cons step (ih ch₂)
+
+/-! **Note on chain successor properties.** The trajectory-step
+relation's actualization arm uses `AtSeam` only (a witness of *some*
+new actualization). To conclude `RealitySuccessor R₁ R₂` from a chain,
+the actualization step would need to additionally carry a "preserves
+prior actualized" hypothesis. Without that, `RealitySuccessor`-closure
+across chains is not derivable from the inductive structure alone.
+Use `actualizeAt_asActualizationMap` to get the stronger
+RealitySuccessor witness for elementary pointwise events. -/
+
+/-- **Bracketed-only chains are trivial.** A chain whose every step
+is bracketed preserves the actualized-set invariant at each step,
+hence by `bracketed_trans` overall. The resulting endpoint chain is
+itself a bracketed transition from start to end. -/
+theorem RealityChain.bracketed_chain_bracketed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (ch : RealityChain P C R₁ R₂)
+    (h_all_bracketed : ∀ {Ra Rb : Reality P C}, TrajectoryStep P C Ra Rb →
+                       BracketedTransition Ra Rb) :
+    BracketedTransition R₁ R₂ := by
+  induction ch with
+  | nil R => exact bracketed_refl R
+  | cons step _ ih =>
+    exact bracketed_trans (h_all_bracketed step) (ih h_all_bracketed)
+
 /-! ## Measurement = actualization (framework's dissolution of the
     measurement problem)
 
