@@ -1413,6 +1413,77 @@ structure HasMultiAxisAgency (k : ℕ)
     (G : GPT V) where
   axes : Fin k → OneParameterFamily G
 
+/-! ## R7 SmoothConnectedAgency — scaffold + precise conjecture
+
+Per ORIGINAL_PROMPT v2 first move #6, state the R7 conjecture
+precisely.
+
+**Conjecture (R7 Lie-group bridge):** for a GPT G with a non-trivial
+`StrictConnectedAgency`, the avail set forms (under composition) a
+CONNECTED LIE GROUP. For Tier B encodings of frameworks supporting
+QM (= satisfying the strengthened wantable axioms including
+`PurePreservingTransitiveAgency`), this Lie group is isomorphic to a
+subgroup of U(n) where n is the operational dimension. In the
+fully-symmetric case (transitive on all pure states), the Lie group
+IS U(n) / Z_n or SO(n+1) depending on real vs complex structure.
+
+This is the v2-progressive analog of Hardy A2 (Simplicity / K-minimum)
+made structural: among connected Lie groups compatible with the
+strengthened agency axioms, the framework forces the minimal-K
+candidate, which is the quantum group U(n).
+
+**Mathematical content needed (heavy):**
+  • Smooth manifold structure on `Set (StrictReversible G)` —
+    requires Mathlib's smooth manifolds with corners.
+  • Lie group structure — requires Mathlib's `LieGroup`.
+  • The connected component containing identity must be characterized.
+
+**Status:** SCAFFOLD only. The typeclass `SmoothConnectedAgency` below
+is a placeholder. The full content depends on wiring Mathlib's
+LieGroup infrastructure to the framework's Reversible structure, which
+is currently deferred. The lightweight precursor `OneParameterFamily`
+(defined elsewhere in this file) gives the 1-parameter abelian case.
+
+**Open work per v2:** prove the R7 conjecture for the framework's
+specific GPT instances (CircleGPT gives U(1); QubitGPT gives SO(3) =
+SU(2)/Z_2; QutritGPT gives generators of SU(3); full uniqueness
+requires the v2-progressive bracketing-from-Tier-A argument). -/
+
+/-- A *smooth-connected agency* on a GPT G — placeholder typeclass.
+The full content would require Mathlib's smooth manifold + Lie group
+infrastructure wired to the framework's `Reversible G` structure.
+For now, this records the framework's structural intention. -/
+class SmoothConnectedAgency
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) extends StrictConnectedAgency G where
+  /-- The avail set admits a (yet-to-be-specified) smooth manifold
+  structure compatible with composition. Placeholder for the Lie
+  group condition. -/
+  smooth_manifold_placeholder : True
+
+/-- **The R7 conjecture (precise form, structural).** For any GPT G
+with a `SmoothConnectedAgency`, the framework predicts that the avail
+set is a connected Lie group; specifically, for GPTs satisfying the
+strengthened wantable axioms (= PurePreservingTransitiveAgency on a
+non-classical Hardy signature), this Lie group is isomorphic to U(n)
+where n is the operational dimension.
+
+**Currently STATED as conjecture, not proved.** The proof requires
+(i) Mathlib LieGroup wiring, (ii) the v2-progressive
+bracketing-from-Tier-A argument that forces the K = N² signature,
+(iii) Renou-style discrimination between U(n) and O(n+1).
+
+This is the framework's central remaining Tier 1 #5 target. -/
+def R7_Conjecture
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) : Prop :=
+  Nonempty (PurePreservingTransitiveAgency G) →
+  ∃ _ : SmoothConnectedAgency G,
+    -- The Lie group structure exists and is connected.
+    -- The U(n) characterization would require additional structure
+    -- (complex Hilbert space, dimension n). Stated structurally for now.
+    True
+
 /-! ### Worked example: agency → Hardy A5 pipeline
 
 A concrete demonstration of the framework's machine-verified Hardy A5
