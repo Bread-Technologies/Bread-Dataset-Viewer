@@ -3348,6 +3348,29 @@ theorem loop_tierAEventCount_one {P : Type u} {C : Type v}
     {R : Reality P C} :
     tierAEventCount (1 : RealityChain' P C R R) = 0 := rfl
 
+/-- **Monoid power (npow) of a loop has count zero.** Since every
+loop has count zero, all Monoid powers also have count zero. -/
+theorem loop_npow_tierAEventCount {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    tierAEventCount (ch ^ n) = 0 := by
+  induction n with
+  | zero =>
+    show tierAEventCount (1 : RealityChain' P C R R) = 0
+    rfl
+  | succ k ih =>
+    rw [pow_succ, loop_tierAEventCount_mul, ih]
+    have h : tierAEventCount ch = 0 := loop_is_coherent ch
+    omega
+
+/-- **Monoid power is decoherence-equivalent to one.** -/
+theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    DecoherenceEquivalent (ch ^ n) (1 : RealityChain' P C R R) := by
+  show (ch ^ n).actualizationCount = (1 : RealityChain' P C R R).actualizationCount
+  have h₁ : (ch ^ n).actualizationCount = 0 := loop_npow_tierAEventCount ch n
+  have h₂ : (1 : RealityChain' P C R R).actualizationCount = 0 := rfl
+  omega
+
 /-- **Trivial chain has nil-like behavior.** A length-0 chain
 trivially has all measures 0 and trivially preserves past. -/
 theorem trivial_chain_nil_like {P : Type u} {C : Type v}
