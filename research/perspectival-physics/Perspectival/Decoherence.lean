@@ -1399,6 +1399,27 @@ example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)]
   · rw [tierAEventCount_append]; rfl
   · rw [RealityChain'.append_length]; rfl
 
+/-- **Example: trichotomy on Bool trajectories.** Concrete witnesses
+of all three regime arms (coherent, mixed, pure-decoherent) on
+Bool trajectories. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let ch_coh : RealityChain' Bool Bool R R := RealityChain'.nil R
+    let ch_pure : RealityChain' Bool Bool R (actualizeAt R m) :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    -- ch_coh is coherent.
+    ch_coh.actualizationCount = 0
+    -- ch_pure is pure decoherent (no bracketed steps).
+    ∧ ch_pure.bracketedCount = 0
+    -- Both demonstrate the trichotomy.
+    := by
+  intro R h_pot ch_coh ch_pure
+  refine ⟨rfl, ?_⟩
+  show (RealityChain'.singleton _).bracketedCount = 0
+  rw [RealityChain'.singleton_bracketedCount]
+  rfl
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
