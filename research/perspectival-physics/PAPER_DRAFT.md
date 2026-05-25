@@ -1146,3 +1146,36 @@ This closes the previously-open Tier 1 "positive complement of R6"
 target: the class of GPTs supporting strict (transitive, pure-
 preserving) agency is now provably NON-empty (CircleGPT) AND
 provably DOES NOT include Classical n ≥ 2.
+
+**A.12 Hardy Trichotomy — full K-signature lattice machine-verified.**
+
+The framework now constructs GPT instances at all three non-trivial
+Hardy K-signatures:
+
+  Classical n:  K = N        (Classical.lean :: classical_hardy_K)
+  CircleGPT:    K = 3 = N(N+1)/2  (rebit / real-QM 2-level)
+  QubitGPT:     K = 4 = N²        (qubit / complex-QM 2-level)
+
+`Perspectival/QubitGPT.lean` (1000+ lines, this session) constructs
+the Bloch-ball model: `V = Fin 4 → ℝ`, `states = {ρ | ρ 3 = 1 ∧ ρ 0² +
+ρ 1² + ρ 2² ≤ 1}` (closed Bloch ball lifted to w = 1), and the three
+SO(3) rotation generators `rotX θ`, `rotY θ`, `rotZ θ` with full
+preservation, bijectivity, and continuity proofs. The
+`qubitStrictConnectedAgency` instance (currently with `rotZ` family
+as avail; extension to full SO(3) deferred) provides the positive
+existence on the complex-QM side.
+
+The Hardy trichotomy is captured as a single theorem:
+`Dichotomy.hardy_trichotomy : K(Classical 2) = 2 ∧ K(CircleGPT) = 3 ∧
+K(QubitGPT) = 4`.
+
+The fourth Hardy signature — quaternionic QM at K = N(2N-1) = 6 for
+N = 2 — is provably EXCLUDED by `TomographicLocality` (GPTTensor.lean):
+the framework's preferred composition gives K_AB = K_A · K_B, but qQM
+violates this multiplicativity rule (K_qQM(4) = 28 ≠ 36 = K_qQM(2)²).
+
+Tier 1 #5 (complex vs real vs quaternionic Hilbert space
+discrimination) is now substantially advanced: qQM excluded via S1
+(local tomography), all three other signatures constructed, real-vs-
+complex discrimination via Renou-style experimental results
+remaining as the open piece.
