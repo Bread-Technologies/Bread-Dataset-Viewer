@@ -4896,6 +4896,19 @@ theorem singleton_bracketed_rate {P : Type u} {C : Type v} (R : Reality P C) :
       RealityChain'.singleton_length]
   rfl
 
+/-- **Singleton actualization has rate (1, 1) (pure-decoherent).** -/
+theorem singleton_actualization_rate {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C)
+    (h_pot : R m = MeetingStatus.Potential) :
+    actualizationRate (RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h_pot)) = (1, 1) := by
+  show ((RealityChain'.singleton _).actualizationCount,
+        (RealityChain'.singleton _).length) = (1, 1)
+  rw [RealityChain'.singleton_actualizationCount,
+      RealityChain'.singleton_length]
+  rfl
+
 /-- **Singleton bracketed chain measure certificate.** A bracketed
 singleton on any R has count 0, bracketed 1, length 1, complexity 1. -/
 theorem singleton_bracketed_measure_certificate :
