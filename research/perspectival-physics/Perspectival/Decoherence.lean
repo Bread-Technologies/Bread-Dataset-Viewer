@@ -4472,6 +4472,20 @@ example (R : Reality Bool Bool) :
   show (loopPower base 7).actualizationCount = 0
   exact loopPower_tierAEventCount base 7
 
+/-- **Worked example: chain monoid identity laws on Bool.** Both
+left and right identity work explicitly. -/
+example (R : Reality Bool Bool) (ch : RealityChain' Bool Bool R R) :
+    1 * ch = ch ∧ ch * 1 = ch := ⟨one_mul ch, mul_one ch⟩
+
+/-- **Worked example: power-add on Bool concrete loop.** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    base ^ (3 + 4) = base ^ 3 * base ^ 4 := by
+  intro base
+  exact pow_add base 3 4
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
