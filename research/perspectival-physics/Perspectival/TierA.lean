@@ -310,6 +310,26 @@ theorem past_actualizeAt_already_act {P : Type u} {C : Type v}
     exact ⟨fun _ => h_act, fun _ => rfl⟩
   · rw [actualizeAt_other R h_eq]
 
+/-- **`actualizeAt` is many-to-one: it forgets R's value at m.** If
+two Reality states R₁, R₂ agree on all meetings except possibly at m
+(where they may differ), then `actualizeAt R₁ m = actualizeAt R₂ m`.
+
+This is the elementary form of the framework's "many-to-one collapse"
+content (cf. Witkowski-Brown-Truong 2024 Picard-Lindelöf
+impossibility): actualization at m forgets the prior status at m,
+which is the lossy / nonconservative content of Axiom II at the
+elementary-event level. -/
+theorem actualizeAt_many_to_one {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R₁ R₂ : Reality P C) (m : Meeting P C)
+    (h_agree : ∀ m' : Meeting P C, m' ≠ m → R₁ m' = R₂ m') :
+    actualizeAt R₁ m = actualizeAt R₂ m := by
+  funext m'
+  by_cases h_eq : m' = m
+  · rw [h_eq, actualizeAt_self, actualizeAt_self]
+  · rw [actualizeAt_other R₁ h_eq, actualizeAt_other R₂ h_eq]
+    exact h_agree m' h_eq
+
 /-! ## Witkowski-Brown-Truong 2024: mechanical content of Axiom II
 
 The user's published paper proves that erasure / reset is strictly
