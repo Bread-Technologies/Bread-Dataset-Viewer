@@ -1174,6 +1174,54 @@ theorem TransitiveAgency.hardy_axiom5
     have : path.γ 1 ρ₁ = R.toLin ρ₁ := by rw [path.finish]
     rw [this, hRρ]
 
+/-! ### Cardinality lower bounds from TransitiveAgency
+
+A `TransitiveAgency` on a GPT with multiple distinct pure states
+forces the available transformation set to be at least as large as
+the number of pure states. This is the operational shadow of the
+"continuous symmetry" intuition: more pure states ⇒ more dynamics.
+
+Combined with the classical n ≥ 2 no-go (no `TransitiveAgency` exists
+at all), this is a strong structural constraint: a non-trivial
+`TransitiveAgency` REQUIRES non-trivial `avail`, which classical n ≥ 2
+fails to deliver because state-preserving bijections form the discrete
+group S_n. -/
+
+/-- If `T : TransitiveAgency G` and ρ₁, ρ₂ are distinct pure states,
+then there exist at least two distinct elements in `T.avail`. -/
+theorem TransitiveAgency.avail_at_least_two
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (T : TransitiveAgency G)
+    (ρ₁ ρ₂ : V) (hp₁ : PureState G ρ₁) (hp₂ : PureState G ρ₂)
+    (hne : ρ₁ ≠ ρ₂) :
+    ∃ R₁ R₂ : StrictReversible G, R₁ ∈ T.avail ∧ R₂ ∈ T.avail ∧ R₁ ≠ R₂ := by
+  obtain ⟨R, hR_avail, hRρ⟩ := T.transitive_on_pure ρ₁ ρ₂ hp₁ hp₂
+  refine ⟨StrictReversible.id G, R, T.id_avail, hR_avail, ?_⟩
+  -- id ≠ R since id ρ₁ = ρ₁ but R ρ₁ = ρ₂ ≠ ρ₁
+  intro heq
+  apply hne
+  have : (StrictReversible.id G).toLin ρ₁ = R.toLin ρ₁ := by rw [heq]
+  -- (StrictReversible.id G).toLin ρ₁ = ρ₁, R.toLin ρ₁ = ρ₂
+  rw [StrictReversible.id_toLin] at this
+  show ρ₁ = ρ₂
+  rw [show ρ₁ = (LinearMap.id : V →ₗ[ℝ] V) ρ₁ from rfl, this, hRρ]
+
+/-- The transformations `transitive_on_pure` produces for distinct
+target pure states are pairwise distinct. -/
+theorem TransitiveAgency.distinct_R_of_distinct_targets
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (T : TransitiveAgency G)
+    (ρ₀ : V) (hp₀ : PureState G ρ₀)
+    (ρ₁ ρ₂ : V) (hp₁ : PureState G ρ₁) (hp₂ : PureState G ρ₂)
+    (hne : ρ₁ ≠ ρ₂)
+    (R₁ R₂ : StrictReversible G)
+    (hR₁ : R₁ ∈ T.avail) (hR₂ : R₂ ∈ T.avail)
+    (hR₁ρ : R₁.toLin ρ₀ = ρ₁) (hR₂ρ : R₂.toLin ρ₀ = ρ₂) :
+    R₁ ≠ R₂ := by
+  intro heq
+  apply hne
+  rw [← hR₁ρ, ← hR₂ρ, heq]
+
 /-- **Hardy Axiom 5, state-path form**: as a consequence, the
 state-trajectory `t ↦ γ(t)(ρ₁)` is a continuous path of states in `G`
 connecting `ρ₁` to `ρ₂`. -/
