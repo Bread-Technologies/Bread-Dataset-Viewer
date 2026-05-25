@@ -836,6 +836,25 @@ theorem RealityChain'.pos_count_implies_ne {P : Type u} {C : Type v} :
           rw [h_pot] at h_end_act
           exact MeetingStatus.noConfusion h_end_act
 
+/-- **The full iff: R₁ ≠ R₂ ↔ count > 0 for strict chains.** -/
+theorem RealityChain'.ne_iff_pos_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    R₁ ≠ R₂ ↔ 0 < ch.actualizationCount :=
+  ⟨ch.distinct_endpoints_implies_actualization,
+   ch.pos_count_implies_ne⟩
+
+/-- **The dual iff: R₁ = R₂ ↔ count = 0 for strict chains.** Together
+with `ne_iff_pos_count`, gives the full characterization. -/
+theorem RealityChain'.eq_iff_zero_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    R₁ = R₂ ↔ ch.actualizationCount = 0 := by
+  constructor
+  · intro h_eq
+    by_contra h_ne_zero
+    have h_pos : 0 < ch.actualizationCount := Nat.pos_of_ne_zero h_ne_zero
+    exact (ch.pos_count_implies_ne h_pos) h_eq
+  · exact ch.zero_actualization_implies_eq
+
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
 transition R₁ → R₂ cannot be a bracketed step; if it's at all
