@@ -526,6 +526,8 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `DefiniteConfig`, `DefiniteBracketed`, `bracketing_forces_permutation`, `bracketing_preserves_definiteness` | `TierB.lean` | ✓ (a) |
 | `definite_bracketed_id`, `definite_bracketed_compose` | `TierB.lean` | ✓ (a) |
 | `actualizeAt`, `actualizeAt_self`, `actualizeAt_other`, `actualizeAt_is_successor` — pointwise Axiom II event | `TierA.lean` | ✓ (a) |
+| `past_actualizeAt_disjunction`, `past_actualizeAt_already_act` — past-growth from pointwise events | `TierA.lean` | ✓ (a) |
+| `actualizeAt_many_to_one` — WBT 2024 many-to-one collapse, structural shadow at elementary level | `TierA.lean` | ✓ (a) **per entropy addendum** |
 | `actualizeAt_atSeam`, `actualizeAt_not_bracketed`, `actualizeAt_asActualizationMap` — pointwise Tier A ↔ Tier B link | `TierB.lean` | ✓ (a) |
 | `definiteToVertex`, `definiteToVertex_perm` — Tier A/B → Classical.vertex bridge | `Dichotomy.lean` | ✓ (a) |
 | `v2_bare_Tier_B_is_classical_excluded` — v2-architectural identification | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
