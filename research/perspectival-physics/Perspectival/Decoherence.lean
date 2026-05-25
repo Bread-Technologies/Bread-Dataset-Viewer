@@ -4213,13 +4213,15 @@ The module's canonical reference theorems:
   formal correlate.
 - `trio_of_morphisms_certificate` — count/bracketed/length morphisms.
 
-Full module: ~3900 lines of build-verified Lean 4 + Mathlib v4.29.1.
+Full module: ~4200 lines of build-verified Lean 4 + Mathlib v4.29.1.
 Substantial structural shadow of decoherence content, including:
 loop submonoid as Mathlib `Monoid` instance with power operations,
-trio of monoid morphisms, quotient algebra, anti-realism witnesses,
+trio of monoid morphisms, quotient algebra (with Setoid + Decidable
++ Subsingleton + Inhabited instances), anti-realism witnesses,
 Boltzmann brain dissolution shadow, no-Maxwell-demon, measurement-
-collapse correlate, Tier B reversibility characterization, foundational
-certificates for all three v2 modules (TierA, TierB, Decoherence).
+collapse correlate, Tier B reversibility characterization, MASTER
+framework certificate (10-fact bundle), foundational certificates
+for all three v2 modules (TierA, TierB, Decoherence).
 -/
 
 end Decoherence
