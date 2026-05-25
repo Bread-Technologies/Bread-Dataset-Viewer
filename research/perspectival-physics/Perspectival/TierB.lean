@@ -1133,6 +1133,20 @@ theorem RealityChain'.append_bracketedCount {P : Type u} {C : Type v} :
   show 1 + RealityChain'.length _ = 1
   simp [RealityChain'.length]
 
+/-- **Singleton chain bracketedCount via match.** -/
+@[simp] theorem RealityChain'.singleton_bracketedCount {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep' P C R₁ R₂) :
+    (RealityChain'.singleton step).bracketedCount
+      = (match step.step with
+         | TrajectoryStep.bracketed _ => 1
+         | TrajectoryStep.actualization _ => 0) := by
+  show (match step.step with
+        | TrajectoryStep.bracketed _ => 1
+        | TrajectoryStep.actualization _ => 0)
+      + RealityChain'.bracketedCount (RealityChain'.nil _)
+      = _
+  simp [RealityChain'.bracketedCount]
+
 /-- **Worked example: chain-monoid associativity on concrete trajectory.**
 Demonstrates that `(ch₁ ++ ch₂) ++ ch₃ = ch₁ ++ (ch₂ ++ ch₃)` holds
 strictly for RealityChain'. -/
