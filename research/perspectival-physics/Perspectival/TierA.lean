@@ -681,5 +681,17 @@ example [DecidableEq (Meeting Bool Bool)] (m : Meeting Bool Bool)
     actualizeAt R₁ m = actualizeAt R₂ m :=
   actualizeAt_many_to_one R₁ R₂ m h
 
+/-- **Arrow of time on Bool.** Past grows monotonically along
+RealitySuccessor — a concrete instance. -/
+example {R₁ R₂ : Reality Bool Bool} (h : RealitySuccessor R₁ R₂) :
+    past R₁ ⊆ past R₂ := past_monotone h
+
+/-- **No-return-to-potential on Bool.** Once a meeting is actualized,
+it stays actualized along any successor. -/
+example {R₁ R₂ : Reality Bool Bool} (h : RealitySuccessor R₁ R₂)
+    {m : Meeting Bool Bool} (h_act : R₁ m = MeetingStatus.Actualized) :
+    R₂ m = MeetingStatus.Actualized :=
+  no_return_to_potential h h_act
+
 end TierA
 end Perspectival
