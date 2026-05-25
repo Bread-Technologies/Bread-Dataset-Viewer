@@ -1109,5 +1109,63 @@ theorem TransitiveAgency.trivial_impossible
   rw [h_avail]
   rfl
 
+/-! ### TransitiveAgency → Hardy Axiom 5 (strong form)
+
+The deepest bridge in the agency hierarchy: a `TransitiveAgency` G
+implies the strong form of Hardy's Axiom 5 — between any two pure
+states there exists a *continuous path of state-preserving bijective
+linear maps* starting at the identity and carrying ρ₁ to ρ₂.
+
+This is the bridge that, in the quantum case, becomes "unitary
+evolution between pure states." The framework's classical-vs-quantum
+dichotomy now reads cleanly: classical n ≥ 2 has no `TransitiveAgency`
+(L6 result), and any GPT that does has Hardy A5 in its strongest form.
+-/
+
+/-- **Hardy Axiom 5, strong form**: a `TransitiveAgency` provides, for
+any two pure states `ρ₁` and `ρ₂`, a continuous path of state-preserving
+bijective linear maps from the identity to a transformation sending
+`ρ₁` to `ρ₂`. -/
+theorem TransitiveAgency.hardy_axiom5
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (T : TransitiveAgency G)
+    (ρ₁ ρ₂ : V) (hp₁ : PureState G ρ₁) (hp₂ : PureState G ρ₂) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      γ 0 = LinearMap.id ∧
+      γ 1 ρ₁ = ρ₂ ∧
+      (∀ t : unitInterval, ∀ ρ ∈ G.states, γ t ρ ∈ G.states) ∧
+      (∀ t : unitInterval, Function.Bijective (γ t)) := by
+  obtain ⟨R, hR, hRρ⟩ := T.transitive_on_pure ρ₁ ρ₂ hp₁ hp₂
+  have h_id : StrictReversible.id G ∈ T.avail := T.id_avail
+  obtain ⟨path⟩ := T.strict_paths (StrictReversible.id G) R h_id hR
+  refine ⟨path.γ, path.continuous, ?_, ?_, path.preserves_states_along, path.bijective_along⟩
+  · -- γ 0 = (StrictReversible.id G).toLin = LinearMap.id
+    rw [path.start]; rfl
+  · -- γ 1 ρ₁ = R.toLin ρ₁ = ρ₂
+    have : path.γ 1 ρ₁ = R.toLin ρ₁ := by rw [path.finish]
+    rw [this, hRρ]
+
+/-- **Hardy Axiom 5, state-path form**: as a consequence, the
+state-trajectory `t ↦ γ(t)(ρ₁)` is a continuous path of states in `G`
+connecting `ρ₁` to `ρ₂`. -/
+theorem TransitiveAgency.hardy_axiom5_state_path
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (T : TransitiveAgency G)
+    (ρ₁ ρ₂ : V) (hρ₁ : ρ₁ ∈ G.states)
+    (hp₁ : PureState G ρ₁) (hp₂ : PureState G ρ₂) :
+    ∃ p : unitInterval → V, Continuous p ∧ p 0 = ρ₁ ∧ p 1 = ρ₂ ∧
+      ∀ t : unitInterval, p t ∈ G.states := by
+  obtain ⟨γ, hcont, hγ_0, hγ_1, hpres, _hbij⟩ := T.hardy_axiom5 ρ₁ ρ₂ hp₁ hp₂
+  refine ⟨fun t => γ t ρ₁, ?_, ?_, ?_, ?_⟩
+  · have hpair : Continuous (fun t : unitInterval => (t, ρ₁)) :=
+      Continuous.prodMk continuous_id continuous_const
+    exact hcont.comp hpair
+  · show γ 0 ρ₁ = ρ₁
+    rw [hγ_0]; rfl
+  · exact hγ_1
+  · intro t
+    exact hpres t ρ₁ hρ₁
+
 end Continuity
 end Perspectival
