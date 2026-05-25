@@ -4683,25 +4683,31 @@ integration. This is a documentation marker; no new content. -/
 theorem decoherence_module_theorem_count_marker :
     True := trivial
 
-/-- **Decoherence module structural summary marker.** Documents the
-key structural commitments of the framework's Seam 4 content in one
-typed True-valued theorem. -/
-theorem decoherence_structural_summary_marker :
-    -- Loop submonoid algebra is comprehensive.
-    True
-      -- Quotient algebra is comprehensive.
-      ∧ True
-      -- Anti-realism witnesses are comprehensive.
-      ∧ True
-      -- Boltzmann brain shadow is in place.
-      ∧ True
-      -- No Maxwell demon is in place.
-      ∧ True
-      -- Mathlib Monoid integration is in place.
-      ∧ True
-      -- 50+ bundle certificates available.
-      ∧ True :=
-  ⟨trivial, trivial, trivial, trivial, trivial, trivial, trivial⟩
+/-- **Coherent chains have the lowest possible complexity for their length.**
+A coherent chain has complexity exactly equal to its length, which is
+the minimum possible. -/
+theorem coherent_minimal_complexity {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    ∀ (ch' : RealityChain' P C R₁ R₂),
+      ch'.length = ch.length →
+      trajectoryComplexity ch ≤ trajectoryComplexity ch' := by
+  intro ch' h_len
+  rw [coherent_complexity ch h, ← h_len]
+  exact complexity_ge_length ch'
+
+/-- **Pure-decoherent chains have the highest possible complexity for their length.**
+A pure-decoherent chain has complexity exactly 2 * length, which is
+the maximum possible. -/
+theorem pure_decoherent_maximal_complexity {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.bracketedCount = 0) :
+    ∀ (ch' : RealityChain' P C R₁ R₂),
+      ch'.length = ch.length →
+      trajectoryComplexity ch' ≤ trajectoryComplexity ch := by
+  intro ch' h_len
+  rw [decoherent_complexity ch h, ← h_len]
+  exact complexity_le_twice_length ch'
 
 /-- **Symmetry of loop characterization.** The implication count = 0 → R₁ = R₂
 goes both ways via the iff. -/
