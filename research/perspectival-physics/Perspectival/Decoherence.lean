@@ -1150,6 +1150,41 @@ theorem density_refines_decoherence_equivalent {P : Type u} {C : Type v}
     DecoherenceEquivalent ch₁ ch₂ :=
   density_eq_implies_equivalent h
 
+/-! ## Counts as monoid morphism
+
+The tier A event count is a monoid morphism from the chain monoid
+(under append) to the additive monoid of natural numbers. -/
+
+/-- **`tierAEventCount` is a monoid morphism.** Multiplicative (under
+chain append) becomes additive (in ℕ). The morphism law:
+tierAEventCount (ch₁ ++ ch₂) = tierAEventCount ch₁ + tierAEventCount ch₂. -/
+theorem tierAEventCount_monoid_morphism {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    tierAEventCount (ch₁.append ch₂)
+      = tierAEventCount ch₁ + tierAEventCount ch₂ :=
+  tierAEventCount_append ch₁ ch₂
+
+/-- **`tierAEventCount` of nil is zero (monoid unit).** -/
+theorem tierAEventCount_unit {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    tierAEventCount (RealityChain'.nil (P := P) (C := C) R) = 0 := rfl
+
+/-- **`trajectoryComplexity` is also a monoid morphism.** -/
+theorem trajectoryComplexity_monoid_morphism {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    trajectoryComplexity (ch₁.append ch₂)
+      = trajectoryComplexity ch₁ + trajectoryComplexity ch₂ :=
+  trajectoryComplexity_append ch₁ ch₂
+
+/-- **`trajectoryComplexity` of nil is zero.** -/
+theorem trajectoryComplexity_unit {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    trajectoryComplexity (RealityChain'.nil (P := P) (C := C) R) = 0 := by
+  unfold trajectoryComplexity
+  simp
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
