@@ -429,6 +429,56 @@ This algebraic structure makes trajectory measures composable in a
 clean monoidal way — the framework's "trajectory algebra" is
 structurally a graded monoid.
 
+## Q23. What is the loop submonoid?
+
+**Framework answer:** Strict chains with equal endpoints
+`RealityChain' P C R R` are called "loops" and form a sub-monoid of
+the chain monoid. The key structural fact:
+
+- **Every loop is coherent.** `Decoherence.loop_is_coherent` proves
+  `ch.actualizationCount = 0` for any `ch : RealityChain' P C R R`.
+- **Loops are closed under composition.** Two loops at the same R
+  compose to a loop, and the result is still coherent.
+- **Loops have iterated powers.** `loopPower ch n` is the n-fold
+  composition; its length is `n * ch.length`, its count is 0, and
+  its complexity is `n * ch.length`.
+
+The loop submonoid is the kernel of the `tierAEventCount` monoid
+morphism. Per `Decoherence.coherent_kernel_iff_endpoints_eq`, the
+kernel is characterized exactly by endpoint equality: count = 0
+iff R₁ = R₂.
+
+**TIER4 connection:** the loop submonoid is the framework's formal
+correlate of "Boltzmann brain recurrence". A fluctuating return-to-
+same-state IS a loop in trajectory space, and loops are coherent —
+they carry no net Tier A content. This dissolves the canonical
+Boltzmann puzzle: fluctuation recurrences are not high-entropy events
+in the framework's reading; they're trajectory loops with zero net
+decoherence. See `Decoherence.boltzmann_brain_dissolution_shadow`
+for the formal correlate of TIER4 dissolution #19.
+
+## Q24. What's the "super-certificate"?
+
+**Framework answer:**
+`Decoherence.decoherence_module_super_certificate` is a single Lean
+theorem bundling eight headline results of the Decoherence module:
+
+1. **Regime trichotomy** — every chain is coherent | pure-decoherent | mixed.
+2. **Monoid morphism** — counts add under append.
+3. **Path-independent coherence** — coherence status is endpoint-
+   determined.
+4. **Loop submonoid** — every R → R chain is coherent.
+5. **Coherent-kernel characterization** — count = 0 ↔ R₁ = R₂.
+6. **Past growth monotonicity** — past R₁ ⊆ past R₂ along chains.
+7. **Anti-realism witness** — explicit witness chain pair with same
+   decoherence class but different complexity.
+8. **Boltzmann brain dissolution shadow** — loop powers have count 0
+   at all n.
+
+This is the framework's "if you have to prove one theorem about
+Seam 4" statement. It's the canonical reference object for external
+citation of the Decoherence module.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
