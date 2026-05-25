@@ -414,6 +414,35 @@ theorem bracketed_iff_eq {P : Type u} {C : Type v}
     rw [h_eq]
     exact bracketed_refl R₂
 
+/-- **Any non-equal Reality transition must be at the seam.** Combining
+the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
+transition R₁ → R₂ cannot be a bracketed step; if it's at all
+characterizable as a trajectory step, it must be an actualization. -/
+theorem non_bracketed_must_be_seam {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (h_succ : RealitySuccessor R₁ R₂)
+    (h_ne : R₁ ≠ R₂) :
+    AtSeam R₁ R₂ := by
+  -- Since R₁ ≠ R₂ and h_succ says actualized R₁ ⊆ actualized R₂,
+  -- there must exist a meeting that is potential in R₁ and actualized in R₂.
+  by_contra h_no_seam
+  -- h_no_seam : ¬ AtSeam R₁ R₂.
+  -- This means: ¬ ∃ m, R₁ m = Potential ∧ R₂ m = Actualized.
+  apply h_ne
+  funext m
+  cases h_eq : R₁ m with
+  | Potential =>
+    -- Goal: Potential = R₂ m.
+    cases h₂_eq : R₂ m with
+    | Potential => rfl
+    | Actualized =>
+      -- Seam witness: m with R₁ m = Potential, R₂ m = Actualized.
+      exact absurd ⟨m, h_eq, h₂_eq⟩ h_no_seam
+  | Actualized =>
+    -- R₁ m = Actualized; by h_succ, R₂ m = Actualized. Goal Actualized = R₂ m.
+    have h2 : R₂ m = MeetingStatus.Actualized := h_succ m h_eq
+    exact h2.symm
+
 /-! **Consequence:** the bracketed-transition relation, on Reality
 states regarded as functions to MeetingStatus, is just EQUALITY. This
 is a strong form of the bracketing operation: a bracketed interval
