@@ -212,6 +212,34 @@ theorem axiom4_dimension_and_state_holds
     Axiom4_Composite_State_Exists GA GB :=
   ⟨axiom4_dimension_holds GA GB, axiom4_state_exists_holds GA GB⟩
 
+/-! ## Framework Hardy-axioms summary
+
+The framework's Hardy axiom derivations:
+  A1: Probabilities — DERIVABLE (`axiom1_holds`).
+  A2: Simplicity (K-minimum) — AUXILIARY (motivated, not derived).
+  A3: Subspaces — DERIVABLE (`axiom3_holds`).
+  A4: Composite (dimension + state existence) — DERIVABLE at general GPT
+      level via gptTensor (`axiom4_dimension_holds`,
+      `axiom4_state_exists_holds`). N-multiplicativity forward direction
+      via `gptTensor_distinguishable_*`. Reverse direction open.
+  A5: Continuity — DERIVABLE via TransitiveAgency
+      (`axiom5_strong_of_transitive_agency`). Strong form
+      `Axiom5_Continuity_Strong` derived from the agency hierarchy. -/
+
+/-- **The framework's full Hardy A1, A3, A4 (dim + state) certificate.**
+Three of the five Hardy axioms (A1, A3, A4 dim half) are derivable
+unconditionally for any GPT in the framework. -/
+theorem framework_hardy_unconditional
+    {VA VB : Type u} [AddCommGroup VA] [Module ℝ VA]
+    [AddCommGroup VB] [Module ℝ VB]
+    (GA : GPT VA) (GB : GPT VB) :
+    Axiom1_Probabilities GA ∧
+    Axiom3_Subspaces GA ∧
+    Axiom4_Composite_Dimension GA GB ∧
+    Axiom4_Composite_State_Exists GA GB :=
+  ⟨axiom1_holds GA, axiom3_holds GA,
+   axiom4_dimension_holds GA GB, axiom4_state_exists_holds GA GB⟩
+
 /-- **Hardy A4 N-multiplicativity, forward direction (1-element
 witness).** If `(ρ₁, ρ₂)` is distinguishable in `G₁` and `σ ∈ G₂.states`,
 then `(ρ₁ ⊗ σ, ρ₂ ⊗ σ)` is distinguishable in `gptTensor G₁ G₂`.
