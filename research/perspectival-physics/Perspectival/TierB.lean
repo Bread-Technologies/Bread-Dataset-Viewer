@@ -812,6 +812,36 @@ def reflBracketedChain {P : Type u} {C : Type v} (R : Reality P C) :
     (R : Reality P C) : (reflBracketedChain R).bracketedCount = 1 :=
   (RealityChain.singleton_bracketed_count (bracketed_refl R)).2
 
+/-- **Worked example: a 2-step actualization trajectory.** Starting
+from an arbitrary R with two potential meetings m₁, m₂ (distinct),
+actualize m₁ first, then m₂. The 2-step chain has actualizationCount = 2,
+bracketedCount = 0, length = 2. Demonstrates concrete trajectory
+composition via append. -/
+example (P : Type u) (C : Type v)
+    [DecidableEq (Meeting P C)] (R : Reality P C)
+    (m₁ m₂ : Meeting P C) (h_ne : m₁ ≠ m₂)
+    (h_pot₁ : R m₁ = MeetingStatus.Potential)
+    (h_pot₂ : R m₂ = MeetingStatus.Potential) :
+    True := by
+  let R₁ := actualizeAt R m₁
+  let R₂ := actualizeAt R₁ m₂
+  -- m₂ is still potential at R₁ since m₂ ≠ m₁.
+  have h_pot₂' : R₁ m₂ = MeetingStatus.Potential := by
+    show actualizeAt R m₁ m₂ = MeetingStatus.Potential
+    rw [actualizeAt_other R h_ne.symm]
+    exact h_pot₂
+  let ch₁ : RealityChain P C R R₁ := actualizeAt_chain R m₁ h_pot₁
+  let ch₂ : RealityChain P C R₁ R₂ := actualizeAt_chain R₁ m₂ h_pot₂'
+  let ch : RealityChain P C R R₂ := ch₁.append ch₂
+  -- ch.actualizationCount = 2 by append additivity + singleton counts.
+  have h_count : ch.actualizationCount = 2 := by
+    show (ch₁.append ch₂).actualizationCount = 2
+    rw [RealityChain.append_actualizationCount]
+    show (actualizeAt_chain R m₁ h_pot₁).actualizationCount
+        + (actualizeAt_chain R₁ m₂ h_pot₂').actualizationCount = 2
+    simp
+  trivial
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
