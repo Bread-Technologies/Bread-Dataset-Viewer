@@ -353,6 +353,21 @@ theorem pure_tier_A_past_monotone {P : Type u} {C : Type v}
     (_h : ch.bracketedCount = 0) :
     past R₁ ⊆ past R₂ := ch.past_monotone'
 
+/-- **Mixed regime: coherent intervals don't disturb count.** A
+trajectory with some bracketed steps and some actualizations has
+actualizationCount equal to the number of actualizations. The
+bracketed intervals only contribute to length, not count. -/
+theorem mixed_regime_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount + ch.bracketedCount = ch.length :=
+  ch.counts_sum
+
+/-- **Mixed regime: count is between 0 and length.** -/
+theorem mixed_regime_count_bounds {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    0 ≤ ch.actualizationCount ∧ ch.actualizationCount ≤ ch.length :=
+  ⟨Nat.zero_le _, ch.actualizationCount_le_length⟩
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
