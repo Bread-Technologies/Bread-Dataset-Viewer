@@ -4825,6 +4825,20 @@ example (R : Reality Bool Bool) :
         (RealityChain'.singleton _).length) = (0, 2)
   rw [RealityChain'.singleton_length]
 
+/-- **Worked example: 3 chains compose to rate (0, 3).** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    actualizationRate ((base.append base).append base) = (0, 3) := by
+  intro base
+  rw [rate_point_addition, rate_point_addition]
+  rw [loop_rate]
+  show ((0 + 0 : ℕ) + 0,
+        (RealityChain'.singleton _).length + (RealityChain'.singleton _).length
+        + (RealityChain'.singleton _).length) = (0, 3)
+  rw [RealityChain'.singleton_length]
+
 /-- **Rate at fixed length certificate.** Combines fixed-length
 characterization with extremal cases. -/
 theorem rate_at_fixed_length_certificate :
