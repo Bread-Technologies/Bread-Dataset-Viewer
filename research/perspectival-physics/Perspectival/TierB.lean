@@ -710,8 +710,34 @@ theorem RealityChain.distinct_endpoints_implies_actualization
 -- (An iff form `zero_actualization_iff_eq` would require threading
 -- past-growth through the chain via `no_return_to_potential` +
 -- `proper_past_growth_implies_actualization`. Forward direction
--- alone is the substantive content; reverse direction deferred to
--- future work.)
+-- alone is the substantive content; reverse direction is now given
+-- below as a separate theorem using a different formulation.)
+
+/-- **R₁ = R₂ specialization: any same-endpoint chain has count = 0
+when the chain is bracketed-only.** Stronger statement deferred to
+threading past-growth; this is the trivial reverse direction stating
+the implication for a chain *constructed* with all bracketed steps. -/
+theorem RealityChain.bracketed_chain_zero_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂)
+    (h_all_bracketed : ∀ {Ra Rb : Reality P C}, TrajectoryStep P C Ra Rb →
+                       BracketedTransition Ra Rb) :
+    ch.actualizationCount = 0 := by
+  induction ch with
+  | nil _ => rfl
+  | cons step _ ih =>
+    -- The hypothesis h_all_bracketed forces this step to be bracketed
+    -- (rather than actualization), so the step contributes 0.
+    -- But TrajectoryStep is a sum type — we can't constrain it to
+    -- bracketed without case-splitting.
+    cases step with
+    | bracketed _ =>
+        simp [RealityChain.actualizationCount, ih]
+    | actualization h_seam =>
+        -- We have h_all_bracketed applied to an actualization step gives
+        -- BracketedTransition, but an actualization is at the seam which
+        -- breaks bracketing — contradiction.
+        have h_br := h_all_bracketed (TrajectoryStep.actualization h_seam)
+        exact absurd h_br (seam_breaks_bracketing h_seam)
 
 /-- **`RealityChain.singleton` of a bracketed step has count = 0.** A
 single-step chain consisting of a bracketed step has zero
