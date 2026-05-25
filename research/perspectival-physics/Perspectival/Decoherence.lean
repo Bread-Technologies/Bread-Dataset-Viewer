@@ -1261,6 +1261,151 @@ theorem past_functor_compose {P : Type u} {C : Type v}
 theorem past_functor_id {P : Type u} {C : Type v} (R : Reality P C) :
     past R ⊆ past R := fun _ h => h
 
+/-! ## Loop chains and powers
+
+Strict chains with equal endpoints (`RealityChain' P C R R`) are
+"loops". By `eq_iff_zero_count` from TierB, every loop chain has
+`actualizationCount = 0` — loops are necessarily coherent.
+
+This section formalizes the corollaries: powers of loops, the loop
+submonoid of coherent chains, and the basic algebra. -/
+
+/-- **Every loop chain is coherent.** A chain with equal endpoints
+necessarily has zero actualization count. This is the framework's
+formal expression of "no net irreversibility in a closed loop." -/
+theorem loop_is_coherent {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    ch.actualizationCount = 0 :=
+  ch.eq_iff_zero_count.mp rfl
+
+/-- **The n-fold power of a loop chain.** Compose `ch : R → R` with
+itself n times. -/
+def loopPower {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    Nat → RealityChain' P C R R
+  | 0 => RealityChain'.nil R
+  | n + 1 => ch.append (loopPower ch n)
+
+/-- **Loop power zero is nil.** -/
+@[simp] theorem loopPower_zero {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    loopPower ch 0 = RealityChain'.nil R := rfl
+
+/-- **Loop power successor unfolds.** -/
+@[simp] theorem loopPower_succ {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : Nat) :
+    loopPower ch (n + 1) = ch.append (loopPower ch n) := rfl
+
+/-- **Loop power length: n * ch.length.** The length of the n-fold
+loop power is exactly n times the base length. -/
+theorem loopPower_length {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : Nat) :
+    (loopPower ch n).length = n * ch.length := by
+  induction n with
+  | zero => simp [loopPower, RealityChain'.nil_length]
+  | succ k ih =>
+    rw [loopPower_succ, RealityChain'.append_length, ih, Nat.succ_mul]
+    omega
+
+/-- **Loop power tier A count: always zero.** Every power of a loop
+chain has count zero (since the base loop has count zero, and zero
+times anything is zero). -/
+theorem loopPower_tierAEventCount {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : Nat) :
+    tierAEventCount (loopPower ch n) = 0 := by
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+    rw [loopPower_succ, tierAEventCount_append, ih]
+    have h : tierAEventCount ch = 0 := loop_is_coherent ch
+    omega
+
+/-- **Loop power actualizationCount: always zero.** -/
+theorem loopPower_actualizationCount {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : Nat) :
+    (loopPower ch n).actualizationCount = 0 :=
+  loopPower_tierAEventCount ch n
+
+/-- **Loop power bracketedCount: n * ch.bracketedCount.** All length
+contributions come from bracketed steps (since count is zero). -/
+theorem loopPower_bracketedCount {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : Nat) :
+    (loopPower ch n).bracketedCount = n * ch.bracketedCount := by
+  -- We have count = 0, so bracketed = length, and length = n * ch.length.
+  -- Also ch.actualizationCount = 0 (loop), so ch.bracketedCount = ch.length.
+  have h_loop_zero := loop_is_coherent ch
+  have h_loop_eq : ch.bracketedCount = ch.length := by
+    have h := ch.counts_sum; omega
+  have h_pow_zero := loopPower_actualizationCount ch n
+  have h_pow_sum := (loopPower ch n).counts_sum
+  have h_pow_len := loopPower_length ch n
+  rw [h_loop_eq]
+  omega
+
+/-- **Loop power complexity: n * ch.length.** Since count is zero and
+bracketed = length, complexity = 0 + length = n * ch.length. -/
+theorem loopPower_complexity {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : Nat) :
+    trajectoryComplexity (loopPower ch n) = n * ch.length := by
+  unfold trajectoryComplexity
+  rw [loopPower_actualizationCount, loopPower_bracketedCount]
+  have h_loop_zero := loop_is_coherent ch
+  have h_loop_eq : ch.bracketedCount = ch.length := by
+    have h := ch.counts_sum; omega
+  rw [h_loop_eq]; omega
+
+/-- **All loop powers are decoherence-equivalent.** Since loop chains
+have count zero, and count = 0 + 0 = 0 under composition, all loop
+powers belong to the same DecoherenceEquivalent class. -/
+theorem loopPower_all_equivalent {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : Nat) :
+    DecoherenceEquivalent (loopPower ch m) (loopPower ch n) := by
+  show (loopPower ch m).actualizationCount = (loopPower ch n).actualizationCount
+  rw [loopPower_actualizationCount, loopPower_actualizationCount]
+
+/-- **Loop powers are decoherence-equivalent to nil.** Direct
+corollary: every loop power is in the coherent class. -/
+theorem loopPower_equivalent_nil {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : Nat) :
+    DecoherenceEquivalent (loopPower ch n) (RealityChain'.nil R) :=
+  loopPower_all_equivalent ch n 0
+
+/-- **Loop chains form a submonoid of strict chains.** Composing two
+loops gives a loop; the nil chain is a loop; loops are closed under
+composition. (This is a structural observation, not a new theorem;
+the Lean statement captures the submonoid character.) -/
+theorem loop_submonoid_closure {P : Type u} {C : Type v}
+    {R : Reality P C}
+    (ch₁ ch₂ : RealityChain' P C R R) :
+    ∃ (ch_loop : RealityChain' P C R R),
+      ch_loop = ch₁.append ch₂ ∧
+      ch_loop.actualizationCount = 0 :=
+  ⟨ch₁.append ch₂, rfl, by
+    rw [RealityChain'.append_actualizationCount,
+        loop_is_coherent ch₁, loop_is_coherent ch₂]⟩
+
+/-- **Loop submonoid certificate.** Bundles the loop-chain content. -/
+theorem loop_submonoid_certificate :
+    -- (a) Every loop chain is coherent (count = 0).
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R), ch.actualizationCount = 0) ∧
+    -- (b) Loop powers preserve coherence.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : Nat),
+      (loopPower ch n).actualizationCount = 0) ∧
+    -- (c) Loop power length: n * ch.length.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : Nat),
+      (loopPower ch n).length = n * ch.length) ∧
+    -- (d) All loop powers are decoherence-equivalent (to nil).
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : Nat),
+      DecoherenceEquivalent (loopPower ch n) (RealityChain'.nil R)) :=
+  ⟨fun ch => loop_is_coherent ch,
+   fun ch n => loopPower_actualizationCount ch n,
+   fun ch n => loopPower_length ch n,
+   fun ch n => loopPower_equivalent_nil ch n⟩
+
 /-! ## Anti-realist monoid morphism interpretation
 
 The framework's anti-realism: only the COUNT (= number of seam
