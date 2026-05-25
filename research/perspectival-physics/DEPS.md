@@ -166,6 +166,39 @@ deepened:
   `ContinuousWantable`/`ContinuousPTrans` (topological refinement, with
   ℝ instance).
 
+## v2 architecture modules
+
+The v2 architectural correction (Tier A + Tier B) introduced new
+modules that constitute the framework's two-tier formalization:
+
+- `TierA.lean` (~700 lines) — Want, Existent, Meeting, MeetingStatus,
+  Reality, RealitySuccessor, ActualizationMap, past/future,
+  no_return_to_potential, WBT_structural_shadow. The Tier A
+  irreversible foundation.
+
+- `TierB.lean` (~1700 lines) — BracketedTransition, AtSeam,
+  DefiniteConfig + permutation action, TrajectoryStep dichotomy,
+  measurement_is_actualization, RealityChain + RealityChain'
+  (plain + strict chains), full count algebra
+  (actualizationCount, bracketedCount, length), chain monoid laws,
+  iff theorems (`ne_iff_pos_count`, `eq_iff_zero_count`).
+
+- `Decoherence.lean` (~2400 lines) — Seam 4 formal correlate.
+  Trajectory algebra (actualizationRate, trajectoryComplexity),
+  regime characterizations, monoid morphism content,
+  DecoherenceEquivalent + congruence, loop submonoid algebra,
+  coherent-kernel characterization, anti-realism witnesses,
+  Boltzmann brain dissolution shadow, super-certificate.
+  Depends on TierA + TierB.
+
+- `Dichotomy.lean` (~1100 lines) — v2-classical-vs-quantum dichotomy
+  certificate, framework_v2_certificate, framework_v2_extended_certificate,
+  R7 instance evidence.
+
+- `Continuity.lean` (~1500 lines) — agency hierarchy, OneParameterFamily,
+  MultiAxisAgency, SmoothConnectedAgency scaffold, R7_Conjecture,
+  Hardy A5 derivation pipeline.
+
 ## Reading order
 
 For a first pass:
