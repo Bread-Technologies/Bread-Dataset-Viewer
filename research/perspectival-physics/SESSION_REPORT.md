@@ -13,7 +13,7 @@ against ORIGINAL_PROMPT.md targets — *not* line/commit count chatter.
 | #2 Hardy axioms categorized | ◑ PARTIAL+ | A1, A3, A5 derivable; A4 BOTH halves derivable (dim + state-existence); A2 auxiliary |
 | #3 Tsirelson 2√2 derived | ✓ DONE | CHSH.lean |
 | #4 No-cloning/broadcast/signaling | ✓ DONE | NoCloning.lean, NoBroadcasting.lean, no-signaling in WantableGPT |
-| #5 Complex Hilbert space (Renou extension) | ◐ PARTIAL | productStateBilin (S1 done), R6 disconnect (S2 partial: n=2 done), S3 not started |
+| #5 Complex Hilbert space (Renou extension) | ◐ PARTIAL+ | productStateBilin (S1 done), R6 disconnect proven for n=2 AND n=3 (`classical_n2_strict_reversible_path_id_swap_empty`, `classical_n3_no_strict_path_id_to_swap01`), L6 TransitiveAgency impossibility on Classical n=2 (`classical_n2_no_transitive_agency`), S3 not started |
 
 **Tier 2 — Standard Model**
 
