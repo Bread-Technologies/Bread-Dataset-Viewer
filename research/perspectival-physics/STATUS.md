@@ -595,6 +595,9 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `TierA.tierA_foundational_certificate` — TierA preorder + past/future + no-return bundle | `TierA.lean` | ✓ (a) |
 | `TierB.tierB_foundational_certificate` — TierB bracketing + chain monoid + iff theorems bundle | `TierB.lean` | ✓ (a) |
 | `Decoherence.no_maxwell_demon`, `no_maxwell_demon_strict`, `no_maxwell_demon_certificate` — count monotonicity (no Maxwell demon) | `Decoherence.lean` | ✓ (a) **no Maxwell demon** |
+| `Decoherence.loopMonoid` — Mathlib `Monoid` instance for loops at R | `Decoherence.lean` | ✓ (a) **Monoid instance** |
+| `Decoherence.loop_npow_tierAEventCount`, `loop_npow_equivalent_one` — Monoid power preserves coherence | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.loop_monoid_axioms_certificate`, `loop_mul_eq_append`, `loop_one_eq_nil` — Monoid structure bridge | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.status_and_content_share_Tier_A_origin` — status and content unified at Tier A | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.coherent_decompose`, `coherent_iff_both_factors_coherent`, `positive_count_iff_factor_positive`, `coherent_decomposition_certificate` — chain factorization preserves coherent status | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.rate_count_eq_length_iff_pure_decoherent`, `rate_count_eq_zero_iff_coherent` — iff bound characterizations | `Decoherence.lean` | ✓ (a) |
