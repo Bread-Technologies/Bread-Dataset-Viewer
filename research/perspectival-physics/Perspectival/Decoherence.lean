@@ -4619,6 +4619,35 @@ theorem loop_npow_complexity_linear {P : Type u} {C : Type v}
     trajectoryComplexity (ch ^ n) = n * trajectoryComplexity ch := by
   rw [loop_npow_complexity, loop_complexity_eq_length]
 
+/-- **Loop length is linear in exponent.** -/
+theorem loop_npow_length_linear {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    (ch ^ n).length = n * ch.length := loop_npow_length ch n
+
+/-- **Loop linearity certificate.** All measures (count, bracketed, length,
+complexity) scale linearly in the exponent on loops. -/
+theorem loop_npow_linearity_certificate :
+    -- count = 0 (always).
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      tierAEventCount (ch ^ n) = 0) ∧
+    -- bracketed = n * ch.bracketedCount.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      (ch ^ n).bracketedCount = n * ch.bracketedCount) ∧
+    -- length = n * ch.length.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      (ch ^ n).length = n * ch.length) ∧
+    -- complexity = n * trajectoryComplexity ch.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      trajectoryComplexity (ch ^ n) = n * trajectoryComplexity ch) :=
+  ⟨fun ch n => loop_npow_tierAEventCount ch n,
+   fun ch n => loop_npow_bracketedCount ch n,
+   fun ch n => loop_npow_length_linear ch n,
+   fun ch n => loop_npow_complexity_linear ch n⟩
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
