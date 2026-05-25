@@ -886,6 +886,40 @@ theorem v2_QM_from_richer_Tier_B :
    ⟨CircleGPT.circleStrictConnectedAgency⟩,
    ⟨QubitGPT.qubitStrictConnectedAgency_full⟩⟩
 
+/-- **Extended v2 certificate** — consolidates all major v2
+architectural facts, including the elementary Tier A → Tier B bridge
+through `actualizeAt`. This is the v2-progressive end-state summary. -/
+theorem framework_v2_extended_certificate :
+    -- 1. Bracketing yields permutation structure on definite configs.
+    (∀ {n : ℕ} (c₁ : TierB.DefiniteConfig n) (σ : Equiv.Perm (Fin n)),
+      ∃ c₂ : TierB.DefiniteConfig n, TierB.DefiniteBracketed σ c₁ c₂) ∧
+    -- 2. The bridge respects permutation action (Tier B → Classical).
+    (∀ {n : ℕ} (c : TierB.DefiniteConfig n) (σ : Equiv.Perm (Fin n)),
+      definiteToVertex (TierB.permActOnDefinite σ c)
+        = Classical.vertex n (σ c.primed)) ∧
+    -- 3. Actualization (abstract) is not bracketed.
+    (∀ {P : Type} {C : Type} (am : TierA.ActualizationMap P C),
+      ¬ TierB.BracketedTransition am.before am.after) ∧
+    -- 4. Pointwise actualizeAt at a potential meeting realizes AtSeam.
+    (∀ {P : Type} {C : Type} [DecidableEq (TierA.Meeting P C)]
+        (R : TierA.Reality P C) (m : TierA.Meeting P C),
+      R m = TierA.MeetingStatus.Potential →
+      TierB.AtSeam R (TierA.actualizeAt R m)) ∧
+    -- 5. Classical Tier B is excluded under L7 (general n ≥ 2).
+    (∀ (n : ℕ) (_h : 1 < n),
+      ∀ _ : Continuity.PurePreservingTransitiveAgency (Classical.gpt n),
+      False) ∧
+    -- 6. Non-classical Tier B is realized.
+    (Nonempty (Continuity.StrictConnectedAgency CircleGPT.circleGPT) ∧
+     Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT)) :=
+  ⟨fun c₁ σ => TierB.bracketing_preserves_definiteness c₁ σ,
+   fun c σ => definiteToVertex_perm c σ,
+   fun am => TierB.actualization_not_bracketed am,
+   fun R m h_pot => TierB.actualizeAt_atSeam R m h_pot,
+   v2_bare_Tier_B_is_classical_excluded,
+   ⟨⟨CircleGPT.circleStrictConnectedAgency⟩,
+    ⟨QubitGPT.qubitStrictConnectedAgency_full⟩⟩⟩
+
 /-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
 
 A triple-tensor instance — `gptTensor (gptTensor CircleGPT QubitGPT)
@@ -926,6 +960,10 @@ Key landmarks:
     on TransitiveAgency.
   • `framework_certificate` — the single Lean expression bundling
     the major Tier 1 + Tier 2 baby step results.
+  • `framework_v2_certificate` / `framework_v2_extended_certificate`
+    — v2-architectural certificates bundling Tier A → Tier B
+    bracketing, actualizeAt seam bridge, classical Tier B exclusion,
+    and non-classical Tier B realization.
 
 The framework's program is substantially complete at this level.
 Remaining work (rebit/qQM explicit constructions, R7 full Lie-group
