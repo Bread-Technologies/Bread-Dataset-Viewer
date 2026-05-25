@@ -2141,5 +2141,63 @@ The framework's distinctive prediction (per `SEAMS.md` Seam 4 +
 actualization content decohere systems faster than statistical
 models alone predict. Testable in principle. -/
 
+/-! ## Grand Decoherence module super-certificate
+
+A single Lean expression bundling EVERY headline result of the module
+into one record. This is the canonical "everything we proved" object
+for external citation. -/
+
+/-- **Decoherence module super-certificate.** Bundles the major
+theorems of this module into a single typed object. Each field
+witnesses one headline result. -/
+theorem decoherence_module_super_certificate :
+    -- (1) Regime characterization (coherent / pure-decoherent / mixed).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 ∨ ch.bracketedCount = 0 ∨
+      (0 < ch.actualizationCount ∧ 0 < ch.bracketedCount)) ∧
+    -- (2) Monoid morphism: counts add under append.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      tierAEventCount (ch₁.append ch₂)
+        = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
+    -- (3) Path-independent coherence (anti-realism on status).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      ch₁.actualizationCount = 0 ↔ ch₂.actualizationCount = 0) ∧
+    -- (4) Loop submonoid: R → R chains have count 0.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R),
+      tierAEventCount ch = 0) ∧
+    -- (5) Coherent-kernel characterization.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      tierAEventCount ch = 0 ↔ R₁ = R₂) ∧
+    -- (6) Past growth monotonic along strict chains.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (_ch : RealityChain' P C R₁ R₂), past R₁ ⊆ past R₂) ∧
+    -- (7) Anti-realism witness: path-dependent complexity at same
+    --     decoherence class.
+    (∃ (P : Type) (C : Type) (R : Reality P C)
+        (ch₁ ch₂ : RealityChain' P C R R),
+      DecoherenceEquivalent ch₁ ch₂ ∧
+      trajectoryComplexity ch₁ ≠ trajectoryComplexity ch₂) ∧
+    -- (8) Boltzmann brain dissolution structural shadow.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : Nat),
+      tierAEventCount (loopPower ch n) = 0) :=
+  ⟨fun ch => trajectory_trichotomy ch,
+   fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂,
+   fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
+   fun ch => loop_is_coherent ch,
+   fun ch => coherent_kernel_iff_endpoints_eq ch,
+   fun ch => ch.past_monotone',
+   ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+    RealityChain'.nil _,
+    RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+    rfl, by decide⟩,
+   fun ch n => loopPower_tierAEventCount ch n⟩
+
 end Decoherence
 end Perspectival
