@@ -5061,6 +5061,36 @@ theorem pure_decoherent_rate_explicit {P : Type u} {C : Type v}
     (h : ch.bracketedCount = 0) :
     actualizationRate ch = (ch.length, ch.length) := decoherence_regime ch h
 
+/-- **Mixed regime: rate has both positive components.** -/
+theorem mixed_regime_rate {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h₁ : 0 < ch.actualizationCount) (h₂ : 0 < ch.bracketedCount) :
+    0 < (actualizationRate ch).1 ∧ (actualizationRate ch).1 < (actualizationRate ch).2 := by
+  refine ⟨h₁, ?_⟩
+  have h_sum := ch.counts_sum
+  show ch.actualizationCount < ch.length
+  omega
+
+/-- **Trichotomy as rate-region partition.** Every chain falls into
+exactly one of three rate regions: x-axis (coherent), diagonal
+(pure-decoherent), or interior (mixed). -/
+theorem rate_region_trichotomy {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    -- Coherent (x = 0).
+    (actualizationRate ch).1 = 0
+    -- Pure-decoherent (x = y).
+    ∨ (actualizationRate ch).1 = (actualizationRate ch).2
+    -- Mixed (0 < x < y).
+    ∨ (0 < (actualizationRate ch).1 ∧ (actualizationRate ch).1 < (actualizationRate ch).2) := by
+  have h_trichotomy := trajectory_trichotomy ch
+  rcases h_trichotomy with h_co | h_pd | ⟨h_pos_c, h_pos_b⟩
+  · left; exact h_co
+  · right; left
+    show ch.actualizationCount = ch.length
+    have h_sum := ch.counts_sum; omega
+  · right; right
+    exact mixed_regime_rate ch h_pos_c h_pos_b
+
 /-- **Explicit rate certificate.** Bundles the explicit rate formulas. -/
 theorem explicit_rate_certificate :
     -- Coherent: (0, length).
