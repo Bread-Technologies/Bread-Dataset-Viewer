@@ -312,6 +312,71 @@ theorem definite_bracketed_iff_perm {n : ℕ}
     refine ⟨σ, ?_⟩
     exact h.symm
 
+/-! ## Tier-B trajectories: bracketed intervals + actualization events
+
+A complete framework-trajectory through Reality is a sequence of
+bracketed transitions interrupted by actualization events. This is
+the v2 encoding of "evolution + measurement" in QM:
+
+  - Bracketed intervals: unitary-like, reversible. Tier B.
+  - Actualization events: measurement-like, irreversible. Tier A.
+
+The framework dissolves the measurement problem: measurement is not
+a separate axiom but the actualization event re-entering the Tier B
+description. -/
+
+/-- A `TrajectoryStep` is either a bracketed (reversible) transition
+or an actualization (irreversible) event. -/
+inductive TrajectoryStep (P : Type u) (C : Type v)
+    (R₁ R₂ : Reality P C) : Type (max u v)
+  | bracketed (h : BracketedTransition R₁ R₂)
+  | actualization (h : AtSeam R₁ R₂)
+
+/-- **A trajectory step is either bracketed or at the seam, and these
+are exclusive.** This expresses the framework's dichotomy: every
+Reality transition is either reversible (Tier B, bracketed) or
+irreversible (Tier A, actualization). No third option. -/
+theorem trajectory_step_dichotomy {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TrajectoryStep P C R₁ R₂) :
+    (BracketedTransition R₁ R₂) ∨ (AtSeam R₁ R₂) := by
+  cases step with
+  | bracketed h => exact Or.inl h
+  | actualization h => exact Or.inr h
+
+/-- **Bracketed and AtSeam are mutually exclusive.** A transition
+cannot be simultaneously a Tier B step and a Tier A actualization. -/
+theorem bracketed_and_seam_exclusive {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (h_bracketed : BracketedTransition R₁ R₂)
+    (h_seam : AtSeam R₁ R₂) : False :=
+  seam_breaks_bracketing h_seam h_bracketed
+
+/-! ## Measurement = actualization (framework's dissolution of the
+    measurement problem)
+
+In standard QM, measurement is a separate axiom (collapse postulate)
+added on top of unitary evolution. The framework dissolves this: every
+"measurement event" IS an actualization event in the Tier A sense.
+
+Concretely: a system + apparatus state before measurement is in
+potential. The measurement event is the actualization — a meeting
+between the system's want and the apparatus's complementary want
+clears, irreversibly. The "collapsed" state is the actualized state.
+
+This is encoded as: any actualization event is at the seam (= breaks
+bracketing). No separate measurement axiom is needed; measurement is
+visible in the framework simply as `AtSeam` predicate. -/
+
+/-- **The measurement-as-actualization theorem.** Any actualization
+event (Witkowski-Brown-Truong-style irreversible many-to-one collapse)
+is automatically at the seam, breaking the bracketed-transition
+relation. This IS measurement in the framework. No separate axiom. -/
+theorem measurement_is_actualization {P : Type u} {C : Type v}
+    (am : ActualizationMap P C) :
+    AtSeam am.before am.after := by
+  obtain ⟨m, h_before_pot, h_after_act⟩ := am.nontrivial
+  exact ⟨m, h_before_pot, h_after_act⟩
+
 /-! ## Summary: the bracketing operation
 
 This module formalizes the Tier A → Tier B bracketing operation.
