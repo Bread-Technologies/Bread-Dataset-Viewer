@@ -416,14 +416,15 @@ def RealityChain.singleton {P : Type u} {C : Type v}
     RealityChain P C R₁ R₂ :=
   RealityChain.cons step (RealityChain.nil R₂)
 
-/-- Concatenation of RealityChains. -/
-def RealityChain.append {P : Type u} {C : Type v}
-    {R₁ R₂ R₃ : Reality P C}
-    (ch₁ : RealityChain P C R₁ R₂) (ch₂ : RealityChain P C R₂ R₃) :
-    RealityChain P C R₁ R₃ := by
-  induction ch₁ with
-  | nil _ => exact ch₂
-  | cons step _ ih => exact RealityChain.cons step (ih ch₂)
+/-- Concatenation of RealityChains by structural recursion on the
+first chain. -/
+def RealityChain.append {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C},
+      RealityChain P C R₁ R₂ → RealityChain P C R₂ R₃ →
+      RealityChain P C R₁ R₃
+  | _, _, _, RealityChain.nil _, ch₂ => ch₂
+  | _, _, _, RealityChain.cons step rest, ch₂ =>
+      RealityChain.cons step (RealityChain.append rest ch₂)
 
 /-! **Note on chain successor properties.** The trajectory-step
 relation's actualization arm uses `AtSeam` only (a witness of *some*
@@ -447,7 +448,7 @@ theorem RealityChain.bracketed_chain_bracketed {P : Type u} {C : Type v}
   induction ch with
   | nil R => exact bracketed_refl R
   | cons step _ ih =>
-    exact bracketed_trans (h_all_bracketed step) (ih h_all_bracketed)
+    exact bracketed_trans (h_all_bracketed step) ih
 
 /-! ## Measurement = actualization (framework's dissolution of the
     measurement problem)
