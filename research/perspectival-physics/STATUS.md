@@ -546,6 +546,8 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `SmoothConnectedAgency` scaffold | `Continuity.lean` | ✓ (a) scaffold only |
 | `SmoothConnectedAgency.ofStrict`, `R7_Conjecture_of_strict` | `Continuity.lean` | ✓ (a) scaffold-level |
 | `R7_Conjecture_holds_on_circleGPT`, `_qubitGPT` — R7 instance evidence | `Dichotomy.lean` | ✓ (a) **scaffold-level R7** |
+| `HasMultiAxisAgency.toOneParameter`, `HasOneParameterAgency.ofMultiAxis` — multi/single axis bridges | `Continuity.lean` | ✓ (a) |
+| `qubit_one_parameter_from_multi_axis` — concrete 3-axis → 1-axis specialization | `Dichotomy.lean` | ✓ (a) |
 | `SEAMS.md` — catalog of 6 Tier A / Tier B seams | docs | ✓ documented |
 | `V2_AUDIT.md` — honest re-examination of prior Tier B work | docs | ✓ documented |
 
