@@ -4414,6 +4414,28 @@ theorem long_trajectory_rate_bound {P : Type u} {C : Type v}
     show ch.length ≤ n
     exact h
 
+/-- **Rate count is always a Nat.** Trivial but documented. -/
+theorem rate_count_is_nat {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 = ch.actualizationCount := rfl
+
+/-- **Rate length is always ch.length.** Trivial but documented. -/
+theorem rate_length_is_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).2 = ch.length := rfl
+
+/-- **Rate identity certificate.** Bundles the structural identities
+defining `actualizationRate` as a pair of count and length. -/
+theorem rate_identity_certificate :
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = ch.actualizationCount) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).2 = ch.length) :=
+  ⟨fun ch => rate_count_is_nat ch,
+   fun ch => rate_length_is_length ch⟩
+
 /-- **Rate bound certificate.** Rate components are bounded by chain
 length parameters. -/
 theorem rate_bound_certificate :
