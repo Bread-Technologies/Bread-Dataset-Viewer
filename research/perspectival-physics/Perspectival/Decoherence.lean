@@ -476,6 +476,48 @@ example {P : Type u} {C : Type v} (R : Reality P C) :
   -- Each singleton bracketed contributes 0.
   rfl
 
+/-! ### Trajectory complexity measure
+
+A natural number-valued "complexity" of a trajectory: the length
+weighted toward actualizations. Defined as 2 * count + bracketed.
+Coherent trajectories (count = 0) get complexity = length; pure-
+decoherent (bracketed = 0) get 2 * length; mixed cases scale in
+between. -/
+
+/-- **Trajectory complexity: weighted step count.** -/
+def trajectoryComplexity {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) : ℕ :=
+  2 * ch.actualizationCount + ch.bracketedCount
+
+/-- **Complexity respects append.** -/
+theorem trajectoryComplexity_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    trajectoryComplexity (ch₁.append ch₂)
+      = trajectoryComplexity ch₁ + trajectoryComplexity ch₂ := by
+  unfold trajectoryComplexity
+  rw [RealityChain'.append_actualizationCount,
+      RealityChain'.append_bracketedCount]
+  omega
+
+/-- **Coherent trajectories have complexity = length.** -/
+theorem coherent_complexity {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.actualizationCount = 0) :
+    trajectoryComplexity ch = ch.length := by
+  show 2 * ch.actualizationCount + ch.bracketedCount = ch.length
+  have h_sum := ch.counts_sum
+  omega
+
+/-- **Pure-decoherent trajectories have complexity = 2 * length.** -/
+theorem decoherent_complexity {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.bracketedCount = 0) :
+    trajectoryComplexity ch = 2 * ch.length := by
+  show 2 * ch.actualizationCount + ch.bracketedCount = 2 * ch.length
+  have h_sum := ch.counts_sum
+  omega
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
