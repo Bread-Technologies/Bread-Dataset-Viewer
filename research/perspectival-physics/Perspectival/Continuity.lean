@@ -1206,6 +1206,36 @@ theorem TransitiveAgency.avail_at_least_two
   show ρ₁ = ρ₂
   rw [show ρ₁ = (LinearMap.id : V →ₗ[ℝ] V) ρ₁ from rfl, this, hRρ]
 
+/-- **Generalized cardinality bound**: for any injective family `φ : Fin n → V`
+of pure states (with a designated "source" pure state ρ₀), there exist
+`n + 1` pairwise-distinct elements in `T.avail`: the identity plus
+n distinct R_i with R_i ρ₀ = φ i. (Or just n, if ρ₀ is one of the φ i.)
+-/
+theorem TransitiveAgency.avail_at_least_n
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (T : TransitiveAgency G)
+    (n : ℕ) (φ : Fin n → V)
+    (hinj : Function.Injective φ)
+    (hpure : ∀ i, PureState G (φ i)) :
+    ∃ ψ : Fin n → StrictReversible G,
+      Function.Injective ψ ∧ ∀ i, ψ i ∈ T.avail := by
+  -- For each i, pick R_i with R_i (φ 0) = φ i (transitivity on pure states).
+  -- (For n = 0 this is vacuous.)
+  by_cases h : n = 0
+  · subst h
+    exact ⟨Fin.elim0, fun i => Fin.elim0 i, fun i => Fin.elim0 i⟩
+  -- n ≥ 1: use φ 0 as source. We need n > 0 to make Fin n inhabited.
+  have hn_pos : 0 < n := Nat.pos_of_ne_zero h
+  let zero_fin : Fin n := ⟨0, hn_pos⟩
+  -- Define ψ i := R_i where R_i (φ zero_fin) = φ i (using transitive_on_pure).
+  choose ψ_fun hψ_avail hψ_eq using (fun i =>
+    T.transitive_on_pure (φ zero_fin) (φ i) (hpure zero_fin) (hpure i))
+  refine ⟨ψ_fun, ?_, hψ_avail⟩
+  intro i j heq
+  -- ψ_fun i = ψ_fun j implies (ψ_fun i).toLin = (ψ_fun j).toLin, so they agree on φ zero_fin.
+  apply hinj
+  rw [← hψ_eq i, ← hψ_eq j, heq]
+
 /-- The transformations `transitive_on_pure` produces for distinct
 target pure states are pairwise distinct. -/
 theorem TransitiveAgency.distinct_R_of_distinct_targets
