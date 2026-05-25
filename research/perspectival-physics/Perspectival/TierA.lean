@@ -285,6 +285,82 @@ theorem axiom_II_actualization_irreversible
   rw [h_before_act] at h_before_pot
   exact MeetingStatus.noConfusion h_before_pot
 
+/-! ## The framework's "no-return-to-potential" theorem
+
+The cleanest structural statement of Axiom II's irreversibility: a
+meeting that has been actualized cannot become potential again. This
+is the framework's arrow-of-time at its sharpest. -/
+
+/-- **No-return-to-potential.** Within any Reality-successor chain,
+once a meeting is actualized at some state, it remains actualized at
+all subsequent states. There is no mechanism in Tier A that reverses
+actualization. -/
+theorem no_return_to_potential {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : RealitySuccessor R₁ R₂)
+    {m : Meeting P C} (h_act : R₁ m = MeetingStatus.Actualized) :
+    R₂ m = MeetingStatus.Actualized := h m h_act
+
+/-- **Asymmetric arrow:** the contrapositive form — if a meeting is
+potential at a successor state, it was potential at the predecessor. -/
+theorem still_potential_implies_was_potential {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : RealitySuccessor R₁ R₂)
+    {m : Meeting P C} (h_pot : R₂ m = MeetingStatus.Potential) :
+    R₁ m = MeetingStatus.Potential := by
+  -- Case on R₁ m: Potential or Actualized.
+  cases h_eq : R₁ m with
+  | Potential => rfl
+  | Actualized =>
+      have h2 := h m h_eq
+      rw [h2] at h_pot
+      exact absurd h_pot MeetingStatus.noConfusion
+
+/-! ## Witkowski-Brown-Truong 2024 connection (Tier 1 step 6)
+
+The user's published paper proves, via Picard-Lindelöf applied to
+time-reversal-symmetric ODEs:
+
+  THEOREM (paper Section 3): reset (= many-to-one phase-space map)
+  is strictly impossible under conservative dynamics.
+
+  COROLLARY (paper Section 4): approaching reset under conservative
+  dynamics yields Lyapunov instability at the reset point.
+
+  COROLLARY (paper Section 5): kT ln 2 erasure bound (Landauer)
+  derivable from pure mechanics, no statistical-mechanical postulate.
+
+Translated to Tier A via the bracketing operation:
+
+  - Conservative dynamics ↔ bracketed transitions (no actualization
+    events in the bracketed interval; the actualized-set is
+    preserved).
+  - Reset / erasure / many-to-one collapse ↔ actualization event.
+  - The paper's impossibility ↔ no_return_to_potential plus the
+    structural ban on bracketed transitions doing actualization.
+
+The Lean encoding here captures the structural shadow:
+`axiom_II_actualization_irreversible` is the framework-theoretic
+version of the paper's impossibility theorem. The dynamical content
+(Picard-Lindelöf application to ODEs, Lyapunov calculation) is in
+the cited paper. Together, the structural shadow + the cited paper
+give Tier 1 step 6 (thermodynamics from mechanics, not from
+statistical postulates). -/
+
+/-- **Witkowski-Brown-Truong structural form:** the existence of an
+`ActualizationMap` provably means the actualization map itself cannot
+be reversed (cf. `axiom_II_actualization_irreversible` above). The
+full Picard-Lindelöf-grounded mechanical content — that conservative
+phase-space dynamics cannot achieve a many-to-one collapse — is in
+the cited paper (Witkowski-Brown-Truong, Entropy 26(3), 203, 2024).
+
+This module records only the structural shadow at the abstract
+Reality / Meeting level. The connection to specific phase-space
+dynamics and the Lyapunov-instability calculation are not encoded in
+Lean here. -/
+theorem WBT_structural_shadow {P : Type u} {C : Type v}
+    (am : ActualizationMap P C) :
+    ¬ RealitySuccessor am.after am.before :=
+  axiom_II_actualization_irreversible am
+
 /-! ## Summary
 
 Tier A is encoded:
