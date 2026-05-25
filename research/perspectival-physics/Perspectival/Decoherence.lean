@@ -3133,6 +3133,27 @@ theorem decoherence_content_non_negative {P : Type u} {C : Type v}
       ∧ 0 ≤ trajectoryComplexity ch :=
   ⟨Nat.zero_le _, Nat.zero_le _, Nat.zero_le _, Nat.zero_le _⟩
 
+/-- **Equal measures implies decoherence-equivalent.** If two chains
+between the same endpoints have equal counts and equal lengths (hence
+equal bracketed by counts_sum), they are decoherence-equivalent. -/
+theorem equal_measures_implies_equivalent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂)
+    (h_count : ch₁.actualizationCount = ch₂.actualizationCount) :
+    DecoherenceEquivalent ch₁ ch₂ := h_count
+
+/-- **Equal complexity + equal length implies equal counts.** Since
+complexity = 2*count + bracketed and length = count + bracketed,
+knowing both gives count uniquely. -/
+theorem complexity_length_determine_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂)
+    (h_comp : trajectoryComplexity ch₁ = trajectoryComplexity ch₂)
+    (h_len : ch₁.length = ch₂.length) :
+    ch₁.actualizationCount = ch₂.actualizationCount := by
+  have h_sum₁ := ch₁.counts_sum
+  have h_sum₂ := ch₂.counts_sum
+  unfold trajectoryComplexity at h_comp
+  omega
+
 /-- **Tier B reversibility certificate.** Bundles the coherent-chain
 characterization. -/
 theorem tier_B_reversibility_certificate :
