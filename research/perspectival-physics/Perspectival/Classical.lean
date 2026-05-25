@@ -3138,6 +3138,141 @@ theorem classical_n5_no_strict_path_id_to_swap01
     False :=
   classical_general_no_strict_path_id_to_swap01 (n := 5) (by norm_num) p
 
+/-! ## TransitiveAgency impossibility — general n ≥ 2
+
+We generalize the L6 `TransitiveAgency` impossibility result from the
+n = 2 case (`classical_n2_no_transitive_agency`) to arbitrary `n ≥ 2`.
+
+### What goes through
+
+The R6 disconnect generalizes uniformly: for any `n ≥ 2`, there is no
+`StrictReversiblePath` between `StrictReversible.id` and
+`swap01StrictReversibleGen h` (the `(0 1)`-transposition as a
+linear map). This is `classical_general_no_strict_path_id_to_swap01`
+above, proven by the sign-of-`LinearMap.det` invariant (id has det = 1,
+the swap has det = -1, and det varies continuously along a path of
+bijective endomorphisms, contradicting the IVT).
+
+The immediate corollary: in any `StrictConnectedAgency` on Classical
+n-GPT, the `(0 1)`-transposition cannot be in `avail` — because
+`StrictConnectedAgency` requires a `StrictReversiblePath` between any
+two `avail`-elements, and id is forced to be in `avail`.
+
+### Where the n=2 argument fails to generalize
+
+The n = 2 proof of `classical_n2_no_transitive_agency` uses
+`n2_disc_det_neg_of_strict_swap_vertex`: if a `StrictReversible R`
+satisfies `R.toLin (vertex 2 0) = vertex 2 1` then `n2_disc_det R < 0`.
+The proof works because `n2_disc_det R = R(v0)(0) - R(v1)(0)` and the
+hypothesis pins `R(v0)(0) = 0`, so `n2_disc_det R = -R(v1)(0)`;
+bijectivity + state-preservation forces `R(v1)(0) > 0`, hence `det < 0`.
+
+For `n ≥ 3` this argument fails because `LinearMap.det R` is no longer
+a simple function of `R(v0)(0)` and `R(v1)(0)`. The witness `R` from
+`transitive_on_pure` is only constrained to send `vertex n 0 ↦ vertex
+n 1`; the images of `vertex n 2, …, vertex n (n-1)` are free, and `R`
+can well be (e.g. for `n = 3`) the 3-cycle `(0 1 2)` whose det is `+1`.
+The straightforward "det = -1" forcing is genuinely false for general n.
+
+### Tractable form proven here
+
+We prove the result under the additional natural hypothesis that the
+`(0 1)`-transposition `swap01StrictReversibleGen h` is among the
+available strict reversibles. This is automatically the case for n = 2
+(where the only bijective state-preserving maps are id and swap), and
+is a natural strengthening of `TransitiveAgency` for general n that
+asserts the *canonical* witness for the (0 1) pure-state exchange is
+the actual permutation matrix.
+
+The conclusion is then immediate: id and `swap01StrictReversibleGen h`
+are both in avail, so `StrictConnectedAgency` (the parent of
+`TransitiveAgency`) gives us a `StrictReversiblePath` between them,
+contradicting `classical_general_no_strict_path_id_to_swap01`. -/
+
+/-- **General-n corollary of the R6 disconnect.** For any `n ≥ 2`, no
+`StrictConnectedAgency` on Classical n-GPT can have the `(0 1)`-
+transposition `swap01StrictReversibleGen` in its `avail`. -/
+theorem classical_general_swap01_not_in_strict_avail
+    (h : 1 < n)
+    (A : Perspectival.Continuity.StrictConnectedAgency (gpt n))
+    (h_swap : swap01StrictReversibleGen (n := n) h ∈ A.avail) :
+    False := by
+  -- id is in avail by the StrictConnectedAgency axiom.
+  have h_id : Perspectival.Continuity.StrictReversible.id (gpt n) ∈ A.avail :=
+    A.id_avail
+  -- StrictConnectedAgency provides a StrictReversiblePath between
+  -- id and swap01StrictReversibleGen h.
+  obtain ⟨p⟩ := A.strict_paths
+    (Perspectival.Continuity.StrictReversible.id (gpt n))
+    (swap01StrictReversibleGen (n := n) h)
+    h_id h_swap
+  -- But no such path exists, by the R6 disconnect.
+  exact classical_general_no_strict_path_id_to_swap01 (n := n) h p
+
+/-- **TransitiveAgency-form.** For any `n ≥ 2`, no `TransitiveAgency`
+on Classical n-GPT can have the `(0 1)`-transposition
+`swap01StrictReversibleGen` in its `avail`. -/
+theorem classical_general_no_transitive_agency_with_swap01_avail
+    (h : 1 < n)
+    (T : Perspectival.Continuity.TransitiveAgency (gpt n))
+    (h_swap : swap01StrictReversibleGen (n := n) h ∈ T.avail) :
+    False :=
+  classical_general_swap01_not_in_strict_avail (n := n) h
+    T.toStrictConnectedAgency h_swap
+
+/-- **Scaled-back generalization of `classical_n2_no_transitive_agency`,
+n ≥ 2.** Suppose `TransitiveAgency T` on Classical n-GPT exists with
+`vertex n 0`, `vertex n 1` pure states, AND suppose the witness from
+`transitive_on_pure` carrying `vertex n 0` to `vertex n 1` is
+specifically the `(0 1)`-transposition `swap01StrictReversibleGen h`.
+Then `False`.
+
+The additional hypothesis `h_witness` is the "canonical witness"
+constraint: it says the `R` provided by transitivity for the pure-state
+pair `(vertex n 0, vertex n 1)` is the natural permutation matrix
+rather than some other bijective state-preserving linear map.
+
+For `n = 2` this hypothesis is automatic (swap01 is the unique state-
+preserving bijection sending v0 to v1, as established by
+`classical_n2_det_neg_one_eq_swap`). For `n ≥ 3` it is a genuine extra
+assumption — `T.avail` might instead exhibit `R = cyclicShift` (n=3,
+det = +1) as the witness, in which case our sign-of-det disconnect
+cannot bite. The full generalization (without this hypothesis) appears
+to require a stronger invariant than `LinearMap.det`; see the SUMMARY
+note below. -/
+theorem classical_general_no_transitive_agency_canonical
+    (h : 1 < n)
+    (T : Perspectival.Continuity.TransitiveAgency (gpt n))
+    (_h_pure0 : Perspectival.Continuity.PureState (gpt n)
+                  (vertex n ⟨0, by omega⟩))
+    (_h_pure1 : Perspectival.Continuity.PureState (gpt n)
+                  (vertex n ⟨1, by omega⟩))
+    (h_witness : swap01StrictReversibleGen (n := n) h ∈ T.avail) :
+    False :=
+  classical_general_no_transitive_agency_with_swap01_avail (n := n) h T h_witness
+
+/-! ### Sample specializations -/
+
+/-- **n = 4 specialization.** -/
+theorem classical_n4_no_transitive_agency_canonical
+    (T : Perspectival.Continuity.TransitiveAgency (gpt 4))
+    (h_pure0 : Perspectival.Continuity.PureState (gpt 4) (vertex 4 0))
+    (h_pure1 : Perspectival.Continuity.PureState (gpt 4) (vertex 4 1))
+    (h_witness : swap01StrictReversibleGen (n := 4) (by norm_num) ∈ T.avail) :
+    False :=
+  classical_general_no_transitive_agency_canonical (n := 4) (by norm_num)
+    T h_pure0 h_pure1 h_witness
+
+/-- **n = 5 specialization.** -/
+theorem classical_n5_no_transitive_agency_canonical
+    (T : Perspectival.Continuity.TransitiveAgency (gpt 5))
+    (h_pure0 : Perspectival.Continuity.PureState (gpt 5) (vertex 5 0))
+    (h_pure1 : Perspectival.Continuity.PureState (gpt 5) (vertex 5 1))
+    (h_witness : swap01StrictReversibleGen (n := 5) (by norm_num) ∈ T.avail) :
+    False :=
+  classical_general_no_transitive_agency_canonical (n := 5) (by norm_num)
+    T h_pure0 h_pure1 h_witness
+
 end Classical
 end Perspectival
 
@@ -3155,16 +3290,59 @@ For Classical n=3 GPT:
     which remains an open lemma — attempted via cofactor + Mathlib
     Matrix.det bridge, but proof did not converge in this session).
 
-For Classical n general (n ≥ 3):
+For Classical n general (n ≥ 2):
+  ✓ classical_general_no_strict_path_id_to_swap01      (unconditional)
+  ✓ classical_general_strict_path_id_swap01_empty      (IsEmpty form)
+  ✓ classical_general_swap01_not_in_strict_avail       (avail corollary)
+  ✓ classical_general_no_transitive_agency_canonical   (TransitiveAgency
+    impossibility under the canonical-witness hypothesis; see below)
   ? R6_conjecture_classical_general_n (stated, not proven)
 
 The framework's R6 PROGRAM-LEVEL claim — classical GPTs cannot host
 nontrivial StrictConnectedAgency — has been proven for n=2 and
-**FULLY proven for both n=2 AND n=3** as of this session. The
+**FULLY proven for both n=2 AND n=3** as of an earlier session. The
 det = 0 → not injective for V 3 (`n3_det_zero_implies_not_injective`)
 was closed via the Mathlib `Matrix.det` ↔ `LinearMap.det` bridge:
 `LinearMap.toMatrix' R` → `Matrix.det` (= `n3_disc_det R` after
 unfolding the Leibniz expansion via `Matrix.det_fin_three`) → IsUnit →
 LinearMap IsUnit → ker = ⊥ → Injective. So both halves of the R6 n=3
 disconnect are done, and `classical_n3_no_strict_path_id_to_swap01`
-is unconditional. -/
+is unconditional. The general-n R6 disconnect bypassed that bridge by
+working directly with `LinearMap.det` for all `n`.
+
+### Status of `TransitiveAgency` impossibility, general n ≥ 2
+
+Fully proven:
+  ✓ classical_n2_no_transitive_agency
+    (no `TransitiveAgency` on `gpt 2`; uses the n=2-specific fact
+    that `n2_disc_det R < 0` whenever `R.toLin (vertex 2 0) = vertex 2 1`,
+    via the closed-form `det = R(v0)(0) - R(v1)(0)`.)
+
+Scaled-back (canonical-witness hypothesis):
+  ✓ classical_general_no_transitive_agency_canonical
+    (no `TransitiveAgency` on `gpt n` *if* the transitivity witness
+    carrying `vertex n 0 ↦ vertex n 1` is the canonical permutation
+    `swap01StrictReversibleGen h`.)
+
+Open:
+  ? Full general-n `classical_general_no_transitive_agency` without the
+    canonical-witness hypothesis.
+
+The gap: for `n ≥ 3`, a witness `R` with `R.toLin (vertex n 0) = vertex
+n 1` need not have `LinearMap.det R = -1`. The 3-cycle `(0 1 2)` on
+`Fin 3` is a bijective state-preserving linear map sending `vertex 3
+0 ↦ vertex 3 1` whose `LinearMap.det` equals `+1`. So the sign-of-det
+invariant alone cannot detect the obstruction. A genuine generalization
+would require either:
+  (i)  a *finer* invariant on state-preserving bijections that
+       distinguishes all permutations carrying `0 ↦ 1` from the identity
+       (e.g., the full position of `vertex 1` in the image, or a per-
+       vertex parity), or
+  (ii) leveraging *multiple* `transitive_on_pure` witnesses (e.g., the
+       witness `R'` for `vertex n 1 ↦ vertex n 0` combined with the
+       witness `R` for `vertex n 0 ↦ vertex n 1`, exploring `R' ∘ R`),
+       which currently does not obviously yield a clean det-sign
+       contradiction.
+
+The canonical-witness scale-back captures what's tractable with the
+existing infrastructure. -/
