@@ -375,6 +375,39 @@ This is a candidate "trajectory information content" measure that
 could connect to Kolmogorov-style descriptive complexity (per
 Müller's algorithmic-information framing) in future work.
 
+## Q21. What is decoherence anti-realism in the framework?
+
+**Framework answer:** Per the entropy addendum + Seam 4 reading,
+decoherence is not a substantial property of the universe in
+isolation. It has two distinct components:
+
+1. **Decoherence-status** (coherent ↔ decoherent): this IS
+   endpoint-determined. Two strict trajectories between the same
+   Reality endpoints always have the same coherence status (count = 0
+   or count > 0). See `path_independent_coherence` in
+   `Perspectival/Decoherence.lean`.
+
+2. **Decoherence-content** (count, length, complexity): this is
+   trajectory-dependent. Different paths between the same endpoints
+   can carry different actualization counts and complexity values.
+   See the worked example in `Decoherence.lean` showing nil vs
+   refl-bracketed singleton chains both have count = 0 but
+   different complexity.
+
+The framework owns the anti-realism: there is no "amount of
+decoherence the universe has" as a free-standing property. What
+exists is the relational structure of actualization events under
+specific trajectories.
+
+This is parallel to the entropy addendum's anti-realism about
+entropy: entropy is observer-relative coarse-graining, decoherence
+is path-relative actualization-counting. Both are perspective-
+relative measures with structural compositional content.
+
+Machine-verified: `Decoherence.decoherence_anti_realism` bundles
+the endpoint-determined-status content with an explicit witness
+of path-dependent complexity.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
