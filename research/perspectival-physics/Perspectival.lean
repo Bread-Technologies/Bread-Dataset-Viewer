@@ -1,4 +1,5 @@
 import Perspectival.TierA
+import Perspectival.TierB
 import Perspectival.Ontology
 import Perspectival.Transformations
 import Perspectival.Composition
