@@ -1013,6 +1013,21 @@ theorem framework_v2_strict_chain_certificate :
    fun ch => ch.counts_sum,
    fun ch₁ ch₂ ch₃ => TierB.RealityChain'.append_assoc ch₁ ch₂ ch₃⟩
 
+/-! ## v2 Decoherence cross-reference
+
+The Decoherence module (`Perspectival/Decoherence.lean`) extends the
+strict-chain machinery with quantitative decoherence content:
+actualizationRate, trajectoryComplexity, monoid morphism structure,
+path-independent coherence status, DecoherenceEquivalent relation
++ congruence, and bundle certificates.
+
+For the full decoherence content, see:
+- `Decoherence.grand_decoherence_certificate` (8-fact bundle).
+- `Decoherence.framework_decoherence_full_certificate`.
+- `Decoherence.decoherence_anti_realism` + path_independent_coherence.
+- `Decoherence.trajectory_monoid_morphism_certificate`.
+- `Decoherence.decoherence_equivalence_certificate`. -/
+
 /-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
 
 A triple-tensor instance — `gptTensor (gptTensor CircleGPT QubitGPT)
