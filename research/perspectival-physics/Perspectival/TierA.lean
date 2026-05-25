@@ -381,6 +381,15 @@ theorem actualizeAt_many_to_one {P : Type u} {C : Type v}
   · rw [actualizeAt_other R₁ h_eq, actualizeAt_other R₂ h_eq]
     exact h_agree m' h_eq
 
+/-- **Past is monotone under pointwise actualization.** Applying
+`actualizeAt R m` can only grow the past, never shrink it. This is
+the elementary form of the framework's arrow-of-time content. -/
+theorem past_subset_past_actualizeAt {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) :
+    past R ⊆ past (actualizeAt R m) :=
+  past_monotone (actualizeAt_is_successor R m)
+
 /-! ## Witkowski-Brown-Truong 2024: mechanical content of Axiom II
 
 The user's published paper proves that erasure / reset is strictly
