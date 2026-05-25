@@ -223,5 +223,29 @@ theorem trichotomy_strict_agency :
   intro PPT
   exact classical_no_L7_unconditional 2 (by omega) PPT
 
+/-! ## OneParameterFamily trichotomy: continuous symmetry on both
+non-classical GPTs -/
+
+/-- Both CircleGPT and QubitGPT carry `HasOneParameterAgency`
+instances — the framework's lightweight precursor to the full R7
+Lie-group bridge. -/
+theorem trichotomy_one_parameter_agency :
+    Nonempty (Continuity.OneParameterFamily CircleGPT.circleGPT) ∧
+    Nonempty (Continuity.OneParameterFamily QubitGPT.qubitGPT) :=
+  ⟨⟨CircleGPT.rotOneParameterFamily⟩, ⟨QubitGPT.rotZOneParameterFamily⟩⟩
+
+/-! ## Hardy A4 dimension applies to all three trichotomy points -/
+
+/-- The Hardy A4 dimension multiplicativity holds for any pair of GPT
+instances in the framework — including all combinations of Classical,
+CircleGPT, and QubitGPT. -/
+theorem trichotomy_hardy_axiom4 :
+    Hardy.Axiom4_Composite_Dimension CircleGPT.circleGPT CircleGPT.circleGPT ∧
+    Hardy.Axiom4_Composite_Dimension QubitGPT.qubitGPT QubitGPT.qubitGPT ∧
+    Hardy.Axiom4_Composite_Dimension CircleGPT.circleGPT QubitGPT.qubitGPT :=
+  ⟨Hardy.axiom4_dimension_holds CircleGPT.circleGPT CircleGPT.circleGPT,
+   Hardy.axiom4_dimension_holds QubitGPT.qubitGPT QubitGPT.qubitGPT,
+   Hardy.axiom4_dimension_holds CircleGPT.circleGPT QubitGPT.qubitGPT⟩
+
 end Dichotomy
 end Perspectival
