@@ -975,6 +975,32 @@ theorem framework_v2_trajectory_certificate :
    fun ch h => TierB.RealityChain.bracketed_only_implies_eq ch h,
    fun ch h => TierB.RealityChain.distinct_endpoints_implies_actualization ch h⟩
 
+/-- **v2 strict-chain certificate** — strict chains carry full
+characterization between Reality endpoint equality and trajectory
+count. Both directions of the iff:
+- R₁ = R₂ ↔ actualizationCount = 0
+- R₁ ≠ R₂ ↔ 0 < actualizationCount
+
+Plus the underlying successor + arrow-of-time consequences. -/
+theorem framework_v2_strict_chain_certificate :
+    -- 1. Strict chains imply RealitySuccessor.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : TierA.Reality P C}
+        (ch : TierB.RealityChain' P C R₁ R₂),
+      TierA.RealitySuccessor R₁ R₂) ∧
+    -- 2. Strict chains preserve actualized meetings end-to-end.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : TierA.Reality P C}
+        (ch : TierB.RealityChain' P C R₁ R₂)
+        {m : TierA.Meeting P C},
+      R₁ m = TierA.MeetingStatus.Actualized →
+      R₂ m = TierA.MeetingStatus.Actualized) ∧
+    -- 3. Full iff: count = 0 ↔ R₁ = R₂.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : TierA.Reality P C}
+        (ch : TierB.RealityChain' P C R₁ R₂),
+      ch.actualizationCount = 0 ↔ R₁ = R₂) :=
+  ⟨fun ch => ch.implies_successor,
+   by intro P C R₁ R₂ ch m h_act; exact ch.no_return_along_chain h_act,
+   fun ch => (ch.eq_iff_zero_count).symm⟩
+
 /-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
 
 A triple-tensor instance — `gptTensor (gptTensor CircleGPT QubitGPT)
