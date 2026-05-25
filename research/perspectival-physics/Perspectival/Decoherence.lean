@@ -1257,6 +1257,39 @@ theorem past_functor_compose {P : Type u} {C : Type v}
     past R₁ ⊆ past R₂ ∧ past R₂ ⊆ past R₃ ∧ past R₁ ⊆ past R₃ :=
   ⟨ch₁.past_monotone', ch₂.past_monotone', past_grows_under_chain ch₁ ch₂⟩
 
+/-! ## Total session-segment summary
+
+This Decoherence module formalizes Seam 4 (decoherence) at the
+count-based discrete level. The complete content:
+
+1. **Measures:** actualizationRate (count, length), tierAEventCount
+   (count alias), trajectoryComplexity (2*count + bracketed).
+
+2. **Regimes:** coherent (count = 0), pure decoherent (bracketed = 0),
+   mixed (positive both). Tripartite characterization
+   via trajectory_trichotomy.
+
+3. **Algebra:** chain monoid (assoc + identity laws), both measures
+   as monoid morphisms to (ℕ, +), DecoherenceEquivalent as
+   equivalence relation + chain-composition congruence.
+
+4. **Anti-realism:** status path-independent, content path-dependent
+   (with explicit witness). The framework's reading of decoherence
+   parallel to entropy addendum's anti-realism on entropy.
+
+5. **Arrow content:** past grows monotonically under chain
+   composition; strict chains witness RealitySuccessor preorder.
+
+6. **Bundle certificates:** 5+ separate certificates summarizing
+   different aspects.
+
+7. **Worked examples + counter-examples:** ~5 concrete instances
+   demonstrating the trajectory algebra in action.
+
+What remains open (per addendum): continuous-time exponential-
+suppression dynamics, operational environment-density definitions,
+quantitative decoherence-time predictions. -/
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
