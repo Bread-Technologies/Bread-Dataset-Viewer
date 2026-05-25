@@ -295,6 +295,36 @@ theorem framework_full_so3_strict_agency :
     Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT) :=
   ⟨QubitGPT.qubitStrictConnectedAgency_full⟩
 
+/-! ## The framework's gauge ladder
+
+The framework's gauge instances — one for each of the three Standard
+Model factors of `U(1) × SU(2) × SU(3)`, at the level the framework
+has achieved:
+
+  U(1)   via CircleGPT (rotOneParameterFamily — abelian 1-parameter).
+  SO(3) ≈ SU(2)/Z₂  via QubitGPT (qubitStrictConnectedAgency_full —
+                    non-abelian, three generator families connected).
+  SU(3) toehold via QutritGPT (λ₃ Gell-Mann generator — abelian
+                  subgroup of SU(3); full Gell-Mann set deferred).
+
+The complete derivation of U(1) × SU(2) × SU(3) as a forced gauge
+group remains OPEN per scoping in `TIER2_GAUGE_SCOPING.md`; what's
+machine-verified here is the *infrastructure* for each factor. -/
+
+/-- **The framework's gauge ladder.** A single theorem witnessing
+the three gauge instances the framework has constructed: -/
+theorem framework_gauge_ladder :
+    -- U(1): a 1-parameter family on CircleGPT.
+    Nonempty (Continuity.OneParameterFamily CircleGPT.circleGPT) ∧
+    -- SO(3)/SU(2): full StrictConnectedAgency on QubitGPT.
+    Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT) ∧
+    -- SU(3) toehold: a rotation generator (λ₃) on QutritGPT.
+    Nonempty { R : QutritGPT.V →ₗ[ℝ] QutritGPT.V //
+              ∃ θ : ℝ, R = QutritGPT.rotL3 θ } := by
+  refine ⟨⟨CircleGPT.rotOneParameterFamily⟩,
+          ⟨QubitGPT.qubitStrictConnectedAgency_full⟩, ?_⟩
+  exact ⟨⟨QutritGPT.rotL3 0, 0, rfl⟩⟩
+
 /-! ## Classical fails Hardy A5 Strong Pure (framework-distinctive)
 
 The framework's refined Axiom 5 (`Hardy.Axiom5_Continuity_Strong_Pure`)
