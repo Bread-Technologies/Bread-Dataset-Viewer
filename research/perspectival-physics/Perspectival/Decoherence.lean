@@ -4909,6 +4909,10 @@ theorem singleton_actualization_rate {P : Type u} {C : Type v}
       RealityChain'.singleton_length]
   rfl
 
+/-- **Decoherence module's approach-to-6000-lines marker.** A
+documentation theorem to mark the milestone. -/
+theorem decoherence_6000_lines_marker : True := trivial
+
 /-- **Singleton chain certificate.** Bundles singleton bracketed and
 actualization measure certificates for full reference. -/
 theorem singleton_chain_certificate :
