@@ -998,6 +998,25 @@ theorem RealityChain'.length_one_count_zero_iff_bracketed
   · rintro ⟨_, h_eq⟩
     rw [h_eq]
 
+/-- **Append with nil-left is identity.** Categorical-style identity:
+appending nil on the left gives back the right chain. -/
+@[simp] theorem RealityChain'.nil_append {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (RealityChain'.nil R₁).append ch = ch := by
+  show (match RealityChain'.nil R₁, ch with
+        | RealityChain'.nil _, c => c
+        | RealityChain'.cons s r, c => RealityChain'.cons s (r.append c)) = ch
+  rfl
+
+/-- **Plain RealityChain append with nil-left is identity.** -/
+@[simp] theorem RealityChain.nil_append {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain P C R₁ R₂) :
+    (RealityChain.nil R₁).append ch = ch := by
+  show (match RealityChain.nil R₁, ch with
+        | RealityChain.nil _, c => c
+        | RealityChain.cons s r, c => RealityChain.cons s (r.append c)) = ch
+  rfl
+
 /-- **Two-step strict chain example: actualize then bracketed.**
 Demonstrates strict-chain composition with both step kinds, where
 the cumulative successor is preserved through append. -/
