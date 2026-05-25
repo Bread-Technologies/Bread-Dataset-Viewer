@@ -996,10 +996,22 @@ theorem framework_v2_strict_chain_certificate :
     -- 3. Full iff: count = 0 ↔ R₁ = R₂.
     (∀ {P : Type} {C : Type} {R₁ R₂ : TierA.Reality P C}
         (ch : TierB.RealityChain' P C R₁ R₂),
-      ch.actualizationCount = 0 ↔ R₁ = R₂) :=
+      ch.actualizationCount = 0 ↔ R₁ = R₂) ∧
+    -- 4. Counts sum to length (full count algebra).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : TierA.Reality P C}
+        (ch : TierB.RealityChain' P C R₁ R₂),
+      ch.actualizationCount + ch.bracketedCount = ch.length) ∧
+    -- 5. Append associativity (chain monoid law).
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ R₄ : TierA.Reality P C}
+        (ch₁ : TierB.RealityChain' P C R₁ R₂)
+        (ch₂ : TierB.RealityChain' P C R₂ R₃)
+        (ch₃ : TierB.RealityChain' P C R₃ R₄),
+      (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃)) :=
   ⟨fun ch => ch.implies_successor,
    by intro P C R₁ R₂ ch m h_act; exact ch.no_return_along_chain h_act,
-   fun ch => (ch.eq_iff_zero_count).symm⟩
+   fun ch => (ch.eq_iff_zero_count).symm,
+   fun ch => ch.counts_sum,
+   fun ch₁ ch₂ ch₃ => TierB.RealityChain'.append_assoc ch₁ ch₂ ch₃⟩
 
 /-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
 
