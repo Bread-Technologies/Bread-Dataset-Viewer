@@ -581,6 +581,9 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.decoherence_module_super_certificate` — 8-fact ultimate bundle (loops + kernel + path-independence + functoriality) | `Decoherence.lean` | ✓ (a) **ULTIMATE BUNDLE** |
 | `Decoherence.coherent_chain_invariant_past`, `loop_preserves_past`, `coherent_invariant_past_certificate` — coherent chains preserve past | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.loop_prepend_preserves_count`, `loop_append_preserves_count`, `loop_insertion_certificate` — loops are transparent to counts | `Decoherence.lean` | ✓ (a) **loop transparency** |
+| `Decoherence.loop_conjugation_preserves_count`, `_equivalent`, `loop_submonoid_trivial_action` — loop submonoid acts trivially on classes | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.decoherence_class_partition`, `loop_class_concentration`, `decoherence_class_partition_certificate` — DecoherenceEquivalent classes indexed by counts | `Decoherence.lean` | ✓ (a) **class partition** |
+| `Decoherence.loop_prepend_density_changes_length`, `_density_differs_when_positive_length` — density refines DecoherenceEquivalent under loop insertion | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
