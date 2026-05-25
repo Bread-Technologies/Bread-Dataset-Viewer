@@ -4282,6 +4282,19 @@ theorem length_bounds_certificate :
   ⟨fun ch => length_ge_count ch,
    fun ch => length_ge_bracketed ch⟩
 
+/-- **Trio sum law for loop products (Mathlib notation).** -/
+theorem loop_trio_sum_law_mul {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    tierAEventCount (ch₁ * ch₂) + (ch₁ * ch₂).bracketedCount
+      = (ch₁ * ch₂).length :=
+  trio_sum_law (ch₁ * ch₂)
+
+/-- **Trio sum law for loop powers (Mathlib notation).** -/
+theorem loop_trio_sum_law_pow {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    tierAEventCount (ch ^ n) + (ch ^ n).bracketedCount = (ch ^ n).length :=
+  trio_sum_law (ch ^ n)
+
 /-- **Grading certificate.** Length is a ℕ-valued grading function
 on the chain monoid, with composition increasing additively and
 nil being the unit. -/
