@@ -1475,6 +1475,78 @@ theorem anti_realism_loop_power_witness {P : Type u} {C : Type v}
   · exact loopPower_all_equivalent _ m n
   · exact reflBracketed_loopPower_distinct_lengths R h
 
+/-! ## Actualization rate on loop chains
+
+A loop chain's actualization rate is always `(0, length)` — the
+coherent regime. This shows the rate is "scale-invariant under loop
+powers": all powers have rate (0, n·length).
+
+This is the framework's formal expression of "closed loops produce
+no net decoherence rate" — a sanity check for the Tier B reading. -/
+
+/-- **Loop rate: always (0, length).** Every loop chain has
+actualization rate `(0, length)` since the actualization count is
+necessarily zero. -/
+theorem loop_rate {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    actualizationRate ch = (0, ch.length) :=
+  coherent_regime ch (loop_is_coherent ch)
+
+/-- **Loop power rate: always (0, n * length).** -/
+theorem loopPower_rate {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : Nat) :
+    actualizationRate (loopPower ch n) = (0, n * ch.length) := by
+  rw [loop_rate (loopPower ch n), loopPower_length]
+
+/-- **Loop rate certificate.** Bundles the loop-rate content. -/
+theorem loop_rate_certificate :
+    -- (a) Every loop chain has rate (0, length).
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R),
+      actualizationRate ch = (0, ch.length)) ∧
+    -- (b) Loop powers have rate (0, n * length).
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : Nat),
+      actualizationRate (loopPower ch n) = (0, n * ch.length)) :=
+  ⟨fun ch => loop_rate ch,
+   fun ch n => loopPower_rate ch n⟩
+
+/-! ## Connection to TIER4 dissolutions (Boltzmann brains)
+
+The loop-chain content directly addresses the framework's reading of
+TIER4 dissolution #19 (Boltzmann brains).
+
+A "Boltzmann brain" trajectory — a closed loop returning to the same
+macrostate — corresponds to a loop chain `RealityChain' P C R R`. By
+`loop_is_coherent`, such trajectories carry zero net actualization
+content. By `loop_rate`, their actualization rate is `(0, n)` — pure
+coherent regime.
+
+The framework's distinctive claim: "Boltzmann brain" reasoning treats
+fluctuation-recurrences as bearing decoherence-content. The
+framework's formal correlate says no — loops carry no net Tier A
+content, regardless of how long the loop is.
+
+The dissolution: fluctuation-style reasoning conflates *substantial*
+state-recurrence (which the framework rejects) with *trajectory*
+content (which the framework owns). The latter is loop-coherent. -/
+
+/-- **Boltzmann brain dissolution structural shadow.** A closed loop
+trajectory carries zero net actualization content, regardless of
+length. The framework's formal expression of why "Boltzmann brain
+fluctuation rates" are not legitimate decoherence-content. -/
+theorem boltzmann_brain_dissolution_shadow {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    -- Loop has zero net content.
+    tierAEventCount ch = 0 ∧
+    -- Loop has zero net rate (count component).
+    (actualizationRate ch).1 = 0 ∧
+    -- This holds at every length (length-independent).
+    ∀ n : Nat, tierAEventCount (loopPower ch n) = 0 :=
+  ⟨loop_is_coherent ch,
+   by rw [loop_rate ch],
+   fun n => loopPower_tierAEventCount ch n⟩
+
 /-! ## Anti-realist monoid morphism interpretation
 
 The framework's anti-realism: only the COUNT (= number of seam
