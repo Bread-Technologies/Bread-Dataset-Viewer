@@ -1815,6 +1815,62 @@ theorem anti_realist_structural_realism :
     by decide⟩,
    fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂⟩
 
+/-! ## DecoherenceEquivalent class ordering
+
+The DecoherenceEquivalent classes between fixed endpoints (R₁, R₂)
+can be indexed by their actualization count value. Different counts
+give different classes; this induces a natural-number-indexed
+hierarchy on chains.
+
+For chains between distinct endpoints (R₁ ≠ R₂), all chains have
+positive count, so they live at indices 1, 2, 3, ... For chains
+between equal endpoints (R₁ = R₂), all chains are in class 0 (loops). -/
+
+/-- **Comparison of DecoherenceEquivalent classes.** Two chains are
+in the same class iff their counts agree. Different counts give
+different classes. -/
+theorem decoherence_class_partition {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    DecoherenceEquivalent ch₁ ch₂ ↔
+    ch₁.actualizationCount = ch₂.actualizationCount := Iff.rfl
+
+/-- **Loop classes are concentrated at count 0.** For R₁ = R₂, all
+chains have count 0 (loop_is_coherent), so there's exactly one
+DecoherenceEquivalent class — the coherent class. -/
+theorem loop_class_concentration {P : Type u} {C : Type v}
+    {R : Reality P C} (ch₁ ch₂ : RealityChain' P C R R) :
+    DecoherenceEquivalent ch₁ ch₂ := by
+  show ch₁.actualizationCount = ch₂.actualizationCount
+  rw [loop_is_coherent ch₁, loop_is_coherent ch₂]
+
+/-- **Distinct-endpoint chains have count > 0.** For R₁ ≠ R₂, every
+chain has positive count, so the chain's class index is at least 1. -/
+theorem distinct_endpoint_positive_class {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h_ne : R₁ ≠ R₂) :
+    0 < ch.actualizationCount :=
+  ch.distinct_endpoints_implies_actualization h_ne
+
+/-- **Class-partition certificate.** Bundles the class-partition
+content for both loop and distinct-endpoint cases. -/
+theorem decoherence_class_partition_certificate :
+    -- (a) Partition is iff equal counts.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      DecoherenceEquivalent ch₁ ch₂ ↔
+      ch₁.actualizationCount = ch₂.actualizationCount) ∧
+    -- (b) Loop chains form a single class.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R R),
+      DecoherenceEquivalent ch₁ ch₂) ∧
+    -- (c) Distinct-endpoint chains are in class ≥ 1.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      R₁ ≠ R₂ → 0 < ch.actualizationCount) :=
+  ⟨fun ch₁ ch₂ => decoherence_class_partition ch₁ ch₂,
+   fun ch₁ ch₂ => loop_class_concentration ch₁ ch₂,
+   fun ch h_ne => distinct_endpoint_positive_class ch h_ne⟩
+
 /-! ## Final certificate
 
 A single Lean expression bundling the full Decoherence module's
