@@ -733,6 +733,19 @@ theorem RealityChain.singleton_actualization_count {P : Type u} {C : Type v}
   · simp [RealityChain.singleton, RealityChain.actualizationCount]
   · simp [RealityChain.singleton, RealityChain.bracketedCount]
 
+/-- **A nil chain has all counts zero.** -/
+@[simp] theorem RealityChain.nil_actualizationCount {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (RealityChain.nil (P := P) (C := C) R).actualizationCount = 0 := rfl
+
+@[simp] theorem RealityChain.nil_bracketedCount {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (RealityChain.nil (P := P) (C := C) R).bracketedCount = 0 := rfl
+
+@[simp] theorem RealityChain.nil_length {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (RealityChain.nil (P := P) (C := C) R).length = 0 := rfl
+
 /-- **Append additivity for actualizationCount.** -/
 theorem RealityChain.append_actualizationCount {P : Type u} {C : Type v} :
     ∀ {R₁ R₂ R₃ : Reality P C}
