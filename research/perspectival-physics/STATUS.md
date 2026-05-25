@@ -541,6 +541,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `v2_bare_Tier_B_is_classical_excluded` — v2-architectural identification | `Dichotomy.lean` | ✓ (a) **framework-distinctive** |
 | `v2_QM_from_richer_Tier_B` — non-classical Tier B realized by richer carriers | `Dichotomy.lean` | ✓ (a) |
 | `framework_v2_certificate`, `framework_v2_extended_certificate` — consolidated v2 facts | `Dichotomy.lean` | ✓ (a) |
+| `framework_v2_trajectory_certificate` — multi-step trajectory bundle | `Dichotomy.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
 | `SmoothConnectedAgency` scaffold | `Continuity.lean` | ✓ (a) scaffold only |
 | `SmoothConnectedAgency.ofStrict`, `R7_Conjecture_of_strict` | `Continuity.lean` | ✓ (a) scaffold-level |
