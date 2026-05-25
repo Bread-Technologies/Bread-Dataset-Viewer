@@ -95,7 +95,18 @@ strengthening).
   (`coherent_kernel_iff_endpoints_eq`), the **Boltzmann brain dissolution
   shadow** (`boltzmann_brain_dissolution_shadow`), and bundle
   certificates including `decoherence_module_super_certificate`
-  (the 8-fact ultimate bundle).
+  (the 8-fact ultimate bundle), `decoherence_framework_master_certificate`
+  (10-fact MASTER bundle), Mathlib `Monoid` instance for loops at R,
+  Setoid/Decidable/Subsingleton/Inhabited type-class instances,
+  `DecoherenceQuotient` with count function (injective into ℕ),
+  `no_maxwell_demon_certificate`, `tier_B_reversibility_certificate`,
+  `measurement_actualization_collapse_certificate`,
+  `chain_time_arrow_certificate`, `decoherence_phase_space_certificate`,
+  `rate_corner_certificate`, `rate_region_characterization_certificate`,
+  `loop_npow_linearity_certificate`, `loop_unified_measures_certificate`,
+  `complexity_range_certificate`, `complexity_extremes_certificate`,
+  `bounded_trajectory_certificate`, `rate_bound_certificate`, and ~70
+  worked examples on Bool. Module is ~6000 lines, build-clean.
 - `Ontology.lean` — axioms I–IV encoded as Lean 4 types (v1; under v2,
   this is Tier B content augmented with Tier A foundation).
 - `Transformations.lean` — PTrans as a Group, MulAction on meetings.
