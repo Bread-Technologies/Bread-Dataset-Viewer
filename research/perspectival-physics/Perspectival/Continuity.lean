@@ -1334,6 +1334,47 @@ theorem TransitiveAgency.hardy_axiom5_state_path
   · intro t
     exact hpres t ρ₁ hρ₁
 
+/-! ### One-parameter families: groundwork for R7 Lie-group bridge
+
+A `OneParameterFamily f` is a continuous map ℝ → StrictReversible G
+that's a homomorphism from (ℝ, +) to the composition monoid on
+StrictReversibles. In Lie-theoretic terms, this is a 1-parameter
+subgroup of the StrictReversible group — the orbit of a Lie algebra
+element under the exponential map.
+
+This is the LIGHTWEIGHT precursor to the full R7 Lie-group bridge,
+sidestepping Mathlib's `LieGroup` infrastructure while still capturing
+the framework's structural intuition: a continuous symmetry corresponds
+to a 1-parameter subgroup of reversibles. `CircleGPT.rotStrictReversible`
+is the framework's canonical example. -/
+
+/-- A `OneParameterFamily f` is a jointly continuous homomorphism
+ℝ → StrictReversible G (composition monoid). Joint continuity in (θ, v)
+sidesteps the need for a topology on `V →ₗ[ℝ] V`. -/
+structure OneParameterFamily
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V) where
+  f : ℝ → StrictReversible G
+  /-- Joint continuity in (θ, v). -/
+  continuous : Continuous (fun p : ℝ × V => (f p.1).toLin p.2)
+  zero : (f 0).toLin = LinearMap.id
+  add : ∀ θ₁ θ₂ : ℝ, (f (θ₁ + θ₂)).toLin = (f θ₁).toLin.comp (f θ₂).toLin
+
+/-- A `OneParameterFamily` evaluated at 0 gives the identity
+StrictReversible (as a linear map). -/
+@[simp] theorem OneParameterFamily.zero_apply
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (F : OneParameterFamily G) :
+    (F.f 0).toLin = LinearMap.id := F.zero
+
+/-- Each element of a `OneParameterFamily` has an inverse element
+(via the additive inverse parameter). -/
+theorem OneParameterFamily.inv
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    {G : GPT V} (F : OneParameterFamily G) (θ : ℝ) :
+    (F.f (-θ)).toLin.comp (F.f θ).toLin = LinearMap.id := by
+  rw [← F.add]; simp
+
 /-! ### Worked example: agency → Hardy A5 pipeline
 
 A concrete demonstration of the framework's machine-verified Hardy A5

@@ -1071,5 +1071,26 @@ theorem rotAvail_has_two_distinct :
     intro h
     exact rotStrictReversible_pi_ne_id h.symm
 
+/-! ## OneParameterFamily instance: the rotation 1-parameter group -/
+
+/-- The rotation family `rotStrictReversible` is a one-parameter family
+on CircleGPT — the framework's canonical example of an R7 Lie-group-
+adjacent structure (lightweight precursor to the full Lie group bridge). -/
+noncomputable def rotOneParameterFamily :
+    Perspectival.Continuity.OneParameterFamily circleGPT where
+  f := rotStrictReversible
+  continuous := by
+    -- Joint continuity in (θ, v) follows from rotZ_continuous_pair.
+    have : Continuous (fun p : ℝ × V => rotZ p.1 p.2) := rotZ_continuous_pair
+    exact this
+  zero := by
+    show (rotStrictReversible 0).toLin = LinearMap.id
+    rw [rotStrictReversible_toLin, rotZ_zero]
+  add θ₁ θ₂ := by
+    show (rotStrictReversible (θ₁ + θ₂)).toLin
+        = (rotStrictReversible θ₁).toLin.comp (rotStrictReversible θ₂).toLin
+    rw [rotStrictReversible_toLin, rotStrictReversible_toLin, rotStrictReversible_toLin,
+        rotZ_comp]
+
 end CircleGPT
 end Perspectival
