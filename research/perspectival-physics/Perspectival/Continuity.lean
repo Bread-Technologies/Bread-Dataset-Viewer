@@ -1317,5 +1317,27 @@ theorem TransitiveAgency.hardy_axiom5_state_path
   · intro t
     exact hpres t ρ₁ hρ₁
 
+/-! ### Worked example: agency → Hardy A5 pipeline
+
+A concrete demonstration of the framework's machine-verified Hardy A5
+derivation pipeline. For any GPT G with at most one pure state, the
+ofUniquePureState constructor gives a TransitiveAgency; then hardy_axiom5
+yields the strong-form A5 path. Trivial but instructive. -/
+
+example
+    {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
+    (G : GPT V)
+    (h_unique : ∀ ρ₁ ρ₂ : V, PureState G ρ₁ → PureState G ρ₂ → ρ₁ = ρ₂)
+    (ρ₁ ρ₂ : V) (hp₁ : PureState G ρ₁) (hp₂ : PureState G ρ₂) :
+    ∃ γ : unitInterval → V →ₗ[ℝ] V,
+      Continuous (fun p : unitInterval × V => γ p.1 p.2) ∧
+      γ 0 = LinearMap.id ∧
+      γ 1 ρ₁ = ρ₂ := by
+  -- Step 1: get the TransitiveAgency from uniqueness.
+  let T : TransitiveAgency G := TransitiveAgency.ofUniquePureState G h_unique
+  -- Step 2: extract Hardy A5 strong-form.
+  obtain ⟨γ, hcont, hγ_0, hγ_1, _, _⟩ := T.hardy_axiom5 ρ₁ ρ₂ hp₁ hp₂
+  exact ⟨γ, hcont, hγ_0, hγ_1⟩
+
 end Continuity
 end Perspectival
