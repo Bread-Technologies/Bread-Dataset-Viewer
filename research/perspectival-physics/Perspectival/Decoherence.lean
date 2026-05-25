@@ -109,5 +109,25 @@ the framework's read of decoherence is via actualization-count
 accumulation, not statistical-mechanical postulates.
 -/
 
+/-! ## Worked examples -/
+
+/-- **Example: a pure actualization trajectory's rate.** Using
+`actualizeAt_strict_step` to build a 1-step actualization chain
+and verifying its rate is (1, 1) — maximal seam crossing per step. -/
+example (P : Type u) (C : Type v)
+    [DecidableEq (TierA.Meeting P C)] (R : TierA.Reality P C)
+    (m : TierA.Meeting P C) (h_pot : R m = TierA.MeetingStatus.Potential) :
+    actualizationRate
+      (RealityChain'.singleton
+        (TierB.actualizeAt_strict_step R m h_pot)) = (1, 1) := by
+  show RealityChain'.actualizationDensity _ = (1, 1)
+  show (RealityChain'.actualizationCount _, RealityChain'.length _) = (1, 1)
+  refine Prod.ext ?_ ?_
+  · -- actualizationCount = 1.
+    rw [RealityChain'.singleton_actualizationCount]
+    rfl
+  · -- length = 1.
+    exact RealityChain'.singleton_length_eq_one _
+
 end Decoherence
 end Perspectival
