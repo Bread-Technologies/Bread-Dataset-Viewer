@@ -3782,6 +3782,21 @@ theorem decoherenceQuotient_mk_surjective {P : Type u} {C : Type v}
   induction q using Quotient.inductionOn with
   | _ ch => exact ⟨ch, rfl⟩
 
+/-- **Loop pow_one.** `ch ^ 1 = ch`. Inherited from Mathlib. -/
+theorem loop_pow_one {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    ch ^ 1 = ch := pow_one ch
+
+/-- **Loop pow_zero.** `ch ^ 0 = 1` (= nil). -/
+theorem loop_pow_zero {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    ch ^ 0 = (1 : RealityChain' P C R R) := pow_zero ch
+
+/-- **Loop pow_succ.** `ch ^ (n+1) = ch^n * ch`. -/
+theorem loop_pow_succ {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    ch ^ (n + 1) = ch ^ n * ch := pow_succ ch n
+
 /-- **Decoherence framework MASTER certificate.** A single Lean
 theorem bundling EVERY major structural result of the Decoherence
 module's loop submonoid + quotient algebra into one referenceable
