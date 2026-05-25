@@ -216,17 +216,58 @@ GPT signature lattice. Negative results of this sharpness are useful
 because they tell the program *exactly* where additional postulates
 must do work.
 
-**The agency hierarchy.** Four progressively stronger postulates on
+**The agency hierarchy.** Seven progressively stronger postulates on
 the available transformation set:
 `HasConnectedAgency` (path-connectedness, used to derive A5);
 `StatePreservingAgency` (path-connected with state-preservation along
 the path); `StrictConnectedAgency` (bijective and state-preserving
-along the path); and `GroupClosedAgency` (closure under composition
+along the path); `GroupClosedAgency` (closure under composition
 and inverse, with `Reachable.equivalence` proving `Reachable` is an
-equivalence relation under closure + inverse availability). The
-hierarchy is constructed and used: the n=2 disconnect rules out
-`StrictConnectedAgency` containing both `id` and `swap` on the
-classical 2-outcome GPT (`classical_n2_no_two_element_strict_agency`).
+equivalence relation under closure + inverse availability);
+`TransitiveAgency` (Hardy A5's transitivity clause: avail acts
+transitively on pure states); and `PurePreservingTransitiveAgency`
+(the framework's intended L7 refinement: strict paths preserve
+pure states along the way). The hierarchy is constructed and used.
+
+**The Classical-vs-Quantum Dichotomy.** The framework's central
+machine-verified technical claim. `Dichotomy.framework_dichotomy_existential`:
+
+  ∀ PPT : PurePreservingTransitiveAgency (Classical.gpt 2), False
+  ∧ Nonempty (TransitiveAgency CircleGPT.circleGPT)
+
+Negative half: `classical_general_no_pure_preserving_transitive_agency`
+(in Classical.lean) — no PurePreservingTransitiveAgency exists on
+Classical n ≥ 2, UNCONDITIONALLY. Combines R6 discreteness
+(`vertexSet_isDiscrete` + `vertex_preserving_path_constant_on_vertex`)
+with R1 in both directions (`vertex_is_pure` and
+`pure_state_of_classical_is_vertex`) to reduce L7 to L6 vertex-
+preservation, which is impossible by IsPreconnected.constant_of_mapsTo.
+
+Positive half: `CircleGPT.circleTransitiveAgency_unconditional` —
+the unit-disk-lifted-to-z=1 GPT carries an unconditional
+`TransitiveAgency`, with avail = the U(1) rotation family acting
+transitively on the parametric pure-state circle. The pure-state
+classification is closed via `pure_state_classification_holds`
+(boundary-vs-interior analysis).
+
+**Critical mathematical correction documented in source.** The naive
+reading "every state-preserving + bijective linear map on Classical n
+is a permutation matrix" is FALSE for n ≥ 3: the affine path
+`t·I + (1-t)·C` (with C the 3-cycle permutation matrix) is bijective
+and state-preserving throughout. The strengthened R6 requires the
+ADDITIONAL hypothesis "paths preserve vertices along the way" — this
+is the framework's first concrete axiom refinement under the
+"metaphysics-fixed, axioms-adjustable" methodology, motivated by
+Axiom IV (pattern stability of particulars).
+
+**TransitiveAgency → Hardy A5 strong-form bridge.**
+`Continuity.TransitiveAgency.hardy_axiom5` and
+`Hardy.axiom5_strong_of_transitive_agency` package the agency-Hardy
+bridge: a TransitiveAgency provides, for any two pure states,
+a continuous path of state-preserving bijective linear maps from id
+to a transformation realizing the move. This consolidates the
+framework's Hardy A5 derivation at the *strong* form
+(`Hardy.Axiom5_Continuity_Strong`).
 
 **Philosophical dissolutions (#14, #15, #16).** Per
 `TIER4_DISSOLUTIONS.md`: each canonical Tier-4 question smuggles in an
