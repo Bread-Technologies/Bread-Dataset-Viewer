@@ -4645,6 +4645,23 @@ theorem loop_unified_measures {P : Type u} {C : Type v}
   ⟨loop_is_coherent ch, loop_bracketed_eq_length_general ch,
    loop_complexity_eq_length_general ch⟩
 
+/-- **Loop unified measures certificate.** Bundles the unified measure
+content for loop chains. -/
+theorem loop_unified_measures_certificate :
+    -- Loops have count 0.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R), tierAEventCount ch = 0) ∧
+    -- Loops have bracketed = length.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R), ch.bracketedCount = ch.length) ∧
+    -- Loops have complexity = length.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R),
+      trajectoryComplexity ch = ch.length) :=
+  ⟨fun ch => loop_is_coherent ch,
+   fun ch => loop_bracketed_eq_length_general ch,
+   fun ch => loop_complexity_eq_length_general ch⟩
+
 /-- **Loop linearity certificate.** All measures (count, bracketed, length,
 complexity) scale linearly in the exponent on loops. -/
 theorem loop_npow_linearity_certificate :
