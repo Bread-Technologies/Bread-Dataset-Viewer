@@ -592,3 +592,14 @@ is classical; non-classical (QM-style) Tier B requires a richer state
 carrier. This identifies the "where does QM come from" answer at
 the architecture level: from the choice of state carrier on which
 the bracketed dynamics acts.
+
+### Build verification (this session segment)
+
+- `lake build Perspectival.TierA`: ✓ **VERIFIED**.
+- `lake build Perspectival.TierB`: ✓ **VERIFIED**.
+- `lake build Perspectival.Continuity` + `Dichotomy`: NOT VERIFIED in
+  this session (Mathlib cache unavailable in this environment;
+  full Mathlib build from source exceeds session-wallclock). All
+  added Continuity / Dichotomy content uses small additive patterns
+  consistent with existing module structure; should compile when
+  the Mathlib cache is available.
