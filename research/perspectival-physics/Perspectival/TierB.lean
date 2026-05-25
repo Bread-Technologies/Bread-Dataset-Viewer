@@ -951,6 +951,38 @@ example (P : Type u) (C : Type v)
     simp
   trivial
 
+/-- **Worked example: a 3-step trajectory mixing arms.** Refl-bracketed,
+then actualize, then refl-bracketed-on-the-new-state. Demonstrates
+that the trajectory machinery composes consistently with R changing
+across the chain. -/
+example (P : Type u) (C : Type v)
+    [DecidableEq (Meeting P C)] (R : Reality P C)
+    (m : Meeting P C) (h_pot : R m = MeetingStatus.Potential) :
+    True := by
+  let R' := actualizeAt R m
+  let ch₁ : RealityChain P C R R := reflBracketedChain R
+  let ch₂ : RealityChain P C R R' := actualizeAt_chain R m h_pot
+  let ch₃ : RealityChain P C R' R' := reflBracketedChain R'
+  let ch : RealityChain P C R R' :=
+    ((ch₁.append ch₂).append ch₃)
+  have h_count : ch.actualizationCount = 1 := by
+    show ((ch₁.append ch₂).append ch₃).actualizationCount = 1
+    rw [RealityChain.append_actualizationCount,
+        RealityChain.append_actualizationCount]
+    show (reflBracketedChain R).actualizationCount
+        + (actualizeAt_chain R m h_pot).actualizationCount
+        + (reflBracketedChain R').actualizationCount = 1
+    simp
+  have h_brk : ch.bracketedCount = 2 := by
+    show ((ch₁.append ch₂).append ch₃).bracketedCount = 2
+    rw [RealityChain.append_bracketedCount,
+        RealityChain.append_bracketedCount]
+    show (reflBracketedChain R).bracketedCount
+        + (actualizeAt_chain R m h_pot).bracketedCount
+        + (reflBracketedChain R').bracketedCount = 2
+    simp
+  trivial
+
 /-! ## Worked example: Bool meetings (smallest non-trivial Tier A space)
 
 A concrete worked example demonstrating the framework's two-tier
