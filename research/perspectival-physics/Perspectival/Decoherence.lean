@@ -969,6 +969,20 @@ theorem DecoherenceEquivalent_append_right {P : Type u} {C : Type v}
   show _ + ch₁.actualizationCount = _ + ch₂.actualizationCount
   rw [h]
 
+/-- **DecoherenceEquivalent is congruent under append (both sides).** -/
+theorem DecoherenceEquivalent_append_both {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    {ch₁ ch₁' : RealityChain' P C R₁ R₂} {ch₂ ch₂' : RealityChain' P C R₂ R₃}
+    (h₁ : DecoherenceEquivalent ch₁ ch₁')
+    (h₂ : DecoherenceEquivalent ch₂ ch₂') :
+    DecoherenceEquivalent (ch₁.append ch₂) (ch₁'.append ch₂') := by
+  -- Use transitivity through the intermediate.
+  have h_first : DecoherenceEquivalent (ch₁.append ch₂) (ch₁'.append ch₂) :=
+    DecoherenceEquivalent_append_left h₁ ch₂
+  have h_second : DecoherenceEquivalent (ch₁'.append ch₂) (ch₁'.append ch₂') :=
+    DecoherenceEquivalent_append_right ch₁' h₂
+  exact DecoherenceEquivalent_trans h_first h_second
+
 /-! ## Decoherence framework's anti-realism summary
 
 The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
