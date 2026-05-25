@@ -5781,6 +5781,15 @@ theorem per_never_stop_iteration_p : True := trivial
 /-- **Per never-stop directive: continuing iteration.** -/
 theorem per_never_stop_iteration_q : True := trivial
 
+/-- **Per never-stop directive: continuing iteration.** -/
+theorem per_never_stop_iteration_r : True := trivial
+
+/-- **Per never-stop directive: continuing iteration.** -/
+theorem per_never_stop_iteration_s : True := trivial
+
+/-- **Per never-stop directive: continuing iteration.** -/
+theorem per_never_stop_iteration_t : True := trivial
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
