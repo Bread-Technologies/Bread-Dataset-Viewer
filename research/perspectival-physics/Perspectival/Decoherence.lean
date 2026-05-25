@@ -1865,6 +1865,34 @@ theorem distinct_loopPower_distinct_length {P : Type u} {C : Type v}
         (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) n).length :=
   reflBracketed_loopPower_distinct_lengths R h
 
+/-! ## Chain monoid axioms (category-of-Realities structure)
+
+The strict chains between Reality states form the morphisms of a
+category (or monoid, restricted to a single Reality). The chain
+monoid axioms — associativity, left identity, right identity —
+are inherited from TierB. This section bundles them as a single
+certificate. -/
+
+/-- **Chain monoid axioms certificate.** Bundles the monoid laws for
+strict-chain composition into a single Lean expression. -/
+theorem chain_monoid_axioms_certificate :
+    -- (a) Associativity.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ R₄ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃)
+        (ch₃ : RealityChain' P C R₃ R₄),
+      (ch₁.append ch₂).append ch₃ = ch₁.append (ch₂.append ch₃)) ∧
+    -- (b) Left identity.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (RealityChain'.nil R₁).append ch = ch) ∧
+    -- (c) Right identity.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.append (RealityChain'.nil R₂) = ch) :=
+  ⟨fun ch₁ ch₂ ch₃ => RealityChain'.append_assoc ch₁ ch₂ ch₃,
+   fun ch => RealityChain'.nil_append ch,
+   fun ch => RealityChain'.append_nil ch⟩
+
 /-! ## Loops are NOT resets — past is preserved
 
 A subtle but important structural fact: while loop chains have
