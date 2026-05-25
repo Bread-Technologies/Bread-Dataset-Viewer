@@ -5262,6 +5262,18 @@ theorem quick_ref_nil_right_id {P : Type u} {C : Type v}
     ch.append (RealityChain'.nil R₂) = ch :=
   RealityChain'.append_nil ch
 
+/-- **Quick reference: counts_sum (identity relation).** -/
+theorem quick_ref_counts_sum {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.actualizationCount + ch.bracketedCount = ch.length :=
+  ch.counts_sum
+
+/-- **Quick reference: count = 0 iff endpoints equal.** -/
+theorem quick_ref_kernel_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    tierAEventCount ch = 0 ↔ R₁ = R₂ :=
+  coherent_kernel_iff_endpoints_eq ch
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
