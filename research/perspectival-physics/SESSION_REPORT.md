@@ -703,7 +703,15 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~3800 lines, 330+ commits)
+### Decoherence module final state (~4000 lines, 344+ commits)
+
+**Framework MASTER certificate (final):**
+`decoherence_framework_master_certificate` bundles 10 headline facts
+into a single Lean expression — the framework's ultimate Seam 4
+reference object. Includes loop submonoid, coherent kernel, trio sum
+law, path-independent coherence, monoid morphism, Mathlib Monoid
+instance bridge, loop power coherence, quotient injectivity,
+Boltzmann brain shadow, and no-Maxwell-demon monotonicity.
 
 **Mathlib Monoid integration (final wave):**
 - `loopMonoid` : Mathlib `Monoid` instance for `RealityChain' P C R R`
