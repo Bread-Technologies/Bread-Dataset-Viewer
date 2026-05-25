@@ -244,6 +244,20 @@ theorem decoherence_regime_plain {P : Type u} {C : Type v}
   rw [h] at h_sum
   rw [← h_sum]; simp
 
+/-- **Plain-chain rate compositional under append.** -/
+theorem actualizationRatePlain_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain P C R₁ R₂) (ch₂ : RealityChain P C R₂ R₃) :
+    actualizationRatePlain (ch₁.append ch₂)
+      = ((actualizationRatePlain ch₁).1 + (actualizationRatePlain ch₂).1,
+         (actualizationRatePlain ch₁).2 + (actualizationRatePlain ch₂).2) := by
+  refine Prod.ext ?_ ?_
+  · show (ch₁.append ch₂).actualizationCount
+        = ch₁.actualizationCount + ch₂.actualizationCount
+    exact RealityChain.append_actualizationCount ch₁ ch₂
+  · show (ch₁.append ch₂).length = ch₁.length + ch₂.length
+    exact RealityChain.append_length ch₁ ch₂
+
 /-- **Decoherence certificate.** Single Lean expression bundling the
 core results of this module — the framework's Seam 4 content
 formalized at the count-based structural level. -/
