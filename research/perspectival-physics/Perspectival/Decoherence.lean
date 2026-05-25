@@ -3876,6 +3876,39 @@ theorem length_loopMonoid_morphism {P : Type u} {C : Type v}
   ⟨fun ch₁ ch₂ => loop_length_mul ch₁ ch₂,
    loop_length_one⟩
 
+/-- **loopPower agrees with Monoid `^` on bracketed count.** -/
+theorem loopPower_npow_bracketedCount_agree {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    (loopPower ch n).bracketedCount = (ch ^ n).bracketedCount := by
+  rw [loopPower_bracketedCount, loop_npow_bracketedCount]
+
+/-- **loopPower agrees with Monoid `^` on complexity.** -/
+theorem loopPower_npow_complexity_agree {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    trajectoryComplexity (loopPower ch n) = trajectoryComplexity (ch ^ n) := by
+  rw [loopPower_complexity, loop_npow_complexity]
+
+/-- **Full loopPower / Monoid `^` agreement certificate.** All
+measures (count, length, bracketed, complexity) agree between
+the custom `loopPower` and the Mathlib Monoid `^` operation. -/
+theorem loopPower_npow_full_agreement_certificate :
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      tierAEventCount (loopPower ch n) = tierAEventCount (ch ^ n)) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      (loopPower ch n).length = (ch ^ n).length) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      (loopPower ch n).bracketedCount = (ch ^ n).bracketedCount) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R) (n : ℕ),
+      trajectoryComplexity (loopPower ch n) = trajectoryComplexity (ch ^ n)) :=
+  ⟨fun ch n => loopPower_npow_count_agree ch n,
+   fun ch n => loopPower_npow_length_agree ch n,
+   fun ch n => loopPower_npow_bracketedCount_agree ch n,
+   fun ch n => loopPower_npow_complexity_agree ch n⟩
+
 /-- **Three loop monoid morphisms certificate.** All three measures
 (tierAEventCount, bracketedCount, length) are monoid morphisms from
 the loop monoid to (ℕ, +, 0). -/
