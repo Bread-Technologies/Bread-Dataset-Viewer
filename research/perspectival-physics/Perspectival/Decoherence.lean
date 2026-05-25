@@ -1798,6 +1798,59 @@ example (R : Reality Bool Bool) :
   show 2 * _ + _ = 0
   rfl
 
+/-! ## Loop-power examples on Bool
+
+Concrete demonstrations of the `loopPower` algebra on Bool-typed
+Reality. The reflexive-bracketed singleton serves as the base loop. -/
+
+/-- **Example: loop power 0 is nil.** The base case of the loop-power
+recursion: 0-fold loop is nil chain. -/
+example (R : Reality Bool Bool) :
+    loopPower (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) 0
+    = RealityChain'.nil R := rfl
+
+/-- **Example: 3-fold reflexive-bracketed Bool loop is coherent.** A
+loop power of 3 has zero count, length 3, complexity 3. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (loopPower base 3).actualizationCount = 0
+      ∧ (loopPower base 3).length = 3
+      ∧ trajectoryComplexity (loopPower base 3) = 3 := by
+  intro base
+  refine ⟨loopPower_actualizationCount base 3, ?_, ?_⟩
+  · rw [loopPower_length]; rfl
+  · rw [loopPower_complexity]; rfl
+
+/-- **Example: loop powers are decoherence-equivalent.** Powers 0, 1,
+2, 3 are all in the same DecoherenceEquivalent class (coherent). -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    DecoherenceEquivalent (loopPower base 0) (loopPower base 1)
+      ∧ DecoherenceEquivalent (loopPower base 1) (loopPower base 2)
+      ∧ DecoherenceEquivalent (loopPower base 2) (loopPower base 3) := by
+  intro base
+  refine ⟨?_, ?_, ?_⟩
+  · exact loopPower_all_equivalent base 0 1
+  · exact loopPower_all_equivalent base 1 2
+  · exact loopPower_all_equivalent base 2 3
+
+/-- **Example: loop power 4 has rate (0, 4).** Demonstrates that loop
+powers have count-zero rate scaling with length. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    actualizationRate (loopPower base 4) = (0, 4) := by
+  intro base
+  rw [loopPower_rate]
+  show (0, 4 * (RealityChain'.singleton _).length) = (0, 4)
+  rw [RealityChain'.singleton_length]
+
 /-! ## Higher-arity composition examples
 
 Compositions involving 3+ chains demonstrate the associativity and
