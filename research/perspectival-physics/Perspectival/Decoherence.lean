@@ -4268,6 +4268,20 @@ theorem length_ge_bracketed {P : Type u} {C : Type v}
   have h := ch.counts_sum
   omega
 
+/-- **Length bounds certificate.** Both count and bracketed are
+bounded above by length. -/
+theorem length_bounds_certificate :
+    -- count ≤ length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.actualizationCount ≤ ch.length) ∧
+    -- bracketed ≤ length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.bracketedCount ≤ ch.length) :=
+  ⟨fun ch => length_ge_count ch,
+   fun ch => length_ge_bracketed ch⟩
+
 /-- **Grading certificate.** Length is a ℕ-valued grading function
 on the chain monoid, with composition increasing additively and
 nil being the unit. -/
