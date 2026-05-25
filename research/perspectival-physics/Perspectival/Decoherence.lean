@@ -4630,6 +4630,21 @@ theorem loop_bracketed_eq_length_general {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) :
     ch.bracketedCount = ch.length := loop_chain_all_bracketed ch
 
+/-- **Loop complexity equals length on loops (renamed for clarity).** -/
+theorem loop_complexity_eq_length_general {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    trajectoryComplexity ch = ch.length := loop_complexity_eq_length ch
+
+/-- **Loops have a unified measure structure.** All measures (length,
+bracketed, complexity) are equal on loops (and count is 0). -/
+theorem loop_unified_measures {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) :
+    tierAEventCount ch = 0
+      ∧ ch.bracketedCount = ch.length
+      ∧ trajectoryComplexity ch = ch.length :=
+  ⟨loop_is_coherent ch, loop_bracketed_eq_length_general ch,
+   loop_complexity_eq_length_general ch⟩
+
 /-- **Loop linearity certificate.** All measures (count, bracketed, length,
 complexity) scale linearly in the exponent on loops. -/
 theorem loop_npow_linearity_certificate :
