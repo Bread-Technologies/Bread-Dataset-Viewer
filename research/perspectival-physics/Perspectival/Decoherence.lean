@@ -4486,6 +4486,25 @@ example (R : Reality Bool Bool) :
   intro base
   exact pow_add base 3 4
 
+/-- **Worked example: pow_mul on Bool concrete loop.** -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    base ^ (3 * 4) = (base ^ 3) ^ 4 := by
+  intro base
+  exact pow_mul base 3 4
+
+/-- **Worked example: Commute pow_pow_self on Bool loop.** Any two
+powers of the same loop commute. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    base ^ 3 * base ^ 5 = base ^ 5 * base ^ 3 := by
+  intro base
+  exact (Commute.pow_pow_self base 3 5).eq
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
