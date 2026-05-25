@@ -5287,6 +5287,22 @@ theorem quick_ref_chain_successor {P : Type u} {C : Type v}
     RealitySuccessor R₁ R₂ :=
   ch.implies_successor
 
+/-- **Quick reference: past grows along chain.** -/
+theorem quick_ref_past_monotone {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    past R₁ ⊆ past R₂ :=
+  ch.past_monotone'
+
+/-- **Quick reference: tier A event count = actualization count.** -/
+theorem quick_ref_tier_A_def {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    tierAEventCount ch = ch.actualizationCount := rfl
+
+/-- **Quick reference: rate = (count, length).** -/
+theorem quick_ref_rate_def {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    actualizationRate ch = (ch.actualizationCount, ch.length) := rfl
+
 /-- **Path-independence certificate.** Status is endpoint-determined. -/
 theorem path_independence_certificate :
     -- Status is path-independent.
