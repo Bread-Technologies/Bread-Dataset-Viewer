@@ -1036,3 +1036,28 @@ precursor to the Lie-group reversible-dynamics target.
 `trivialGroupClosedAgency` shows the structure is non-vacuous.
 Full Lie-group bridge (smooth paths, Lie algebra) deferred to
 future work with Mathlib `LieGroup` infrastructure.
+
+**A.10 L6 TransitiveAgency.** `TransitiveAgency G extends
+StrictConnectedAgency G` with `transitive_on_pure`: the available
+StrictReversibles act transitively on pure states. This is the
+substantive content of Hardy's Axiom 5 — and combined with the R6
+disconnect, gives the framework's strongest classical-side
+impossibility result:
+
+  *`classical_n2_no_transitive_agency`*: on Classical Bool, no
+  TransitiveAgency exists. Proof: TransitiveAgency forces some
+  R ∈ avail to map vertex 0 ↦ vertex 1. By state-preservation
+  bijectivity, R has n2_disc_det ≠ 0; the vertex-flip forces det < 0.
+  But identity ∈ avail by L4 (StrictConnectedAgency.id_avail) has
+  det = 1 > 0. By `classical_n2_no_path_across_sign` (the IVT-on-det
+  disconnect), no path-connected strict agency contains both. So
+  TransitiveAgency on Classical n=2 is impossible.
+
+This is the framework's distinctive R6 + Hardy-A5 combined result:
+**classical Bool cannot host the substantive content of Hardy
+Axiom 5**, because the framework's strict-paths agency requirement
+forces a choice of connected component on the bijective doubly-
+stochastic Birkhoff polytope, and the transitivity requirement
+forces a witness in the other component. The two demands are
+incompatible. Quantum-like GPTs (where U(2) is connected) are
+expected to evade this incompatibility.
