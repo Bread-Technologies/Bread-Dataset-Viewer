@@ -3960,6 +3960,37 @@ theorem loop_right_action_count {P : Type u} {C : Type v}
     tierAEventCount (ch.append g) = tierAEventCount ch :=
   loop_append_preserves_count ch g
 
+/-- **Complexity-length relationship.** `length ≤ complexity ≤ 2 * length`
+for any strict chain. -/
+theorem complexity_length_bounds {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.length ≤ trajectoryComplexity ch
+      ∧ trajectoryComplexity ch ≤ 2 * ch.length :=
+  ⟨complexity_ge_length ch, complexity_le_twice_length ch⟩
+
+/-- **Complexity-length bounds certificate.** -/
+theorem complexity_length_bounds_certificate :
+    -- Lower bound: complexity ≥ length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length ≤ trajectoryComplexity ch) ∧
+    -- Upper bound: complexity ≤ 2 * length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      trajectoryComplexity ch ≤ 2 * ch.length) ∧
+    -- Equality at lower bound iff coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      trajectoryComplexity ch = ch.length ↔ ch.actualizationCount = 0) ∧
+    -- Equality at upper bound iff pure-decoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      trajectoryComplexity ch = 2 * ch.length ↔ ch.bracketedCount = 0) :=
+  ⟨fun ch => complexity_ge_length ch,
+   fun ch => complexity_le_twice_length ch,
+   fun ch => complexity_eq_length_iff_coherent ch,
+   fun ch => complexity_eq_twice_length_iff_pure_decoherent ch⟩
+
 /-- **Loop action certificate.** Bundles the loop-action content:
 loops act trivially (on counts) from either the left or the right. -/
 theorem loop_action_certificate :
