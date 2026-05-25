@@ -16773,3 +16773,24 @@ example (w : Bool) (h : PatternStableWantable.Stable_nontrivial w) :
   show w = Wantable.complement w
   have : (Sum.inl w : Bool ⊕ Bool) = Sum.inl (Wantable.complement w) := hbad
   exact Sum.inl.inj this
+
+/-! ## More Stable_nontrivial / PTrans-bridge corollaries -/
+
+/-- For any element w of a Wantable with non-trivial complement, w is
+either fixed by complement (not Stable_nontrivial) or its orbit has
+exactly 2 elements (Stable_nontrivial). -/
+example {W : Type u} [Wantable W] [DecidableEq W] (w : W) :
+    w = Wantable.complement w ∨ PatternStableWantable.Stable_nontrivial w := by
+  by_cases h : w = Wantable.complement w
+  · left; exact h
+  · right
+    rw [PatternStableWantable.stable_nontrivial_iff]
+    exact h
+
+/-- For a Wantable with non-trivial complement, Stable_nontrivial holds
+for some element iff the complement is not equal to the identity PTrans. -/
+example {W : Type u} [Wantable W] [DecidableEq W] :
+    (∃ w : W, PatternStableWantable.Stable_nontrivial w) →
+    (PTrans.complement : PTrans W) ≠ 1 := by
+  intro ⟨w, hw⟩
+  exact stable_nontrivial_implies_complement_ne_one w hw
