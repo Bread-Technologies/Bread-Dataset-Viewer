@@ -717,6 +717,11 @@ theorem RealityChain'.toRealityChain_actualizationCount {P : Type u} {C : Type v
                  RealityChain'.actualizationCount]
       rw [RealityChain'.toRealityChain_actualizationCount rest]
 
+-- (Strict-chain zero-actualization-implies-equality available externally
+-- via the forgetful map: `ch.toRealityChain.bracketed_only_implies_eq` —
+-- the forward-reference into `RealityChain.bracketed_only_implies_eq`
+-- below.)
+
 /-- **A bracketed step preserves both potential and actualized status
 of every meeting.** Restated: the entire meeting-status function is
 unchanged across a bracketed step. -/
@@ -775,6 +780,16 @@ theorem RealityChain.bracketed_only_implies_eq {P : Type u} {C : Type v} :
           rw [h_eq_step]; exact h_eq_rest
       | actualization _ =>
           simp [RealityChain.actualizationCount] at h_zero
+
+/-- **Strict chains with zero actualization count have equal endpoints.**
+The strict-chain analog of `bracketed_only_implies_eq`, transported
+via the forgetful map. -/
+theorem RealityChain'.zero_actualization_implies_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h_zero : ch.actualizationCount = 0) : R₁ = R₂ := by
+  apply RealityChain.bracketed_only_implies_eq ch.toRealityChain
+  rw [RealityChain'.toRealityChain_actualizationCount]
+  exact h_zero
 
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
