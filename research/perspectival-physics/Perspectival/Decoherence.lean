@@ -1637,7 +1637,7 @@ theorem coherent_invariant_past_certificate :
         (ch : RealityChain' P C R₁ R₂),
       tierAEventCount ch = 0 → past R₁ = past R₂) ∧
     (∀ {P : Type} {C : Type} {R : Reality P C}
-        (ch : RealityChain' P C R R), past R = past R) :=
+        (_ch : RealityChain' P C R R), past R = past R) :=
   ⟨fun ch h => coherent_chain_invariant_past ch h,
    fun ch => loop_preserves_past ch⟩
 
@@ -1858,7 +1858,7 @@ theorem grand_decoherence_certificate :
       tierAEventCount ch₁ = tierAEventCount ch₂) ∧
     -- 8. Past grows under chain.
     (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
-        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+        (_ch₁ : RealityChain' P C R₁ R₂) (_ch₂ : RealityChain' P C R₂ R₃),
       past R₁ ⊆ past R₃) :=
   ⟨fun ch h => coherent_regime ch h,
    fun ch h => decoherence_regime ch h,
@@ -2204,7 +2204,7 @@ theorem decoherence_module_certificate :
         = tierAEventCount ch₁ + tierAEventCount ch₂) ∧
     -- (d) Past grows monotonically along chains (arrow of time).
     (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
-        (ch : RealityChain' P C R₁ R₂), past R₁ ⊆ past R₂) :=
+        (_ch : RealityChain' P C R₁ R₂), past R₁ ⊆ past R₂) :=
   ⟨fun ch => ch.actualizationCount_le_length,
    fun ch₁ ch₂ => path_independent_coherence ch₁ ch₂,
    fun ch₁ ch₂ => tierAEventCount_monoid_morphism ch₁ ch₂,
