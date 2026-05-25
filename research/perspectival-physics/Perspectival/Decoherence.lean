@@ -1993,6 +1993,12 @@ instance DecoherenceQuotient.loop_inhabited {P : Type u} {C : Type v}
     Inhabited (DecoherenceQuotient R R) :=
   ⟨Quotient.mk _ (RealityChain'.nil R)⟩
 
+/-- **Loop quotient elements all equal the default (nil class).** -/
+theorem DecoherenceQuotient.loop_quotient_eq_default {P : Type u} {C : Type v}
+    {R : Reality P C} (q : DecoherenceQuotient R R) :
+    q = default :=
+  Subsingleton.elim _ _
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
