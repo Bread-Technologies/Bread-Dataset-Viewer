@@ -12,12 +12,25 @@ Per `SEAMS.md` Seam 4: decoherence rates depend on the
 properties. This module formalizes the count-based content via
 `RealityChain'.actualizationDensity` from `TierB.lean`.
 
-What's NOT formalized here:
-  • The Tier B exponential-suppression dynamics (requires
-    Mathlib's analysis-of-decoherence-time machinery).
-  • The system-environment factor structure (requires
-    `gptTensor` + a partial-trace operation).
-  • Quantitative predictions of decoherence rates.
+## Key results (count-based structural level)
+
+- `actualizationRate` : the (count, length) rate measure.
+- `coherent_regime` : count = 0 → rate (0, length).
+- `decoherence_regime` : bracketed = 0 → rate (length, length).
+- `concatenated_decoherence` : rate composes coordinate-wise.
+- `coherent_compose` : coherent + coherent → coherent.
+- `coherent_and_decoherent_distinct_endpoints` : trajectories with
+  same endpoints have trajectory-independent coherence status
+  (via the strict-chain iff).
+- `decoherence_certificate` : bundle of the four core facts.
+
+## What's NOT formalized here
+
+- The Tier B exponential-suppression dynamics (requires
+  Mathlib's analysis-of-decoherence-time machinery).
+- The system-environment factor structure (requires
+  `gptTensor` + a partial-trace operation).
+- Quantitative predictions of decoherence rates.
 
 This module records the structural shadow + cites the entropy
 addendum + SEAMS.md for the broader framing.
