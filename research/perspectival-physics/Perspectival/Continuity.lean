@@ -1490,7 +1490,7 @@ any GPT with a `StrictConnectedAgency` instance trivially admits a
 `SmoothConnectedAgency`. This is the framework's minimal instance-
 construction; the substantive content (Lie group structure) is
 deferred to future Mathlib-LieGroup wiring. -/
-def SmoothConnectedAgency.ofStrict
+@[reducible] def SmoothConnectedAgency.ofStrict
     {V : Type u} [AddCommGroup V] [Module ℝ V] [TopologicalSpace V]
     {G : GPT V} (SCA : StrictConnectedAgency G) :
     SmoothConnectedAgency G where
