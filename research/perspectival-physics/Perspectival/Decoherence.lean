@@ -4661,6 +4661,21 @@ theorem loop_iff_unified_measures {P : Type u} {C : Type v}
     R₁ = R₂ ↔ tierAEventCount ch = 0 :=
   (coherent_kernel_iff_endpoints_eq ch).symm
 
+/-- **Loop characterization certificate.** -/
+theorem loop_characterization_certificate :
+    -- R₁ = R₂ ↔ count = 0 (kernel iff).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      R₁ = R₂ ↔ tierAEventCount ch = 0) ∧
+    -- count = 0 implies loop measures.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (ch : RealityChain' P C R R),
+      tierAEventCount ch = 0
+        ∧ ch.bracketedCount = ch.length
+        ∧ trajectoryComplexity ch = ch.length) :=
+  ⟨fun ch => loop_iff_unified_measures ch,
+   fun ch => loop_unified_measures ch⟩
+
 /-- **Loop unified measures certificate.** Bundles the unified measure
 content for loop chains. -/
 theorem loop_unified_measures_certificate :
