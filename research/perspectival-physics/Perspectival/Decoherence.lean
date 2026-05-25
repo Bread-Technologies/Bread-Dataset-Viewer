@@ -24,6 +24,48 @@ properties. This module formalizes the count-based content via
   (via the strict-chain iff).
 - `decoherence_certificate` : bundle of the four core facts.
 
+## Major bundle certificates (40+ in this module)
+
+- `decoherence_module_super_certificate` — 8-fact ultimate bundle.
+- `decoherence_framework_master_certificate` — 10-fact framework
+  master bundle (including Mathlib Monoid + quotient content).
+- `loop_submonoid_certificate`, `loop_action_certificate`,
+  `loop_regime_shift_certificate`, `loop_insertion_certificate`,
+  `loop_monoid_axioms_certificate`, `loop_monoid_morphism_certificate`,
+  `loopMonoid_integration_certificate`, `loopPower_additive_certificate`,
+  `loopPower_npow_measures_certificate`, `loopPower_npow_full_agreement_certificate`
+  — comprehensive loop submonoid algebra bundles.
+- `coherent_kernel_submonoid_certificate`,
+  `coherent_decomposition_certificate`,
+  `coherent_invariant_past_certificate` — coherent kernel content.
+- `tier_B_reversibility_certificate` — coherent ⇔ Tier B limit.
+- `measurement_actualization_collapse_certificate` — measurement
+  formal correlate.
+- `no_maxwell_demon_certificate`, `tier_A_strict_monotonicity_certificate`,
+  `master_monotonicity_certificate` — irreversibility content.
+- `boltzmann_brain_dissolution_shadow` — TIER4 #19 formal correlate.
+- `framework_anti_realism_restatement`, `three_level_anti_realism_witness`
+  — anti-realism content.
+- `chain_monoid_axioms_certificate`, `chain_grading_certificate`,
+  `chain_time_arrow_certificate`, `chain_no_rewind_certificate`
+  — chain monoid + arrow content.
+- `trio_of_morphisms_certificate`, `trio_sum_law`,
+  `three_loopMonoid_morphisms_certificate` — measure algebra.
+- `complexity_length_bounds_certificate`, `active_passive_certificate`,
+  `decoherence_class_partition_certificate`,
+  `decoherence_equivalent_congruence_certificate`,
+  `class_projection_certificate` — additional structural content.
+
+## Mathlib integration
+
+- `loopMonoid` : Mathlib `Monoid` instance for `RealityChain' P C R R`.
+- `DecoherenceEquivalent_setoid` : Setoid quotient.
+- `DecoherenceQuotient` : Quotient type with count function.
+- `DecoherenceEquivalent_decidable`, `loop_subsingleton`,
+  `loop_inhabited`, `loopMonoid_inhabited` : type-class instances.
+- Full `pow` notation available on loops with all Mathlib pow lemmas
+  (pow_zero, pow_one, pow_succ, pow_add, pow_mul) inherited.
+
 ## What's NOT formalized here
 
 - The Tier B exponential-suppression dynamics (requires
