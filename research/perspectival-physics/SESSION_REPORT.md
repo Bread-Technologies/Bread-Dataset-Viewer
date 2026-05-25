@@ -703,7 +703,17 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~4850 lines, 390+ commits)
+### Decoherence module final state (~5000 lines, 400+ commits)
+
+**MAJOR MILESTONE: 5000+ lines, 400 commits**
+
+The Decoherence module has crossed the 5000-line mark and the
+session has produced 400 commits. The framework's Seam 4 content
+is COMPREHENSIVE at the count-based structural level. Mathlib
+integration (Monoid, Setoid, Decidable, Subsingleton, Inhabited
+instances) is in place. 40+ bundle certificates. ~50 worked examples
+on Bool. Cross-module foundational certificates for TierA, TierB,
+Decoherence.
 
 **Framework MASTER certificate (final):**
 `decoherence_framework_master_certificate` bundles 10 headline facts
