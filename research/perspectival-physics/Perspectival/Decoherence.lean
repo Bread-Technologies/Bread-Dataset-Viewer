@@ -3185,5 +3185,30 @@ theorem tier_A_strict_monotonicity_certificate :
   ⟨fun ch₁ ch₂ => tier_A_strict_monotone_iff ch₁ ch₂,
    fun ch₁ ch₂ => tier_A_equality_iff_coherent_extension ch₁ ch₂⟩
 
+/-! ## Concluding remarks
+
+The Decoherence module's content, in one sentence: **the framework's
+Seam 4 (decoherence) is the count-based algebra of strict trajectory
+chains modulo DecoherenceEquivalent, with the loop submonoid as the
+coherent kernel.**
+
+This formal correlate is COMPLETE at the count-based discrete level.
+The continuous-time exponential-suppression framing remains Tier 2
+open work (per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md` and Seam 4
+in `SEAMS.md`).
+
+The module's canonical reference theorems:
+- `decoherence_module_super_certificate` — 8-fact ultimate bundle.
+- `loop_submonoid_certificate` — loop algebra.
+- `coherent_kernel_submonoid_certificate` — kernel characterization.
+- `tier_B_reversibility_certificate` — coherent ⇔ Tier B limit.
+- `measurement_actualization_collapse_certificate` — measurement
+  formal correlate.
+- `trio_of_morphisms_certificate` — count/bracketed/length morphisms.
+
+Full module: ~3200 lines of build-verified Lean 4 + Mathlib v4.29.1.
+Substantial structural shadow of decoherence content.
+-/
+
 end Decoherence
 end Perspectival
