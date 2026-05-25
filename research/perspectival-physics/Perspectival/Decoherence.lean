@@ -4785,6 +4785,30 @@ theorem rate_at_fixed_length {P : Type u} {C : Type v}
   show ch.actualizationCount ≤ n
   omega
 
+/-- **Rate at fixed length certificate.** Combines fixed-length
+characterization with extremal cases. -/
+theorem rate_at_fixed_length_certificate :
+    -- General: length = n implies rate y = n and rate x ≤ n.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length = n →
+      (actualizationRate ch).2 = n ∧ (actualizationRate ch).1 ≤ n) ∧
+    -- Coherent length n: rate is (0, n).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length = n → ch.actualizationCount = 0 →
+      actualizationRate ch = (0, n)) ∧
+    -- Pure-decoherent length n: rate is (n, n).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length = n → ch.bracketedCount = 0 →
+      actualizationRate ch = (n, n)) :=
+  ⟨fun ch n h => rate_at_fixed_length ch n h,
+   fun ch n h_len h_co => by
+     rw [coherent_regime ch h_co, h_len],
+   fun ch n h_len h_pd => by
+     rw [decoherence_regime ch h_pd, h_len]⟩
+
 /-- **Phase space transition certificate.** Bundles the rate-point
 addition fact with its corollaries. -/
 theorem rate_phase_transition_certificate :
