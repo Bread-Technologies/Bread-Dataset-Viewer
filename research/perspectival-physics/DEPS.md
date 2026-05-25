@@ -36,6 +36,13 @@ GPT.lean            ← convex state spaces, effects
 NoCloning.lean      ← linear-algebra no-cloning (TensorProduct + linearity)
    ↑
    └── Distinguish.lean (chains to no_cloning_of_distinguishable)
+
+TierA.lean          ← v2 foundation: Want, Meeting, Reality, actualization
+   ↑
+   └── TierB.lean   (bracketing + RealityChain + trajectory algebra)
+         ↑
+         ├── Decoherence.lean   (Seam 4 formal correlate)
+         └── Dichotomy.lean     (v2 classical-vs-quantum bundle)
 ```
 
 ## What each module contributes
