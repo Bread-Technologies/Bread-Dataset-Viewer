@@ -194,11 +194,14 @@ unifying claim across semantic and physical levels.
 
 ### Next critical-path priorities
 
-1. ~~**R6 general-n**~~ — **DONE this session**: `classical_general_no_strict_path_id_to_swap01` for any n ≥ 2 via `Matrix.toLin' ∘ Equiv.Perm.permMatrix`. R6 program-level claim fully established.
-2. **R7 Lie-group bridge** — needs Mathlib LieGroup wiring. Now the single biggest remaining piece; the positive complement (quantum DOES support StrictConnectedAgency) is the open piece.
-3. **PatternStableWantable formulation (b)**: reachable-closure / orbit-cardinality non-trivial stability predicate. Would discriminate Bool (orbit > 1 under complement) from Fin 3 (orbit = 1 under id-complement).
-4. **u(1) toy formalization**: per TIER2_GAUGE_SCOPING.md, the smallest non-trivial Lie-group gauge instance.
-5. **gptTensor**: tensor-product-of-GPTs construction, S1 tomographic locality.
+1. ~~**R6 general-n via det-sign**~~ — **DONE earlier**: `classical_general_no_strict_path_id_to_swap01` for any n ≥ 2 via `Matrix.toLin' ∘ Equiv.Perm.permMatrix`. Handles transpositions / det = -1 elements.
+2. ~~**R6 closure for ALL non-id permutations**~~ — **DONE this session via discreteness**: `classical_general_no_strict_vertex_preserving_path_id_to_perm` for any σ ≠ 1 under a vertex-preserving path hypothesis. Critical mathematical correction: the naive "state-preserving bijection = permutation" claim is FALSE for n ≥ 3 (counterexample: t·I + (1-t)·C bijective throughout for the 3-cycle C). The discreteness argument requires the additional vertex-preservation hypothesis on paths.
+3. ~~**L6 TransitiveAgency under vertex-preservation**~~ — **DONE this session**: `classical_general_vertex_preserving_no_transitive_agency` — no TransitiveAgency on Classical n ≥ 2 when underlying strict paths preserve vertices. This is the framework's intended axiom refinement, with the pure-state-stability metaphysics motivating vertex-preservation.
+4. **R7 Lie-group bridge** — needs Mathlib LieGroup wiring. The single biggest remaining piece; the positive complement (quantum DOES support StrictConnectedAgency) is the open piece.
+5. **Vertex-preservation as axiom**: investigate whether vertex-preservation along paths is forced by the framework's pattern-stability metaphysics (Axiom IV) or must be added as an additional operational postulate. This is the key open methodological question after the R6 correction.
+6. **PatternStableWantable formulation (b)**: reachable-closure / orbit-cardinality non-trivial stability predicate. Would discriminate Bool (orbit > 1 under complement) from Fin 3 (orbit = 1 under id-complement).
+7. **u(1) toy formalization**: per TIER2_GAUGE_SCOPING.md, the smallest non-trivial Lie-group gauge instance.
+8. **gptTensor**: tensor-product-of-GPTs construction, S1 tomographic locality.
 
 ## Methodology constants
 
