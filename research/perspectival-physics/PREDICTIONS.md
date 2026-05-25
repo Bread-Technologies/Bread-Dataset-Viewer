@@ -33,14 +33,28 @@ joint ledger of facts. Rejecting the latter forces the former
 No linear cloner exists for distinguishable states. Verified in our
 framework (`Perspectival/Distinguish.lean :: no_cloning_of_distinguishable`).
 
-### P3 — Continuous reversible transformations between pure states  [D, conditional]
+### P3 — Continuous reversible transformations between pure states  [D]
 
 Given the libertarian-agency postulate (connected group of reversible
 transformations) and transitivity on pure states, Hardy Axiom 5
 holds. Quantum mechanics does; classical theory (with reversibles =
-permutations) does not. The framework predicts a Quantum-side outcome
-of any reconstruction in which we are willing to formalize agency as
-path-connectedness (`Perspectival/Continuity.lean`).
+permutations) does not. The framework predicts a Quantum-side outcome.
+
+**Status** (upgraded from [D, conditional] to [D]): the
+classical-vs-quantum dichotomy is now MACHINE-VERIFIED at the
+TransitiveAgency level. `Perspectival/Dichotomy.lean ::
+framework_dichotomy_existential`:
+- Classical n ≥ 2: no `PurePreservingTransitiveAgency` exists
+  (UNCONDITIONALLY).
+- CircleGPT (the rebit-like continuous-symmetry GPT): an unconditional
+  `TransitiveAgency` exists.
+
+The framework's bridge to Hardy A5 strong form
+(`Continuity.TransitiveAgency.hardy_axiom5`,
+`Hardy.axiom5_strong_of_transitive_agency`) lifts this to: classical
+GPTs (n ≥ 2) fail strong-form Hardy A5; continuous-symmetry GPTs
+(CircleGPT) satisfy it. The prediction is now formally entailed by
+the framework's agency hierarchy.
 
 ### P4 — N ≤ K (operational dim ≤ state-space dim)  [D]
 
