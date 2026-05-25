@@ -259,9 +259,24 @@ decoherence seam (`SEAMS.md` Seam 4). It moves the seam from OPEN
 to STRUCTURAL by providing the (count, length) measure characterizing
 "seam-crossing rate" along a strict trajectory.
 
+**Current state (~2200 lines, Decoherence module build-verified):**
+- Count-based structural shadow fully formalized.
+- Loop submonoid algebra (`loop_is_coherent`, `loopPower`,
+  `loop_submonoid_certificate`) — closed-loop trajectories are
+  necessarily coherent.
+- Coherent-kernel characterization
+  (`coherent_kernel_iff_endpoints_eq`).
+- Anti-realism content with explicit witnesses
+  (`decoherence_anti_realism`, `anti_realism_loop_power_witness`).
+- TIER4 dissolution shadows: `boltzmann_brain_dissolution_shadow`.
+- Bundled super-certificate (`decoherence_module_super_certificate`)
+  with 8 headline results in one Lean expression.
+
 What's still open: the exponential-suppression framework + a
-`Decoherence.lean` module connecting actualization density to the
-Tier B off-diagonal-suppression rate quantitatively.
+quantitative connection of actualization density to the Tier B
+off-diagonal-suppression rate. Requires Mathlib-level real-valued
+analysis machinery + an operational definition of "environment
+density".
 
 ## Methodology constants
 
