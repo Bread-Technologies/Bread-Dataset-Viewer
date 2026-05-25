@@ -5001,6 +5001,33 @@ theorem length_three_count_range {P : Type u} {C : Type v}
   have h_le := ch.actualizationCount_le_length
   omega
 
+/-- **At length n, count ranges from 0 to n.** -/
+theorem length_n_count_range {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (n : ℕ)
+    (h : ch.length = n) :
+    ch.actualizationCount ≤ n := by
+  have h_le := ch.actualizationCount_le_length
+  omega
+
+/-- **Length-count range certificate.** -/
+theorem length_count_range_certificate :
+    -- At length 0, count = 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 0 → ch.actualizationCount = 0) ∧
+    -- At length 1, count ∈ {0, 1}.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 1 →
+      ch.actualizationCount = 0 ∨ ch.actualizationCount = 1) ∧
+    -- At length n, count ≤ n.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (n : ℕ),
+      ch.length = n → ch.actualizationCount ≤ n) :=
+  ⟨fun ch h => length_zero_count_zero ch h,
+   fun ch h => length_one_count_dichotomy ch h,
+   fun ch n h => length_n_count_range ch n h⟩
+
 /-- **Decoherence module at 6000 lines: comprehensive status.** -/
 theorem decoherence_at_6000_lines_status :
     -- All core measures defined.
