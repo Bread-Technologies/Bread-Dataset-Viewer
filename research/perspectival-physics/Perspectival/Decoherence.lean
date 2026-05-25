@@ -614,6 +614,14 @@ example {P : Type u} {C : Type v}
   show 2 * _ + _ = 2
   rfl
 
+/-- **Worked example: refl-bracketed singleton chain has complexity = 1.** -/
+example {P : Type u} {C : Type v} (R : Reality P C) :
+    trajectoryComplexity
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) = 1 := by
+  show 2 * _ + _ = 1
+  rfl
+
 /-! ### Summary
 
 This module formalizes the framework's reading of decoherence as
