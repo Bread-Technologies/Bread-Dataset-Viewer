@@ -652,5 +652,20 @@ example (m : Meeting Bool Bool) :
 example (m : Meeting Bool Bool) :
     actualize (actualize m) = actualize m := axiom_II_idempotent m
 
+/-- **A concrete Reality with one actualized meeting.** Maps the
+specific true-vs-false `Bool` meeting to Actualized, all other
+meetings (which are different `Meeting Bool Bool` values) to Potential. -/
+example [DecidableEq (Meeting Bool Bool)] (m₀ : Meeting Bool Bool) :
+    Reality Bool Bool :=
+  fun m => if m = m₀ then MeetingStatus.Actualized else MeetingStatus.Potential
+
+/-- **A concrete past growth.** Starting from the all-potential
+Reality and actualizing m₀ produces a reality with m₀ in the past. -/
+example [DecidableEq (Meeting Bool Bool)] (m₀ : Meeting Bool Bool) :
+    let R₀ : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    m₀ ∈ past (actualizeAt R₀ m₀) := by
+  show actualizeAt _ m₀ m₀ = MeetingStatus.Actualized
+  simp
+
 end TierA
 end Perspectival
