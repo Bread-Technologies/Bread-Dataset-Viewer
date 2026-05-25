@@ -306,19 +306,47 @@ Tier A foundation. The puzzle "why are they aligned?" presupposes
 they could fail to align; under v2 + entropy-addendum, they have
 the same root and the alignment is *necessary*.
 
-### #23. Decoherence formalized (Seam 4 — partial Lean correlate)
+### #23. Decoherence formalized (Seam 4 — full count-based Lean correlate)
 
 The dissolution of "decoherence is mysterious thermodynamic-style
 loss of coherence" reframes it as accumulated actualization at the
 system-environment interface (per Seam 4 in `SEAMS.md`). The Lean
 module `Perspectival/Decoherence.lean` provides the structural
-content:
+content (~1200 lines, fully build-verified):
 
+**Core measures:**
 - `actualizationRate` : (count, length) characterization along a
   strict trajectory chain.
+- `trajectoryComplexity` : weighted measure (2*count + bracketed).
+- `tierAEventCount` : count alias.
+
+**Regime characterizations:**
 - `coherent_regime` (count = 0): zero seam crossings, no decoherence.
 - `decoherence_regime` (bracketed = 0): maximal rate, full Tier A.
-- Compositional structure: rates compose under trajectory append.
+- `trajectory_trichotomy`: every chain is coherent | pure | mixed.
+
+**Anti-realism content** (per entropy addendum):
+- `path_independent_coherence`: status is endpoint-determined.
+- `decoherence_anti_realism`: status endpoint-determined but
+  content path-dependent (with explicit Lean witness).
+- `density_refines_decoherence_equivalent`: (count, length)
+  refines DecoherenceEquivalent.
+
+**Algebraic structure:**
+- Strict chains form a monoid under append (assoc + identity).
+- `tierAEventCount` and `trajectoryComplexity` are monoid morphisms
+  to (ℕ, +).
+- `DecoherenceEquivalent` is an equivalence relation + congruence
+  under append.
+
+**Hierarchy of equivalences:** DecoherenceEquivalent (coarsest) <
+density-equivalence < trajectory equality (finest, deferred).
+
+**Bundle certificates:** `decoherence_certificate`,
+`framework_decoherence_full_certificate`,
+`decoherence_monotonicity_certificate`,
+`decoherence_equivalence_certificate`,
+`trajectory_monoid_morphism_certificate`.
 
 **Open work** (Tier 2): continuous-time exponential-suppression
 dynamics, operational environment-density definition, quantitative
