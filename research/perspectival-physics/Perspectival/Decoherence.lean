@@ -2070,6 +2070,27 @@ theorem singleton_actualization_at_seam {P : Type u} {C : Type v}
     AtSeam R (actualizeAt R m) :=
   TierB.actualizeAt_atSeam R m h_pot
 
+/-- **Measurement-actualization-collapse certificate.** Bundles the
+framework's reading of measurement: every collapse IS a Tier A
+actualization event, which IS a seam-crossing, which has count 1 in
+the chain algebra. -/
+theorem measurement_actualization_collapse_certificate :
+    -- (a) Every collapse is a Tier A actualization event.
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (_h_pot : R m = MeetingStatus.Potential),
+      AtSeam R (actualizeAt R m)) ∧
+    -- (b) Every collapse trajectory has count 1 (smallest non-trivial).
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h_pot : R m = MeetingStatus.Potential),
+      (RealityChain'.singleton
+        (TierB.actualizeAt_strict_step R m h_pot)).actualizationCount = 1) :=
+  ⟨fun R m h_pot => singleton_actualization_at_seam R m h_pot,
+   fun R m _h_pot => by
+     show (RealityChain'.singleton _).actualizationCount = 1
+     rw [RealityChain'.singleton_actualizationCount]; rfl⟩
+
 /-- **Collapse = single actualization step.** The framework's reading
 of wave function collapse: the smallest non-trivial actualization
 chain. Has count 1, length 1, complexity 2. This is the framework's
