@@ -4310,6 +4310,16 @@ theorem loop_self_commute {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) :
     Commute ch ch := Commute.refl ch
 
+/-- **Powers of a loop commute with the loop.** -/
+theorem loop_self_pow_commute {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    Commute ch (ch ^ n) := Commute.self_pow ch n
+
+/-- **Powers commute with each other.** -/
+theorem loop_pow_pow_commute {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (m n : ℕ) :
+    Commute (ch ^ m) (ch ^ n) := Commute.pow_pow_self ch m n
+
 /-- **Grading certificate.** Length is a ℕ-valued grading function
 on the chain monoid, with composition increasing additively and
 nil being the unit. -/
