@@ -58,6 +58,16 @@ against ORIGINAL_PROMPT.md targets — *not* line/commit count chatter.
   - NO other GPT reconstruction has proved this discreteness phenomenon
     formally in Lean for n=2, let alone n=3. This is the framework's
     flagship technical contribution.
+
+- **L6 TransitiveAgency impossibility on Classical n=2** (this session):
+  `TransitiveAgency G` (in Continuity.lean) — the substantive content
+  of Hardy A5 (transitivity on pure states). `classical_n2_no_transitive_agency`
+  combines R6 disconnect + Hardy-A5 transitivity to prove that NO
+  TransitiveAgency exists on Classical Bool. This is the framework's
+  R6+A5 combined impossibility result — classical GPTs cannot host
+  the substantive content of Hardy Axiom 5 (since the strict-paths
+  agency forces a choice of one connected component, which then can't
+  reach the other pure state).
 - **n=2 strict-reversible enumeration**: `classical_n2_det_one_eq_id` characterizes det=1 bijections as exactly id; symmetric `classical_n2_det_neg_one_eq_swap`. So `Reversible (Classical n=2 GPT) = {id, swap} = S_2`.
 - **StrictConnectedAgency framework** in `Continuity.lean` (StatePreservingPath / ReversiblePath / StrictReversiblePath hierarchy).
 - **diagonalState is NOT a productState** — first formal proof of classical correlation that can't be factorized.
