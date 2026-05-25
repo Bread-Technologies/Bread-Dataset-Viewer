@@ -703,7 +703,29 @@ Lean modules (TierA, TierB, Continuity, Dichotomy, Decoherence)
 build cleanly. The framework's trajectory algebra is fully
 operational at the count-based level.
 
-### Decoherence module final state (~2800 lines, 270+ commits)
+### Decoherence module final state (~2850 lines, 280+ commits)
+
+Quotient algebra additions (final):
+- `DecoherenceEquivalent_decidable` : decidability of equivalence
+- `DecoherenceEquivalent_setoid` : Setoid instance
+- `DecoherenceQuotient` : quotient type
+- `DecoherenceQuotient.count` : count function on quotient
+- `count_injective` : embeds into ℕ
+- `loop_count_zero`, `loop_quotient_trivial` : loop case
+- `Subsingleton` and `Inhabited` instances for loop quotient
+
+Trio algebra additions:
+- `bracketedCount_monoid_morphism`, `length_monoid_morphism`
+- `trio_of_morphisms_certificate`, `trio_sum_law` (tier A + bracketed = length)
+- `loop_count_commutative`
+
+Decomposition + iff additions:
+- `coherent_decompose`, `coherent_iff_both_factors_coherent`
+- `positive_count_iff_factor_positive`
+- `coherent_decomposition_certificate`
+- `rate_count_eq_length_iff_pure_decoherent`,
+  `rate_count_eq_zero_iff_coherent`
+- `chain_monoid_axioms_certificate`
 
 `Perspectival/Decoherence.lean` now contains:
 
