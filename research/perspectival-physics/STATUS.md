@@ -562,6 +562,8 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.tier_A_monotone_under_append`, `length_monotone_under_append`, `complexity_monotone_under_append` + left-versions | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.decoherence_monotonicity_certificate` — monotonicity bundle | `Decoherence.lean` | ✓ (a) |
 | `Decoherence.trajectoryComplexityPlain` + bounds + append additivity + forgetful preservation | `Decoherence.lean` | ✓ (a) |
+| `Decoherence.decoherence_anti_realism` — endpoint-status vs path-dependent-content (with explicit witness) | `Decoherence.lean` | ✓ (a) **machine-verified anti-realism** |
+| `Decoherence.coherent_append_preserves_past`, `tier_A_status_endpoint_determined`, `coherent_equal_tier_A` | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
 | **R7 conjecture stated precisely** | `Continuity.lean :: R7_Conjecture` | ○ (c) **CONJECTURE** |
