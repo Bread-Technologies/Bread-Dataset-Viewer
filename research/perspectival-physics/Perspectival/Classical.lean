@@ -3853,6 +3853,58 @@ theorem classical_general_vertex_preserving_no_transitive_agency_unconditional
     (vertex_is_pure n ⟨1, by omega⟩)
     hvp_paths
 
+/-! ### L7 closure: PurePreservingTransitiveAgency on Classical n ≥ 2
+
+The L7 typeclass `PurePreservingTransitiveAgency` (Continuity.lean)
+on Classical n ≥ 2 is impossible *conditional on the reverse-R1
+lemma* (pure states of Classical n are vertices). With reverse-R1,
+paths preserving pure states ⇒ paths preserving vertices (since the
+forward image of a vertex is pure by L7, hence a vertex), and the
+L6 closure applies.
+
+The reverse-R1 lemma `pure_state_of_classical_is_vertex` is the
+standard convex analysis fact "extreme points of the standard
+simplex are exactly its vertices" — included as a hypothesis below
+pending separate formalization. -/
+
+/-- **L7 closure on Classical (conditional).** No
+`PurePreservingTransitiveAgency` exists on Classical n for n ≥ 2,
+given the reverse-R1 lemma (pure states are vertices).
+
+The reverse-R1 hypothesis `h_pure_is_vertex` reduces this to the
+L6 vertex-preserving closure. Once reverse-R1 is proved as a
+separate lemma, this becomes fully unconditional. -/
+theorem classical_general_no_pure_preserving_transitive_agency_conditional
+    {n : ℕ} (h : 1 < n)
+    (PPT : Perspectival.Continuity.PurePreservingTransitiveAgency (gpt n))
+    (h_pure_is_vertex :
+      ∀ ρ : V n, Perspectival.Continuity.PureState (gpt n) ρ →
+        ρ ∈ vertexSet n) :
+    False := by
+  -- Extract the underlying TransitiveAgency.
+  let T : Perspectival.Continuity.TransitiveAgency (gpt n) :=
+    PPT.toTransitiveAgency
+  -- Show paths preserve vertices via R1 (forward) + h_pure_is_vertex (reverse).
+  have hvp_paths :
+      ∀ R₁ R₂ : Perspectival.Continuity.StrictReversible (gpt n),
+        R₁ ∈ T.avail → R₂ ∈ T.avail →
+        ∀ (p : Perspectival.Continuity.StrictReversiblePath (gpt n) R₁ R₂)
+          (t : unitInterval) (i : Fin n),
+          p.γ t (vertex n i) ∈ vertexSet n := by
+    intro R₁ R₂ hR₁ hR₂ p t i
+    -- vertex n i is a pure state by R1.
+    have hp_vert : Perspectival.Continuity.PureState (gpt n) (vertex n i) :=
+      vertex_is_pure n i
+    -- p.γ t maps pure states to pure states by L7.
+    have hp_image : Perspectival.Continuity.PureState (gpt n)
+                      (p.γ t (vertex n i)) :=
+      PPT.preserves_pure_along R₁ R₂ hR₁ hR₂ p t (vertex n i) hp_vert
+    -- Reverse R1: pure ⇒ vertex.
+    exact h_pure_is_vertex _ hp_image
+  -- Apply L6 unconditional closure.
+  exact classical_general_vertex_preserving_no_transitive_agency_unconditional
+    (n := n) h T hvp_paths
+
 end Classical
 end Perspectival
 
