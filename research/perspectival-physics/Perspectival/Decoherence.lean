@@ -3265,6 +3265,26 @@ example (R : Reality Bool Bool) (n : Nat) :
   intro base
   exact loopPower_equivalent_nil base n
 
+/-- **Worked derivation: pure-decoherent length 1.** Given an
+actualization on a Bool meeting, the singleton chain has length 1
+and count 1 (which equals length), making it pure-decoherent. -/
+example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let h_pot : R m = MeetingStatus.Potential := rfl
+    let act_chain : RealityChain' Bool Bool R (actualizeAt R m) :=
+      RealityChain'.singleton (TierB.actualizeAt_strict_step R m h_pot)
+    act_chain.bracketedCount = 0
+      ∧ act_chain.actualizationCount = act_chain.length := by
+  intro R h_pot act_chain
+  refine ⟨?_, ?_⟩
+  · show (RealityChain'.singleton _).bracketedCount = 0
+    rw [RealityChain'.singleton_bracketedCount]; rfl
+  · show (RealityChain'.singleton _).actualizationCount =
+        (RealityChain'.singleton _).length
+    rw [RealityChain'.singleton_actualizationCount,
+        RealityChain'.singleton_length]
+    rfl
+
 /-- **Both status and content derive from Tier A.** The framework's
 structural claim: status (count = 0 or > 0) and content (complexity,
 length) both derive from the same Tier A primitives, even though
