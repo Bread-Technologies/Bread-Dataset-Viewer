@@ -318,6 +318,48 @@ theorem past_monotone {P : Type u} {C : Type v} {R₁ R₂ : Reality P C}
   simp only [past, Set.mem_setOf_eq] at hm ⊢
   exact h m hm
 
+/-- **Time arrow theorem (dual form):** future shrinks monotonically
+along Reality-successor. Once a meeting leaves the future (= becomes
+actualized), it cannot re-enter. -/
+theorem future_antitone {P : Type u} {C : Type v} {R₁ R₂ : Reality P C}
+    (h : RealitySuccessor R₁ R₂) : future R₂ ⊆ future R₁ := by
+  intro m hm
+  simp only [future, Set.mem_setOf_eq] at hm ⊢
+  -- hm : R₂ m = Potential. Need: R₁ m = Potential.
+  -- By contrapositive: if R₁ m = Actualized, then R₂ m = Actualized (by h), contradiction.
+  cases h_eq : R₁ m with
+  | Potential => rfl
+  | Actualized =>
+      have h_act : R₂ m = MeetingStatus.Actualized := h m h_eq
+      rw [h_act] at hm
+      exact absurd hm MeetingStatus.noConfusion
+
+/-- **Cardinality content (boundary form):** if past R₁ is a proper
+subset of past R₂, then some meeting was actualized between R₁ and R₂.
+This is the framework's "non-trivial actualization detector": a
+strictly-growing past witnesses an AtSeam-style event. -/
+theorem proper_past_growth_implies_actualization {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (h_proper : past R₁ ⊂ past R₂) :
+    ∃ m : Meeting P C, R₁ m = MeetingStatus.Potential ∧
+                        R₂ m = MeetingStatus.Actualized := by
+  obtain ⟨_, h_not_subset⟩ := h_proper
+  -- h_not_subset : ¬ past R₂ ⊆ past R₁
+  -- So ∃ m ∈ past R₂ with m ∉ past R₁.
+  by_contra h_no
+  apply h_not_subset
+  intro m hm₂
+  -- hm₂ : m ∈ past R₂, i.e., R₂ m = Actualized.
+  simp only [past, Set.mem_setOf_eq] at hm₂
+  cases h_eq : R₁ m with
+  | Actualized =>
+      show m ∈ past R₁
+      simp only [past, Set.mem_setOf_eq]
+      exact h_eq
+  | Potential =>
+      -- m was potential in R₁ and actualized in R₂ — a seam witness.
+      exact absurd ⟨m, h_eq, hm₂⟩ h_no
+
 /-- **`actualizeAt` extends the past by exactly the new meeting.** When
 m was potential in R, the past of `actualizeAt R m` is the past of R
 together with the meeting m. -/
