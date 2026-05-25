@@ -5091,6 +5091,24 @@ theorem rate_region_trichotomy {P : Type u} {C : Type v}
   · right; right
     exact mixed_regime_rate ch h_pos_c h_pos_b
 
+/-- **Rate region trichotomy certificate.** -/
+theorem rate_region_trichotomy_certificate :
+    -- Trichotomy holds for every chain.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = 0
+        ∨ (actualizationRate ch).1 = (actualizationRate ch).2
+        ∨ (0 < (actualizationRate ch).1
+            ∧ (actualizationRate ch).1 < (actualizationRate ch).2)) ∧
+    -- Mixed regime has both components positive.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      0 < ch.actualizationCount → 0 < ch.bracketedCount →
+      0 < (actualizationRate ch).1
+        ∧ (actualizationRate ch).1 < (actualizationRate ch).2) :=
+  ⟨fun ch => rate_region_trichotomy ch,
+   fun ch h₁ h₂ => mixed_regime_rate ch h₁ h₂⟩
+
 /-- **Explicit rate certificate.** Bundles the explicit rate formulas. -/
 theorem explicit_rate_certificate :
     -- Coherent: (0, length).
