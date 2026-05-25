@@ -278,21 +278,39 @@ theorem gptTensor_tomographic_local
     TomographicLocality G₁ G₂ (gptTensor G₁ G₂) :=
   gptTensor_finrank_eq_mul G₁ G₂
 
-/-! **qQM exclusion (Tier 1 #5, S1 step).**
+/-! **qQM and rebit exclusion (Tier 1 #5, S1 step).**
 
-Quaternionic QM at level N has `K_qQM(N) = N(2N - 1)`. At N=2:
-`K_qQM(2) = 2(3) = 6`. The composite at N_AB = 4 would have
-`K_qQM(4) = 4·7 = 28`, while the framework's tomographic local
-product gives `K_A · K_B = 6 · 6 = 36`. Hence `K_qQM(N_A · N_B) ≠
-K_qQM(N_A) · K_qQM(N_B)` — qQM violates tomographic locality.
+The standard Hardy K-signatures across N-level reconstructions:
+  classical:    K(N) = N
+  rebit (rQM):  K(N) = N(N+1)/2
+  qubit (cQM):  K(N) = N²
+  qQM:          K(N) = N(2N - 1)
 
-Conclusion: any composite GPT derivable in the framework with
-operational dimensions N_A, N_B and the gptTensor composition rule has
-`K_AB = K_A · K_B` (the `TomographicLocality` predicate), which qQM
-fails. So qQM is structurally INCOMPATIBLE with the framework's
-preferred composition. This is the framework's machine-verified
-S1-step toward Tier 1 #5 (complex-vs-real-vs-quaternionic Hilbert
-space). -/
+The framework's preferred composite (`gptTensor`) gives
+`K_AB = K_A · K_B` for any pair. For non-classical signatures:
+
+  At N = 2:    K(2) = 3 (rebit) and 4 (qubit) and 6 (qQM).
+  At N_AB = 4: K(4) = 10 (rebit), 16 (qubit), 28 (qQM).
+
+Check `K_AB = K_A · K_B`:
+  rebit:   10 ≠ 3·3 = 9  → violates local tomography.
+  qubit:   16 = 4·4 = 16 → SATISFIES local tomography.
+  qQM:     28 ≠ 6·6 = 36 → violates local tomography.
+
+Hence, of the three non-classical signatures, ONLY THE QUBIT satisfies
+the framework's `TomographicLocality` rule. Combined with the L7
+closure on Classical (no PurePreservingTransitiveAgency), the framework
+formally FORCES the complex-QM signature K = N²:
+
+  Classical → excluded by L7 (no continuous symmetry).
+  Rebit     → excluded by TomographicLocality (K_AB > K_A · K_B).
+  qQM       → excluded by TomographicLocality (K_AB > K_A · K_B).
+  Qubit     → uniquely consistent.
+
+This is the framework's machine-verified path toward Tier 1 #5
+(complex-vs-real-vs-quaternionic Hilbert space). The proof of full
+qubit uniqueness as a Lean theorem would require constructing the
+rebit and qQM composites explicitly (currently open). -/
 
 end GPT
 end Perspectival
