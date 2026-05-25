@@ -883,6 +883,29 @@ def RealityChain'.singleton {P : Type u} {C : Type v}
       = _
   simp [RealityChain'.actualizationCount]
 
+/-- **Strict chain concatenation `append`.** Structural recursion on
+the first chain. -/
+def RealityChain'.append {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C},
+      RealityChain' P C R₁ R₂ → RealityChain' P C R₂ R₃ →
+      RealityChain' P C R₁ R₃
+  | _, _, _, RealityChain'.nil _, ch₂ => ch₂
+  | _, _, _, RealityChain'.cons step rest, ch₂ =>
+      RealityChain'.cons step (RealityChain'.append rest ch₂)
+
+/-- **Append additivity for strict chain actualization count.** -/
+theorem RealityChain'.append_actualizationCount {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ R₃ : Reality P C}
+      (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      (ch₁.append ch₂).actualizationCount
+        = ch₁.actualizationCount + ch₂.actualizationCount
+  | _, _, _, RealityChain'.nil _, _ => by
+      simp [RealityChain'.append, RealityChain'.actualizationCount]
+  | _, _, _, RealityChain'.cons step rest, ch₂ => by
+      simp only [RealityChain'.append, RealityChain'.actualizationCount]
+      rw [RealityChain'.append_actualizationCount rest ch₂]
+      omega
+
 /-- **Any non-equal Reality transition must be at the seam.** Combining
 the bracketed-iff-eq theorem with the dichotomy: if R₁ ≠ R₂, then the
 transition R₁ → R₂ cannot be a bracketed step; if it's at all
