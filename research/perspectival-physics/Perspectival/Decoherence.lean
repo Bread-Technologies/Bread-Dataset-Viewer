@@ -1765,6 +1765,25 @@ theorem loop_insertion_certificate :
    fun loop ch => loop_prepend_equivalent loop ch,
    fun ch loop => loop_append_equivalent ch loop⟩
 
+/-! ## Loop submonoid acts trivially on decoherence equivalence
+
+The combined structural fact: the loop submonoid (chains R → R) acts
+trivially on the DecoherenceEquivalent quotient via append (both
+prepending and appending). This is the framework's expression of
+"loops add 'time' but not 'decoherence content'". -/
+
+/-- **Loop submonoid acts trivially on equivalence classes.** For any
+chain `ch : R₁ → R₂` and any loops at either endpoint, the resulting
+extended chain is decoherence-equivalent to `ch`. -/
+theorem loop_submonoid_trivial_action :
+    ∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+      (loop_pre : RealityChain' P C R₁ R₁)
+      (ch : RealityChain' P C R₁ R₂)
+      (loop_post : RealityChain' P C R₂ R₂),
+    DecoherenceEquivalent (loop_pre.append (ch.append loop_post)) ch :=
+  fun loop_pre ch loop_post =>
+    loop_conjugation_equivalent loop_pre ch loop_post
+
 /-! ## Anti-realist monoid morphism interpretation
 
 The framework's anti-realism: only the COUNT (= number of seam
