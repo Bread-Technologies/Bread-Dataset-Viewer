@@ -4361,6 +4361,18 @@ theorem one_npow_count_zero {P : Type u} {C : Type v} {R : Reality P C}
     ((1 : RealityChain' P C R R) ^ n).actualizationCount = 0 := by
   rw [one_pow]; rfl
 
+/-- **Worked example: chain of bracketed loops on Bool sums correctly.**
+Demonstrates pow_add and length_mul together. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (base ^ (3 + 4)).length = 7 := by
+  intro base
+  rw [loop_npow_length]
+  show 7 * (RealityChain'.singleton _).length = 7
+  rw [RealityChain'.singleton_length]
+
 /-- **Loop power monotonicity certificate.** -/
 theorem loop_npow_monotonicity_certificate :
     -- Weak monotonicity.
