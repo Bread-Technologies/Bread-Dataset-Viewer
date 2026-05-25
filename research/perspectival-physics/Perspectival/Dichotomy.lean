@@ -611,6 +611,12 @@ theorem circle_full_hardy_reconstruction (GB : GPT (Fin 3 → ℝ)) :
     CircleGPT.circleTransitiveAgency_unconditional
     (fun _ h => h.1 (Set.mem_singleton _))
 
+/-- The framework reconstructs FOUR of the five Hardy axioms (everything
+except A2 which is auxiliary) on the rebit GPT. -/
+example : Hardy.Axiom5_Continuity_Strong CircleGPT.circleGPT := by
+  have := circle_full_hardy_reconstruction CircleGPT.circleGPT
+  exact this.2.2.2.2
+
 /-! ## Framework certificate (full Tier 1 + Tier 2 baby step summary)
 
 A single theorem bundling the framework's major machine-verified
