@@ -4596,6 +4596,14 @@ example (R : Reality Bool Bool)
   show ch ^ 3 = ch * ch * ch
   rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add, pow_two, pow_one]
 
+/-- **Worked example: complexity of chain product on Bool.** -/
+example (R : Reality Bool Bool)
+    (ch : RealityChain' Bool Bool R R) :
+    trajectoryComplexity (ch * ch) = trajectoryComplexity ch
+      + trajectoryComplexity ch := by
+  show trajectoryComplexity (ch.append ch) = _
+  exact trajectoryComplexity_append ch ch
+
 /-- **Worked example: no Maxwell demon on Bool.** Extending a 5-loop
 with another step strictly increases count if the extension actualizes. -/
 example (m : Meeting Bool Bool) [DecidableEq (Meeting Bool Bool)] :
