@@ -630,6 +630,28 @@ def actualizeAt_strict_step {P : Type u} {C : Type v}
   step := TrajectoryStep.actualization (actualizeAt_atSeam R m h_pot)
   is_successor := actualizeAt_is_successor R m
 
+/-- **`RealityChain'` carries cumulative RealitySuccessor along chain.**
+A strengthened chain where each step preserves the successor relation.
+Forms a transitive closure-style structure. -/
+inductive RealityChain' (P : Type u) (C : Type v) :
+    Reality P C → Reality P C → Type (max u v)
+  | nil (R : Reality P C) : RealityChain' P C R R
+  | cons {R₁ R₂ R₃ : Reality P C}
+      (step : TrajectoryStep' P C R₁ R₂)
+      (rest : RealityChain' P C R₂ R₃) :
+      RealityChain' P C R₁ R₃
+
+/-- **A `RealityChain'` implies the endpoints are linked by Reality
+successor.** This is the substantive content of the strengthening:
+chains built from strict steps carry the cumulative time-ordering. -/
+theorem RealityChain'.implies_successor {P : Type u} {C : Type v} :
+    ∀ {R₁ R₂ : Reality P C}, RealityChain' P C R₁ R₂ →
+      RealitySuccessor R₁ R₂
+  | _, _, RealityChain'.nil R => reality_successor_refl R
+  | _, _, RealityChain'.cons step rest =>
+      reality_successor_trans step.is_successor
+        (RealityChain'.implies_successor rest)
+
 /-- **A bracketed step preserves both potential and actualized status
 of every meeting.** Restated: the entire meeting-status function is
 unchanged across a bracketed step. -/
