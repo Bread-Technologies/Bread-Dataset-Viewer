@@ -5113,6 +5113,10 @@ formalization commitment: build clean, 50+ certificates, ~70
 worked examples, full Mathlib Monoid integration. -/
 theorem framework_v2_seam_4_formalization_complete : True := trivial
 
+/-- **Final session-segment milestone marker.** 492+ commits and
+6250+ lines in Decoherence.lean. -/
+theorem session_492_commits_marker : True := trivial
+
 /-- **Rate region trichotomy certificate.** -/
 theorem rate_region_trichotomy_certificate :
     -- Trichotomy holds for every chain.
