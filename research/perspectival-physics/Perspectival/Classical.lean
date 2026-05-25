@@ -34,6 +34,8 @@ import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Matrix.Permutation
 import Mathlib.Topology.Instances.Matrix
+import Mathlib.Topology.Connected.TotallyDisconnected
+import Mathlib.Topology.Separation.Basic
 
 namespace Perspectival
 namespace Classical
@@ -3273,6 +3275,397 @@ theorem classical_n5_no_transitive_agency_canonical
   classical_general_no_transitive_agency_canonical (n := 5) (by norm_num)
     T h_pure0 h_pure1 h_witness
 
+/-! ## R6 strengthening via DISCRETENESS of the vertex set
+
+The det-sign argument (`classical_general_no_strict_path_id_to_swap01`)
+proves that no strict path connects `id` to a permutation of negative
+sign (e.g., a transposition). It cannot rule out paths to even
+permutations (det = +1), e.g., the 3-cycle on `Fin 3`.
+
+**Important corrective remark.** A naive expectation is that *every*
+state-preserving linear bijection of `V n` is a permutation matrix, so
+that the locus of strict reversibles is the *discrete* set `S_n`,
+giving R6 for free. **This is mathematically false for `n ≥ 2`.** The
+state-preserving linear bijections on `V n` form the *interior* of
+the column-stochastic polytope (in the affine sense): the column-
+stochastic matrices with nonzero determinant. For `n = 2` this is a
+two-component open subset of `[0,1]²`; the two components are
+separated by the singular line `a = b` and characterized by the sign
+of `LinearMap.det`. For `n = 3`, the 6 permutation matrices `S_3` lie
+inside this much larger open set, and (for example) the affine path
+`t ↦ t·I + (1 - t)·C` (with `C` the 3-cycle's permutation matrix)
+remains state-preserving, unit-preserving, and bijective at every `t`
+(the determinant equals `t^3 + (1 - t)^3 > 0` throughout). So `id` and
+the 3-cycle ARE connected by a `StrictReversiblePath` in `gpt 3`.
+
+Therefore the literal claim "no strict path from id to any nontrivial
+permutation" is **false** for `n ≥ 3`. The right strengthening of R6
+is to demand that the path itself preserves vertices — i.e., that at
+every `t ∈ [0,1]`, `γ t` sends each `vertex n i` to *some* vertex.
+This is a natural physical requirement: in any realisation where the
+agency acts on a discrete set of orthogonal/distinguishable basis
+states, the path must keep those basis states as basis states. Under
+that hypothesis the discreteness argument applies: the trajectory
+`t ↦ γ t (vertex n i)` is a continuous map from the preconnected
+`unitInterval` into the *finite* (hence discrete) set
+`{vertex n j : j ∈ Fin n}` ⊂ `V n`, so it is constant. Hence `γ 0`
+and `γ 1` agree on every vertex, and by `vertices_span` they agree as
+linear maps. -/
+
+/-- The finite set of vertices in `V n`, viewed as a subset of `V n`. -/
+def vertexSet : Set (V n) := Set.range (vertex n)
+
+/-- The vertex set is finite. -/
+theorem vertexSet_finite : (vertexSet n).Finite := Set.finite_range _
+
+/-- The vertex set is discrete as a subspace of `V n`. (`V n = Fin n → ℝ`
+is a finite product of `ℝ`, which is `T1`, hence so is `V n`; a finite
+subset of a `T1` space is discrete.) -/
+theorem vertexSet_isDiscrete : IsDiscrete (vertexSet n) :=
+  (vertexSet_finite n).isDiscrete
+
+/-- Trajectory of a vertex along a jointly-continuous family of linear
+maps is continuous. -/
+theorem vertex_trajectory_continuous
+    (γ : unitInterval → V n →ₗ[ℝ] V n)
+    (hcont : Continuous (fun p : unitInterval × V n => γ p.1 p.2))
+    (i : Fin n) :
+    Continuous (fun t : unitInterval => γ t (vertex n i)) := by
+  have hpair : Continuous (fun t : unitInterval => (t, vertex n i)) :=
+    Continuous.prodMk continuous_id continuous_const
+  exact hcont.comp hpair
+
+/-- **Discreteness lemma.** If a jointly-continuous family of linear
+endomorphisms `γ` of `V n` sends each vertex to *some* vertex at every
+time `t`, then the trajectory of each vertex is constant. -/
+theorem vertex_preserving_path_constant_on_vertex
+    (γ : unitInterval → V n →ₗ[ℝ] V n)
+    (hcont : Continuous (fun p : unitInterval × V n => γ p.1 p.2))
+    (hvp : ∀ t : unitInterval, ∀ i : Fin n,
+              γ t (vertex n i) ∈ vertexSet n)
+    (i : Fin n) (s t : unitInterval) :
+    γ s (vertex n i) = γ t (vertex n i) := by
+  -- The trajectory is a continuous map unitInterval → V n
+  -- which factors through the finite (hence discrete) set vertexSet n.
+  set f : unitInterval → V n := fun t => γ t (vertex n i)
+  have hf : Continuous f := vertex_trajectory_continuous (n := n) γ hcont i
+  -- f maps the whole unitInterval into vertexSet n.
+  have hmaps : Set.MapsTo f Set.univ (vertexSet n) :=
+    fun t _ => hvp t i
+  -- IsPreconnected.constant_of_mapsTo on the discrete codomain.
+  have huniv : IsPreconnected (Set.univ : Set unitInterval) :=
+    (PreconnectedSpace.isPreconnected_univ : IsPreconnected (Set.univ : Set unitInterval))
+  exact huniv.constant_of_mapsTo (vertexSet_isDiscrete n) hf.continuousOn hmaps
+    (Set.mem_univ s) (Set.mem_univ t)
+
+/-! ### General permutation linear map (any `σ : Equiv.Perm (Fin n)`)
+
+We package the linear endomorphism of `V n` associated with an
+arbitrary permutation `σ`, via the permutation matrix and
+`Matrix.toLin'`. The bijectivity and state/unit preservation are
+identical to the `swap01` case. -/
+
+/-- Linear endomorphism of `V n` associated with `σ : Equiv.Perm (Fin n)`,
+defined as `Matrix.toLin' (σ.permMatrix ℝ)`. By Mathlib convention
+this sends `v ↦ v ∘ σ`, hence `vertex n i ↦ vertex n (σ⁻¹ i)`. -/
+noncomputable def permLinGen (σ : Equiv.Perm (Fin n)) : V n →ₗ[ℝ] V n :=
+  Matrix.toLin' (Equiv.Perm.permMatrix ℝ σ)
+
+/-- `permLinGen σ v = v ∘ σ`. -/
+theorem permLinGen_apply (σ : Equiv.Perm (Fin n)) (v : V n) :
+    permLinGen (n := n) σ v = v ∘ σ := by
+  show Matrix.toLin' (Equiv.Perm.permMatrix ℝ σ) v = _
+  rw [Matrix.toLin'_apply]
+  exact Matrix.permMatrix_mulVec (σ := σ) (v := v)
+
+/-- `permLinGen σ` sends `vertex n i` to `vertex n (σ.symm i)`. -/
+theorem permLinGen_vertex (σ : Equiv.Perm (Fin n)) (i : Fin n) :
+    permLinGen (n := n) σ (vertex n i) = vertex n (σ.symm i) := by
+  funext j
+  rw [permLinGen_apply (n := n) σ (vertex n i)]
+  show vertex n i (σ j) = vertex n (σ.symm i) j
+  show (if i = σ j then (1 : ℝ) else 0)
+        = (if σ.symm i = j then (1 : ℝ) else 0)
+  by_cases hij : i = σ j
+  · have hsym : σ.symm i = j := by
+      have hh : σ.symm i = σ.symm (σ j) := congrArg σ.symm hij
+      rwa [Equiv.symm_apply_apply] at hh
+    rw [if_pos hij, if_pos hsym]
+  · have hsym : σ.symm i ≠ j := by
+      intro h
+      apply hij
+      have hh : σ (σ.symm i) = σ j := congrArg σ h
+      rwa [Equiv.apply_symm_apply] at hh
+    rw [if_neg hij, if_neg hsym]
+
+/-- `permLinGen σ` is continuous. -/
+theorem permLinGen_continuous (σ : Equiv.Perm (Fin n)) :
+    Continuous (permLinGen (n := n) σ) := by
+  have hreduce : ∀ v : V n, permLinGen (n := n) σ v = v ∘ σ :=
+    permLinGen_apply (n := n) σ
+  have hpi : Continuous (fun v : V n => v ∘ σ) := by
+    apply continuous_pi
+    intro j
+    exact continuous_apply (σ j)
+  exact Continuous.congr hpi (fun v => (hreduce v).symm)
+
+/-- `permLinGen σ` preserves states. -/
+theorem permLinGen_preserves_states (σ : Equiv.Perm (Fin n))
+    (v : V n) (hv : v ∈ states n) : permLinGen (n := n) σ v ∈ states n := by
+  refine ⟨?_, ?_⟩
+  · intro j
+    rw [permLinGen_apply (n := n) σ v]
+    show 0 ≤ v (σ j)
+    exact hv.1 _
+  · rw [permLinGen_apply (n := n) σ v]
+    show ∑ j, v (σ j) = 1
+    rw [Equiv.sum_comp σ v]
+    exact hv.2
+
+/-- `permLinGen σ` preserves the unit functional. -/
+theorem permLinGen_preserves_unit (σ : Equiv.Perm (Fin n)) :
+    (unitFn n).comp (permLinGen (n := n) σ) = unitFn n := by
+  apply LinearMap.ext
+  intro v
+  show ∑ j, permLinGen (n := n) σ v j = ∑ j, v j
+  rw [permLinGen_apply (n := n) σ v]
+  show ∑ j, v (σ j) = ∑ j, v j
+  exact Equiv.sum_comp _ v
+
+/-- `permLinGen σ` is bijective. (It is `Matrix.toLin'` of a
+permutation matrix, which has an inverse coming from `σ.symm`.) -/
+theorem permLinGen_bijective (σ : Equiv.Perm (Fin n)) :
+    Function.Bijective (permLinGen (n := n) σ) := by
+  -- We exhibit the inverse: permLinGen σ.symm ∘ permLinGen σ = id, etc.
+  have hinv1 : ∀ v : V n,
+      permLinGen (n := n) σ.symm (permLinGen (n := n) σ v) = v := by
+    intro v
+    rw [permLinGen_apply (n := n) σ v,
+        permLinGen_apply (n := n) σ.symm (v ∘ σ)]
+    funext j
+    show v (σ (σ.symm j)) = v j
+    rw [Equiv.apply_symm_apply]
+  have hinv2 : ∀ v : V n,
+      permLinGen (n := n) σ (permLinGen (n := n) σ.symm v) = v := by
+    intro v
+    rw [permLinGen_apply (n := n) σ.symm v,
+        permLinGen_apply (n := n) σ (v ∘ σ.symm)]
+    funext j
+    show v (σ.symm (σ j)) = v j
+    rw [Equiv.symm_apply_apply]
+  refine ⟨?_, ?_⟩
+  · intro u v huv
+    have hh := congrArg (permLinGen (n := n) σ.symm) huv
+    rw [hinv1, hinv1] at hh
+    exact hh
+  · intro v
+    exact ⟨permLinGen (n := n) σ.symm v, hinv2 v⟩
+
+/-- `permLinGen σ` as a `Reversible` on Classical n-GPT. -/
+noncomputable def permReversibleGen (σ : Equiv.Perm (Fin n)) :
+    Perspectival.Continuity.Reversible (gpt n) where
+  toLin := permLinGen (n := n) σ
+  continuous_toLin := permLinGen_continuous (n := n) σ
+  preserves_states := permLinGen_preserves_states (n := n) σ
+  preserves_unit := permLinGen_preserves_unit (n := n) σ
+
+/-- `permLinGen σ` as a `StrictReversible`. -/
+noncomputable def permStrictReversibleGen (σ : Equiv.Perm (Fin n)) :
+    Perspectival.Continuity.StrictReversible (gpt n) where
+  toReversible := permReversibleGen (n := n) σ
+  isEquiv := permLinGen_bijective (n := n) σ
+
+/-- `permStrictReversibleGen` of the identity permutation is the
+identity strict reversible (as linear maps). -/
+theorem permLinGen_one : permLinGen (n := n) 1 = LinearMap.id := by
+  apply LinearMap.ext
+  intro v
+  rw [permLinGen_apply (n := n) 1 v]
+  funext j
+  show v ((1 : Equiv.Perm (Fin n)) j) = v j
+  rfl
+
+/-- The natural permutation map differs from the identity exactly when
+`σ` is not the identity permutation. -/
+theorem permLinGen_ne_id_iff (σ : Equiv.Perm (Fin n)) :
+    permLinGen (n := n) σ ≠ LinearMap.id ↔ σ ≠ 1 := by
+  refine ⟨?_, ?_⟩
+  · intro hne hσ
+    apply hne
+    rw [hσ]; exact permLinGen_one (n := n)
+  · intro hσ heq
+    apply hσ
+    -- From permLinGen σ = id, deduce σ j = j for all j (by evaluating on
+    -- vertices). Since σ.symm i = j ↔ σ j = i, evaluating
+    -- permLinGen σ (vertex n i) = vertex n (σ.symm i)
+    -- = LinearMap.id (vertex n i) = vertex n i gives σ.symm i = i for all i,
+    -- equivalently σ i = i for all i, i.e., σ = 1.
+    apply Equiv.ext
+    intro j
+    -- Goal: σ j = (1 : Equiv.Perm (Fin n)) j = j.
+    show σ j = j
+    -- Evaluate permLinGen σ at vertex n (σ j).
+    have hj_app : permLinGen (n := n) σ (vertex n (σ j))
+                  = (LinearMap.id : V n →ₗ[ℝ] V n) (vertex n (σ j)) := by
+      rw [heq]
+    have hj_vert : permLinGen (n := n) σ (vertex n (σ j))
+                  = vertex n (σ.symm (σ j)) := permLinGen_vertex (n := n) σ (σ j)
+    have hsymeq : σ.symm (σ j) = j := Equiv.symm_apply_apply σ j
+    rw [hsymeq] at hj_vert
+    -- hj_vert : permLinGen σ (vertex n (σ j)) = vertex n j
+    -- hj_app : permLinGen σ (vertex n (σ j)) = vertex n (σ j)
+    have hvertex_eq : vertex n j = vertex n (σ j) := by
+      rw [← hj_vert]; exact hj_app
+    -- vertex n j and vertex n (σ j) agree, hence σ j = j.
+    have hcoord := congrFun hvertex_eq j
+    -- vertex n j j = vertex n (σ j) j
+    -- = (if j = j then 1 else 0) vs (if σ j = j then 1 else 0)
+    rw [show vertex n j j = (1 : ℝ) by
+          show (if j = j then (1 : ℝ) else 0) = 1; simp] at hcoord
+    -- hcoord : 1 = vertex n (σ j) j = if σ j = j then 1 else 0
+    by_contra hne_sj
+    have hcoord_zero : vertex n (σ j) j = 0 := by
+      show (if σ j = j then (1 : ℝ) else 0) = 0
+      rw [if_neg hne_sj]
+    rw [hcoord_zero] at hcoord
+    exact one_ne_zero hcoord
+
+/-! ### R6 main result: vertex-preserving paths between permutations
+are constant on vertices, hence equal as linear maps. -/
+
+/-- **Main discreteness theorem.** Given a `StrictReversiblePath` `p`
+between two strict reversibles `R₁`, `R₂`, IF the path is also
+*vertex-preserving along the way* — every `p.γ t` sends every vertex
+to some vertex — THEN `R₁.toLin = R₂.toLin`.
+
+The proof: `vertex_preserving_path_constant_on_vertex` gives that
+each vertex trajectory `t ↦ p.γ t (vertex n i)` is constant. So
+`p.γ 0 (vertex n i) = p.γ 1 (vertex n i)`, i.e., `R₁ (vertex n i)
+= R₂ (vertex n i)` for every `i`. Since vertices span `V n`, linear
+maps agreeing on all vertices are equal. -/
+theorem strict_path_vertex_preserving_eq
+    {R₁ R₂ : Perspectival.Continuity.StrictReversible (gpt n)}
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt n) R₁ R₂)
+    (hvp : ∀ t : unitInterval, ∀ i : Fin n,
+              p.γ t (vertex n i) ∈ vertexSet n) :
+    R₁.toLin = R₂.toLin := by
+  -- Every vertex trajectory is constant.
+  have hconst : ∀ i : Fin n,
+      p.γ 0 (vertex n i) = p.γ 1 (vertex n i) := by
+    intro i
+    exact vertex_preserving_path_constant_on_vertex (n := n) p.γ p.continuous
+      hvp i 0 1
+  -- Hence R₁ and R₂ agree on every vertex.
+  have hvert_eq : ∀ i : Fin n, R₁.toLin (vertex n i) = R₂.toLin (vertex n i) := by
+    intro i
+    have h0 : p.γ 0 (vertex n i) = R₁.toLin (vertex n i) := by
+      rw [p.start]
+    have h1 : p.γ 1 (vertex n i) = R₂.toLin (vertex n i) := by
+      rw [p.finish]
+    rw [← h0, ← h1]; exact hconst i
+  -- Two linear maps agreeing on a spanning set are equal.
+  exact LinearMap.ext_on_range (vertices_span n) hvert_eq
+
+/-- **R6 strengthening, key form.** If a `StrictReversiblePath` from
+the identity to `permStrictReversibleGen σ` is *vertex-preserving along
+the way* and `σ ≠ 1`, then `False`.
+
+This is the discreteness-based R6 disconnect: it strictly extends
+`classical_general_no_strict_path_id_to_swap01` (which only handled
+permutations of negative sign). With the vertex-preserving hypothesis
+along the path, *every* non-identity permutation is ruled out, even
+those with positive sign (e.g., the 3-cycle on `Fin 3`). -/
+theorem classical_general_no_strict_vertex_preserving_path_id_to_perm
+    (σ : Equiv.Perm (Fin n)) (hσ : σ ≠ 1)
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt n)
+            (Perspectival.Continuity.StrictReversible.id (gpt n))
+            (permStrictReversibleGen (n := n) σ))
+    (hvp : ∀ t : unitInterval, ∀ i : Fin n,
+              p.γ t (vertex n i) ∈ vertexSet n) :
+    False := by
+  have heq := strict_path_vertex_preserving_eq (n := n) p hvp
+  -- LHS: (id).toLin = LinearMap.id
+  -- RHS: (permStrictReversibleGen σ).toLin = permLinGen σ
+  have hLHS : (Perspectival.Continuity.StrictReversible.id (gpt n)).toLin
+              = (LinearMap.id : V n →ₗ[ℝ] V n) := rfl
+  have hRHS : (permStrictReversibleGen (n := n) σ).toLin
+              = permLinGen (n := n) σ := rfl
+  rw [hLHS, hRHS] at heq
+  -- heq : LinearMap.id = permLinGen σ
+  -- But permLinGen σ ≠ id since σ ≠ 1.
+  exact (permLinGen_ne_id_iff (n := n) σ).mpr hσ heq.symm
+
+/-! ### Corollary: avail and TransitiveAgency consequences -/
+
+/-- **Corollary on `StrictConnectedAgency`.** No `StrictConnectedAgency`
+on Classical n-GPT can include a non-identity `permStrictReversibleGen
+σ` in `avail` *if every strict path between elements of `avail` is
+required to preserve vertices along the way*.
+
+The hypothesis `hvp_paths` packages this constraint: every strict
+path between available reversibles preserves vertices along the way.
+This is a natural physical strengthening of `StrictConnectedAgency`. -/
+theorem classical_general_perm_not_in_strict_avail_vertex_preserving
+    (A : Perspectival.Continuity.StrictConnectedAgency (gpt n))
+    (σ : Equiv.Perm (Fin n)) (hσ : σ ≠ 1)
+    (h_perm : permStrictReversibleGen (n := n) σ ∈ A.avail)
+    (hvp_paths :
+      ∀ R₁ R₂ : Perspectival.Continuity.StrictReversible (gpt n),
+        R₁ ∈ A.avail → R₂ ∈ A.avail →
+        ∀ (p : Perspectival.Continuity.StrictReversiblePath (gpt n) R₁ R₂)
+          (t : unitInterval) (i : Fin n),
+          p.γ t (vertex n i) ∈ vertexSet n) :
+    False := by
+  have h_id : Perspectival.Continuity.StrictReversible.id (gpt n) ∈ A.avail :=
+    A.id_avail
+  obtain ⟨p⟩ := A.strict_paths
+    (Perspectival.Continuity.StrictReversible.id (gpt n))
+    (permStrictReversibleGen (n := n) σ) h_id h_perm
+  exact classical_general_no_strict_vertex_preserving_path_id_to_perm (n := n)
+    σ hσ p (hvp_paths _ _ h_id h_perm p)
+
+/-! ### n = 3 specialization: 3-cycle disconnect via vertex preservation
+
+The 3-cycle on `Fin 3` (the permutation that sends 0 ↦ 1, 1 ↦ 2,
+2 ↦ 0) is the canonical example *not* covered by the det-sign
+argument: it has `LinearMap.det = +1`. The discreteness argument
+DOES rule it out (under vertex preservation along the path). -/
+
+/-- The 3-cycle `(0 1 2)` on `Fin 3` as a permutation. -/
+noncomputable def threeCycle : Equiv.Perm (Fin 3) :=
+  Equiv.swap (0 : Fin 3) 1 * Equiv.swap (1 : Fin 3) 2
+
+/-- The 3-cycle is not the identity. -/
+theorem threeCycle_ne_one : threeCycle ≠ 1 := by
+  intro h
+  -- threeCycle sends 0 to (swap 0 1) ((swap 1 2) 0).
+  -- swap 1 2 fixes 0 (since 0 ∉ {1, 2}), so equals 0;
+  -- then swap 0 1 sends 0 to 1.
+  have h0 : threeCycle 0 = 1 := by
+    show Equiv.swap (0 : Fin 3) 1 (Equiv.swap (1 : Fin 3) 2 0) = 1
+    have hfix : Equiv.swap (1 : Fin 3) 2 0 = 0 :=
+      Equiv.swap_apply_of_ne_of_ne (by decide) (by decide)
+    rw [hfix, Equiv.swap_apply_left]
+  rw [h] at h0
+  show False
+  have hcontra : (0 : Fin 3) = (1 : Fin 3) := h0
+  exact absurd hcontra (by decide)
+
+/-- **n=3 strengthened R6 disconnect** (for the 3-cycle, the missing
+piece of the det-sign result). No vertex-preserving strict path
+connects the identity to the 3-cycle on `Fin 3`. This is exactly
+the gap left open by `classical_general_no_strict_path_id_to_swap01`
+(whose det-sign argument does not see permutations of positive sign). -/
+theorem classical_n3_no_strict_vertex_preserving_path_id_to_threeCycle
+    (p : Perspectival.Continuity.StrictReversiblePath (gpt 3)
+            (Perspectival.Continuity.StrictReversible.id (gpt 3))
+            (permStrictReversibleGen (n := 3) threeCycle))
+    (hvp : ∀ t : unitInterval, ∀ i : Fin 3,
+              p.γ t (vertex 3 i) ∈ vertexSet 3) :
+    False :=
+  classical_general_no_strict_vertex_preserving_path_id_to_perm (n := 3)
+    threeCycle threeCycle_ne_one p hvp
+
 end Classical
 end Perspectival
 
@@ -3345,4 +3738,43 @@ would require either:
        contradiction.
 
 The canonical-witness scale-back captures what's tractable with the
-existing infrastructure. -/
+existing infrastructure.
+
+### R6 strengthening via DISCRETENESS (added later)
+
+The det-sign approach handles only opposite-sign permutations. The
+DISCRETENESS approach (vertex-set is finite, finite ⊂ T1 = discrete,
+preconnected → discrete = constant) handles ALL non-identity
+permutations — provided that the path itself preserves vertices at
+every time. The relevant additions:
+
+  ✓ vertexSet, vertexSet_isDiscrete
+  ✓ vertex_trajectory_continuous
+  ✓ vertex_preserving_path_constant_on_vertex
+  ✓ permLinGen σ, permStrictReversibleGen σ  (any σ : Equiv.Perm (Fin n))
+  ✓ strict_path_vertex_preserving_eq        (path with vertex-preservation
+                                              ⇒ equal endpoints)
+  ✓ classical_general_no_strict_vertex_preserving_path_id_to_perm
+    (R6 strengthening: id ↛ σ for any σ ≠ 1, under vertex preservation)
+  ✓ classical_n3_no_strict_vertex_preserving_path_id_to_threeCycle
+    (the missing 3-cycle case from the det-sign argument)
+
+**Important mathematical caveat.** A naive reading of the
+"discreteness argument" assumes every state-preserving linear
+bijection of `V n` is a permutation matrix. This is FALSE for
+`n ≥ 2`: the state-preserving bijective linear maps form the
+interior of the column-stochastic polytope, a connected open subset
+(per det-sign component). For example, for `n = 3`, the affine path
+`t·I + (1 - t)·C` (with `C` the 3-cycle permutation matrix) is a
+state-preserving bijective continuous path from `id` to the 3-cycle
+permutation matrix, with determinant `t³ + (1 - t)³ > 0` throughout —
+i.e., this path is a fully valid `StrictReversiblePath`. The det-
+sign disconnect doesn't see it, AND the discreteness disconnect
+doesn't see it either unless we add the vertex-preserving hypothesis.
+
+So the strengthened R6 we proved is conditional on the additional
+"path stays within the permutation locus" assumption. This is a
+*genuine* extra postulate beyond `StrictConnectedAgency` as
+formalized. The deeper question of whether this extra postulate is
+forced by other axioms (e.g., by some discreteness condition on the
+agency or by the pure-state structure) is left open. -/
