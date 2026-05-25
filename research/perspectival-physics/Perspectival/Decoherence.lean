@@ -4399,6 +4399,21 @@ theorem long_trajectory_measures_bounded {P : Type u} {C : Type v}
   · omega
   · omega
 
+/-- **Long-trajectory rate bound.** The (count, length) actualization
+rate has both components bounded by the length. -/
+theorem long_trajectory_rate_bound {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (n : ℕ)
+    (h : ch.length ≤ n) :
+    (actualizationRate ch).1 ≤ n ∧ (actualizationRate ch).2 ≤ n := by
+  refine ⟨?_, ?_⟩
+  · -- (actualizationRate ch).1 = ch.actualizationCount ≤ ch.length ≤ n.
+    have h_count := ch.actualizationCount_le_length
+    show ch.actualizationCount ≤ n
+    omega
+  · -- (actualizationRate ch).2 = ch.length ≤ n.
+    show ch.length ≤ n
+    exact h
+
 /-- **Bounded-trajectory certificate.** Trajectories of bounded
 length have all measures uniformly bounded. -/
 theorem bounded_trajectory_certificate :
