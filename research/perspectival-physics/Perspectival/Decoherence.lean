@@ -3261,6 +3261,18 @@ theorem pure_decoherent_iff_length_eq_count {P : Type u} {C : Type v}
   · intro h_pd; omega
   · intro h_eq; omega
 
+/-- **Worked example: trio sum law on 4-fold reflBracketed Bool loop.**
+For the 4-fold reflBracketed Bool loop, count + bracketed = length:
+0 + 4 = 4. -/
+example (R : Reality Bool Bool) :
+    let base : RealityChain' Bool Bool R R :=
+      RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    tierAEventCount (loopPower base 4) + (loopPower base 4).bracketedCount
+      = (loopPower base 4).length := by
+  intro base
+  exact trio_sum_law (loopPower base 4)
+
 /-- **Trivial chain has nil-like behavior.** A length-0 chain
 trivially has all measures 0 and trivially preserves past. -/
 theorem trivial_chain_nil_like {P : Type u} {C : Type v}
