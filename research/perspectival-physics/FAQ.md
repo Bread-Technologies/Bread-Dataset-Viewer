@@ -355,6 +355,26 @@ deferred).
 
 See `Perspectival/Decoherence.lean` for the full Lean machinery.
 
+## Q20. Is there a "trajectory complexity" measure?
+
+**Framework answer:** Yes — `Decoherence.trajectoryComplexity` in
+`Perspectival/Decoherence.lean`. Defined as
+`2 * actualizationCount + bracketedCount`, it weights actualizations
+more heavily than bracketed steps (reflecting that seam crossings
+carry more 'information content' than reversible inter-event
+evolution).
+
+**Properties:**
+- `trajectoryComplexity_append` : compositional under chain append.
+- `coherent_complexity` : count = 0 → complexity = length.
+- `decoherent_complexity` : bracketed = 0 → complexity = 2 * length.
+- `complexity_ge_length` and `complexity_le_twice_length` : bounds
+  [length, 2 * length].
+
+This is a candidate "trajectory information content" measure that
+could connect to Kolmogorov-style descriptive complexity (per
+Müller's algorithmic-information framing) in future work.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
