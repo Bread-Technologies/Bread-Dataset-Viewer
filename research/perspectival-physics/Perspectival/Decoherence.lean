@@ -4121,6 +4121,37 @@ theorem five_chain_compose_assoc {P : Type u} {C : Type v}
   rw [RealityChain'.append_assoc, RealityChain'.append_assoc,
       RealityChain'.append_assoc]
 
+/-- **Time arrow from chain monoid.** A strict chain witnesses
+RealitySuccessor in the direction R₁ → R₂. Since RealitySuccessor is
+a preorder (refl + trans) with antisymmetry (in TierA), the chain
+monoid embeds into a time-ordered structure. The "arrow of time" in
+the framework IS the chain composition direction. -/
+theorem chain_witnesses_time_arrow {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    RealitySuccessor R₁ R₂ := ch.implies_successor
+
+/-- **Chain composition preserves time arrow.** Composition of chain
+witnesses gives a chain witness of the composed time arrow. -/
+theorem chain_compose_preserves_time_arrow {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    RealitySuccessor R₁ R₃ :=
+  chain_witnesses_time_arrow (ch₁.append ch₂)
+
+/-- **Time-arrow certificate.** The chain monoid embeds into the
+time-arrow preorder structure of TierA. -/
+theorem chain_time_arrow_certificate :
+    -- Every chain witnesses a successor relation.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      RealitySuccessor R₁ R₂) ∧
+    -- Chain composition preserves the successor.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      RealitySuccessor R₁ R₃) :=
+  ⟨fun ch => chain_witnesses_time_arrow ch,
+   fun ch₁ ch₂ => chain_compose_preserves_time_arrow ch₁ ch₂⟩
+
 /-- **loopPower additive certificate.** All three measures
 (actualizationCount, length, complexity) are additive over loop power
 exponents. This is the structural shadow of: `loopPower ch m + loopPower ch n
