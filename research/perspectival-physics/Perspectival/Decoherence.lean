@@ -1534,6 +1534,27 @@ The Decoherence module's structure, in dependency order:
 
 Total: ~1700 lines, fully build-verified against Mathlib v4.29.1. -/
 
+/-! ## Cross-module connection guide
+
+For external readers tracing the v2 architecture:
+
+- **Tier A foundation:** `Perspectival/TierA.lean` (Want, Meeting,
+  Reality, actualization, past/future, WBT structural shadow).
+- **Tier B operational:** `Perspectival/TierB.lean` (BracketedTransition,
+  DefiniteConfig, TrajectoryStep, RealityChain + RealityChain',
+  measurement_is_actualization).
+- **Continuity (agency):** `Perspectival/Continuity.lean` (agency
+  hierarchy, OneParameterFamily, MultiAxisAgency, R7 scaffold).
+- **Hardy reconstruction:** `Perspectival/Hardy.lean` (5 axioms +
+  framework_hardy_unconditional + framework_hardy_with_agency).
+- **GPT instances:** `Classical/CircleGPT/QubitGPT/QutritGPT.lean`.
+- **Dichotomy bundle:** `Perspectival/Dichotomy.lean` (classical-vs-
+  quantum, gauge ladder, framework certificates, R7 instance evidence).
+- **Decoherence (Seam 4):** THIS MODULE.
+
+The framework's full v2 architecture is encoded across these 5 modules
+(plus the per-instance GPT files), all build-clean. -/
+
 /-! ## Total session-segment summary
 
 This Decoherence module formalizes Seam 4 (decoherence) at the
