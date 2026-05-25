@@ -693,5 +693,34 @@ example {R₁ R₂ : Reality Bool Bool} (h : RealitySuccessor R₁ R₂)
     R₂ m = MeetingStatus.Actualized :=
   no_return_to_potential h h_act
 
+/-! ## Final TierA bundle certificate
+
+A single Lean expression bundling the Tier A foundational content. -/
+
+/-- **TierA foundational certificate.** Bundles the framework's
+Tier A axioms and structure into one Lean expression. -/
+theorem tierA_foundational_certificate :
+    -- (1) RealitySuccessor is a preorder (refl + trans).
+    (∀ {P : Type} {C : Type} (R : Reality P C), RealitySuccessor R R) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C},
+      RealitySuccessor R₁ R₂ → RealitySuccessor R₂ R₃ →
+      RealitySuccessor R₁ R₃) ∧
+    -- (2) Past is monotonic.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C},
+      RealitySuccessor R₁ R₂ → past R₁ ⊆ past R₂) ∧
+    -- (3) Future is anti-monotonic.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C},
+      RealitySuccessor R₁ R₂ → future R₂ ⊆ future R₁) ∧
+    -- (4) No return to potential.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (_h : RealitySuccessor R₁ R₂) (m : Meeting P C),
+        R₁ m = MeetingStatus.Actualized →
+        R₂ m = MeetingStatus.Actualized) :=
+  ⟨fun R => reality_successor_refl R,
+   fun h₁ h₂ => reality_successor_trans h₁ h₂,
+   fun h => past_monotone h,
+   fun h => future_antitone h,
+   fun h m h_act => no_return_to_potential h (m := m) h_act⟩
+
 end TierA
 end Perspectival
