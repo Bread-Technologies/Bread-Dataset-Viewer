@@ -2041,6 +2041,146 @@ theorem DecoherenceQuotient.loop_quotient_eq_default {P : Type u} {C : Type v}
     q = default :=
   Subsingleton.elim _ _
 
+/-! ## Quotient append: chain composition descends to the quotient
+
+The count function `tierAEventCount` is a monoid morphism with respect
+to `RealityChain'.append`. Since the decoherence equivalence identifies
+chains with equal count, append is a congruence and so descends to a
+well-defined operation on `DecoherenceQuotient`. This gives the
+quotient a category-like algebraic structure: composition of equivalence
+classes is well-defined, and the count function is a morphism into
+`(ℕ, +)`. -/
+
+/-- **Append is a decoherence congruence.** If two pairs of chains
+are decoherence-equivalent, then their appends are too. -/
+theorem decoherenceEquivalent_append_congr {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    {ch₁ ch₁' : RealityChain' P C R₁ R₂} {ch₂ ch₂' : RealityChain' P C R₂ R₃}
+    (h₁ : DecoherenceEquivalent ch₁ ch₁')
+    (h₂ : DecoherenceEquivalent ch₂ ch₂') :
+    DecoherenceEquivalent (ch₁.append ch₂) (ch₁'.append ch₂') := by
+  show (ch₁.append ch₂).actualizationCount = (ch₁'.append ch₂').actualizationCount
+  rw [RealityChain'.append_actualizationCount, RealityChain'.append_actualizationCount]
+  exact congrArg₂ (· + ·) h₁ h₂
+
+/-- **Append on the decoherence quotient.** Chain append descends to
+a well-defined binary operation on equivalence classes, by
+`decoherenceEquivalent_append_congr`. -/
+def DecoherenceQuotient.append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C} :
+    DecoherenceQuotient R₁ R₂ → DecoherenceQuotient R₂ R₃ →
+    DecoherenceQuotient R₁ R₃ :=
+  Quotient.map₂ RealityChain'.append (fun _ _ h₁ _ _ h₂ =>
+    decoherenceEquivalent_append_congr h₁ h₂)
+
+/-- **Quotient append computes via Quotient.mk.** Definitional unfolding. -/
+@[simp]
+theorem DecoherenceQuotient.append_mk {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    DecoherenceQuotient.append
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch₁)
+        (Quotient.mk (DecoherenceEquivalent_setoid R₂ R₃) ch₂) =
+      Quotient.mk (DecoherenceEquivalent_setoid R₁ R₃) (ch₁.append ch₂) := rfl
+
+/-- **Quotient count is a monoid morphism under quotient append.**
+`count (q₁ ⋆ q₂) = count q₁ + count q₂`. -/
+theorem DecoherenceQuotient.count_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (q₁ : DecoherenceQuotient R₁ R₂) (q₂ : DecoherenceQuotient R₂ R₃) :
+    (DecoherenceQuotient.append q₁ q₂).count = q₁.count + q₂.count := by
+  induction q₁ using Quotient.inductionOn with
+  | _ ch₁ =>
+    induction q₂ using Quotient.inductionOn with
+    | _ ch₂ =>
+      show tierAEventCount (ch₁.append ch₂) = tierAEventCount ch₁ + tierAEventCount ch₂
+      exact tierAEventCount_append ch₁ ch₂
+
+/-- **Quotient append is associative.** Descends from associativity of
+`RealityChain'.append`. -/
+theorem DecoherenceQuotient.append_assoc {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ R₄ : Reality P C}
+    (q₁ : DecoherenceQuotient R₁ R₂) (q₂ : DecoherenceQuotient R₂ R₃)
+    (q₃ : DecoherenceQuotient R₃ R₄) :
+    DecoherenceQuotient.append (DecoherenceQuotient.append q₁ q₂) q₃ =
+      DecoherenceQuotient.append q₁ (DecoherenceQuotient.append q₂ q₃) := by
+  induction q₁ using Quotient.inductionOn with
+  | _ ch₁ =>
+    induction q₂ using Quotient.inductionOn with
+    | _ ch₂ =>
+      induction q₃ using Quotient.inductionOn with
+      | _ ch₃ =>
+        -- Both sides have the same count, and count is injective.
+        apply DecoherenceQuotient.count_injective
+        simp only [DecoherenceQuotient.count_append]
+        omega
+
+/-- **Nil class is a left identity for quotient append.** -/
+theorem DecoherenceQuotient.nil_append {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) :
+    DecoherenceQuotient.append
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₁)
+          (RealityChain'.nil R₁)) q = q := by
+  induction q using Quotient.inductionOn with
+  | _ ch =>
+    apply DecoherenceQuotient.count_injective
+    rw [DecoherenceQuotient.count_append]
+    -- count of nil class is 0 by definition of tierAEventCount on nil.
+    have h_nil : DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₁)
+          (RealityChain'.nil R₁)) = 0 := rfl
+    rw [h_nil, Nat.zero_add]
+
+/-- **Nil class is a right identity for quotient append.** -/
+theorem DecoherenceQuotient.append_nil {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) :
+    DecoherenceQuotient.append q
+        (Quotient.mk (DecoherenceEquivalent_setoid R₂ R₂)
+          (RealityChain'.nil R₂)) = q := by
+  induction q using Quotient.inductionOn with
+  | _ ch =>
+    apply DecoherenceQuotient.count_injective
+    rw [DecoherenceQuotient.count_append]
+    have h_nil : DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R₂ R₂)
+          (RealityChain'.nil R₂)) = 0 := rfl
+    rw [h_nil, Nat.add_zero]
+
+/-- **Quotient algebra bundle certificate.** The decoherence quotient
+carries a well-defined append operation with: (a) count compositional
+morphism into ℕ, (b) associativity, (c) two-sided nil identity. This
+makes `DecoherenceQuotient` a categorical structure (objects = realities,
+morphisms = quotient classes, composition = quotient append, identity =
+nil class), with `DecoherenceQuotient.count` a (functorial) morphism
+to the additive monoid ℕ. -/
+theorem decoherence_quotient_algebra_certificate :
+    -- (a) Count is compositional under quotient append.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (q₁ : DecoherenceQuotient R₁ R₂) (q₂ : DecoherenceQuotient R₂ R₃),
+      (DecoherenceQuotient.append q₁ q₂).count = q₁.count + q₂.count) ∧
+    -- (b) Quotient append is associative.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ R₄ : Reality P C}
+        (q₁ : DecoherenceQuotient R₁ R₂) (q₂ : DecoherenceQuotient R₂ R₃)
+        (q₃ : DecoherenceQuotient R₃ R₄),
+      DecoherenceQuotient.append (DecoherenceQuotient.append q₁ q₂) q₃ =
+        DecoherenceQuotient.append q₁ (DecoherenceQuotient.append q₂ q₃)) ∧
+    -- (c) Nil class is left identity.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (q : DecoherenceQuotient R₁ R₂),
+      DecoherenceQuotient.append
+          (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₁)
+            (RealityChain'.nil R₁)) q = q) ∧
+    -- (d) Nil class is right identity.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (q : DecoherenceQuotient R₁ R₂),
+      DecoherenceQuotient.append q
+          (Quotient.mk (DecoherenceEquivalent_setoid R₂ R₂)
+            (RealityChain'.nil R₂)) = q) :=
+  ⟨fun q₁ q₂ => DecoherenceQuotient.count_append q₁ q₂,
+   fun q₁ q₂ q₃ => DecoherenceQuotient.append_assoc q₁ q₂ q₃,
+   fun q => DecoherenceQuotient.nil_append q,
+   fun q => DecoherenceQuotient.append_nil q⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
