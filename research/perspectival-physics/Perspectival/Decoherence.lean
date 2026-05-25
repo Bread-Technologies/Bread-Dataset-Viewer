@@ -4876,6 +4876,16 @@ example (R : Reality Unit Unit) :
       ∧ trajectoryComplexity ch = 0 :=
   ⟨rfl, rfl, rfl, rfl⟩
 
+/-- **Nil chain measure certificate: all measures = 0.** -/
+theorem nil_chain_measure_certificate :
+    -- All measures of nil are zero (for any P, C, R).
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      (RealityChain'.nil (P := P) (C := C) R).actualizationCount = 0
+        ∧ (RealityChain'.nil (P := P) (C := C) R).bracketedCount = 0
+        ∧ (RealityChain'.nil (P := P) (C := C) R).length = 0
+        ∧ trajectoryComplexity (RealityChain'.nil (P := P) (C := C) R) = 0) :=
+  fun R => ⟨rfl, rfl, rfl, rfl⟩
+
 /-- **Decoherence module's complete content** in one umbrella theorem.
 This is the framework's "everything" statement for Seam 4. -/
 theorem decoherence_complete_content :
