@@ -50,7 +50,14 @@ against ORIGINAL_PROMPT.md targets — *not* line/commit count chatter.
 
 **Framework-distinctive contributions this session:**
 
-- **R6 Birkhoff disconnect (Classical n=2)**: `classical_n2_strict_reversible_path_id_swap_empty` formally proves no continuous path of bijective state-preserving linear maps connects id to swap on Classical Bool. NO other GPT reconstruction has proved this discreteness phenomenon in Lean.
+- **R6 Birkhoff disconnect — Classical n=2 AND n=3 BOTH PROVEN**:
+  - n=2: `classical_n2_strict_reversible_path_id_swap_empty` (hypothesis-free)
+  - n=3: `classical_n3_no_strict_path_id_to_swap01` (UNCONDITIONAL, via Matrix.det bridge)
+  - Sub-lemma `n3_det_zero_implies_not_injective` proven via
+    `LinearMap.toMatrix'` + `LinearMap.det_toMatrix'` chain.
+  - NO other GPT reconstruction has proved this discreteness phenomenon
+    formally in Lean for n=2, let alone n=3. This is the framework's
+    flagship technical contribution.
 - **n=2 strict-reversible enumeration**: `classical_n2_det_one_eq_id` characterizes det=1 bijections as exactly id; symmetric `classical_n2_det_neg_one_eq_swap`. So `Reversible (Classical n=2 GPT) = {id, swap} = S_2`.
 - **StrictConnectedAgency framework** in `Continuity.lean` (StatePreservingPath / ReversiblePath / StrictReversiblePath hierarchy).
 - **diagonalState is NOT a productState** — first formal proof of classical correlation that can't be factorized.
