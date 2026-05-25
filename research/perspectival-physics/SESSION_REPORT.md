@@ -544,3 +544,51 @@ Remaining open per v2: derive QM at Tier B from Tier A bracketing
 rather than postulate (the heavy uniqueness theorem), R7 Lie-group
 proof, Renou-style rebit exclusion at Tier A, full Picard-Lindelöf
 encoding (delegated to Witkowski et al. 2024 paper).
+
+### v2 EXTENSIONS (this session segment, post-summary)
+
+Continuing under the user's never-stop directive, several v2-progressive
+extensions were added:
+
+**TierA.lean — pointwise Axiom II event:**
+- `actualizeAt R m` : Reality state with m forced Actualized, others unchanged.
+- `actualizeAt_self`, `actualizeAt_other`, `actualizeAt_is_successor`.
+
+**TierB.lean — concrete Tier A → Tier B link:**
+- `actualizeAt_atSeam` : pointwise actualization at a potential meeting realizes AtSeam.
+- `actualizeAt_not_bracketed` : direct consequence.
+- `actualizeAt_asActualizationMap` : the pointwise event instantiates ActualizationMap.
+- `definiteConfigEquivFin` : canonical DefiniteConfig n ≃ Fin n.
+- `permActOnDefinite_via_equiv` : permutation action matches Fin n's natural action.
+- `bracketed_iff_mutual_successor` : bracketing as time-arrow reversibility.
+
+**Dichotomy.lean — v2-architectural identification + R7 evidence:**
+- `v2_bare_Tier_B_is_classical_excluded` : the bracketing operation on
+  bare DefiniteConfig lands in Classical and is L7-excluded — formal
+  statement of "bare Tier B = classical."
+- `v2_QM_from_richer_Tier_B` : non-classical realized by richer carriers
+  (CircleGPT, QubitGPT, QutritGPT).
+- `framework_v2_extended_certificate` : consolidated v2 facts in single
+  Lean expression, including actualizeAt seam bridge.
+- `R7_Conjecture_holds_on_circleGPT` / `_qubitGPT` : R7 instance
+  evidence at the scaffold level (existence claim satisfied on the
+  framework's canonical U(1) and SO(3)/SU(2) instances).
+
+**Continuity.lean:**
+- `SmoothConnectedAgency.ofStrict` : scaffold-level constructor.
+- `R7_Conjecture_of_strict` : the R7 existence claim follows from
+  StrictConnectedAgency at the scaffold level.
+
+**FINDINGS.md:** added §0a v2 architectural correction summary.
+
+**STATUS.md:** updated to record all extensions.
+
+### v2-architectural identification (key novel content)
+
+The bracketing operation on bare `DefiniteConfig n` lands in
+`Classical.gpt n` via the `definiteToVertex` bridge; the L7 closure
+rules out `PurePreservingTransitiveAgency`. Therefore *bare* Tier B
+is classical; non-classical (QM-style) Tier B requires a richer state
+carrier. This identifies the "where does QM come from" answer at
+the architecture level: from the choice of state carrier on which
+the bracketed dynamics acts.
