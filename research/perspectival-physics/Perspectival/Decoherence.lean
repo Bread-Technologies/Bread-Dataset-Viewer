@@ -4709,6 +4709,15 @@ theorem pure_decoherent_maximal_complexity {P : Type u} {C : Type v}
   rw [decoherent_complexity ch h, ← h_len]
   exact complexity_le_twice_length ch'
 
+/-- **At fixed length, complexity range is determined.** For any
+length n, the complexity range is [n, 2n] with coherent achieving n
+and pure-decoherent achieving 2n. -/
+theorem complexity_range_at_fixed_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    ch.length ≤ trajectoryComplexity ch
+      ∧ trajectoryComplexity ch ≤ 2 * ch.length :=
+  ⟨complexity_ge_length ch, complexity_le_twice_length ch⟩
+
 /-- **Complexity extremes certificate.** Coherent chains minimize complexity
 and pure-decoherent chains maximize complexity at any fixed length. -/
 theorem complexity_extremes_certificate :
