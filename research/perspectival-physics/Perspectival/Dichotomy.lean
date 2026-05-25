@@ -834,6 +834,58 @@ theorem framework_v2_certificate :
    ⟨⟨CircleGPT.circleStrictConnectedAgency⟩,
     ⟨QubitGPT.qubitStrictConnectedAgency_full⟩⟩⟩
 
+/-! ## v2-architectural identification: bare Tier B is classical
+
+A central v2 insight: the bracketing operation on bare `DefiniteConfig n`
+yields a state space whose pure-state structure embeds via `definiteToVertex`
+into `Classical.gpt n`. Since `Classical.gpt n` (n ≥ 2) admits NO
+`PurePreservingTransitiveAgency` (`classical_no_L7_unconditional`),
+the bare bracketing-from-Tier-A construction CANNOT support continuous
+Hardy A5 dynamics.
+
+**Architectural consequence:** Non-classical (continuous-symmetry,
+QM-style) Tier B requires *more* state structure than bare
+`DefiniteConfig`. The "extra" content is exactly Hardy's A2 (K = N²,
+not K = N) signature — the operational dimension exceeds the
+distinguishability dimension. The v2 architectural correction
+*identifies* this gap: it lives in the choice of Tier B carrier
+beyond the bare definite-configuration set.
+
+This is the v2-progressive answer to "where does QM come from?" —
+not from a separate axiom on top of I + II, but from the choice of
+state carrier on which the bracketed dynamics acts. Bare DefiniteConfig
+→ classical. Richer carriers (CircleGPT vertices = unit circle in ℝ²;
+QubitGPT vertices = Bloch sphere in ℝ³+ℝ; QutritGPT vertices = SU(3)
+orbit in ℝ⁸+ℝ) → non-classical. -/
+
+/-- **v2-architectural theorem: bare Tier B is classical.** The
+bracketing operation on `DefiniteConfig n` (n ≥ 2), as applied
+through `definiteToVertex` to `Classical.gpt n`, CANNOT support
+`PurePreservingTransitiveAgency`. Bare Tier B is excluded from
+continuous-symmetry Tier B. -/
+theorem v2_bare_Tier_B_is_classical_excluded (n : ℕ) (h : 1 < n) :
+    ∀ _ : Continuity.PurePreservingTransitiveAgency (Classical.gpt n),
+    False :=
+  fun PPT => classical_no_L7_unconditional n h PPT
+
+/-- **v2-architectural theorem: QM-from-richer-Tier-B.** Non-classical
+Tier B is realizable when the state carrier is richer than
+`DefiniteConfig` — the bridge through `definiteToVertex` only embeds
+into `Classical.gpt`, but `CircleGPT` / `QubitGPT` / `QutritGPT` carry
+state spaces strictly richer than the simplex. The framework's
+empirical signature lives in this richer Tier B carrier. -/
+theorem v2_QM_from_richer_Tier_B :
+    -- Bare bracketing → classical → excluded.
+    (∀ (n : ℕ) (_h : 1 < n),
+      ∀ _ : Continuity.PurePreservingTransitiveAgency (Classical.gpt n),
+      False) ∧
+    -- Richer carriers → non-classical → realized.
+    Nonempty (Continuity.StrictConnectedAgency CircleGPT.circleGPT) ∧
+    Nonempty (Continuity.StrictConnectedAgency QubitGPT.qubitGPT) :=
+  ⟨v2_bare_Tier_B_is_classical_excluded,
+   ⟨CircleGPT.circleStrictConnectedAgency⟩,
+   ⟨QubitGPT.qubitStrictConnectedAgency_full⟩⟩
+
 /-! ## Triple gauge composition: U(1) × SO(3) × SU(3)-toehold (deferred)
 
 A triple-tensor instance — `gptTensor (gptTensor CircleGPT QubitGPT)

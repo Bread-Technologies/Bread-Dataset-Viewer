@@ -438,6 +438,9 @@ Tier A is encoded:
     `axiom_II_idempotent`, `axiom_II_actualize_lossy_on_status`.
   • Reality as developing structure: `Reality`, `RealitySuccessor`,
     `reality_successor_*`.
+  • Pointwise actualization (elementary Axiom II event):
+    `actualizeAt`, `actualizeAt_self`, `actualizeAt_other`,
+    `actualizeAt_is_successor`.
   • Arrow of time: `past`, `future`, `past_future_disjoint`,
     `past_monotone`.
   • Witkowski-Brown-Truong 2024 structural shadow:
