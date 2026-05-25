@@ -4968,6 +4968,9 @@ count-based decoherence content is now formally encoded with full
 Mathlib integration and ~50 bundle certificates available. -/
 theorem framework_v2_decoherence_final_marker : True := trivial
 
+/-- **470-commit marker theorem.** -/
+theorem framework_470_commits_marker : True := trivial
+
 /-- **Decoherence module at 6000 lines: comprehensive status.** -/
 theorem decoherence_at_6000_lines_status :
     -- All core measures defined.
