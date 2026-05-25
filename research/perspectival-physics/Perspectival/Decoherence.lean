@@ -850,6 +850,29 @@ example (P : Type u) (C : Type v) (R : Reality P C) :
   show (0 : ℕ) ≠ 1
   decide
 
+/-! ## Decoherence framework's anti-realism summary
+
+The framework's reading per `ORIGINAL_PROMPT_V2_ADDENDUM_ENTROPY.md`:
+
+1. **Decoherence-status** (coherent / decoherent) is endpoint-
+   determined — a property of the (R₁, R₂) pair, not the trajectory.
+
+2. **Decoherence-content** (count, complexity, length) is
+   trajectory-dependent — different paths between the same endpoints
+   can carry different content.
+
+3. **Decoherence is not substantial.** No "amount of decoherence"
+   exists as a property of the universe in isolation; what exists is
+   the relational structure of system-environment actualization
+   counts under specific trajectory.
+
+This is the framework's anti-realism about decoherence, parallel to
+the anti-realism about entropy (per the addendum). The structural
+content is captured via the trajectory algebra; the operational
+content awaits Tier 2 work (continuous-time exponential-suppression
+dynamics + operational environment-density definitions).
+-/
+
 /-! ## Closing remarks
 
 This module is the framework's first Lean correlate of a v2 Seam
