@@ -786,6 +786,31 @@ theorem v2_nonclassical_Tier_B_exists :
    ⟨QubitGPT.qubitStrictConnectedAgency_full⟩,
    ⟨QutritGPT.rotL3OneParameterFamily⟩⟩
 
+/-! ## Bridge: DefiniteConfig (Tier A/B) ↔ vertex (Classical Tier B) -/
+
+/-- The bridge from Tier A/B definite-outcome configurations to
+Classical Tier B vertices. A `DefiniteConfig n` with primed candidate
+`i` maps to `Classical.vertex n i` — the standard basis vector with
+a 1 at position i and 0 elsewhere. This is the v2-formal connection
+between the foundational "currently-primed candidate" structure and
+the operational state-space vertices. -/
+def definiteToVertex {n : ℕ} (c : TierB.DefiniteConfig n) :
+    Classical.V n := Classical.vertex n c.primed
+
+@[simp] theorem definiteToVertex_apply {n : ℕ} (c : TierB.DefiniteConfig n) :
+    definiteToVertex c = Classical.vertex n c.primed := rfl
+
+/-- **The bridge respects permutation action.** Permuting a definite
+configuration corresponds to permuting the vertex's underlying index.
+Together with `Classical.permLinGen` (which encodes permutations as
+state-preserving linear maps), this gives the v2-formal connection
+between Tier A bracketed dynamics and Tier B classical-reversible
+dynamics. -/
+theorem definiteToVertex_perm {n : ℕ} (c : TierB.DefiniteConfig n)
+    (σ : Equiv.Perm (Fin n)) :
+    definiteToVertex (TierB.permActOnDefinite σ c)
+    = Classical.vertex n (σ c.primed) := rfl
+
 /-- **v2 certificate** — the framework's results expressed in v2
 architectural vocabulary. Bundles Tier A formalization, bracketing
 operation, vertex preservation as derived, classical Tier B exclusion,
