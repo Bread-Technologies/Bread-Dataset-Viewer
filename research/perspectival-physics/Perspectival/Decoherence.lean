@@ -4909,6 +4909,36 @@ theorem singleton_actualization_rate {P : Type u} {C : Type v}
       RealityChain'.singleton_length]
   rfl
 
+/-- **Singleton chain certificate.** Bundles singleton bracketed and
+actualization measure certificates for full reference. -/
+theorem singleton_chain_certificate :
+    -- Bracketed singleton.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))).actualizationCount = 0
+        ∧ (RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))).bracketedCount = 1
+        ∧ (RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))).length = 1) ∧
+    -- Actualization singleton (requires DecidableEq).
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h_pot : R m = MeetingStatus.Potential),
+      (RealityChain'.singleton
+        (TierB.actualizeAt_strict_step R m h_pot)).actualizationCount = 1
+        ∧ (RealityChain'.singleton
+            (TierB.actualizeAt_strict_step R m h_pot)).bracketedCount = 0
+        ∧ (RealityChain'.singleton
+            (TierB.actualizeAt_strict_step R m h_pot)).length = 1) :=
+  ⟨fun R =>
+    ⟨by rw [RealityChain'.singleton_actualizationCount]; rfl,
+     by rw [RealityChain'.singleton_bracketedCount]; rfl,
+     by rw [RealityChain'.singleton_length]⟩,
+   fun R m h_pot =>
+    ⟨by rw [RealityChain'.singleton_actualizationCount]; rfl,
+     by rw [RealityChain'.singleton_bracketedCount]; rfl,
+     by rw [RealityChain'.singleton_length]⟩⟩
+
 /-- **Singleton actualization measure certificate.** A singleton
 actualization on any meeting m with R m = Potential has count 1,
 bracketed 0, length 1, complexity 2. -/
