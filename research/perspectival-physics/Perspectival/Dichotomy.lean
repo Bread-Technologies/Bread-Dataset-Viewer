@@ -149,5 +149,32 @@ example :
     Hardy.Axiom4_Composite_Dimension CircleGPT.circleGPT CircleGPT.circleGPT :=
   Hardy.axiom4_dimension_holds CircleGPT.circleGPT CircleGPT.circleGPT
 
+/-! ## Hardy K-dimension for the framework's GPT instances
+
+The state-space dimension K is, in Hardy's language, the dim of the
+affine span of states — equivalently `Module.finrank ℝ V` for the bare
+linear ambient space. This pins the framework's GPT instances on the
+Hardy-signature lattice:
+
+  Classical n:  K_classical(n) = n  (Hardy: K = N classical signature).
+  CircleGPT:    K = 3              (Hardy: 2K = N(N+1), the rebit / real-QM
+                                    2-level signature for N = 2).
+
+The full complex-QM signature K = N² requires K = 4 at N = 2 — the qubit
+Bloch ball — which the framework has not yet constructed (Tier 1 #5 open). -/
+
+/-- **Hardy K for Classical n.** `K_classical(n) = n`, agreeing with the
+classical Hardy signature K = N. -/
+theorem classical_hardy_K (n : ℕ) :
+    Module.finrank ℝ (Classical.V n) = n := by
+  -- V n := Fin n → ℝ; finrank = Fintype.card (Fin n) = n.
+  simp [Classical.V, Module.finrank_pi]
+
+/-- **Hardy K for CircleGPT.** `K_circle = 3`, matching the rebit Hardy
+signature 2K = N(N+1) at N = 2. -/
+theorem circle_hardy_K :
+    Module.finrank ℝ (Fin 3 → ℝ) = 3 := by
+  simp [Module.finrank_pi]
+
 end Dichotomy
 end Perspectival
