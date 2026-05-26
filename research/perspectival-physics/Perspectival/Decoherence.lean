@@ -3007,6 +3007,63 @@ example (n : ℕ) :
   intro R loop
   exact loopPower_isCoherent loop n
 
+/-! ## chainRegime fully determines the rate-first-coordinate
+
+Given `chainRegime ch`, the first coordinate of `actualizationRate ch`
+is determined (modulo length): coherent ⇒ 0, pure-decoherent ⇒ length,
+mixed ⇒ strictly between 0 and length. -/
+
+/-- **chainRegime = coherent ⇒ first rate coordinate is 0.** -/
+theorem chainRegime_coherent_rate_first {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch : RealityChain' P C R₁ R₂}
+    (h : chainRegime ch = Regime.coherent) :
+    (actualizationRate ch).1 = 0 := by
+  have hC : IsCoherent ch := (chainRegime_eq_coherent_iff ch).mp h
+  show ch.actualizationCount = 0
+  exact hC
+
+/-- **chainRegime = pureDecoherent ⇒ first rate coordinate = length.** -/
+theorem chainRegime_pureDecoherent_rate_first {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch : RealityChain' P C R₁ R₂}
+    (h : chainRegime ch = Regime.pureDecoherent) :
+    (actualizationRate ch).1 = ch.length := by
+  have hPnC : IsPureDecoherent ch ∧ ¬ IsCoherent ch :=
+    (chainRegime_eq_pureDecoherent_iff ch).mp h
+  have hB : ch.bracketedCount = 0 := hPnC.1
+  have hsum := ch.counts_sum
+  show ch.actualizationCount = ch.length
+  omega
+
+/-- **chainRegime = mixed ⇒ first rate coordinate strictly between 0
+and length.** -/
+theorem chainRegime_mixed_rate_first {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch : RealityChain' P C R₁ R₂}
+    (h : chainRegime ch = Regime.mixed) :
+    0 < (actualizationRate ch).1 ∧ (actualizationRate ch).1 < ch.length := by
+  have hM : IsMixed ch := (chainRegime_eq_mixed_iff ch).mp h
+  exact (IsMixed.iff_strict_interior ch).mp hM
+
+/-- **Regime-rate bundle certificate.** Given the regime, determines
+the first coordinate of `actualizationRate`. -/
+theorem regime_rate_first_certificate :
+    -- (a) coherent ⇒ rate.1 = 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        {ch : RealityChain' P C R₁ R₂},
+      chainRegime ch = Regime.coherent → (actualizationRate ch).1 = 0) ∧
+    -- (b) pureDecoherent ⇒ rate.1 = length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        {ch : RealityChain' P C R₁ R₂},
+      chainRegime ch = Regime.pureDecoherent →
+        (actualizationRate ch).1 = ch.length) ∧
+    -- (c) mixed ⇒ 0 < rate.1 < length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        {ch : RealityChain' P C R₁ R₂},
+      chainRegime ch = Regime.mixed →
+        0 < (actualizationRate ch).1 ∧ (actualizationRate ch).1 < ch.length) :=
+  ⟨fun h => chainRegime_coherent_rate_first h,
+   fun h => chainRegime_pureDecoherent_rate_first h,
+   fun h => chainRegime_mixed_rate_first h⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
