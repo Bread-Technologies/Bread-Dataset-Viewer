@@ -2738,6 +2738,69 @@ theorem decoherence_quotient_IsCoherent_certificate :
    fun q => DecoherenceQuotient.isCoherentClass_iff_endpoints_eq q,
    fun q₁ q₂ => DecoherenceQuotient.isCoherentClass_append_iff q₁ q₂⟩
 
+/-! ## Worked Bool examples for the new predicate/classifier API
+
+These examples instantiate the new IsCoherent / IsPureDecoherent /
+IsMixed / chainRegime API on concrete Bool-typed nil and loop
+witnesses, showing the predicates and classifier compute correctly. -/
+
+/-- **nil chain on Bool/Bool is coherent and pure-decoherent.** -/
+example (R : Reality Bool Bool) :
+    IsCoherent (RealityChain'.nil R) ∧
+    IsPureDecoherent (RealityChain'.nil R) :=
+  ⟨IsCoherent.nil R, rfl⟩
+
+/-- **nil chain is NOT mixed (has zero counts).** -/
+example (R : Reality Bool Bool) :
+    ¬ IsMixed (RealityChain'.nil R) := by
+  rintro ⟨h, _⟩
+  exact absurd h (by simp : ¬ 0 < (RealityChain'.nil R).actualizationCount)
+
+/-- **nil chain has rate (0, 0).** -/
+example (R : Reality Bool Bool) :
+    actualizationRate (RealityChain'.nil R) = (0, 0) := rfl
+
+/-- **Single bracketed step (self-loop) on Bool is coherent.** -/
+example :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    IsCoherent (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))) := by
+  intro R
+  show tierAEventCount _ = 0
+  rfl
+
+/-- **Single bracketed step has length 1.** -/
+example :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))).length = 1 := rfl
+
+/-- **isCoherentClass decides correctly on the nil class.** -/
+example (R : Reality Bool Bool) :
+    DecoherenceQuotient.isCoherentClass
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (RealityChain'.nil R)) := by
+  show tierAEventCount (RealityChain'.nil R) = 0
+  rfl
+
+/-- **DecoherenceQuotient.count on the nil class is 0.** -/
+example (R : Reality Bool Bool) :
+    DecoherenceQuotient.count
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (RealityChain'.nil R)) = 0 := rfl
+
+/-- **Quotient append of nil with nil is nil.** -/
+example (R : Reality Bool Bool) :
+    DecoherenceQuotient.append
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (RealityChain'.nil R))
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (RealityChain'.nil R)) =
+      Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (RealityChain'.nil R) := by
+  apply DecoherenceQuotient.count_injective
+  rfl
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
