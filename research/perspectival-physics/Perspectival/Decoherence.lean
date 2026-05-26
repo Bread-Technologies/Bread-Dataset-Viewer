@@ -3064,6 +3064,48 @@ theorem regime_rate_first_certificate :
    fun h => chainRegime_pureDecoherent_rate_first h,
    fun h => chainRegime_mixed_rate_first h⟩
 
+/-! ## Loop equivalences
+
+All loops at R are decoherence-equivalent (since they all have count 0).
+This gives the loop quotient at R the structure of a single point. -/
+
+/-- **Any two loops at R are decoherence-equivalent.** -/
+theorem loops_decoherenceEquivalent {P : Type u} {C : Type v}
+    {R : Reality P C} (loop₁ loop₂ : RealityChain' P C R R) :
+    DecoherenceEquivalent loop₁ loop₂ := by
+  show loop₁.actualizationCount = loop₂.actualizationCount
+  rw [loop_is_coherent loop₁, loop_is_coherent loop₂]
+
+/-- **Any two loop quotient classes at R are equal.** Restating
+loop_quotient_trivial from the equivalence direction. -/
+theorem loops_quotient_eq {P : Type u} {C : Type v}
+    {R : Reality P C} (loop₁ loop₂ : RealityChain' P C R R) :
+    Quotient.mk (DecoherenceEquivalent_setoid R R) loop₁ =
+      Quotient.mk (DecoherenceEquivalent_setoid R R) loop₂ :=
+  Quotient.sound (loops_decoherenceEquivalent loop₁ loop₂)
+
+/-- **Loop equivalence certificate.** Bundles the loop-equivalence
+result with the quotient-equality consequence and the subsingleton
+instance. -/
+theorem loop_equivalence_certificate :
+    -- (a) Any two loops at R are decoherence-equivalent.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop₁ loop₂ : RealityChain' P C R R),
+      DecoherenceEquivalent loop₁ loop₂) ∧
+    -- (b) Loop quotient classes collapse to a single point.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop₁ loop₂ : RealityChain' P C R R),
+      Quotient.mk (DecoherenceEquivalent_setoid R R) loop₁ =
+        Quotient.mk (DecoherenceEquivalent_setoid R R) loop₂) ∧
+    -- (c) Every loop class is the default (nil) class.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R),
+      Quotient.mk (DecoherenceEquivalent_setoid R R) loop =
+        Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R)) :=
+  ⟨fun loop₁ loop₂ => loops_decoherenceEquivalent loop₁ loop₂,
+   fun loop₁ loop₂ => loops_quotient_eq loop₁ loop₂,
+   fun loop => loops_quotient_eq loop (RealityChain'.nil _)⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
