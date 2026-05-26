@@ -582,6 +582,53 @@ a (functorial) morphism into the additive monoid ℕ. Equality on the
 quotient is decidable (`DecoherenceQuotient.decidableEq`,
 `eq_iff_count`) since count is injective into ℕ.
 
+## Q30. What's the regime-aware append calculus?
+
+**Framework answer:** The regime triple (coherent, pureDecoherent,
+mixed) interacts cleanly with chain append:
+- `IsPureDecoherent` is closed under append (both halves are pure
+  ⇒ the join is pure)
+- `IsMixed` is absorbing on both sides: any chain appended onto a
+  mixed chain stays mixed
+- `IsCoherent` × `IsPureDecoherent` with both halves of positive
+  length produces a `IsMixed` chain (the canonical genuinely-mixed
+  shape)
+
+Bundled in `regime_append_certificate`. The classifier `chainRegime`
+also satisfies the corresponding iffs: `chainRegime_eq_coherent_iff`,
+`chainRegime_eq_pureDecoherent_iff` (with the nil edge case as the
+"NOT IsCoherent" conjunct), `chainRegime_eq_mixed_iff`, all bundled
+in `chainRegime_full_characterization`.
+
+## Q31. How does the loop submonoid interact with the regime triple?
+
+**Framework answer:** Every `loopPower ch n` (n-fold iteration of a
+loop `ch` at R) is `IsCoherent` — proved as `loopPower_isCoherent`.
+Hence `chainRegime (loopPower ch n) = Regime.coherent` and the
+quotient class of any loopPower equals the nil class (since the loop
+quotient at R is a Subsingleton, by
+`DecoherenceQuotient.loop_subsingleton`).
+
+This formalizes "the loop submonoid sits entirely in the coherent
+regime" — the loop algebra (loopPower, Mathlib Monoid on loops,
+loopMonoid) is the formal home of Tier B reversibility within the
+trichotomy.
+
+## Q32. What does the predicate-API super certificate bundle?
+
+**Framework answer:** `predicate_api_super_certificate` aggregates one
+representative fact from each of the seven sub-certificates added in
+the new predicate/regime/quotient-algebra layer:
+1. `coherence_predicate_certificate` — nil is coherent
+2. `trichotomy_predicates_certificate` — every chain is one of three
+3. `rate_predicate_bridge_certificate` — coherent ↔ rate (0, length)
+4. `regime_classifier_certificate` — chainRegime ↔ IsCoherent
+5. `regime_append_certificate` — Mixed is right-absorbing
+6. `decoherence_quotient_IsCoherent_certificate` — quotient lift agrees
+7. `decoherence_quotient_algebra_certificate` — count is a morphism
+
+A single named anchor for the full new layer.
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
