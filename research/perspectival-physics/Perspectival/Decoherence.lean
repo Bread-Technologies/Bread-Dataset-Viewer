@@ -2801,6 +2801,35 @@ example (R : Reality Bool Bool) :
   apply DecoherenceQuotient.count_injective
   rfl
 
+/-! ## chainRegime simp lemmas
+
+Convenience lemmas that let `simp` / `decide` resolve `chainRegime`
+queries on standard chain forms (nil, singletons). -/
+
+/-- **chainRegime nil = coherent.** -/
+@[simp]
+theorem chainRegime_nil {P : Type u} {C : Type v} (R : Reality P C) :
+    chainRegime (RealityChain'.nil R) = Regime.coherent := rfl
+
+/-- **chainRegime of a bracketed singleton is coherent.** -/
+@[simp]
+theorem chainRegime_bracketed_singleton {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : TierB.BracketedTransition R₁ R₂) :
+    chainRegime (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed h)) = Regime.coherent := rfl
+
+/-- **chainRegime is functional under DecoherenceEquivalent on the
+coherent class.** If ch₁ ≈ ch₂ and ch₁ is coherent, ch₂ is too;
+hence chainRegime ch₂ = coherent. (For other regimes, equivalence
+doesn't constrain.) -/
+theorem chainRegime_coherent_invariant {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} {ch₁ ch₂ : RealityChain' P C R₁ R₂}
+    (h : DecoherenceEquivalent ch₁ ch₂)
+    (h₁ : chainRegime ch₁ = Regime.coherent) :
+    chainRegime ch₂ = Regime.coherent := by
+  rw [chainRegime_eq_coherent_iff] at h₁ ⊢
+  exact IsCoherent.respects_equivalence h h₁
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
