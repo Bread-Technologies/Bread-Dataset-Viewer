@@ -2664,6 +2664,80 @@ theorem regime_append_certificate :
    @fun _ _ _ _ _ ch₁ _ h₂ => IsMixed.append_left_anything ch₁ h₂,
    fun h₁ h₂ hp₁ hp₂ => coherent_append_pureDecoherent_mixed h₁ h₂ hp₁ hp₂⟩
 
+/-! ## IsCoherent lifts to the decoherence quotient
+
+Since `IsCoherent ch` ↔ `tierAEventCount ch = 0`, and the equivalence
+identifies on count, IsCoherent is a well-defined predicate on
+`DecoherenceQuotient`. This gives a coherent-class predicate that
+can be decided on quotient elements directly. -/
+
+/-- **IsCoherent as a quotient predicate.** Descends via Quotient.lift
+because DecoherenceEquivalent identifies chains with equal count. -/
+def DecoherenceQuotient.isCoherentClass {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) : Prop :=
+  q.count = 0
+
+/-- **Quotient IsCoherent is decidable.** -/
+instance DecoherenceQuotient.isCoherentClass.decidable {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) :
+    Decidable (DecoherenceQuotient.isCoherentClass q) :=
+  inferInstanceAs (Decidable (q.count = 0))
+
+/-- **Quotient IsCoherent agrees with chain IsCoherent on representatives.** -/
+theorem DecoherenceQuotient.isCoherentClass_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    DecoherenceQuotient.isCoherentClass
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch) ↔
+      IsCoherent ch := by
+  show tierAEventCount ch = 0 ↔ tierAEventCount ch = 0
+  rfl
+
+/-- **Coherent class iff endpoints equal.** Quotient-level reading of
+`coherent_kernel_iff_endpoints_eq`. The class of any chain in
+DecoherenceQuotient R₁ R₂ is coherent iff R₁ = R₂. -/
+theorem DecoherenceQuotient.isCoherentClass_iff_endpoints_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) :
+    DecoherenceQuotient.isCoherentClass q ↔ R₁ = R₂ := by
+  induction q using Quotient.inductionOn with
+  | _ ch =>
+    rw [DecoherenceQuotient.isCoherentClass_iff]
+    exact IsCoherent.iff_endpoints_eq ch
+
+/-- **Quotient append preserves quotient IsCoherent iff both classes
+are coherent.** -/
+theorem DecoherenceQuotient.isCoherentClass_append_iff {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (q₁ : DecoherenceQuotient R₁ R₂) (q₂ : DecoherenceQuotient R₂ R₃) :
+    DecoherenceQuotient.isCoherentClass (DecoherenceQuotient.append q₁ q₂) ↔
+    DecoherenceQuotient.isCoherentClass q₁ ∧ DecoherenceQuotient.isCoherentClass q₂ := by
+  show (DecoherenceQuotient.append q₁ q₂).count = 0 ↔
+       q₁.count = 0 ∧ q₂.count = 0
+  rw [DecoherenceQuotient.count_append]
+  exact Nat.add_eq_zero
+
+/-- **Quotient IsCoherent certificate.** Bundles three Prop-valued facts
+about the lifted IsCoherent predicate (decidability is a separate
+type-class instance). -/
+theorem decoherence_quotient_IsCoherent_certificate :
+    -- (a) Agrees with chain IsCoherent on representatives.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      DecoherenceQuotient.isCoherentClass
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch) ↔
+        IsCoherent ch) ∧
+    -- (b) Endpoint characterization.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (q : DecoherenceQuotient R₁ R₂),
+      DecoherenceQuotient.isCoherentClass q ↔ R₁ = R₂) ∧
+    -- (c) Quotient-append iff.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (q₁ : DecoherenceQuotient R₁ R₂) (q₂ : DecoherenceQuotient R₂ R₃),
+      DecoherenceQuotient.isCoherentClass (DecoherenceQuotient.append q₁ q₂) ↔
+      DecoherenceQuotient.isCoherentClass q₁ ∧ DecoherenceQuotient.isCoherentClass q₂) :=
+  ⟨fun ch => DecoherenceQuotient.isCoherentClass_iff ch,
+   fun q => DecoherenceQuotient.isCoherentClass_iff_endpoints_eq q,
+   fun q₁ q₂ => DecoherenceQuotient.isCoherentClass_append_iff q₁ q₂⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
