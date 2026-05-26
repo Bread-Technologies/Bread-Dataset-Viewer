@@ -3146,6 +3146,7 @@ theorem chainRegime_append_table :
     rw [chainRegime_eq_mixed_iff] at h₂ ⊢
     exact IsMixed.append_left_anything ch₁ h₂
 
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
@@ -4508,6 +4509,46 @@ theorem loop_npow_tierAEventCount {P : Type u} {C : Type v}
     rw [pow_succ, loop_tierAEventCount_mul, ih]
     have h : tierAEventCount ch = 0 := loop_is_coherent ch
     omega
+
+/-- **One (= nil loop) is coherent — Mathlib Monoid notation.** -/
+@[simp]
+theorem IsCoherent.one {P : Type u} {C : Type v} {R : Reality P C} :
+    IsCoherent (1 : RealityChain' P C R R) :=
+  IsCoherent.nil R
+
+/-- **Loop multiplication preserves IsCoherent.** Since loops are
+coherent and count is additive, the multiplied loop is coherent. -/
+@[simp]
+theorem IsCoherent.mul {P : Type u} {C : Type v} {R : Reality P C}
+    (loop₁ loop₂ : RealityChain' P C R R) :
+    IsCoherent (loop₁ * loop₂) :=
+  loop_is_coherent _
+
+/-- **Loop ^ n is coherent (Mathlib Monoid power).** Restating
+loop_npow_tierAEventCount via IsCoherent. -/
+@[simp]
+theorem IsCoherent.npow {P : Type u} {C : Type v} {R : Reality P C}
+    (loop : RealityChain' P C R R) (n : ℕ) :
+    IsCoherent (loop ^ n) :=
+  loop_npow_tierAEventCount loop n
+
+/-- **Mathlib-Monoid-notation loop coherence certificate.** Bundles
+the three simp lemmas for the loop Monoid. -/
+theorem loop_Mathlib_coherence_certificate :
+    -- (a) One is coherent.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      IsCoherent (1 : RealityChain' P C R R)) ∧
+    -- (b) Mul preserves coherence.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop₁ loop₂ : RealityChain' P C R R),
+      IsCoherent (loop₁ * loop₂)) ∧
+    -- (c) Npow preserves coherence.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R) (n : ℕ),
+      IsCoherent (loop ^ n)) :=
+  ⟨fun _ => IsCoherent.one,
+   fun loop₁ loop₂ => IsCoherent.mul loop₁ loop₂,
+   fun loop n => IsCoherent.npow loop n⟩
 
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
