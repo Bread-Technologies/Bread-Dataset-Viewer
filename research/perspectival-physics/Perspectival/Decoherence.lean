@@ -2883,6 +2883,43 @@ theorem predicate_api_super_certificate :
    fun ch => DecoherenceQuotient.isCoherentClass_iff ch,
    fun q₁ q₂ => DecoherenceQuotient.count_append q₁ q₂⟩
 
+/-! ## chainRegime ↔ refined predicate characterizations
+
+The classifier `chainRegime` is biased: nil counts as coherent even
+though it's also vacuously pure-decoherent. The lemmas below give the
+exact conditions under which each regime tag fires. -/
+
+/-- **chainRegime = pureDecoherent iff genuinely pure-decoherent
+(IsPureDecoherent + not IsCoherent).** -/
+theorem chainRegime_eq_pureDecoherent_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    chainRegime ch = Regime.pureDecoherent ↔
+    IsPureDecoherent ch ∧ ¬ IsCoherent ch := by
+  unfold chainRegime
+  by_cases hC : ch.actualizationCount = 0
+  · rw [if_pos hC]
+    refine ⟨fun h => ?_, fun ⟨_, hnC⟩ => absurd hC hnC⟩
+    cases h
+  · rw [if_neg hC]
+    by_cases hB : ch.bracketedCount = 0
+    · rw [if_pos hB]
+      refine ⟨fun _ => ⟨hB, hC⟩, fun _ => rfl⟩
+    · rw [if_neg hB]
+      refine ⟨fun h => ?_, fun ⟨hPure, _⟩ => absurd hPure hB⟩
+      cases h
+
+/-- **chainRegime fully determines the regime triple.** Bundles all
+three iffs into a single biconditional structure. -/
+theorem chainRegime_full_characterization {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (chainRegime ch = Regime.coherent ↔ IsCoherent ch) ∧
+    (chainRegime ch = Regime.pureDecoherent ↔
+      IsPureDecoherent ch ∧ ¬ IsCoherent ch) ∧
+    (chainRegime ch = Regime.mixed ↔ IsMixed ch) :=
+  ⟨chainRegime_eq_coherent_iff ch,
+   chainRegime_eq_pureDecoherent_iff ch,
+   chainRegime_eq_mixed_iff ch⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
