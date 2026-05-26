@@ -2949,6 +2949,29 @@ theorem loopPower_class_eq_nil_class {P : Type u} {C : Type v}
       Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R) :=
   Subsingleton.elim _ _
 
+/-- **Regime.coherent is not Regime.pureDecoherent.** -/
+@[simp]
+theorem Regime.coherent_ne_pureDecoherent :
+    Regime.coherent ≠ Regime.pureDecoherent := by decide
+
+/-- **Regime.coherent is not Regime.mixed.** -/
+@[simp]
+theorem Regime.coherent_ne_mixed :
+    Regime.coherent ≠ Regime.mixed := by decide
+
+/-- **Regime.pureDecoherent is not Regime.mixed.** -/
+@[simp]
+theorem Regime.pureDecoherent_ne_mixed :
+    Regime.pureDecoherent ≠ Regime.mixed := by decide
+
+/-- **Regime exhaustion: every Regime value is one of the three.** -/
+theorem Regime.exhaustive (r : Regime) :
+    r = Regime.coherent ∨ r = Regime.pureDecoherent ∨ r = Regime.mixed := by
+  cases r
+  · left; rfl
+  · right; left; rfl
+  · right; right; rfl
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
