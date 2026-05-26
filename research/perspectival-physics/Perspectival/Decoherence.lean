@@ -2552,6 +2552,118 @@ theorem regime_classifier_certificate :
    fun ch => chainRegime_eq_mixed_iff ch,
    fun ch => chainRegime_classifies ch⟩
 
+/-! ## Regime-aware append
+
+How does the regime of a chain change under append? Coherent + Coherent
+= Coherent (already known as `IsCoherent.append_iff`). The other
+combinations: Mixed survives under anything, PureDecoherent + Coherent
+stays PureDecoherent (no new bracketed steps added... wait, no:
+PureDecoherent means bracketedCount = 0, and Coherent means count = 0,
+so a Coherent appendee can add bracketed steps. The combinatorics
+are subtle and the bridge gives us the calculus). -/
+
+/-- **Pure-decoherent ∘ pure-decoherent is pure-decoherent.** -/
+theorem IsPureDecoherent.append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    {ch₁ : RealityChain' P C R₁ R₂} {ch₂ : RealityChain' P C R₂ R₃}
+    (h₁ : IsPureDecoherent ch₁) (h₂ : IsPureDecoherent ch₂) :
+    IsPureDecoherent (ch₁.append ch₂) := by
+  show (ch₁.append ch₂).bracketedCount = 0
+  rw [RealityChain'.append_bracketedCount]
+  show ch₁.bracketedCount + ch₂.bracketedCount = 0
+  have h₁' : ch₁.bracketedCount = 0 := h₁
+  have h₂' : ch₂.bracketedCount = 0 := h₂
+  omega
+
+/-- **PureDecoherent ∘ PureDecoherent classifies as mixed only if
+empty.** Stronger: the append is pure-decoherent (already shown).
+This iff captures it: append-IsPureDecoherent iff both parts are. -/
+theorem IsPureDecoherent.append_iff {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃) :
+    IsPureDecoherent (ch₁.append ch₂) ↔
+    IsPureDecoherent ch₁ ∧ IsPureDecoherent ch₂ := by
+  show (ch₁.append ch₂).bracketedCount = 0 ↔
+       ch₁.bracketedCount = 0 ∧ ch₂.bracketedCount = 0
+  rw [RealityChain'.append_bracketedCount]
+  exact Nat.add_eq_zero
+
+/-- **Mixed survives append on the right by anything positive-length.**
+If ch₁ is mixed and ch₂ has positive length, then ch₁.append ch₂ is
+mixed (provided ch₂ doesn't cancel — which it can't, since counts
+only add). -/
+theorem IsMixed.append_right_anything {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    {ch₁ : RealityChain' P C R₁ R₂} (ch₂ : RealityChain' P C R₂ R₃)
+    (h₁ : IsMixed ch₁) :
+    IsMixed (ch₁.append ch₂) := by
+  obtain ⟨hC, hB⟩ := h₁
+  refine ⟨?_, ?_⟩
+  · rw [RealityChain'.append_actualizationCount]; omega
+  · rw [RealityChain'.append_bracketedCount]; omega
+
+/-- **Mixed survives append on the left.** -/
+theorem IsMixed.append_left_anything {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch₁ : RealityChain' P C R₁ R₂) {ch₂ : RealityChain' P C R₂ R₃}
+    (h₂ : IsMixed ch₂) :
+    IsMixed (ch₁.append ch₂) := by
+  obtain ⟨hC, hB⟩ := h₂
+  refine ⟨?_, ?_⟩
+  · rw [RealityChain'.append_actualizationCount]; omega
+  · rw [RealityChain'.append_bracketedCount]; omega
+
+/-- **Coherent + PureDecoherent of positive length is mixed.**
+Concretely: a coherent first half (adding bracketed steps but zero
+actualizations) plus a pure-decoherent second half (adding actualizations
+but zero bracketed) gives a mixed chain iff both halves have positive
+length. -/
+theorem coherent_append_pureDecoherent_mixed {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    {ch₁ : RealityChain' P C R₁ R₂} {ch₂ : RealityChain' P C R₂ R₃}
+    (h₁ : IsCoherent ch₁) (h₂ : IsPureDecoherent ch₂)
+    (h_pos₁ : 0 < ch₁.length) (h_pos₂ : 0 < ch₂.length) :
+    IsMixed (ch₁.append ch₂) := by
+  -- ch₁ coherent ⇒ ch₁.bracketedCount = ch₁.length > 0.
+  -- ch₂ pureDec ⇒ ch₂.actualizationCount = ch₂.length > 0.
+  have hC₁ : ch₁.actualizationCount = 0 := h₁
+  have hB₂ : ch₂.bracketedCount = 0 := h₂
+  have hsum₁ := ch₁.counts_sum
+  have hsum₂ := ch₂.counts_sum
+  refine ⟨?_, ?_⟩
+  · rw [RealityChain'.append_actualizationCount]
+    -- ch₂.actualizationCount = ch₂.length > 0.
+    omega
+  · rw [RealityChain'.append_bracketedCount]
+    -- ch₁.bracketedCount = ch₁.length > 0.
+    omega
+
+/-- **Regime-aware append certificate.** Bundles the append behavior
+across the trichotomy. -/
+theorem regime_append_certificate :
+    -- (a) PureDecoherent is closed under append.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) (ch₂ : RealityChain' P C R₂ R₃),
+      IsPureDecoherent (ch₁.append ch₂) ↔
+      IsPureDecoherent ch₁ ∧ IsPureDecoherent ch₂) ∧
+    -- (b) Mixed survives append on either side.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        {ch₁ : RealityChain' P C R₁ R₂} (ch₂ : RealityChain' P C R₂ R₃),
+      IsMixed ch₁ → IsMixed (ch₁.append ch₂)) ∧
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) {ch₂ : RealityChain' P C R₂ R₃},
+      IsMixed ch₂ → IsMixed (ch₁.append ch₂)) ∧
+    -- (c) Coherent + PureDecoherent (both positive length) is Mixed.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        {ch₁ : RealityChain' P C R₁ R₂} {ch₂ : RealityChain' P C R₂ R₃},
+      IsCoherent ch₁ → IsPureDecoherent ch₂ →
+      0 < ch₁.length → 0 < ch₂.length →
+      IsMixed (ch₁.append ch₂)) :=
+  ⟨fun ch₁ ch₂ => IsPureDecoherent.append_iff ch₁ ch₂,
+   @fun _ _ _ _ _ _ ch₂ h₁ => IsMixed.append_right_anything ch₂ h₁,
+   @fun _ _ _ _ _ ch₁ _ h₂ => IsMixed.append_left_anything ch₁ h₂,
+   fun h₁ h₂ hp₁ hp₂ => coherent_append_pureDecoherent_mixed h₁ h₂ hp₁ hp₂⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
