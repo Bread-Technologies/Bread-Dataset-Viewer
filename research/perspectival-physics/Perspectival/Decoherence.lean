@@ -2830,6 +2830,59 @@ theorem chainRegime_coherent_invariant {P : Type u} {C : Type v}
   rw [chainRegime_eq_coherent_iff] at h₁ ⊢
   exact IsCoherent.respects_equivalence h h₁
 
+/-! ## Predicate API super certificate
+
+A single bundled statement aggregating the seven major sub-certificates
+of the new predicate/classifier/quotient-algebra API. Provides a single
+named anchor for downstream consumers and documentation. -/
+
+/-- **Predicate API super certificate.** Aggregates the seven major
+sub-bundles introduced in the new predicate/regime/quotient layer:
+- `coherence_predicate_certificate` (5-fact IsCoherent characterizations)
+- `trichotomy_predicates_certificate` (3-fact exhaustive/exclusive)
+- `rate_predicate_bridge_certificate` (4-fact phase-space bridge)
+- `regime_classifier_certificate` (3-fact computable classifier)
+- `regime_append_certificate` (4-fact regime calculus under append)
+- `decoherence_quotient_IsCoherent_certificate` (3-fact quotient lift)
+- `decoherence_quotient_algebra_certificate` (4-fact categorical algebra) -/
+theorem predicate_api_super_certificate :
+    -- (a) coherence predicate facts.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      IsCoherent (RealityChain'.nil R)) ∧
+    -- (b) trichotomy is exhaustive.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsCoherent ch ∨ IsPureDecoherent ch ∨ IsMixed ch) ∧
+    -- (c) coherent ↔ rate (0, length).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsCoherent ch ↔ actualizationRate ch = (0, ch.length)) ∧
+    -- (d) computable classifier agrees with IsCoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      chainRegime ch = Regime.coherent ↔ IsCoherent ch) ∧
+    -- (e) mixed is absorbing on the right under append.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        {ch₁ : RealityChain' P C R₁ R₂} (ch₂ : RealityChain' P C R₂ R₃),
+      IsMixed ch₁ → IsMixed (ch₁.append ch₂)) ∧
+    -- (f) quotient class IsCoherent agrees with chain IsCoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      DecoherenceQuotient.isCoherentClass
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch) ↔
+        IsCoherent ch) ∧
+    -- (g) quotient count is a monoid morphism under quotient append.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (q₁ : DecoherenceQuotient R₁ R₂) (q₂ : DecoherenceQuotient R₂ R₃),
+      (DecoherenceQuotient.append q₁ q₂).count = q₁.count + q₂.count) :=
+  ⟨fun R => IsCoherent.nil R,
+   fun ch => chain_regime_trichotomy ch,
+   fun ch => IsCoherent.iff_rate_zero ch,
+   fun ch => chainRegime_eq_coherent_iff ch,
+   @fun _ _ _ _ _ _ ch₂ h₁ => IsMixed.append_right_anything ch₂ h₁,
+   fun ch => DecoherenceQuotient.isCoherentClass_iff ch,
+   fun q₁ q₂ => DecoherenceQuotient.count_append q₁ q₂⟩
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
