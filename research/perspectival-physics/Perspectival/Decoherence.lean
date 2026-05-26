@@ -2972,6 +2972,41 @@ theorem Regime.exhaustive (r : Regime) :
   · right; left; rfl
   · right; right; rfl
 
+/-! ## End-to-end Bool composition examples
+
+Demonstrating that the new API composes: chainRegime of a loopPower
+of a bracketed loop on Bool is decided to be coherent, etc. -/
+
+/-- **End-to-end: loopPower of a bracketed self-loop is coherent.** -/
+example (n : ℕ) :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let loop := RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    IsCoherent (loopPower loop n) := by
+  intro R loop
+  exact loopPower_isCoherent loop n
+
+/-- **End-to-end: chainRegime of a loopPower of a bracketed self-loop
+is coherent.** -/
+example (n : ℕ) :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let loop := RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    chainRegime (loopPower loop n) = Regime.coherent := by
+  intro R loop
+  exact chainRegime_loopPower loop n
+
+/-- **End-to-end: DecoherenceQuotient.count of a loopPower is 0.** -/
+example (n : ℕ) :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let loop := RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    DecoherenceQuotient.count
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (loopPower loop n)) = 0 := by
+  intro R loop
+  exact loopPower_isCoherent loop n
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
