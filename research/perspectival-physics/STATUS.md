@@ -630,6 +630,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.chainRegime_coherent_rate_first`, `chainRegime_pureDecoherent_rate_first`, `chainRegime_mixed_rate_first`, `regime_rate_first_certificate` — regime determines first rate coordinate | `Decoherence.lean` | ✓ (a) **regime → rate.1** |
 | `Decoherence.loops_decoherenceEquivalent`, `loops_quotient_eq`, `loop_equivalence_certificate` — any two loops at R are equivalent + their quotient classes collapse | `Decoherence.lean` | ✓ (a) **loop equivalence** |
 | `Decoherence.chainRegime_append_table` — coherent+coherent=coherent, Mixed survives both sides under append | `Decoherence.lean` | ✓ (a) **regime append table** |
+| `Decoherence.IsCoherent.one`, `IsCoherent.mul`, `IsCoherent.npow`, `loop_Mathlib_coherence_certificate` — IsCoherent under Mathlib Monoid notation (1/⋆/^) | `Decoherence.lean` | ✓ (a) **IsCoherent in Mathlib notation** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
