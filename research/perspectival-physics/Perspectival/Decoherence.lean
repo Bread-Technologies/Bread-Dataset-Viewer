@@ -2920,6 +2920,35 @@ theorem chainRegime_full_characterization {P : Type u} {C : Type v}
    chainRegime_eq_pureDecoherent_iff ch,
    chainRegime_eq_mixed_iff ch⟩
 
+/-- **loopPower is always coherent.** Any power of a loop has count 0
+(since loops are coherent and count is additive), so `IsCoherent`. -/
+theorem loopPower_isCoherent {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    IsCoherent (loopPower ch n) := by
+  show tierAEventCount (loopPower ch n) = 0
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+    rw [loopPower_succ, tierAEventCount_append]
+    have h_ch : tierAEventCount ch = 0 := loop_is_coherent ch
+    omega
+
+/-- **chainRegime of any loopPower is coherent.** -/
+theorem chainRegime_loopPower {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    chainRegime (loopPower ch n) = Regime.coherent :=
+  (chainRegime_eq_coherent_iff _).mpr (loopPower_isCoherent ch n)
+
+/-- **DecoherenceQuotient class of any loopPower is the nil class.**
+Since all loop powers at R are coherent (count = 0), and the loop
+quotient at R is a subsingleton (only one class), the class of any
+loopPower equals the class of nil. -/
+theorem loopPower_class_eq_nil_class {P : Type u} {C : Type v}
+    {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
+    Quotient.mk (DecoherenceEquivalent_setoid R R) (loopPower ch n) =
+      Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R) :=
+  Subsingleton.elim _ _
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
