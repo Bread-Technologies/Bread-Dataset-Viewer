@@ -3106,6 +3106,46 @@ theorem loop_equivalence_certificate :
    fun loop₁ loop₂ => loops_quotient_eq loop₁ loop₂,
    fun loop => loops_quotient_eq loop (RealityChain'.nil _)⟩
 
+/-! ## chainRegime append-rule table
+
+A compact summary of how regime tags compose under append. The two
+'survival' rules of `Mixed` and the 'transparency' of nil
+(left- and right-identity) together fully determine the table. -/
+
+/-- **chainRegime append table (selected entries).** Encodes:
+- coherent ⋆ coherent = coherent
+- mixed survives left and right
+- pure-decoherent ⋆ pure-decoherent = pure-decoherent OR coherent
+  (the latter when both are nil)
+- regime depends only on count = 0 / bracketed = 0 conditions. -/
+theorem chainRegime_append_table :
+    -- (a) coherent ⋆ coherent = coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        {ch₁ : RealityChain' P C R₁ R₂} {ch₂ : RealityChain' P C R₂ R₃},
+      chainRegime ch₁ = Regime.coherent →
+      chainRegime ch₂ = Regime.coherent →
+      chainRegime (ch₁.append ch₂) = Regime.coherent) ∧
+    -- (b) mixed on the left ⇒ mixed result.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        {ch₁ : RealityChain' P C R₁ R₂} (ch₂ : RealityChain' P C R₂ R₃),
+      chainRegime ch₁ = Regime.mixed →
+      chainRegime (ch₁.append ch₂) = Regime.mixed) ∧
+    -- (c) mixed on the right ⇒ mixed result.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch₁ : RealityChain' P C R₁ R₂) {ch₂ : RealityChain' P C R₂ R₃},
+      chainRegime ch₂ = Regime.mixed →
+      chainRegime (ch₁.append ch₂) = Regime.mixed) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro _ _ _ _ _ ch₁ ch₂ h₁ h₂
+    rw [chainRegime_eq_coherent_iff] at h₁ h₂ ⊢
+    exact (IsCoherent.append_iff ch₁ ch₂).mpr ⟨h₁, h₂⟩
+  · intro _ _ _ _ _ ch₁ ch₂ h₁
+    rw [chainRegime_eq_mixed_iff] at h₁ ⊢
+    exact IsMixed.append_right_anything ch₂ h₁
+  · intro _ _ _ _ _ ch₁ ch₂ h₂
+    rw [chainRegime_eq_mixed_iff] at h₂ ⊢
+    exact IsMixed.append_left_anything ch₁ h₂
+
 /-! ## Loop insertion changes the trichotomy regime
 
 Inserting a loop into a pure-decoherent chain breaks pure decoherence
