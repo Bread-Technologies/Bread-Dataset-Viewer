@@ -5774,6 +5774,30 @@ example : True := by
   have _h := @decoherence_integration_certificate
   trivial
 
+/-! ## Existence on Bool/Bool: pure-decoherent witness
+
+Using a concrete Meeting on Bool/Bool, we can construct a length-1
+pure-decoherent chain via `actualizeAt_strict_step`. -/
+
+/-- **A pure-decoherent length-1 witness on Bool/Bool exists.** -/
+example [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let m : Meeting Bool Bool := ⟨⟨true, true⟩, ⟨true, true⟩, MeetingStatus.Potential⟩
+    ∃ (ch : RealityChain' Bool Bool R (actualizeAt R m)),
+      IsPureDecoherent ch ∧ ch.length = 1 := by
+  intro R m
+  exact exists_pureDecoherent_chain_length_one R m rfl
+
+/-- **A mixed length-2 witness on Bool/Bool exists.** -/
+example [DecidableEq (Meeting Bool Bool)] :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let m : Meeting Bool Bool := ⟨⟨true, true⟩, ⟨true, true⟩, MeetingStatus.Potential⟩
+    ∃ (ch : RealityChain' Bool Bool R (actualizeAt R m)),
+      IsMixed ch ∧ ch.length = 2 := by
+  intro R m
+  exact ⟨_, mixed_actualize_then_loop R m rfl,
+         mixed_actualize_then_loop_length R m rfl⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
