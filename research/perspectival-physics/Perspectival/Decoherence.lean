@@ -5225,6 +5225,38 @@ theorem trichotomy_existence_super_certificate :
    fun R m h => ⟨_, mixed_actualize_then_loop R m h,
                   mixed_actualize_then_loop_length R m h⟩⟩
 
+/-! ## Inhabited witnesses for each regime
+
+A type-class friendlier statement: at every reality, the IsCoherent
+predicate has an inhabitant. -/
+
+/-- **Inhabited witness: coherent chain at R with length 0 (nil).** -/
+instance IsCoherent.inhabited {P : Type u} {C : Type v} {R : Reality P C} :
+    Inhabited { ch : RealityChain' P C R R // IsCoherent ch } :=
+  ⟨⟨RealityChain'.nil R, IsCoherent.nil R⟩⟩
+
+/-- **Inhabited witness: coherent chain at every length, packaged.** -/
+def IsCoherent.witness {P : Type u} {C : Type v}
+    (R : Reality P C) (k : ℕ) :
+    { ch : RealityChain' P C R R // IsCoherent ch ∧ ch.length = k } :=
+  let loop := RealityChain'.singleton
+    (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+  ⟨loopPower loop k,
+   loopPower_isCoherent loop k,
+   by rw [loopPower_length]; show k * 1 = k; omega⟩
+
+/-- **Witness extracts to a chain with correct length.** -/
+theorem IsCoherent.witness_length {P : Type u} {C : Type v}
+    (R : Reality P C) (k : ℕ) :
+    (IsCoherent.witness R k).val.length = k :=
+  (IsCoherent.witness R k).property.2
+
+/-- **Witness extracts to a coherent chain.** -/
+theorem IsCoherent.witness_isCoherent {P : Type u} {C : Type v}
+    (R : Reality P C) (k : ℕ) :
+    IsCoherent (IsCoherent.witness R k).val :=
+  (IsCoherent.witness R k).property.1
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
