@@ -6766,6 +6766,53 @@ theorem isDecoherenceEquivalentBool_certificate :
   ⟨fun ch₁ ch₂ => isDecoherenceEquivalentBool_iff ch₁ ch₂,
    fun ch => isDecoherenceEquivalentBool_refl ch⟩
 
+/-! ## isIsCoherentBool: Bool-valued IsCoherent classifier on chains
+
+A Bool classifier on chains for the IsCoherent predicate. -/
+
+/-- **isIsCoherentBool: Bool-valued IsCoherent.** -/
+def isIsCoherentBool {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) : Bool :=
+  decide (IsCoherent ch)
+
+/-- **isIsCoherentBool iff IsCoherent.** -/
+theorem isIsCoherentBool_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    isIsCoherentBool ch = true ↔ IsCoherent ch := by
+  unfold isIsCoherentBool
+  exact decide_eq_true_iff
+
+/-- **isIsCoherentBool on nil chain is true.** -/
+@[simp]
+theorem isIsCoherentBool_nil {P : Type u} {C : Type v} (R : Reality P C) :
+    isIsCoherentBool (RealityChain'.nil R) = true := by
+  rw [isIsCoherentBool_iff]
+  exact IsCoherent.nil R
+
+/-- **isIsCoherentBool on loops is true.** -/
+theorem isIsCoherentBool_loop {P : Type u} {C : Type v}
+    {R : Reality P C} (loop : RealityChain' P C R R) :
+    isIsCoherentBool loop = true := by
+  rw [isIsCoherentBool_iff]
+  exact IsCoherent.loop loop
+
+/-- **isIsCoherentBool certificate.** -/
+theorem isIsCoherentBool_certificate :
+    -- (a) Iff agreement.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      isIsCoherentBool ch = true ↔ IsCoherent ch) ∧
+    -- (b) True on nil.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      isIsCoherentBool (RealityChain'.nil R) = true) ∧
+    -- (c) True on loops.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R),
+      isIsCoherentBool loop = true) :=
+  ⟨fun ch => isIsCoherentBool_iff ch,
+   fun R => isIsCoherentBool_nil R,
+   fun loop => isIsCoherentBool_loop loop⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
