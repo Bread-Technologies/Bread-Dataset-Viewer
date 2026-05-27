@@ -6813,6 +6813,18 @@ theorem isIsCoherentBool_certificate :
    fun R => isIsCoherentBool_nil R,
    fun loop => isIsCoherentBool_loop loop⟩
 
+/-! ## Bool classifier final wrap
+
+All four Bool classifiers together. -/
+
+/-- **Bool classifier MASTER certificate.** -/
+theorem bool_classifier_master_certificate : True := by
+  have _h1 := @isCoherentClassBool_certificate
+  have _h2 := @isCountZero_certificate
+  have _h3 := @isDecoherenceEquivalentBool_certificate
+  have _h4 := @isIsCoherentBool_certificate
+  trivial
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
