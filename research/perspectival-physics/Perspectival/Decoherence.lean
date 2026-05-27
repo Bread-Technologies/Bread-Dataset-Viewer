@@ -4672,6 +4672,33 @@ theorem DecoherenceQuotient.isCoherentClass_npow {P : Type u} {C : Type v}
         (loop ^ n)) :=
   IsCoherent.npow loop n
 
+/-! ## Mathlib loop endpoint lemmas
+
+When loop multiplication or powers are formed, the endpoints stay
+at R. The quotient class for any of these collapses to the nil
+class via the loop_subsingleton instance. -/
+
+/-- **All Mathlib-Monoid-loop classes collapse to the nil class.** -/
+theorem mathlib_loop_class_eq_nil_class {P : Type u} {C : Type v}
+    {R : Reality P C} (loop : RealityChain' P C R R) :
+    Quotient.mk (DecoherenceEquivalent_setoid R R) loop =
+      Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R) :=
+  Subsingleton.elim _ _
+
+/-- **The class of `loop₁ * loop₂` equals the class of `loop₁`.** -/
+theorem mathlib_loop_class_mul_left {P : Type u} {C : Type v}
+    {R : Reality P C} (loop₁ loop₂ : RealityChain' P C R R) :
+    Quotient.mk (DecoherenceEquivalent_setoid R R) (loop₁ * loop₂) =
+      Quotient.mk (DecoherenceEquivalent_setoid R R) loop₁ :=
+  Subsingleton.elim _ _
+
+/-- **The class of `loop ^ n` equals the class of `loop`.** -/
+theorem mathlib_loop_class_npow {P : Type u} {C : Type v}
+    {R : Reality P C} (loop : RealityChain' P C R R) (n : ℕ) :
+    Quotient.mk (DecoherenceEquivalent_setoid R R) (loop ^ n) =
+      Quotient.mk (DecoherenceEquivalent_setoid R R) loop :=
+  Subsingleton.elim _ _
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
