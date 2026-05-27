@@ -5312,6 +5312,64 @@ theorem regime_subtype_certificate :
   ⟨fun c => CoherentChain.count_zero c,
    fun c => CoherentChain.endpoints_eq c⟩
 
+/-! ## CoherentChain append: composition closes the regime
+
+CoherentChain is closed under append: if both parts are coherent,
+the join is coherent. -/
+
+/-- **CoherentChain composition.** -/
+def CoherentChain.append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃) :
+    CoherentChain R₁ R₃ :=
+  ⟨c₁.val.append c₂.val,
+   (IsCoherent.append_iff c₁.val c₂.val).mpr ⟨c₁.property, c₂.property⟩⟩
+
+/-- **CoherentChain length is additive under append.** -/
+theorem CoherentChain.length_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃) :
+    (CoherentChain.append c₁ c₂).val.length =
+      c₁.val.length + c₂.val.length :=
+  RealityChain'.append_length c₁.val c₂.val
+
+/-- **CoherentChain count is always 0.** -/
+theorem CoherentChain.append_count {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃) :
+    (CoherentChain.append c₁ c₂).val.actualizationCount = 0 :=
+  CoherentChain.count_zero _
+
+/-- **CoherentChain append associativity (count-wise — actual chain
+equality follows from RealityChain' associativity).** -/
+theorem CoherentChain.append_assoc_count {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ R₄ : Reality P C}
+    (c₁ : CoherentChain R₁ R₂)
+    (c₂ : CoherentChain R₂ R₃)
+    (c₃ : CoherentChain R₃ R₄) :
+    (CoherentChain.append (CoherentChain.append c₁ c₂) c₃).val.actualizationCount =
+      (CoherentChain.append c₁ (CoherentChain.append c₂ c₃)).val.actualizationCount := by
+  rw [CoherentChain.count_zero, CoherentChain.count_zero]
+
+/-- **CoherentChain composition certificate.** -/
+theorem coherent_chain_composition_certificate :
+    -- (a) append closes the regime.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃),
+      IsCoherent (CoherentChain.append c₁ c₂).val) ∧
+    -- (b) length is additive under append.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃),
+      (CoherentChain.append c₁ c₂).val.length =
+        c₁.val.length + c₂.val.length) ∧
+    -- (c) count of join is 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃),
+      (CoherentChain.append c₁ c₂).val.actualizationCount = 0) :=
+  ⟨fun c₁ c₂ => (CoherentChain.append c₁ c₂).property,
+   fun c₁ c₂ => CoherentChain.length_append c₁ c₂,
+   fun c₁ c₂ => CoherentChain.append_count c₁ c₂⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
