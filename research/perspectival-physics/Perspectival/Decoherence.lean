@@ -5707,6 +5707,29 @@ theorem decoherence_integration_certificate :
    fun q₁ q₂ => DecoherenceQuotient.count_append q₁ q₂,
    fun ch => ⟨chainRegime_eq_coherent_iff ch, chainRegime_eq_mixed_iff ch⟩⟩
 
+/-! ## Final summary section
+
+The Decoherence module's new predicate/classifier/quotient layer
+is complete. Top-level anchors:
+- `decoherence_integration_certificate` (9-fact GRAND bundle)
+- `predicate_api_super_certificate` (7-fact predicate layer)
+- `coherent_chain_super_certificate` (7-fact CoherentChain subtype)
+- `mathlib_loop_master_certificate` (9-fact Mathlib notation)
+- `trichotomy_existence_super_certificate` (3-regime existence) -/
+
+/-- **Top-level anchor: all super-certificates exist and are
+formally distinct (i.e., the file actually contains them).** This
+is a deliberately tautological theorem documenting the named
+top-level certificates. -/
+theorem decoherence_top_anchors : True := by
+  -- Reference each super-certificate name to document existence.
+  have _h₁ := @decoherence_integration_certificate
+  have _h₂ := @predicate_api_super_certificate
+  have _h₃ := @coherent_chain_super_certificate
+  have _h₄ := @mathlib_loop_master_certificate
+  have _h₅ := @trichotomy_existence_super_certificate
+  trivial
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
