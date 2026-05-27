@@ -4550,6 +4550,25 @@ theorem loop_Mathlib_coherence_certificate :
    fun loop₁ loop₂ => IsCoherent.mul loop₁ loop₂,
    fun loop n => IsCoherent.npow loop n⟩
 
+/-- **Mathlib chainRegime: regime of 1 (= nil loop) is coherent.** -/
+@[simp]
+theorem chainRegime_one {P : Type u} {C : Type v} {R : Reality P C} :
+    chainRegime (1 : RealityChain' P C R R) = Regime.coherent := rfl
+
+/-- **Mathlib chainRegime: regime of `loop₁ * loop₂` is coherent.** -/
+@[simp]
+theorem chainRegime_mul {P : Type u} {C : Type v} {R : Reality P C}
+    (loop₁ loop₂ : RealityChain' P C R R) :
+    chainRegime (loop₁ * loop₂) = Regime.coherent :=
+  (chainRegime_eq_coherent_iff _).mpr (IsCoherent.mul loop₁ loop₂)
+
+/-- **Mathlib chainRegime: regime of `loop ^ n` is coherent.** -/
+@[simp]
+theorem chainRegime_npow {P : Type u} {C : Type v} {R : Reality P C}
+    (loop : RealityChain' P C R R) (n : ℕ) :
+    chainRegime (loop ^ n) = Regime.coherent :=
+  (chainRegime_eq_coherent_iff _).mpr (IsCoherent.npow loop n)
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
