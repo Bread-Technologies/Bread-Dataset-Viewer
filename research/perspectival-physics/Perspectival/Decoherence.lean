@@ -6212,6 +6212,58 @@ theorem conjugation_metric_certificate :
   ⟨fun loop₁ ch loop₂ => conjugation_length loop₁ ch loop₂,
    fun loop₁ ch loop₂ => conjugation_bracketedCount loop₁ ch loop₂⟩
 
+/-! ## Quotient class invariance under conjugation
+
+In the decoherence quotient, conjugation by loops collapses to the
+same class (since count is preserved). -/
+
+/-- **Conjugation preserves quotient class.** -/
+theorem conjugation_preserves_quotient_class {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂) :
+    Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ((loop₁.append ch).append loop₂) =
+      Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch := by
+  apply Quotient.sound
+  show ((loop₁.append ch).append loop₂).actualizationCount = ch.actualizationCount
+  exact conjugation_preserves_count loop₁ ch loop₂
+
+/-- **DecoherenceQuotient.count is conjugation-invariant.** -/
+theorem conjugation_quotient_count_invariant {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂) :
+    DecoherenceQuotient.count
+      (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂)
+        ((loop₁.append ch).append loop₂)) =
+    DecoherenceQuotient.count
+      (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch) := by
+  rw [conjugation_preserves_quotient_class]
+
+/-- **Conjugation quotient certificate.** -/
+theorem conjugation_quotient_certificate :
+    -- (a) Quotient class preserved.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂),
+      Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ((loop₁.append ch).append loop₂) =
+        Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch) ∧
+    -- (b) Quotient count preserved.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂),
+      DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂)
+          ((loop₁.append ch).append loop₂)) =
+      DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch)) :=
+  ⟨fun loop₁ ch loop₂ => conjugation_preserves_quotient_class loop₁ ch loop₂,
+   fun loop₁ ch loop₂ => conjugation_quotient_count_invariant loop₁ ch loop₂⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
