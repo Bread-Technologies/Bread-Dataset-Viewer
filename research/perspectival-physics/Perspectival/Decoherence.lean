@@ -4969,6 +4969,49 @@ theorem bracketed_singleton_quotient_certificate :
    fun h => isCoherentClass_bracketed_singleton h,
    fun h => count_bracketed_singleton_class h⟩
 
+/-! ## Append-of-bracketed-singletons forms a coherent chain
+
+Appending multiple bracketed singletons gives a coherent chain
+(count remains 0). -/
+
+/-- **Append of two bracketed singletons is coherent.** -/
+theorem bracketed_singletons_append_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (h₁ : TierB.BracketedTransition R₁ R₂)
+    (h₂ : TierB.BracketedTransition R₂ R₃) :
+    IsCoherent ((RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed h₁)).append
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed h₂))) := by
+  refine (IsCoherent.append_iff _ _).mpr ⟨?_, ?_⟩
+  · exact bracketed_singleton_coherent h₁
+  · exact bracketed_singleton_coherent h₂
+
+/-- **Append of two bracketed singletons has length 2.** -/
+theorem bracketed_singletons_append_length {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (h₁ : TierB.BracketedTransition R₁ R₂)
+    (h₂ : TierB.BracketedTransition R₂ R₃) :
+    ((RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed h₁)).append
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed h₂))).length = 2 := by
+  rw [RealityChain'.append_length]
+  show 1 + 1 = 2
+  rfl
+
+/-- **Append of two bracketed singletons classifies as coherent.** -/
+theorem chainRegime_bracketed_singletons_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (h₁ : TierB.BracketedTransition R₁ R₂)
+    (h₂ : TierB.BracketedTransition R₂ R₃) :
+    chainRegime ((RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed h₁)).append
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed h₂))) = Regime.coherent :=
+  (chainRegime_eq_coherent_iff _).mpr
+    (bracketed_singletons_append_coherent h₁ h₂)
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
