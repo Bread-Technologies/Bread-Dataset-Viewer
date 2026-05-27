@@ -6524,6 +6524,44 @@ theorem rate_zero_characterization_certificate :
       actualizationRate ch = (0, k) ↔ IsCoherent ch ∧ ch.length = k :=
   fun ch k => rate_zero_iff_coherent_length ch k
 
+/-! ## Rate-full characterization
+
+The rate (k, k) corresponds exactly to pure-decoherent chains of
+length k. -/
+
+/-- **Rate (k, k) ↔ pure-decoherent with length k.** -/
+theorem rate_full_iff_pureDecoherent_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (k : ℕ) :
+    actualizationRate ch = (k, k) ↔ IsPureDecoherent ch ∧ ch.length = k := by
+  constructor
+  · intro h
+    have hC : ch.actualizationCount = k := by
+      have : (actualizationRate ch).1 = k := by rw [h]
+      exact this
+    have hL : ch.length = k := by
+      have : (actualizationRate ch).2 = k := by rw [h]
+      exact this
+    refine ⟨?_, hL⟩
+    show ch.bracketedCount = 0
+    have hsum := ch.counts_sum
+    omega
+  · rintro ⟨hP, hL⟩
+    have hB : ch.bracketedCount = 0 := hP
+    have hsum := ch.counts_sum
+    have hC : ch.actualizationCount = ch.length := by omega
+    ext
+    · show ch.actualizationCount = k
+      rw [hC, hL]
+    · show ch.length = k
+      exact hL
+
+/-- **Rate-full characterization certificate.** -/
+theorem rate_full_characterization_certificate :
+    ∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (k : ℕ),
+      actualizationRate ch = (k, k) ↔ IsPureDecoherent ch ∧ ch.length = k :=
+  fun ch k => rate_full_iff_pureDecoherent_length ch k
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
