@@ -4856,6 +4856,65 @@ theorem length_zero_certificate :
      show ch.actualizationCount = 0
      have := ch.counts_sum; omega⟩
 
+/-! ## Single-step regime characterizations
+
+A length-1 (singleton) chain is either coherent (if the step is
+bracketed) or pure-decoherent (if the step is an actualization).
+This gives an exact, computable classification of singleton chains. -/
+
+/-- **A singleton chain has length 1.** -/
+@[simp]
+theorem RealityChain'.singleton_length' {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (step : TierB.TrajectoryStep' P C R₁ R₂) :
+    (RealityChain'.singleton step).length = 1 := rfl
+
+/-- **A bracketed singleton has count 0.** -/
+@[simp]
+theorem bracketed_singleton_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : TierB.BracketedTransition R₁ R₂) :
+    (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed h)).actualizationCount = 0 := rfl
+
+/-- **A bracketed singleton has rate (0, 1).** -/
+theorem bracketed_singleton_rate {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : TierB.BracketedTransition R₁ R₂) :
+    actualizationRate (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed h)) = (0, 1) := rfl
+
+/-- **A bracketed singleton classifies as coherent.** -/
+theorem bracketed_singleton_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : TierB.BracketedTransition R₁ R₂) :
+    IsCoherent (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed h)) := rfl
+
+/-- **Singleton characterization certificate.** Bundles the length and
+rate facts for bracketed singletons. -/
+theorem bracketed_singleton_certificate :
+    -- (a) Length is 1.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (h : TierB.BracketedTransition R₁ R₂),
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed h)).length = 1) ∧
+    -- (b) Count is 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (h : TierB.BracketedTransition R₁ R₂),
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed h)).actualizationCount = 0) ∧
+    -- (c) Rate is (0, 1).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (h : TierB.BracketedTransition R₁ R₂),
+      actualizationRate (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed h)) = (0, 1)) ∧
+    -- (d) Coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (h : TierB.BracketedTransition R₁ R₂),
+      IsCoherent (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed h))) :=
+  ⟨fun h => RealityChain'.singleton_length' _,
+   fun h => bracketed_singleton_count h,
+   fun h => bracketed_singleton_rate h,
+   fun h => bracketed_singleton_coherent h⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
