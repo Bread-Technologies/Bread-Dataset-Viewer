@@ -5257,6 +5257,61 @@ theorem IsCoherent.witness_isCoherent {P : Type u} {C : Type v}
     IsCoherent (IsCoherent.witness R k).val :=
   (IsCoherent.witness R k).property.1
 
+/-! ## Witness extension: regime-tagged subtypes
+
+Subtypes carrying chains and their regime predicates. -/
+
+/-- **Subtype: chains tagged with IsCoherent.** -/
+abbrev CoherentChain {P : Type u} {C : Type v} (R₁ R₂ : Reality P C) : Type _ :=
+  { ch : RealityChain' P C R₁ R₂ // IsCoherent ch }
+
+/-- **Subtype: chains tagged with IsPureDecoherent.** -/
+abbrev PureDecoherentChain {P : Type u} {C : Type v}
+    (R₁ R₂ : Reality P C) : Type _ :=
+  { ch : RealityChain' P C R₁ R₂ // IsPureDecoherent ch }
+
+/-- **Subtype: chains tagged with IsMixed.** -/
+abbrev MixedChain {P : Type u} {C : Type v}
+    (R₁ R₂ : Reality P C) : Type _ :=
+  { ch : RealityChain' P C R₁ R₂ // IsMixed ch }
+
+/-- **CoherentChain is Inhabited at every R.** -/
+instance CoherentChain.inhabited {P : Type u} {C : Type v} {R : Reality P C} :
+    Inhabited (CoherentChain R R) :=
+  ⟨⟨RealityChain'.nil R, IsCoherent.nil R⟩⟩
+
+/-- **PureDecoherentChain on the same reality is Inhabited via nil.** -/
+instance PureDecoherentChain.inhabited {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    Inhabited (PureDecoherentChain R R) :=
+  ⟨⟨RealityChain'.nil R, rfl⟩⟩
+
+/-- **Subtype extractor: every CoherentChain class has count 0.** -/
+theorem CoherentChain.count_zero {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : CoherentChain R₁ R₂) :
+    c.val.actualizationCount = 0 :=
+  c.property
+
+/-- **CoherentChain endpoints must agree.** -/
+theorem CoherentChain.endpoints_eq {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : CoherentChain R₁ R₂) :
+    R₁ = R₂ :=
+  (IsCoherent.iff_endpoints_eq c.val).mp c.property
+
+/-- **Regime-tagged subtype certificate.** Prop-valued bundle. The
+Inhabited instances are separate type-class instances. -/
+theorem regime_subtype_certificate :
+    -- (a) CoherentChain count_zero.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (c : CoherentChain R₁ R₂),
+      c.val.actualizationCount = 0) ∧
+    -- (b) CoherentChain endpoints agree.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (c : CoherentChain R₁ R₂),
+      R₁ = R₂) :=
+  ⟨fun c => CoherentChain.count_zero c,
+   fun c => CoherentChain.endpoints_eq c⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
