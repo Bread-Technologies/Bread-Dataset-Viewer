@@ -5012,6 +5012,39 @@ theorem chainRegime_bracketed_singletons_append {P : Type u} {C : Type v}
   (chainRegime_eq_coherent_iff _).mpr
     (bracketed_singletons_append_coherent h₁ h₂)
 
+/-! ## Pure-decoherent chain: existence via actualizeAt_strict_step
+
+Given a Reality and a Potential meeting at it, we get a length-1
+actualization step. -/
+
+/-- **A pure-decoherent chain of length 1 exists for any pointwise
+actualization.** -/
+theorem exists_pureDecoherent_chain_length_one {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    ∃ (ch : RealityChain' P C R (actualizeAt R m)),
+      IsPureDecoherent ch ∧ ch.length = 1 := by
+  refine ⟨RealityChain'.singleton
+    (TierB.actualizeAt_strict_step R m h), ?_, ?_⟩
+  · show (RealityChain'.singleton _).bracketedCount = 0
+    rfl
+  · rfl
+
+/-- **Length-1 actualization chain has count 1.** -/
+theorem actualization_length_one_count {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    (RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)).actualizationCount = 1 := rfl
+
+/-- **Length-1 actualization chain has rate (1, 1) = full
+decoherence.** -/
+theorem actualization_length_one_rate {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    actualizationRate (RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)) = (1, 1) := rfl
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
