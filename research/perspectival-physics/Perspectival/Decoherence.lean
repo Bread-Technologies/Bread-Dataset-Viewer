@@ -6716,6 +6716,18 @@ theorem isCountZero_certificate :
   ⟨fun q => isCountZero_iff_isCoherentClass q,
    isCountZero_nil⟩
 
+/-! ## Closing wrap
+
+The Bool-valued classifier API completes the predicate layer:
+both isCoherentClassBool and isCountZero give computational Bool
+access; iffs to the Prop version preserve reasoning power. -/
+
+/-- **Closing wrap marker.** -/
+theorem decoherence_bool_classifier_wrap : True := by
+  have _h1 := @isCoherentClassBool_certificate
+  have _h2 := @isCountZero_certificate
+  trivial
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
