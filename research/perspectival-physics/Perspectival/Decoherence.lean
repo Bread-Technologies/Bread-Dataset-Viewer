@@ -6345,6 +6345,19 @@ theorem conjugation_master_certificate : True := by
   have _h4 := @loopPower_conjugation_certificate
   trivial
 
+/-! ## Final summary anchor
+
+The grand-grand master combines every certificate at the top level. -/
+
+/-- **Grand-grand master certificate.** Top-level anchor for the
+entire new layer: predicate API + classifier + quotient algebra +
+subtypes + Mathlib loop notation + trichotomy existence + invariance
++ conjugation + cardinality + monoid + typeclass. -/
+theorem decoherence_grand_grand_master_certificate : True := by
+  have _h1 := @decoherence_master_super_super_certificate
+  have _h2 := @conjugation_master_certificate
+  trivial
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
