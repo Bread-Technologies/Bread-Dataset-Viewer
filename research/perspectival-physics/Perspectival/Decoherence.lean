@@ -5045,6 +5045,61 @@ theorem actualization_length_one_rate {P : Type u} {C : Type v}
     actualizationRate (RealityChain'.singleton
       (TierB.actualizeAt_strict_step R m h)) = (1, 1) := rfl
 
+/-- **Length-1 actualization is `IsMixed`-incompatible (it's pure-
+decoherent).** -/
+theorem actualization_length_one_not_mixed {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    ¬ IsMixed (RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)) := by
+  rintro ⟨_, hB⟩
+  have h0 : (RealityChain'.singleton
+    (TierB.actualizeAt_strict_step R m h)).bracketedCount = 0 := rfl
+  omega
+
+/-- **Length-1 actualization is `IsCoherent`-incompatible (count > 0).** -/
+theorem actualization_length_one_not_coherent {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    ¬ IsCoherent (RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)) := by
+  intro hC
+  have h1 : (RealityChain'.singleton
+    (TierB.actualizeAt_strict_step R m h)).actualizationCount = 1 := rfl
+  have h0 : (RealityChain'.singleton
+    (TierB.actualizeAt_strict_step R m h)).actualizationCount = 0 := hC
+  omega
+
+/-- **Length-1 actualization classifies as `pureDecoherent`.** -/
+theorem chainRegime_actualization_length_one {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    chainRegime (RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)) = Regime.pureDecoherent := by
+  rw [chainRegime_eq_pureDecoherent_iff]
+  refine ⟨?_, ?_⟩
+  · show _ = 0; rfl
+  · exact actualization_length_one_not_coherent R m h
+
+/-- **Pure-decoherent length-1 quotient-class certificate.** -/
+theorem actualization_length_one_quotient_certificate :
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h : R m = MeetingStatus.Potential),
+      DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R (actualizeAt R m))
+          (RealityChain'.singleton
+            (TierB.actualizeAt_strict_step R m h))) = 1) ∧
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h : R m = MeetingStatus.Potential),
+      ¬ DecoherenceQuotient.isCoherentClass
+        (Quotient.mk (DecoherenceEquivalent_setoid R (actualizeAt R m))
+          (RealityChain'.singleton
+            (TierB.actualizeAt_strict_step R m h)))) :=
+  ⟨fun R m h => actualization_length_one_count R m h,
+   fun R m h hC => actualization_length_one_not_coherent R m h hC⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
