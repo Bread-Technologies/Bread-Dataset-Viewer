@@ -4569,6 +4569,31 @@ theorem chainRegime_npow {P : Type u} {C : Type v} {R : Reality P C}
     chainRegime (loop ^ n) = Regime.coherent :=
   (chainRegime_eq_coherent_iff _).mpr (IsCoherent.npow loop n)
 
+/-- **DecoherenceQuotient.count: count of 1 (= nil loop class) is 0.** -/
+@[simp]
+theorem DecoherenceQuotient.count_one {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    DecoherenceQuotient.count
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (1 : RealityChain' P C R R)) = 0 := rfl
+
+/-- **DecoherenceQuotient.count: count of any loop class is 0
+(Mathlib mul form).** -/
+theorem DecoherenceQuotient.count_loop_mul {P : Type u} {C : Type v}
+    {R : Reality P C} (loop₁ loop₂ : RealityChain' P C R R) :
+    DecoherenceQuotient.count
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (loop₁ * loop₂)) = 0 :=
+  loop_is_coherent _
+
+/-- **DecoherenceQuotient.count: count of `loop ^ n` class is 0.** -/
+theorem DecoherenceQuotient.count_loop_npow {P : Type u} {C : Type v}
+    {R : Reality P C} (loop : RealityChain' P C R R) (n : ℕ) :
+    DecoherenceQuotient.count
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (loop ^ n)) = 0 :=
+  IsCoherent.npow loop n
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
