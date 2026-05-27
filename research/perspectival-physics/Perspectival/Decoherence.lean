@@ -5370,6 +5370,58 @@ theorem coherent_chain_composition_certificate :
    fun c₁ c₂ => CoherentChain.length_append c₁ c₂,
    fun c₁ c₂ => CoherentChain.append_count c₁ c₂⟩
 
+/-! ## CoherentChain identity element
+
+CoherentChain R R carries a `nil` identity element under append. -/
+
+/-- **CoherentChain nil (the identity element).** -/
+def CoherentChain.nil {P : Type u} {C : Type v} (R : Reality P C) :
+    CoherentChain R R :=
+  ⟨RealityChain'.nil R, IsCoherent.nil R⟩
+
+/-- **CoherentChain nil has length 0.** -/
+@[simp]
+theorem CoherentChain.nil_length {P : Type u} {C : Type v} (R : Reality P C) :
+    (CoherentChain.nil R).val.length = 0 := rfl
+
+/-- **CoherentChain nil has count 0.** -/
+@[simp]
+theorem CoherentChain.nil_count {P : Type u} {C : Type v} (R : Reality P C) :
+    (CoherentChain.nil R).val.actualizationCount = 0 := rfl
+
+/-- **CoherentChain nil composes trivially (left identity at length).** -/
+theorem CoherentChain.nil_append_length {P : Type u} {C : Type v}
+    {R R' : Reality P C} (c : CoherentChain R R') :
+    (CoherentChain.append (CoherentChain.nil R) c).val.length = c.val.length := by
+  rw [CoherentChain.length_append, CoherentChain.nil_length, Nat.zero_add]
+
+/-- **CoherentChain nil composes trivially (right identity at length).** -/
+theorem CoherentChain.append_nil_length {P : Type u} {C : Type v}
+    {R R' : Reality P C} (c : CoherentChain R R') :
+    (CoherentChain.append c (CoherentChain.nil R')).val.length = c.val.length := by
+  rw [CoherentChain.length_append, CoherentChain.nil_length, Nat.add_zero]
+
+/-- **CoherentChain identity certificate.** -/
+theorem coherent_chain_identity_certificate :
+    -- (a) nil length = 0.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      (CoherentChain.nil R).val.length = 0) ∧
+    -- (b) nil count = 0.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      (CoherentChain.nil R).val.actualizationCount = 0) ∧
+    -- (c) left identity (length-wise).
+    (∀ {P : Type} {C : Type} {R R' : Reality P C}
+        (c : CoherentChain R R'),
+      (CoherentChain.append (CoherentChain.nil R) c).val.length = c.val.length) ∧
+    -- (d) right identity (length-wise).
+    (∀ {P : Type} {C : Type} {R R' : Reality P C}
+        (c : CoherentChain R R'),
+      (CoherentChain.append c (CoherentChain.nil R')).val.length = c.val.length) :=
+  ⟨fun R => CoherentChain.nil_length R,
+   fun R => CoherentChain.nil_count R,
+   fun c => CoherentChain.nil_append_length c,
+   fun c => CoherentChain.append_nil_length c⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
