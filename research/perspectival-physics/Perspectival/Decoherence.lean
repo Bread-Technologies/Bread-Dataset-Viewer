@@ -6679,6 +6679,43 @@ theorem isCoherentClassBool_certificate :
   ⟨fun q => isCoherentClassBool_iff q,
    isCoherentClassBool_nil⟩
 
+/-! ## Quotient count as a Bool-valued zero predicate
+
+A computational Bool: is this quotient class's count zero? -/
+
+/-- **isCountZero: Bool-valued predicate for quotient count = 0.** -/
+def DecoherenceQuotient.isCountZero {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) : Bool :=
+  decide (q.count = 0)
+
+/-- **isCountZero iff isCoherentClass.** -/
+theorem isCountZero_iff_isCoherentClass {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) :
+    q.isCountZero = true ↔ q.isCoherentClass := by
+  unfold DecoherenceQuotient.isCountZero DecoherenceQuotient.isCoherentClass
+  exact decide_eq_true_iff
+
+/-- **isCountZero on nil class is true.** -/
+@[simp]
+theorem isCountZero_nil {P : Type u} {C : Type v} {R : Reality P C} :
+    DecoherenceQuotient.isCountZero
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (RealityChain'.nil R)) = true := rfl
+
+/-- **isCountZero certificate.** -/
+theorem isCountZero_certificate :
+    -- (a) isCountZero iff isCoherentClass.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (q : DecoherenceQuotient R₁ R₂),
+      q.isCountZero = true ↔ q.isCoherentClass) ∧
+    -- (b) isCountZero on nil is true.
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      DecoherenceQuotient.isCountZero
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (RealityChain'.nil R)) = true) :=
+  ⟨fun q => isCountZero_iff_isCoherentClass q,
+   isCountZero_nil⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
