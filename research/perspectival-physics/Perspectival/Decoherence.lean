@@ -6358,6 +6358,88 @@ theorem decoherence_grand_grand_master_certificate : True := by
   have _h2 := @conjugation_master_certificate
   trivial
 
+/-! ## Symmetry: append-on-the-other-side
+
+For a singleton-prefix conjugation, the count behavior is the same:
+adding a coherent prefix and a coherent suffix doesn't change count. -/
+
+/-- **Prefix by a coherent chain preserves count.** -/
+theorem coherent_prefix_preserves_count {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (prefixCh : RealityChain' P C R₁ R₂)
+    (ch : RealityChain' P C R₂ R₃)
+    (h : IsCoherent prefixCh) :
+    (prefixCh.append ch).actualizationCount = ch.actualizationCount := by
+  rw [RealityChain'.append_actualizationCount]
+  have h' : prefixCh.actualizationCount = 0 := h
+  omega
+
+/-- **Suffix by a coherent chain preserves count.** -/
+theorem coherent_suffix_preserves_count {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch : RealityChain' P C R₁ R₂)
+    (suffixCh : RealityChain' P C R₂ R₃)
+    (h : IsCoherent suffixCh) :
+    (ch.append suffixCh).actualizationCount = ch.actualizationCount := by
+  rw [RealityChain'.append_actualizationCount]
+  have h' : suffixCh.actualizationCount = 0 := h
+  omega
+
+/-- **Coherent prefix preserves IsCoherent.** -/
+theorem coherent_prefix_preserves_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (prefixCh : RealityChain' P C R₁ R₂)
+    (ch : RealityChain' P C R₂ R₃)
+    (h_prefix : IsCoherent prefixCh) (h : IsCoherent ch) :
+    IsCoherent (prefixCh.append ch) := by
+  show (prefixCh.append ch).actualizationCount = 0
+  rw [coherent_prefix_preserves_count prefixCh ch h_prefix]
+  exact h
+
+/-- **Coherent suffix preserves IsCoherent.** -/
+theorem coherent_suffix_preserves_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (ch : RealityChain' P C R₁ R₂)
+    (suffixCh : RealityChain' P C R₂ R₃)
+    (h : IsCoherent ch) (h_suffix : IsCoherent suffixCh) :
+    IsCoherent (ch.append suffixCh) := by
+  show (ch.append suffixCh).actualizationCount = 0
+  rw [coherent_suffix_preserves_count ch suffixCh h_suffix]
+  exact h
+
+/-- **Coherent prefix/suffix certificate.** -/
+theorem coherent_prefix_suffix_certificate :
+    -- (a) Coherent prefix preserves count.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (prefixCh : RealityChain' P C R₁ R₂)
+        (ch : RealityChain' P C R₂ R₃),
+      IsCoherent prefixCh →
+      (prefixCh.append ch).actualizationCount = ch.actualizationCount) ∧
+    -- (b) Coherent suffix preserves count.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂)
+        (suffixCh : RealityChain' P C R₂ R₃),
+      IsCoherent suffixCh →
+      (ch.append suffixCh).actualizationCount = ch.actualizationCount) ∧
+    -- (c) Coherent prefix preserves IsCoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (prefixCh : RealityChain' P C R₁ R₂)
+        (ch : RealityChain' P C R₂ R₃),
+      IsCoherent prefixCh → IsCoherent ch →
+      IsCoherent (prefixCh.append ch)) ∧
+    -- (d) Coherent suffix preserves IsCoherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂)
+        (suffixCh : RealityChain' P C R₂ R₃),
+      IsCoherent ch → IsCoherent suffixCh →
+      IsCoherent (ch.append suffixCh)) :=
+  ⟨fun prefixCh ch h => coherent_prefix_preserves_count prefixCh ch h,
+   fun ch suffixCh h => coherent_suffix_preserves_count ch suffixCh h,
+   fun prefixCh ch h₁ h₂ =>
+     coherent_prefix_preserves_coherent prefixCh ch h₁ h₂,
+   fun ch suffixCh h₁ h₂ =>
+     coherent_suffix_preserves_coherent ch suffixCh h₁ h₂⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
