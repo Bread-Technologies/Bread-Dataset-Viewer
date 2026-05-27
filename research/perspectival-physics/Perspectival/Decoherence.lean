@@ -4915,6 +4915,60 @@ theorem bracketed_singleton_certificate :
    fun h => bracketed_singleton_rate h,
    fun h => bracketed_singleton_coherent h⟩
 
+/-! ## chainRegime under bracketed singletons
+
+A bracketed singleton always classifies as coherent. -/
+
+/-- **Bracketed singleton classifies as coherent.** -/
+@[simp]
+theorem chainRegime_bracketed_singleton' {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : TierB.BracketedTransition R₁ R₂) :
+    chainRegime (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed h)) = Regime.coherent := rfl
+
+/-- **isCoherentClass holds for the bracketed singleton class.** -/
+theorem isCoherentClass_bracketed_singleton {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : TierB.BracketedTransition R₁ R₂) :
+    DecoherenceQuotient.isCoherentClass
+      (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂)
+        (RealityChain'.singleton
+          (TierB.TrajectoryStep'.bracketed h))) :=
+  bracketed_singleton_coherent h
+
+/-- **DecoherenceQuotient.count of a bracketed singleton's class is 0.** -/
+theorem count_bracketed_singleton_class {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (h : TierB.BracketedTransition R₁ R₂) :
+    DecoherenceQuotient.count
+      (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂)
+        (RealityChain'.singleton
+          (TierB.TrajectoryStep'.bracketed h))) = 0 :=
+  bracketed_singleton_coherent h
+
+/-- **Bracketed-singleton quotient certificate.** -/
+theorem bracketed_singleton_quotient_certificate :
+    -- (a) chainRegime = coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (h : TierB.BracketedTransition R₁ R₂),
+      chainRegime (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed h)) = Regime.coherent) ∧
+    -- (b) isCoherentClass holds.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (h : TierB.BracketedTransition R₁ R₂),
+      DecoherenceQuotient.isCoherentClass
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂)
+          (RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed h)))) ∧
+    -- (c) count of class is 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (h : TierB.BracketedTransition R₁ R₂),
+      DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂)
+          (RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed h))) = 0) :=
+  ⟨fun h => chainRegime_bracketed_singleton' h,
+   fun h => isCoherentClass_bracketed_singleton h,
+   fun h => count_bracketed_singleton_class h⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
