@@ -4641,6 +4641,37 @@ theorem mathlib_loop_master_certificate :
    fun loop₁ loop₂ => DecoherenceQuotient.count_loop_mul loop₁ loop₂,
    fun loop n => DecoherenceQuotient.count_loop_npow loop n⟩
 
+/-! ## isCoherentClass in Mathlib Monoid notation
+
+The quotient-level `isCoherentClass` predicate evaluates to True
+for any class of a loop expressed in Mathlib Monoid notation. -/
+
+/-- **isCoherentClass holds for 1's class.** -/
+@[simp]
+theorem DecoherenceQuotient.isCoherentClass_one {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    DecoherenceQuotient.isCoherentClass
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (1 : RealityChain' P C R R)) := by
+  show tierAEventCount (1 : RealityChain' P C R R) = 0
+  rfl
+
+/-- **isCoherentClass holds for `loop₁ * loop₂`'s class.** -/
+theorem DecoherenceQuotient.isCoherentClass_mul {P : Type u} {C : Type v}
+    {R : Reality P C} (loop₁ loop₂ : RealityChain' P C R R) :
+    DecoherenceQuotient.isCoherentClass
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (loop₁ * loop₂)) :=
+  IsCoherent.mul loop₁ loop₂
+
+/-- **isCoherentClass holds for `loop ^ n`'s class.** -/
+theorem DecoherenceQuotient.isCoherentClass_npow {P : Type u} {C : Type v}
+    {R : Reality P C} (loop : RealityChain' P C R R) (n : ℕ) :
+    DecoherenceQuotient.isCoherentClass
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (loop ^ n)) :=
+  IsCoherent.npow loop n
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
