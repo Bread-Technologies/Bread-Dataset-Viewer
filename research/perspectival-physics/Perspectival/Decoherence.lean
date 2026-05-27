@@ -5422,6 +5422,42 @@ theorem coherent_chain_identity_certificate :
    fun c => CoherentChain.nil_append_length c,
    fun c => CoherentChain.append_nil_length c⟩
 
+/-! ## CoherentChain projection back to RealityChain'
+
+The forgetful map sending a CoherentChain to its underlying chain. -/
+
+/-- **CoherentChain projection.** -/
+def CoherentChain.toRealityChain' {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : CoherentChain R₁ R₂) :
+    RealityChain' P C R₁ R₂ :=
+  c.val
+
+/-- **Projection commutes with append.** -/
+theorem CoherentChain.toRealityChain'_append {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃) :
+    (CoherentChain.append c₁ c₂).toRealityChain' =
+      c₁.toRealityChain'.append c₂.toRealityChain' := rfl
+
+/-- **Projection sends nil to nil.** -/
+@[simp]
+theorem CoherentChain.toRealityChain'_nil {P : Type u} {C : Type v}
+    (R : Reality P C) :
+    (CoherentChain.nil R).toRealityChain' = RealityChain'.nil R := rfl
+
+/-- **Projection certificate.** -/
+theorem coherent_chain_projection_certificate :
+    -- (a) Projection commutes with append.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃),
+      (CoherentChain.append c₁ c₂).toRealityChain' =
+        c₁.toRealityChain'.append c₂.toRealityChain') ∧
+    -- (b) Projection sends nil to nil.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      (CoherentChain.nil R).toRealityChain' = RealityChain'.nil R) :=
+  ⟨fun c₁ c₂ => CoherentChain.toRealityChain'_append c₁ c₂,
+   fun R => CoherentChain.toRealityChain'_nil R⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
