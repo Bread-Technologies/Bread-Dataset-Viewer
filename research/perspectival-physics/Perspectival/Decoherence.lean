@@ -5100,6 +5100,99 @@ theorem actualization_length_one_quotient_certificate :
   ⟨fun R m h => actualization_length_one_count R m h,
    fun R m h hC => actualization_length_one_not_coherent R m h hC⟩
 
+/-! ## Mixed witness: actualization-then-loop construction
+
+A concrete construction of a mixed chain: an actualization step
+followed by a bracketed loop at the post-actualization reality. -/
+
+/-- **Actualization-then-bracketed-loop is mixed.** -/
+theorem mixed_actualize_then_loop {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    IsMixed ((RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)).append
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed
+          (TierB.bracketed_refl (actualizeAt R m))))) := by
+  refine ⟨?_, ?_⟩
+  · rw [RealityChain'.append_actualizationCount]
+    show 1 + 0 > 0
+    omega
+  · rw [RealityChain'.append_bracketedCount]
+    show 0 + 1 > 0
+    omega
+
+/-- **Actualization-then-bracketed-loop has length 2.** -/
+theorem mixed_actualize_then_loop_length {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    ((RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)).append
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed
+          (TierB.bracketed_refl (actualizeAt R m))))).length = 2 := by
+  rw [RealityChain'.append_length]
+  show 1 + 1 = 2
+  rfl
+
+/-- **Actualization-then-bracketed-loop has rate (1, 2).** -/
+theorem mixed_actualize_then_loop_rate {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    actualizationRate ((RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)).append
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed
+          (TierB.bracketed_refl (actualizeAt R m))))) = (1, 2) := by
+  show (_, _) = (1, 2)
+  ext
+  · rw [RealityChain'.append_actualizationCount]
+    show 1 + 0 = 1; rfl
+  · rw [RealityChain'.append_length]
+    show 1 + 1 = 2; rfl
+
+/-- **Actualization-then-bracketed-loop classifies as `mixed`.** -/
+theorem chainRegime_mixed_actualize_then_loop {P : Type u} {C : Type v}
+    [DecidableEq (Meeting P C)]
+    (R : Reality P C) (m : Meeting P C) (h : R m = MeetingStatus.Potential) :
+    chainRegime ((RealityChain'.singleton
+      (TierB.actualizeAt_strict_step R m h)).append
+      (RealityChain'.singleton
+        (TierB.TrajectoryStep'.bracketed
+          (TierB.bracketed_refl (actualizeAt R m))))) = Regime.mixed :=
+  (chainRegime_eq_mixed_iff _).mpr (mixed_actualize_then_loop R m h)
+
+/-- **Mixed-witness certificate.** Concrete mixed chain construction
+with all four characterizations. -/
+theorem mixed_witness_certificate :
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h : R m = MeetingStatus.Potential),
+      IsMixed ((RealityChain'.singleton
+        (TierB.actualizeAt_strict_step R m h)).append
+        (RealityChain'.singleton
+          (TierB.TrajectoryStep'.bracketed
+            (TierB.bracketed_refl (actualizeAt R m)))))) ∧
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h : R m = MeetingStatus.Potential),
+      ((RealityChain'.singleton
+        (TierB.actualizeAt_strict_step R m h)).append
+        (RealityChain'.singleton
+          (TierB.TrajectoryStep'.bracketed
+            (TierB.bracketed_refl (actualizeAt R m))))).length = 2) ∧
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h : R m = MeetingStatus.Potential),
+      chainRegime ((RealityChain'.singleton
+        (TierB.actualizeAt_strict_step R m h)).append
+        (RealityChain'.singleton
+          (TierB.TrajectoryStep'.bracketed
+            (TierB.bracketed_refl (actualizeAt R m))))) = Regime.mixed) :=
+  ⟨fun R m h => mixed_actualize_then_loop R m h,
+   fun R m h => mixed_actualize_then_loop_length R m h,
+   fun R m h => chainRegime_mixed_actualize_then_loop R m h⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
