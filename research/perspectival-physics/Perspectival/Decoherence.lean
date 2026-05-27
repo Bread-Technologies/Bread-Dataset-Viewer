@@ -6168,6 +6168,50 @@ theorem conjugation_preservation_certificate :
    fun loop₁ ch loop₂ h => conjugation_preserves_coherent loop₁ ch loop₂ h,
    fun loop₁ ch loop₂ h => chainRegime_conjugation_coherent loop₁ ch loop₂ h⟩
 
+/-! ## Conjugation by loops changes the LENGTH
+
+Conjugation by non-trivial loops INCREASES the length even though it
+preserves the count. -/
+
+/-- **Conjugation length addition.** -/
+theorem conjugation_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂) :
+    ((loop₁.append ch).append loop₂).length =
+      loop₁.length + ch.length + loop₂.length := by
+  rw [RealityChain'.append_length, RealityChain'.append_length]
+
+/-- **Conjugation bracketed count addition.** -/
+theorem conjugation_bracketedCount {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂) :
+    ((loop₁.append ch).append loop₂).bracketedCount =
+      loop₁.bracketedCount + ch.bracketedCount + loop₂.bracketedCount := by
+  rw [RealityChain'.append_bracketedCount, RealityChain'.append_bracketedCount]
+
+/-- **Conjugation rate-second-coord (length) addition certificate.** -/
+theorem conjugation_metric_certificate :
+    -- (a) length is additive under conjugation.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂),
+      ((loop₁.append ch).append loop₂).length =
+        loop₁.length + ch.length + loop₂.length) ∧
+    -- (b) bracketed count is additive under conjugation.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂),
+      ((loop₁.append ch).append loop₂).bracketedCount =
+        loop₁.bracketedCount + ch.bracketedCount + loop₂.bracketedCount) :=
+  ⟨fun loop₁ ch loop₂ => conjugation_length loop₁ ch loop₂,
+   fun loop₁ ch loop₂ => conjugation_bracketedCount loop₁ ch loop₂⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
