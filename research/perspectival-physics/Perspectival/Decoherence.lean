@@ -6562,6 +6562,67 @@ theorem rate_full_characterization_certificate :
       actualizationRate ch = (k, k) ↔ IsPureDecoherent ch ∧ ch.length = k :=
   fun ch k => rate_full_iff_pureDecoherent_length ch k
 
+/-! ## Rate (j, k) general characterization
+
+For 0 < j < k, the rate (j, k) corresponds to mixed chains with
+specific count + length. -/
+
+/-- **Rate (j, k) with 0 < j < k ↔ mixed + count = j + length = k.** -/
+theorem rate_interior_iff_mixed {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (j k : ℕ)
+    (h_pos : 0 < j) (h_lt : j < k) :
+    actualizationRate ch = (j, k) ↔
+    IsMixed ch ∧ ch.actualizationCount = j ∧ ch.length = k := by
+  constructor
+  · intro h
+    have hC : ch.actualizationCount = j := by
+      have : (actualizationRate ch).1 = j := by rw [h]
+      exact this
+    have hL : ch.length = k := by
+      have : (actualizationRate ch).2 = k := by rw [h]
+      exact this
+    refine ⟨?_, hC, hL⟩
+    have hsum := ch.counts_sum
+    refine ⟨?_, ?_⟩
+    · show 0 < ch.actualizationCount
+      omega
+    · show 0 < ch.bracketedCount
+      omega
+  · rintro ⟨_, hC, hL⟩
+    ext
+    · show ch.actualizationCount = j; exact hC
+    · show ch.length = k; exact hL
+
+/-- **Rate interior characterization certificate.** -/
+theorem rate_interior_characterization_certificate :
+    ∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (j k : ℕ),
+      0 < j → j < k →
+      (actualizationRate ch = (j, k) ↔
+        IsMixed ch ∧ ch.actualizationCount = j ∧ ch.length = k) :=
+  fun ch j k hp hl => rate_interior_iff_mixed ch j k hp hl
+
+/-- **Rate trichotomy point-set certificate.** Bundles all three
+corner/interior characterizations. -/
+theorem rate_trichotomy_point_certificate :
+    -- (a) Rate (0, k) ↔ coherent + length k.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (k : ℕ),
+      actualizationRate ch = (0, k) ↔ IsCoherent ch ∧ ch.length = k) ∧
+    -- (b) Rate (k, k) ↔ pure-decoherent + length k.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (k : ℕ),
+      actualizationRate ch = (k, k) ↔ IsPureDecoherent ch ∧ ch.length = k) ∧
+    -- (c) Rate (j, k) with 0 < j < k ↔ mixed + count j + length k.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (j k : ℕ),
+      0 < j → j < k →
+      (actualizationRate ch = (j, k) ↔
+        IsMixed ch ∧ ch.actualizationCount = j ∧ ch.length = k)) :=
+  ⟨fun ch k => rate_zero_iff_coherent_length ch k,
+   fun ch k => rate_full_iff_pureDecoherent_length ch k,
+   fun ch j k hp hl => rate_interior_iff_mixed ch j k hp hl⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
