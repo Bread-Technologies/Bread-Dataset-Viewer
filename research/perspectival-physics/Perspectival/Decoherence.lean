@@ -4594,6 +4594,53 @@ theorem DecoherenceQuotient.count_loop_npow {P : Type u} {C : Type v}
         (loop ^ n)) = 0 :=
   IsCoherent.npow loop n
 
+/-- **Mathlib loop coherence master certificate.** A single bundled
+statement summarizing IsCoherent, chainRegime, and quotient-count
+behavior on the Mathlib Monoid loop operations (1, *, ^). -/
+theorem mathlib_loop_master_certificate :
+    -- IsCoherent layer.
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      IsCoherent (1 : RealityChain' P C R R)) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop₁ loop₂ : RealityChain' P C R R),
+      IsCoherent (loop₁ * loop₂)) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R) (n : ℕ),
+      IsCoherent (loop ^ n)) ∧
+    -- chainRegime layer.
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      chainRegime (1 : RealityChain' P C R R) = Regime.coherent) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop₁ loop₂ : RealityChain' P C R R),
+      chainRegime (loop₁ * loop₂) = Regime.coherent) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R) (n : ℕ),
+      chainRegime (loop ^ n) = Regime.coherent) ∧
+    -- Quotient count layer.
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (1 : RealityChain' P C R R)) = 0) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop₁ loop₂ : RealityChain' P C R R),
+      DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (loop₁ * loop₂)) = 0) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R) (n : ℕ),
+      DecoherenceQuotient.count
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (loop ^ n)) = 0) :=
+  ⟨IsCoherent.one,
+   fun loop₁ loop₂ => IsCoherent.mul loop₁ loop₂,
+   fun loop n => IsCoherent.npow loop n,
+   chainRegime_one,
+   fun loop₁ loop₂ => chainRegime_mul loop₁ loop₂,
+   fun loop n => chainRegime_npow loop n,
+   DecoherenceQuotient.count_one,
+   fun loop₁ loop₂ => DecoherenceQuotient.count_loop_mul loop₁ loop₂,
+   fun loop n => DecoherenceQuotient.count_loop_npow loop n⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
