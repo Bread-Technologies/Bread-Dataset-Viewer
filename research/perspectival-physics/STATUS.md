@@ -668,6 +668,8 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.decoherence_grand_grand_master_certificate` — final top-level anchor combining master_super_super + conjugation_master | `Decoherence.lean` | ✓ (a) **GRAND-GRAND-MASTER** |
 | `Decoherence.coherent_prefix_preserves_count`, `coherent_suffix_preserves_count`, `coherent_prefix_preserves_coherent`, `coherent_suffix_preserves_coherent`, `coherent_prefix_suffix_certificate` — any coherent prefix/suffix preserves count + IsCoherent | `Decoherence.lean` | ✓ (a) **coherent prefix/suffix** |
 | `Decoherence.rate_first_le_length`, `rate_second_eq_length` (@simp), `rate_first_eq_count` (@simp), `rate_point_set_certificate` — rate phase-space simp normalization | `Decoherence.lean` | ✓ (a) **rate point-set facts** |
+| `Decoherence.rate_zero_iff_coherent_length`, `rate_zero_characterization_certificate` — rate (0, k) iff coherent + length k | `Decoherence.lean` | ✓ (a) **rate-zero corner cert** |
+| `Decoherence.rate_full_iff_pureDecoherent_length`, `rate_full_characterization_certificate` — rate (k, k) iff pure-decoherent + length k | `Decoherence.lean` | ✓ (a) **rate-full corner cert** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
