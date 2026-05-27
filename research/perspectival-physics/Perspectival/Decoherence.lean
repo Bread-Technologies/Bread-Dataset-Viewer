@@ -6638,6 +6638,47 @@ theorem decoherence_session_meta_anchor : True := by
   have _h7 := @rate_trichotomy_point_certificate
   trivial
 
+/-! ## Coherent class as a Quotient predicate
+
+A Bool-valued classifier on the quotient. -/
+
+/-- **isCoherentClass as a Bool-valued predicate.** -/
+def DecoherenceQuotient.isCoherentClassBool {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) : Bool :=
+  decide q.isCoherentClass
+
+/-- **isCoherentClassBool is true iff isCoherentClass.** -/
+theorem isCoherentClassBool_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) :
+    q.isCoherentClassBool = true ↔ q.isCoherentClass := by
+  unfold DecoherenceQuotient.isCoherentClassBool
+  exact decide_eq_true_iff
+
+/-- **isCoherentClassBool = true on the nil class.** -/
+@[simp]
+theorem isCoherentClassBool_nil {P : Type u} {C : Type v}
+    {R : Reality P C} :
+    DecoherenceQuotient.isCoherentClassBool
+      (Quotient.mk (DecoherenceEquivalent_setoid R R)
+        (RealityChain'.nil R)) = true := by
+  rw [isCoherentClassBool_iff]
+  show tierAEventCount _ = 0
+  rfl
+
+/-- **isCoherentClassBool certificate.** -/
+theorem isCoherentClassBool_certificate :
+    -- (a) Bool ↔ Prop agreement.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (q : DecoherenceQuotient R₁ R₂),
+      q.isCoherentClassBool = true ↔ q.isCoherentClass) ∧
+    -- (b) Bool on nil class is true.
+    (∀ {P : Type} {C : Type} {R : Reality P C},
+      DecoherenceQuotient.isCoherentClassBool
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (RealityChain'.nil R)) = true) :=
+  ⟨fun q => isCoherentClassBool_iff q,
+   isCoherentClassBool_nil⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
