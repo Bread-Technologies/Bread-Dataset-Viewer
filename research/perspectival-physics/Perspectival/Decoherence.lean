@@ -6493,6 +6493,37 @@ theorem rate_point_set_certificate :
    fun ch => rate_second_eq_length ch,
    fun ch => rate_first_eq_count ch⟩
 
+/-! ## Rate-zero characterization
+
+The rate (0, k) corresponds exactly to coherent chains of length k. -/
+
+/-- **Rate (0, k) ↔ coherent with length k.** -/
+theorem rate_zero_iff_coherent_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) (k : ℕ) :
+    actualizationRate ch = (0, k) ↔ IsCoherent ch ∧ ch.length = k := by
+  constructor
+  · intro h
+    refine ⟨?_, ?_⟩
+    · have : (actualizationRate ch).1 = 0 := by rw [h]
+      show ch.actualizationCount = 0
+      exact this
+    · have : (actualizationRate ch).2 = k := by rw [h]
+      show ch.length = k
+      exact this
+  · rintro ⟨hC, hL⟩
+    ext
+    · show (actualizationRate ch).1 = 0
+      exact hC
+    · show (actualizationRate ch).2 = k
+      exact hL
+
+/-- **Rate-zero characterization certificate.** -/
+theorem rate_zero_characterization_certificate :
+    ∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂) (k : ℕ),
+      actualizationRate ch = (0, k) ↔ IsCoherent ch ∧ ch.length = k :=
+  fun ch k => rate_zero_iff_coherent_length ch k
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
