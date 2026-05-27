@@ -651,6 +651,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.CoherentChain.all_equivalent`, `quotient_class_eq_nil`, `coherent_chain_quotient_certificate` — CoherentChain at R collapses to a single quotient class | `Decoherence.lean` | ✓ (a) **CoherentChain quotient** |
 | `Decoherence.coherent_chain_super_certificate` — 7-fact aggregate bundling the CoherentChain subtype API (identity, composition, length morphism, endpoint eq, projection, quotient collapse, existence) | `Decoherence.lean` | ✓ (a) **CoherentChain SUPER cert** |
 | `Decoherence.PureDecoherentChain.bracketed_zero`, `count_eq_length`, `rate`, `MixedChain.count_pos`, `bracketed_pos`, `length_ge_two`, `nonCoherent_subtype_certificate` — extractor API for PureDecoherent + Mixed subtypes | `Decoherence.lean` | ✓ (a) **non-coherent subtype API** |
+| `Decoherence.decoherence_integration_certificate` — 9-fact grand integration: trichotomy + existence(coh/pure/mixed) + endpoint iff + loops coherent + quotient collapse + count morphism + classifier iffs | `Decoherence.lean` | ✓ (a) **GRAND INTEGRATION CERTIFICATE** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
