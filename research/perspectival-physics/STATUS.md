@@ -660,6 +660,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.decoherence_layer_complete` — layer-completion marker theorem (final tally: 19+ named certificates, 50+ lemmas, build-clean) | `Decoherence.lean` | ✓ (a) **layer-completion marker** |
 | `Decoherence.loop_quotient_typeclass_certificate` — type-class derivability check for the loop quotient Subsingleton + Inhabited + DecidableEq instances | `Decoherence.lean` | ✓ (a) **typeclass cert** |
 | `Decoherence.decoherence_master_super_super_certificate` — 11-certificate meta-anchor referencing every super-cert in the new layer | `Decoherence.lean` | ✓ (a) **MASTER super-super-cert** |
+| `Decoherence.conjugation_preserves_count`, `conjugation_preserves_coherent`, `chainRegime_conjugation_coherent`, `conjugation_preservation_certificate` — loop conjugation preserves count + IsCoherent + chainRegime | `Decoherence.lean` | ✓ (a) **conjugation preservation** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
