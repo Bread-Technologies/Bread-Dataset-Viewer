@@ -4755,6 +4755,61 @@ theorem loop_quotient_append_certificate :
    fun q₁ q₂ => DecoherenceQuotient.loop_append_comm q₁ q₂,
    fun q => DecoherenceQuotient.loop_append_idem q⟩
 
+/-! ## Length-bounded existence: chain-with-count-k constructors
+
+Given a length bound, we can ask: does a chain with exactly k
+actualizations exist between some pair of realities? On Bool/Bool
+with the all-Potential reality, the answer is yes for any k ≤ some
+bound (limited by the supply of distinct meetings). -/
+
+/-- **A coherent chain of any length exists at any reality.** Use
+loopPower of a bracketed self-loop. -/
+theorem exists_coherent_chain_of_length {P : Type u} {C : Type v}
+    (R : Reality P C) (k : ℕ) :
+    ∃ (ch : RealityChain' P C R R),
+      IsCoherent ch ∧ ch.length = k := by
+  let loop := RealityChain'.singleton
+    (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+  refine ⟨loopPower loop k, loopPower_isCoherent loop k, ?_⟩
+  rw [loopPower_length]
+  show k * 1 = k
+  omega
+
+/-- **The length of the loopPower realization for given k.** -/
+theorem coherent_realization_length {P : Type u} {C : Type v}
+    (R : Reality P C) (k : ℕ) :
+    let loop := RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl R))
+    (loopPower loop k).length = k := by
+  intro loop
+  rw [loopPower_length]
+  show k * 1 = k
+  omega
+
+/-- **Existence certificate: a coherent chain of any length exists at
+any reality + its rate is (0, k).** -/
+theorem coherent_existence_certificate :
+    (∀ {P : Type} {C : Type} (R : Reality P C) (k : ℕ),
+      ∃ (ch : RealityChain' P C R R),
+        IsCoherent ch ∧ ch.length = k) ∧
+    (∀ {P : Type} {C : Type} (R : Reality P C) (k : ℕ),
+      ∃ (ch : RealityChain' P C R R),
+        actualizationRate ch = (0, k)) :=
+  ⟨fun R k => exists_coherent_chain_of_length R k,
+   fun R k => by
+     obtain ⟨ch, hC, hL⟩ := exists_coherent_chain_of_length R k
+     refine ⟨ch, ?_⟩
+     have : (actualizationRate ch).1 = 0 := hC
+     have : (actualizationRate ch).2 = k := by
+       show ch.length = k
+       exact hL
+     show actualizationRate ch = (0, k)
+     ext
+     · show (actualizationRate ch).1 = 0
+       exact hC
+     · show (actualizationRate ch).2 = k
+       exact hL⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
