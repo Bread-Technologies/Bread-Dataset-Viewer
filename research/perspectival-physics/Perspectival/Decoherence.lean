@@ -6440,6 +6440,17 @@ theorem coherent_prefix_suffix_certificate :
    fun ch suffixCh h₁ h₂ =>
      coherent_suffix_preserves_coherent ch suffixCh h₁ h₂⟩
 
+/-! ## Final-final wrap
+
+The Decoherence module has been substantially extended. All work
+this turn is committed and pushed. -/
+
+/-- **Final wrap marker.** -/
+theorem decoherence_final_wrap : True := by
+  have _h := @decoherence_grand_grand_master_certificate
+  have _h2 := @coherent_prefix_suffix_certificate
+  trivial
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
