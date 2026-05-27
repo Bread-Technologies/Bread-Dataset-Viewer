@@ -663,6 +663,8 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.conjugation_preserves_count`, `conjugation_preserves_coherent`, `chainRegime_conjugation_coherent`, `conjugation_preservation_certificate` — loop conjugation preserves count + IsCoherent + chainRegime | `Decoherence.lean` | ✓ (a) **conjugation preservation** |
 | `Decoherence.conjugation_length`, `conjugation_bracketedCount`, `conjugation_metric_certificate` — length + bracketed are additive under conjugation by loops | `Decoherence.lean` | ✓ (a) **conjugation metric** |
 | `Decoherence.conjugation_preserves_quotient_class`, `conjugation_quotient_count_invariant`, `conjugation_quotient_certificate` — quotient-level conjugation invariance | `Decoherence.lean` | ✓ (a) **conjugation quotient cert** |
+| `Decoherence.conjugation_loopPower_preserves_count`, `_preserves_coherent`, `_preserves_quotient_class`, `loopPower_conjugation_certificate` — loopPower-level conjugation preservation | `Decoherence.lean` | ✓ (a) **loopPower conjugation cert** |
+| `Decoherence.conjugation_master_certificate` — top-level meta-anchor for all conjugation results | `Decoherence.lean` | ✓ (a) **conjugation master cert** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
