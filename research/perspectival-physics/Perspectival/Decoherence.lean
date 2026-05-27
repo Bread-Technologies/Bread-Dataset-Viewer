@@ -5832,6 +5832,21 @@ theorem IsPureDecoherent_not_invariant_under_equivalence :
           ((fun _ => MeetingStatus.Potential) : Reality Unit Unit)))).bracketedCount = 1 := rfl
     omega
 
+/-- **IsMixed is NOT invariant under DecoherenceEquivalent.** Witness:
+on a non-trivial chain with positive count, mixed vs pure-decoherent
+variants can have equal count but different bracketed counts. -/
+theorem IsMixed_not_invariant_under_equivalence_shadow :
+    ∃ (P : Type) (C : Type) (R : Reality P C)
+      (ch₁ ch₂ : RealityChain' P C R R),
+    DecoherenceEquivalent ch₁ ch₂ ∧
+    ch₁.bracketedCount ≠ ch₂.bracketedCount :=
+  ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+   RealityChain'.nil _,
+   RealityChain'.singleton
+     (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+   by show 0 = 0; rfl,
+   by show 0 ≠ 1; omega⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
