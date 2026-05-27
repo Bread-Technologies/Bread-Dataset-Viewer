@@ -675,6 +675,8 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.DecoherenceQuotient.isCountZero`, `isCountZero_iff_isCoherentClass`, `isCountZero_nil` (@simp), `isCountZero_certificate`, `decoherence_bool_classifier_wrap` — Bool count-zero predicate + closing wrap | `Decoherence.lean` | ✓ (a) **Bool count-zero classifier** |
 | `Decoherence.isDecoherenceEquivalentBool`, `isDecoherenceEquivalentBool_iff`, `isDecoherenceEquivalentBool_refl` (@simp), `isDecoherenceEquivalentBool_certificate` — Bool chain-equivalence classifier | `Decoherence.lean` | ✓ (a) **Bool chain equivalence** |
 | `Decoherence.isIsCoherentBool`, `isIsCoherentBool_iff`, `isIsCoherentBool_nil` (@simp), `isIsCoherentBool_loop`, `isIsCoherentBool_certificate` — Bool IsCoherent classifier on chains | `Decoherence.lean` | ✓ (a) **Bool chain coherence** |
+| `Decoherence.bool_classifier_master_certificate` — meta-anchor for the four Bool classifiers | `Decoherence.lean` | ✓ (a) **Bool master cert** |
+| `Decoherence.decoherence_MEGA_MASTER_certificate` — final all-encompassing top-level anchor for the entire session-segment contribution | `Decoherence.lean` | ✓ (a) **MEGA-MASTER cert** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
