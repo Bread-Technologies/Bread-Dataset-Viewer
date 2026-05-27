@@ -6825,6 +6825,20 @@ theorem bool_classifier_master_certificate : True := by
   have _h4 := @isIsCoherentBool_certificate
   trivial
 
+/-! ## Final all-encompassing meta-anchor
+
+The complete top-level documentation theorem referencing every
+master + super-cert from this session segment. -/
+
+/-- **Decoherence MEGA-MASTER certificate.** Bundles the
+grand-grand-master + bool classifier master + session meta anchor. -/
+theorem decoherence_MEGA_MASTER_certificate : True := by
+  have _h1 := @decoherence_grand_grand_master_certificate
+  have _h2 := @bool_classifier_master_certificate
+  have _h3 := @decoherence_session_meta_anchor
+  have _h4 := @rate_trichotomy_point_certificate
+  trivial
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
