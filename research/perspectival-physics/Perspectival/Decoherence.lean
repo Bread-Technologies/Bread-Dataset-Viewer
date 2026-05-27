@@ -5193,6 +5193,38 @@ theorem mixed_witness_certificate :
    fun R m h => mixed_actualize_then_loop_length R m h,
    fun R m h => chainRegime_mixed_actualize_then_loop R m h⟩
 
+/-! ## Trichotomy existence super-certificate
+
+Each of the three regimes has been shown constructible: this bundles
+the existence theorems into a single super-certificate. -/
+
+/-- **Existence-of-each-regime super certificate.** All three
+trichotomy regimes are constructible:
+- IsCoherent: via loopPower of any bracketed loop, at any length k
+- IsPureDecoherent: via a length-1 actualization at any Potential meeting
+- IsMixed: via actualization-then-bracketed-loop (length 2) -/
+theorem trichotomy_existence_super_certificate :
+    -- (a) Coherent chains exist at every length k.
+    (∀ {P : Type} {C : Type} (R : Reality P C) (k : ℕ),
+      ∃ (ch : RealityChain' P C R R),
+        IsCoherent ch ∧ ch.length = k) ∧
+    -- (b) Pure-decoherent chains exist (length 1) at any Potential meeting.
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (_ : R m = MeetingStatus.Potential),
+      ∃ (ch : RealityChain' P C R (actualizeAt R m)),
+        IsPureDecoherent ch ∧ ch.length = 1) ∧
+    -- (c) Mixed chains exist (length 2) at any Potential meeting.
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h : R m = MeetingStatus.Potential),
+      ∃ (ch : RealityChain' P C R (actualizeAt R m)),
+        IsMixed ch ∧ ch.length = 2) :=
+  ⟨fun R k => exists_coherent_chain_of_length R k,
+   fun R m h => exists_pureDecoherent_chain_length_one R m h,
+   fun R m h => ⟨_, mixed_actualize_then_loop R m h,
+                  mixed_actualize_then_loop_length R m h⟩⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
