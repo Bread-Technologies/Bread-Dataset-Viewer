@@ -6728,6 +6728,44 @@ theorem decoherence_bool_classifier_wrap : True := by
   have _h2 := @isCountZero_certificate
   trivial
 
+/-! ## Equivalence Bool classifier on chains
+
+A Bool-valued classifier for chain equivalence. -/
+
+/-- **isDecoherenceEquivalent: Bool-valued chain equivalence.** -/
+def isDecoherenceEquivalentBool {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) : Bool :=
+  decide (ch₁.actualizationCount = ch₂.actualizationCount)
+
+/-- **isDecoherenceEquivalentBool iff DecoherenceEquivalent.** -/
+theorem isDecoherenceEquivalentBool_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch₁ ch₂ : RealityChain' P C R₁ R₂) :
+    isDecoherenceEquivalentBool ch₁ ch₂ = true ↔
+    DecoherenceEquivalent ch₁ ch₂ := by
+  unfold isDecoherenceEquivalentBool
+  exact decide_eq_true_iff
+
+/-- **isDecoherenceEquivalentBool is reflexive.** -/
+@[simp]
+theorem isDecoherenceEquivalentBool_refl {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    isDecoherenceEquivalentBool ch ch = true :=
+  (isDecoherenceEquivalentBool_iff ch ch).mpr (DecoherenceEquivalent_refl ch)
+
+/-- **isDecoherenceEquivalentBool certificate.** -/
+theorem isDecoherenceEquivalentBool_certificate :
+    -- (a) Iff agreement with Prop version.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch₁ ch₂ : RealityChain' P C R₁ R₂),
+      isDecoherenceEquivalentBool ch₁ ch₂ = true ↔
+      DecoherenceEquivalent ch₁ ch₂) ∧
+    -- (b) Reflexivity.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      isDecoherenceEquivalentBool ch ch = true) :=
+  ⟨fun ch₁ ch₂ => isDecoherenceEquivalentBool_iff ch₁ ch₂,
+   fun ch => isDecoherenceEquivalentBool_refl ch⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
