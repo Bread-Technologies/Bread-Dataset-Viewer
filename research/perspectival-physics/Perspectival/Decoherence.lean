@@ -5798,6 +5798,40 @@ example [DecidableEq (Meeting Bool Bool)] :
   exact ⟨_, mixed_actualize_then_loop R m rfl,
          mixed_actualize_then_loop_length R m rfl⟩
 
+/-! ## Predicate non-invariance witnesses
+
+While `IsCoherent` is invariant under `DecoherenceEquivalent`, the
+predicates `IsPureDecoherent` and `IsMixed` are NOT invariant — the
+equivalence only identifies on the count axis. Below we make this
+non-invariance explicit. -/
+
+/-- **IsPureDecoherent is NOT invariant under DecoherenceEquivalent.**
+Witness: nil chain (vacuously pure-decoherent) vs a bracketed singleton
+(NOT pure-decoherent, bracketed = 1) — both have count 0. -/
+theorem IsPureDecoherent_not_invariant_under_equivalence :
+    ∃ (P : Type) (C : Type) (R : Reality P C)
+      (ch₁ ch₂ : RealityChain' P C R R),
+    DecoherenceEquivalent ch₁ ch₂ ∧
+    IsPureDecoherent ch₁ ∧ ¬ IsPureDecoherent ch₂ := by
+  refine ⟨Unit, Unit, fun _ => MeetingStatus.Potential,
+          RealityChain'.nil _,
+          RealityChain'.singleton
+            (TierB.TrajectoryStep'.bracketed (TierB.bracketed_refl _)),
+          ?_, rfl, ?_⟩
+  · show (RealityChain'.nil _).actualizationCount =
+        (RealityChain'.singleton _).actualizationCount
+    rfl
+  · intro h
+    have h' : (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed
+        (TierB.bracketed_refl
+          ((fun _ => MeetingStatus.Potential) : Reality Unit Unit)))).bracketedCount = 0 := h
+    have h_one : (RealityChain'.singleton
+      (TierB.TrajectoryStep'.bracketed
+        (TierB.bracketed_refl
+          ((fun _ => MeetingStatus.Potential) : Reality Unit Unit)))).bracketedCount = 1 := rfl
+    omega
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
