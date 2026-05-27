@@ -4799,16 +4799,62 @@ theorem coherent_existence_certificate :
    fun R k => by
      obtain ⟨ch, hC, hL⟩ := exists_coherent_chain_of_length R k
      refine ⟨ch, ?_⟩
-     have : (actualizationRate ch).1 = 0 := hC
-     have : (actualizationRate ch).2 = k := by
-       show ch.length = k
-       exact hL
      show actualizationRate ch = (0, k)
      ext
      · show (actualizationRate ch).1 = 0
        exact hC
      · show (actualizationRate ch).2 = k
        exact hL⟩
+
+/-! ## Boundedness: when no actualization is possible at all
+
+If the underlying chain has length 0, the chain is the nil chain and
+both endpoint realities are equal. -/
+
+/-- **Length-0 chain is nil (and endpoints are equal).** -/
+theorem length_zero_chain_is_nil {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.length = 0) :
+    R₁ = R₂ := by
+  -- length 0 ⇒ count = 0 and bracketed = 0 (both ≤ length).
+  have hC : ch.actualizationCount = 0 := by
+    have := ch.counts_sum
+    omega
+  -- count = 0 ⇒ R₁ = R₂ (coherent kernel characterization).
+  have : IsCoherent ch := hC
+  exact (IsCoherent.iff_endpoints_eq ch).mp this
+
+/-- **Length-0 chain has rate (0, 0).** -/
+theorem length_zero_rate {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂)
+    (h : ch.length = 0) :
+    actualizationRate ch = (0, 0) := by
+  show ch.actualizationDensity = (0, 0)
+  have hC : ch.actualizationCount = 0 := by
+    have := ch.counts_sum; omega
+  show (ch.actualizationCount, ch.length) = (0, 0)
+  rw [hC, h]
+
+/-- **Length-0 chain certificate.** Bundles the endpoint equality
+and rate consequences. -/
+theorem length_zero_certificate :
+    -- (a) Length 0 ⇒ endpoints equal.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 0 → R₁ = R₂) ∧
+    -- (b) Length 0 ⇒ rate (0, 0).
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 0 → actualizationRate ch = (0, 0)) ∧
+    -- (c) Length 0 ⇒ coherent.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      ch.length = 0 → IsCoherent ch) :=
+  ⟨fun ch h => length_zero_chain_is_nil ch h,
+   fun ch h => length_zero_rate ch h,
+   fun ch h => by
+     show ch.actualizationCount = 0
+     have := ch.counts_sum; omega⟩
 
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
