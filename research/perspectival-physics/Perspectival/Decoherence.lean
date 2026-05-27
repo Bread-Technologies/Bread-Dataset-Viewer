@@ -4699,6 +4699,62 @@ theorem mathlib_loop_class_npow {P : Type u} {C : Type v}
       Quotient.mk (DecoherenceEquivalent_setoid R R) loop :=
   Subsingleton.elim _ _
 
+/-! ## Quotient-level append calculus for loops
+
+Adding the quotient-level analogs of the Mathlib loop relations. The
+DecoherenceQuotient.append on loop classes collapses everything to
+the nil class via Subsingleton, but we can still expose useful
+identity-style lemmas. -/
+
+/-- **DecoherenceQuotient.append of two loop classes is a loop class.**
+The endpoint type is `R R → R R → R R`. -/
+theorem DecoherenceQuotient.loop_append_class {P : Type u} {C : Type v}
+    {R : Reality P C}
+    (loop₁ loop₂ : RealityChain' P C R R) :
+    DecoherenceQuotient.append
+        (Quotient.mk (DecoherenceEquivalent_setoid R R) loop₁)
+        (Quotient.mk (DecoherenceEquivalent_setoid R R) loop₂) =
+      Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R) :=
+  Subsingleton.elim _ _
+
+/-- **DecoherenceQuotient.append on loop classes is commutative.**
+Trivially: any two loop classes are equal (Subsingleton). -/
+theorem DecoherenceQuotient.loop_append_comm {P : Type u} {C : Type v}
+    {R : Reality P C}
+    (q₁ q₂ : DecoherenceQuotient R R) :
+    DecoherenceQuotient.append q₁ q₂ = DecoherenceQuotient.append q₂ q₁ :=
+  Subsingleton.elim _ _
+
+/-- **DecoherenceQuotient.append on loop classes is idempotent.** -/
+theorem DecoherenceQuotient.loop_append_idem {P : Type u} {C : Type v}
+    {R : Reality P C}
+    (q : DecoherenceQuotient R R) :
+    DecoherenceQuotient.append q q = q :=
+  Subsingleton.elim _ _
+
+/-- **Loop quotient append certificate.** Bundles three properties
+of the loop quotient under append: classes-collapse-to-nil,
+commutativity, idempotence. All from Subsingleton. -/
+theorem loop_quotient_append_certificate :
+    -- (a) Loop class append collapses to nil class.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop₁ loop₂ : RealityChain' P C R R),
+      DecoherenceQuotient.append
+          (Quotient.mk (DecoherenceEquivalent_setoid R R) loop₁)
+          (Quotient.mk (DecoherenceEquivalent_setoid R R) loop₂) =
+        Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R)) ∧
+    -- (b) Commutativity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q₁ q₂ : DecoherenceQuotient R R),
+      DecoherenceQuotient.append q₁ q₂ = DecoherenceQuotient.append q₂ q₁) ∧
+    -- (c) Idempotence.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q : DecoherenceQuotient R R),
+      DecoherenceQuotient.append q q = q) :=
+  ⟨fun loop₁ loop₂ => DecoherenceQuotient.loop_append_class loop₁ loop₂,
+   fun q₁ q₂ => DecoherenceQuotient.loop_append_comm q₁ q₂,
+   fun q => DecoherenceQuotient.loop_append_idem q⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
