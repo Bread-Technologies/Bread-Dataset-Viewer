@@ -5926,6 +5926,44 @@ Decoherence jobs / 2360+ full-package jobs), zero `sorry`. -/
 the layer is closed. -/
 theorem decoherence_layer_complete : True := trivial
 
+/-! ## Length-bounded coherent quotient enumeration
+
+For the loop quotient at R, all elements have count 0. We can express
+this as a finite enumeration. -/
+
+/-- **Every quotient element at R R has count = 0.** -/
+theorem loop_quotient_all_count_zero {P : Type u} {C : Type v}
+    {R : Reality P C} (q : DecoherenceQuotient R R) :
+    q.count = 0 :=
+  DecoherenceQuotient.loop_count_zero q
+
+/-- **Loop quotient cardinality is bounded by 1.** -/
+theorem loop_quotient_one_element {P : Type u} {C : Type v}
+    {R : Reality P C} (q₁ q₂ : DecoherenceQuotient R R) :
+    q₁ = q₂ :=
+  Subsingleton.elim _ _
+
+/-- **Loop quotient at R has exactly the nil-class.** -/
+theorem loop_quotient_eq_nil_class {P : Type u} {C : Type v}
+    {R : Reality P C} (q : DecoherenceQuotient R R) :
+    q = Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R) :=
+  Subsingleton.elim _ _
+
+/-- **Loop quotient cardinality certificate.** Three facts about the
+loop quotient at R: all count 0, subsingleton (one element), equal
+to nil class. -/
+theorem loop_quotient_cardinality_certificate :
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q : DecoherenceQuotient R R), q.count = 0) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q₁ q₂ : DecoherenceQuotient R R), q₁ = q₂) ∧
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q : DecoherenceQuotient R R),
+      q = Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R)) :=
+  ⟨fun q => loop_quotient_all_count_zero q,
+   fun q₁ q₂ => loop_quotient_one_element q₁ q₂,
+   fun q => loop_quotient_eq_nil_class q⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
