@@ -629,6 +629,43 @@ the new predicate/regime/quotient-algebra layer:
 
 A single named anchor for the full new layer.
 
+## Q33. What's the CoherentChain subtype API?
+
+**Framework answer:** `CoherentChain R₁ R₂` is the subtype of
+`RealityChain' P C R₁ R₂` carrying the `IsCoherent` predicate. The
+full subtype algebra (consolidated in
+`coherent_chain_super_certificate`) provides:
+- `CoherentChain.nil R` — identity element
+- `CoherentChain.append c₁ c₂` — composition (closes regime)
+- `CoherentChain.length` — monoid morphism to (ℕ, +, 0)
+- `CoherentChain.endpoints_eq` — R₁ must equal R₂
+- `CoherentChain.toRealityChain'` — forgetful map preserving append
+- Quotient class collapse: all CoherentChains at R map to nil class
+- Existence at every length k via the loopPower realization
+
+Parallel `PureDecoherentChain` and `MixedChain` subtypes carry the
+remaining regimes (`nonCoherent_subtype_certificate` bundles their
+extractors).
+
+## Q34. What's the grand integration certificate?
+
+**Framework answer:** `decoherence_integration_certificate` is the
+top-level 9-fact bundle for the new predicate/regime/quotient/
+existence layer:
+1. Trichotomy is exhaustive
+2. Coherent witness at every length
+3. Pure-decoherent witness at any Potential meeting
+4. Mixed witness at any Potential meeting (length 2)
+5. Coherent ↔ endpoint equality (Tier B reversibility)
+6. Loops are always coherent
+7. Loop quotient classes collapse
+8. Quotient count is compositional under quotient append
+9. chainRegime classifier ↔ trichotomy predicates
+
+Use `decoherence_top_anchors` as the documentation theorem listing
+all five super-certificates (integration, predicate API, CoherentChain,
+Mathlib loop, trichotomy existence).
+
 ## Q10. How do I read this codebase?
 
 **Framework answer:** Start with `README.md` for orientation, then
