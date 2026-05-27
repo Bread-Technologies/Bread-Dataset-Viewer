@@ -5458,6 +5458,42 @@ theorem coherent_chain_projection_certificate :
   ⟨fun c₁ c₂ => CoherentChain.toRealityChain'_append c₁ c₂,
    fun R => CoherentChain.toRealityChain'_nil R⟩
 
+/-! ## CoherentChain length as a monoid-style morphism
+
+The length function on CoherentChain is additive under append and
+takes the nil to 0. -/
+
+/-- **CoherentChain length.** -/
+def CoherentChain.length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : CoherentChain R₁ R₂) : ℕ :=
+  c.val.length
+
+/-- **CoherentChain length of nil is 0.** -/
+@[simp]
+theorem CoherentChain.length_nil {P : Type u} {C : Type v} (R : Reality P C) :
+    CoherentChain.length (CoherentChain.nil R) = 0 := rfl
+
+/-- **CoherentChain length is additive under append.** -/
+theorem CoherentChain.length_append' {P : Type u} {C : Type v}
+    {R₁ R₂ R₃ : Reality P C}
+    (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃) :
+    CoherentChain.length (CoherentChain.append c₁ c₂) =
+      CoherentChain.length c₁ + CoherentChain.length c₂ :=
+  CoherentChain.length_append c₁ c₂
+
+/-- **CoherentChain length morphism certificate.** -/
+theorem coherent_chain_length_morphism_certificate :
+    -- (a) length of nil = 0.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      CoherentChain.length (CoherentChain.nil R) = 0) ∧
+    -- (b) length is additive.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃),
+      CoherentChain.length (CoherentChain.append c₁ c₂) =
+        CoherentChain.length c₁ + CoherentChain.length c₂) :=
+  ⟨fun R => CoherentChain.length_nil R,
+   fun c₁ c₂ => CoherentChain.length_append' c₁ c₂⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
