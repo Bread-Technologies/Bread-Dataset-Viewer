@@ -6623,6 +6623,21 @@ theorem rate_trichotomy_point_certificate :
    fun ch k => rate_full_iff_pureDecoherent_length ch k,
    fun ch j k hp hl => rate_interior_iff_mixed ch j k hp hl⟩
 
+/-! ## Closing meta-anchor
+
+All certificates documented in this session segment. -/
+
+/-- **Session segment closing meta-anchor.** -/
+theorem decoherence_session_meta_anchor : True := by
+  have _h1 := @decoherence_grand_grand_master_certificate
+  have _h2 := @coherent_prefix_suffix_certificate
+  have _h3 := @rate_point_set_certificate
+  have _h4 := @rate_zero_characterization_certificate
+  have _h5 := @rate_full_characterization_certificate
+  have _h6 := @rate_interior_characterization_certificate
+  have _h7 := @rate_trichotomy_point_certificate
+  trivial
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
