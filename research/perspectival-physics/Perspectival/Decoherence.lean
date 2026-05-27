@@ -5494,6 +5494,40 @@ theorem coherent_chain_length_morphism_certificate :
   ⟨fun R => CoherentChain.length_nil R,
    fun c₁ c₂ => CoherentChain.length_append' c₁ c₂⟩
 
+/-! ## CoherentChain quotient via length
+
+Two CoherentChains R₁ R₂ (with the endpoint equality from
+CoherentChain.endpoints_eq, R₁ = R₂) are interchangeable under
+DecoherenceEquivalent. The quotient is parameterized by length only. -/
+
+/-- **All CoherentChains at R R are decoherence-equivalent.** -/
+theorem CoherentChain.all_equivalent {P : Type u} {C : Type v}
+    {R : Reality P C} (c₁ c₂ : CoherentChain R R) :
+    DecoherenceEquivalent c₁.val c₂.val := by
+  show c₁.val.actualizationCount = c₂.val.actualizationCount
+  rw [CoherentChain.count_zero, CoherentChain.count_zero]
+
+/-- **Loop quotient class of CoherentChain.val is always nil class.** -/
+theorem CoherentChain.quotient_class_eq_nil {P : Type u} {C : Type v}
+    {R : Reality P C} (c : CoherentChain R R) :
+    Quotient.mk (DecoherenceEquivalent_setoid R R) c.val =
+      Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R) :=
+  Subsingleton.elim _ _
+
+/-- **CoherentChain Quotient certificate.** -/
+theorem coherent_chain_quotient_certificate :
+    -- (a) Any two CoherentChain R R are decoherence-equivalent.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (c₁ c₂ : CoherentChain R R),
+      DecoherenceEquivalent c₁.val c₂.val) ∧
+    -- (b) Every quotient class equals nil class.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (c : CoherentChain R R),
+      Quotient.mk (DecoherenceEquivalent_setoid R R) c.val =
+        Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R)) :=
+  ⟨fun c₁ c₂ => CoherentChain.all_equivalent c₁ c₂,
+   fun c => CoherentChain.quotient_class_eq_nil c⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
