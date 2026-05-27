@@ -6264,6 +6264,72 @@ theorem conjugation_quotient_certificate :
   ⟨fun loop₁ ch loop₂ => conjugation_preserves_quotient_class loop₁ ch loop₂,
    fun loop₁ ch loop₂ => conjugation_quotient_count_invariant loop₁ ch loop₂⟩
 
+/-! ## Conjugation by powers
+
+Iterated loop conjugation continues to preserve count. -/
+
+/-- **Conjugation by loopPower preserves count.** -/
+theorem conjugation_loopPower_preserves_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁) (n₁ : ℕ)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂) (n₂ : ℕ) :
+    (((loopPower loop₁ n₁).append ch).append (loopPower loop₂ n₂)).actualizationCount =
+      ch.actualizationCount := by
+  rw [conjugation_preserves_count]
+
+/-- **Conjugation by loopPower preserves IsCoherent.** -/
+theorem conjugation_loopPower_preserves_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁) (n₁ : ℕ)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂) (n₂ : ℕ)
+    (h : IsCoherent ch) :
+    IsCoherent (((loopPower loop₁ n₁).append ch).append (loopPower loop₂ n₂)) :=
+  conjugation_preserves_coherent _ _ _ h
+
+/-- **Conjugation by loopPower preserves quotient class.** -/
+theorem conjugation_loopPower_preserves_quotient_class {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁) (n₁ : ℕ)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂) (n₂ : ℕ) :
+    Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂)
+      (((loopPower loop₁ n₁).append ch).append (loopPower loop₂ n₂)) =
+    Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch :=
+  conjugation_preserves_quotient_class _ _ _
+
+/-- **Loop-power conjugation certificate.** -/
+theorem loopPower_conjugation_certificate :
+    -- (a) Count preserved.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁) (n₁ : ℕ)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂) (n₂ : ℕ),
+      (((loopPower loop₁ n₁).append ch).append (loopPower loop₂ n₂)).actualizationCount =
+        ch.actualizationCount) ∧
+    -- (b) IsCoherent preserved.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁) (n₁ : ℕ)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂) (n₂ : ℕ),
+      IsCoherent ch →
+      IsCoherent (((loopPower loop₁ n₁).append ch).append (loopPower loop₂ n₂))) ∧
+    -- (c) Quotient class preserved.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁) (n₁ : ℕ)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂) (n₂ : ℕ),
+      Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂)
+        (((loopPower loop₁ n₁).append ch).append (loopPower loop₂ n₂)) =
+      Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch) :=
+  ⟨fun loop₁ n₁ ch loop₂ n₂ =>
+      conjugation_loopPower_preserves_count loop₁ n₁ ch loop₂ n₂,
+   fun loop₁ n₁ ch loop₂ n₂ h =>
+      conjugation_loopPower_preserves_coherent loop₁ n₁ ch loop₂ n₂ h,
+   fun loop₁ n₁ ch loop₂ n₂ =>
+      conjugation_loopPower_preserves_quotient_class loop₁ n₁ ch loop₂ n₂⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
