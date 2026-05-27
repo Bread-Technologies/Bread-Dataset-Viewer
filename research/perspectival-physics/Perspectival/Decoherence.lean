@@ -5964,6 +5964,68 @@ theorem loop_quotient_cardinality_certificate :
    fun q₁ q₂ => loop_quotient_one_element q₁ q₂,
    fun q => loop_quotient_eq_nil_class q⟩
 
+/-! ## Quotient append on loops: idempotent monoid
+
+The DecoherenceQuotient at R R, with quotient append as the operation
+and the nil-class as the identity, forms an idempotent commutative
+monoid (with one element). -/
+
+/-- **Quotient append on loops is left-identity by nil class.** -/
+theorem loop_quotient_left_identity {P : Type u} {C : Type v}
+    {R : Reality P C} (q : DecoherenceQuotient R R) :
+    DecoherenceQuotient.append
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (RealityChain'.nil R)) q = q :=
+  Subsingleton.elim _ _
+
+/-- **Quotient append on loops is right-identity by nil class.** -/
+theorem loop_quotient_right_identity {P : Type u} {C : Type v}
+    {R : Reality P C} (q : DecoherenceQuotient R R) :
+    DecoherenceQuotient.append q
+        (Quotient.mk (DecoherenceEquivalent_setoid R R)
+          (RealityChain'.nil R)) = q :=
+  Subsingleton.elim _ _
+
+/-- **Quotient append on loops is associative.** -/
+theorem loop_quotient_assoc {P : Type u} {C : Type v}
+    {R : Reality P C} (q₁ q₂ q₃ : DecoherenceQuotient R R) :
+    DecoherenceQuotient.append (DecoherenceQuotient.append q₁ q₂) q₃ =
+      DecoherenceQuotient.append q₁ (DecoherenceQuotient.append q₂ q₃) :=
+  Subsingleton.elim _ _
+
+/-- **Loop quotient as idempotent commutative monoid certificate.** -/
+theorem loop_quotient_idem_comm_monoid_certificate :
+    -- (a) Left identity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q : DecoherenceQuotient R R),
+      DecoherenceQuotient.append
+          (Quotient.mk (DecoherenceEquivalent_setoid R R)
+            (RealityChain'.nil R)) q = q) ∧
+    -- (b) Right identity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q : DecoherenceQuotient R R),
+      DecoherenceQuotient.append q
+          (Quotient.mk (DecoherenceEquivalent_setoid R R)
+            (RealityChain'.nil R)) = q) ∧
+    -- (c) Associativity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q₁ q₂ q₃ : DecoherenceQuotient R R),
+      DecoherenceQuotient.append (DecoherenceQuotient.append q₁ q₂) q₃ =
+        DecoherenceQuotient.append q₁ (DecoherenceQuotient.append q₂ q₃)) ∧
+    -- (d) Commutativity.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q₁ q₂ : DecoherenceQuotient R R),
+      DecoherenceQuotient.append q₁ q₂ = DecoherenceQuotient.append q₂ q₁) ∧
+    -- (e) Idempotence.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (q : DecoherenceQuotient R R),
+      DecoherenceQuotient.append q q = q) :=
+  ⟨fun q => loop_quotient_left_identity q,
+   fun q => loop_quotient_right_identity q,
+   fun q₁ q₂ q₃ => loop_quotient_assoc q₁ q₂ q₃,
+   fun q₁ q₂ => DecoherenceQuotient.loop_append_comm q₁ q₂,
+   fun q => DecoherenceQuotient.loop_append_idem q⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
