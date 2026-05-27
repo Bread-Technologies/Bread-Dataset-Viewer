@@ -5847,6 +5847,32 @@ theorem IsMixed_not_invariant_under_equivalence_shadow :
    by show 0 = 0; rfl,
    by show 0 ≠ 1; omega⟩
 
+/-! ## Non-invariance certificate
+
+A bundled record of which trichotomy predicates DO / DO NOT lift to
+the quotient. -/
+
+/-- **Non-invariance certificate.** Documents the asymmetry: only
+IsCoherent lifts to the quotient. -/
+theorem decoherence_invariance_certificate :
+    -- (a) IsCoherent is invariant.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        {ch₁ ch₂ : RealityChain' P C R₁ R₂},
+      DecoherenceEquivalent ch₁ ch₂ → IsCoherent ch₁ → IsCoherent ch₂) ∧
+    -- (b) IsPureDecoherent is NOT invariant (existence witness).
+    (∃ (P : Type) (C : Type) (R : Reality P C)
+        (ch₁ ch₂ : RealityChain' P C R R),
+      DecoherenceEquivalent ch₁ ch₂ ∧
+      IsPureDecoherent ch₁ ∧ ¬ IsPureDecoherent ch₂) ∧
+    -- (c) Bracketed count is NOT invariant (existence witness).
+    (∃ (P : Type) (C : Type) (R : Reality P C)
+        (ch₁ ch₂ : RealityChain' P C R R),
+      DecoherenceEquivalent ch₁ ch₂ ∧
+      ch₁.bracketedCount ≠ ch₂.bracketedCount) :=
+  ⟨fun h h₁ => IsCoherent.respects_equivalence h h₁,
+   IsPureDecoherent_not_invariant_under_equivalence,
+   IsMixed_not_invariant_under_equivalence_shadow⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
