@@ -5873,6 +5873,38 @@ theorem decoherence_invariance_certificate :
    IsPureDecoherent_not_invariant_under_equivalence,
    IsMixed_not_invariant_under_equivalence_shadow⟩
 
+/-! ## Quotient lift: explicit DecoherenceQuotient.isCoherentClass
+
+The quotient predicate `isCoherentClass` is the only trichotomy
+predicate that lifts to a well-defined Quotient.lift. We verify this
+explicitly. -/
+
+/-- **isCoherentClass via Quotient.lift.** Alternative definition
+using the Quotient.lift API directly. -/
+def DecoherenceQuotient.isCoherentClass_via_lift {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} : DecoherenceQuotient R₁ R₂ → Prop :=
+  Quotient.lift IsCoherent (fun _ _ h => propext
+    ⟨fun h₁ => IsCoherent.respects_equivalence h h₁,
+     fun h₁ => IsCoherent.respects_equivalence
+       (DecoherenceEquivalent_symm h) h₁⟩)
+
+/-- **The two formulations agree on representatives.** -/
+theorem isCoherentClass_via_lift_iff {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    DecoherenceQuotient.isCoherentClass_via_lift
+      (Quotient.mk (DecoherenceEquivalent_setoid R₁ R₂) ch) ↔
+      IsCoherent ch := Iff.rfl
+
+/-- **The two formulations of quotient-coherence agree.** -/
+theorem isCoherentClass_eq_via_lift {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (q : DecoherenceQuotient R₁ R₂) :
+    DecoherenceQuotient.isCoherentClass q ↔
+      DecoherenceQuotient.isCoherentClass_via_lift q := by
+  induction q using Quotient.inductionOn with
+  | _ ch =>
+    rw [isCoherentClass_via_lift_iff]
+    exact DecoherenceQuotient.isCoherentClass_iff ch
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
