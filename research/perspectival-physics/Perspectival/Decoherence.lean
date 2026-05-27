@@ -6098,6 +6098,76 @@ theorem decoherence_master_super_super_certificate : True := by
   have _h11 := @decoherence_session_segment_stats
   trivial
 
+/-! ## chainRegime preservation under conjugation by loops
+
+Conjugating a chain by loops on either side preserves the actualization
+count (because loops are coherent). For coherent chains, this means the
+regime is preserved. -/
+
+/-- **Conjugation by loops preserves count.** -/
+theorem conjugation_preserves_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂) :
+    ((loop₁.append ch).append loop₂).actualizationCount =
+      ch.actualizationCount := by
+  rw [RealityChain'.append_actualizationCount,
+      RealityChain'.append_actualizationCount,
+      loop_is_coherent loop₁, loop_is_coherent loop₂]
+  omega
+
+/-- **Conjugation by loops preserves IsCoherent.** -/
+theorem conjugation_preserves_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂)
+    (h : IsCoherent ch) :
+    IsCoherent ((loop₁.append ch).append loop₂) := by
+  show ((loop₁.append ch).append loop₂).actualizationCount = 0
+  rw [conjugation_preserves_count]
+  exact h
+
+/-- **Conjugation preserves chainRegime for the coherent regime.** -/
+theorem chainRegime_conjugation_coherent {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C}
+    (loop₁ : RealityChain' P C R₁ R₁)
+    (ch : RealityChain' P C R₁ R₂)
+    (loop₂ : RealityChain' P C R₂ R₂)
+    (h : chainRegime ch = Regime.coherent) :
+    chainRegime ((loop₁.append ch).append loop₂) = Regime.coherent := by
+  have hC : IsCoherent ch := (chainRegime_eq_coherent_iff _).mp h
+  exact (chainRegime_eq_coherent_iff _).mpr
+    (conjugation_preserves_coherent loop₁ ch loop₂ hC)
+
+/-- **Conjugation preservation certificate.** -/
+theorem conjugation_preservation_certificate :
+    -- (a) Count preserved under conjugation by loops.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂),
+      ((loop₁.append ch).append loop₂).actualizationCount =
+        ch.actualizationCount) ∧
+    -- (b) IsCoherent preserved under conjugation.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂),
+      IsCoherent ch →
+      IsCoherent ((loop₁.append ch).append loop₂)) ∧
+    -- (c) chainRegime = coherent preserved under conjugation.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (loop₁ : RealityChain' P C R₁ R₁)
+        (ch : RealityChain' P C R₁ R₂)
+        (loop₂ : RealityChain' P C R₂ R₂),
+      chainRegime ch = Regime.coherent →
+      chainRegime ((loop₁.append ch).append loop₂) = Regime.coherent) :=
+  ⟨fun loop₁ ch loop₂ => conjugation_preserves_count loop₁ ch loop₂,
+   fun loop₁ ch loop₂ h => conjugation_preserves_coherent loop₁ ch loop₂ h,
+   fun loop₁ ch loop₂ h => chainRegime_conjugation_coherent loop₁ ch loop₂ h⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
