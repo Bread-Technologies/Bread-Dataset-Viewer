@@ -5528,6 +5528,52 @@ theorem coherent_chain_quotient_certificate :
   ⟨fun c₁ c₂ => CoherentChain.all_equivalent c₁ c₂,
    fun c => CoherentChain.quotient_class_eq_nil c⟩
 
+/-! ## CoherentChain SUPER certificate
+
+A single bundled statement aggregating the new CoherentChain subtype
+algebra: identity, composition, projection, length-morphism, quotient
+properties. -/
+
+/-- **CoherentChain subtype super-certificate.** Bundles 7 facts from
+the new CoherentChain subtype API. -/
+theorem coherent_chain_super_certificate :
+    -- (a) Identity element exists.
+    (∀ {P : Type} {C : Type} (R : Reality P C),
+      CoherentChain.length (CoherentChain.nil R) = 0) ∧
+    -- (b) Composition closes the regime.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃),
+      IsCoherent (CoherentChain.append c₁ c₂).val) ∧
+    -- (c) Length is a monoid morphism (additivity).
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃),
+      CoherentChain.length (CoherentChain.append c₁ c₂) =
+        CoherentChain.length c₁ + CoherentChain.length c₂) ∧
+    -- (d) Endpoints must agree.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (c : CoherentChain R₁ R₂), R₁ = R₂) ∧
+    -- (e) Forgetful map preserves append.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (c₁ : CoherentChain R₁ R₂) (c₂ : CoherentChain R₂ R₃),
+      (CoherentChain.append c₁ c₂).toRealityChain' =
+        c₁.toRealityChain'.append c₂.toRealityChain') ∧
+    -- (f) Loop quotient class collapses to nil class.
+    (∀ {P : Type} {C : Type} {R : Reality P C} (c : CoherentChain R R),
+      Quotient.mk (DecoherenceEquivalent_setoid R R) c.val =
+        Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R)) ∧
+    -- (g) Coherent witness exists at every length.
+    (∀ {P : Type} {C : Type} (R : Reality P C) (k : ℕ),
+      ∃ c : CoherentChain R R, c.val.length = k) :=
+  ⟨fun R => CoherentChain.length_nil R,
+   fun c₁ c₂ => (CoherentChain.append c₁ c₂).property,
+   fun c₁ c₂ => CoherentChain.length_append' c₁ c₂,
+   fun c => CoherentChain.endpoints_eq c,
+   fun c₁ c₂ => CoherentChain.toRealityChain'_append c₁ c₂,
+   fun c => CoherentChain.quotient_class_eq_nil c,
+   fun R k =>
+     let w := IsCoherent.witness R k
+     ⟨⟨w.val, w.property.1⟩, w.property.2⟩⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
