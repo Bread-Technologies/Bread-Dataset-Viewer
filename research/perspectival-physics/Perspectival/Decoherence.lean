@@ -5730,6 +5730,50 @@ theorem decoherence_top_anchors : True := by
   have _h₅ := @trichotomy_existence_super_certificate
   trivial
 
+/-! ## Worked example: end-to-end usage of the new API on Bool
+
+A concrete demonstration of the new predicate/classifier/quotient/
+subtype API in action. -/
+
+/-- **A coherent witness on Bool/Bool of length 5 exists.** -/
+example :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    ∃ (ch : RealityChain' Bool Bool R R),
+      IsCoherent ch ∧ ch.length = 5 :=
+  exists_coherent_chain_of_length _ 5
+
+/-- **The CoherentChain witness at length 5 is a CoherentChain
+inhabitant.** -/
+example :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    let c := IsCoherent.witness R 5
+    IsCoherent c.val ∧ c.val.length = 5 ∧
+    chainRegime c.val = Regime.coherent := by
+  intro R c
+  refine ⟨c.property.1, c.property.2, ?_⟩
+  exact (chainRegime_eq_coherent_iff _).mpr c.property.1
+
+/-- **CoherentChain.append preserves length additively on Bool/Bool.** -/
+example :
+    let R : Reality Bool Bool := fun _ => MeetingStatus.Potential
+    ∀ (c₁ c₂ : CoherentChain R R),
+    (CoherentChain.append c₁ c₂).val.length =
+      c₁.val.length + c₂.val.length := by
+  intro R c₁ c₂
+  exact CoherentChain.length_append c₁ c₂
+
+/-- **The Bool quotient at (all-Potential, all-Potential) is a
+Subsingleton.** -/
+example : Subsingleton (DecoherenceQuotient
+    ((fun _ => MeetingStatus.Potential) : Reality Bool Bool)
+    ((fun _ => MeetingStatus.Potential))) :=
+  inferInstance
+
+/-- **Decoherence integration certificate is a (True)-provable theorem.** -/
+example : True := by
+  have _h := @decoherence_integration_certificate
+  trivial
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
