@@ -671,6 +671,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.rate_zero_iff_coherent_length`, `rate_zero_characterization_certificate` — rate (0, k) iff coherent + length k | `Decoherence.lean` | ✓ (a) **rate-zero corner cert** |
 | `Decoherence.rate_full_iff_pureDecoherent_length`, `rate_full_characterization_certificate` — rate (k, k) iff pure-decoherent + length k | `Decoherence.lean` | ✓ (a) **rate-full corner cert** |
 | `Decoherence.rate_interior_iff_mixed`, `rate_interior_characterization_certificate`, `rate_trichotomy_point_certificate` — rate (j, k) with 0<j<k iff mixed; 3-corner bundle covering all rate trichotomy points | `Decoherence.lean` | ✓ (a) **rate trichotomy point cert** |
+| `Decoherence.DecoherenceQuotient.isCoherentClassBool`, `isCoherentClassBool_iff`, `isCoherentClassBool_nil` (@simp), `isCoherentClassBool_certificate` — Bool-valued classifier for quotient coherence | `Decoherence.lean` | ✓ (a) **Bool quotient classifier** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
