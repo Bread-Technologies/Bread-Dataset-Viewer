@@ -5644,6 +5644,69 @@ theorem nonCoherent_subtype_certificate :
    fun c => MixedChain.bracketed_pos c,
    fun c => MixedChain.length_ge_two c⟩
 
+/-! ## Decoherence module integration certificate
+
+A grand-master integration certificate aggregating the most important
+pieces from this turn's work: super certificates and witness existence
+across all three regimes. -/
+
+/-- **Decoherence module integration certificate.** Bundles
+predicate API, regime classifier, quotient algebra, loop submonoid,
+existence witnesses, and CoherentChain subtype algebra. -/
+theorem decoherence_integration_certificate :
+    -- (a) Trichotomy exhausts.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsCoherent ch ∨ IsPureDecoherent ch ∨ IsMixed ch) ∧
+    -- (b) Coherent witness at every length.
+    (∀ {P : Type} {C : Type} (R : Reality P C) (k : ℕ),
+      ∃ (ch : RealityChain' P C R R),
+        IsCoherent ch ∧ ch.length = k) ∧
+    -- (c) Pure-decoherent witness exists at any Potential meeting.
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (_ : R m = MeetingStatus.Potential),
+      ∃ (ch : RealityChain' P C R (actualizeAt R m)),
+        IsPureDecoherent ch ∧ ch.length = 1) ∧
+    -- (d) Mixed witness exists at any Potential meeting.
+    (∀ {P : Type} {C : Type} [DecidableEq (Meeting P C)]
+        (R : Reality P C) (m : Meeting P C)
+        (h : R m = MeetingStatus.Potential),
+      ∃ (ch : RealityChain' P C R (actualizeAt R m)),
+        IsMixed ch ∧ ch.length = 2) ∧
+    -- (e) Coherent + endpoint equality.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      IsCoherent ch ↔ R₁ = R₂) ∧
+    -- (f) Loops are coherent.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R),
+      IsCoherent loop) ∧
+    -- (g) Loop quotient class collapses.
+    (∀ {P : Type} {C : Type} {R : Reality P C}
+        (loop : RealityChain' P C R R),
+      Quotient.mk (DecoherenceEquivalent_setoid R R) loop =
+        Quotient.mk (DecoherenceEquivalent_setoid R R) (RealityChain'.nil R)) ∧
+    -- (h) Quotient count is compositional.
+    (∀ {P : Type} {C : Type} {R₁ R₂ R₃ : Reality P C}
+        (q₁ : DecoherenceQuotient R₁ R₂) (q₂ : DecoherenceQuotient R₂ R₃),
+      (DecoherenceQuotient.append q₁ q₂).count = q₁.count + q₂.count) ∧
+    -- (i) chainRegime classifier.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (chainRegime ch = Regime.coherent ↔ IsCoherent ch) ∧
+      (chainRegime ch = Regime.mixed ↔ IsMixed ch)) :=
+  ⟨fun ch => chain_regime_trichotomy ch,
+   fun R k => exists_coherent_chain_of_length R k,
+   fun R m h => exists_pureDecoherent_chain_length_one R m h,
+   fun R m h => ⟨_, mixed_actualize_then_loop R m h,
+                  mixed_actualize_then_loop_length R m h⟩,
+   fun ch => IsCoherent.iff_endpoints_eq ch,
+   fun loop => IsCoherent.loop loop,
+   fun loop => mathlib_loop_class_eq_nil_class loop,
+   fun q₁ q₂ => DecoherenceQuotient.count_append q₁ q₂,
+   fun ch => ⟨chainRegime_eq_coherent_iff ch, chainRegime_eq_mixed_iff ch⟩⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
