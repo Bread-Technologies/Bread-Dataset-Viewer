@@ -649,6 +649,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.CoherentChain.toRealityChain'`, `toRealityChain'_append`, `toRealityChain'_nil` (@simp), `coherent_chain_projection_certificate` — CoherentChain → RealityChain' forgetful map (composition + identity preserving) | `Decoherence.lean` | ✓ (a) **CoherentChain projection** |
 | `Decoherence.CoherentChain.length`, `length_nil` (@simp), `length_append'`, `coherent_chain_length_morphism_certificate` — CoherentChain length is a monoid morphism to (ℕ, +, 0) | `Decoherence.lean` | ✓ (a) **CoherentChain length morphism** |
 | `Decoherence.CoherentChain.all_equivalent`, `quotient_class_eq_nil`, `coherent_chain_quotient_certificate` — CoherentChain at R collapses to a single quotient class | `Decoherence.lean` | ✓ (a) **CoherentChain quotient** |
+| `Decoherence.coherent_chain_super_certificate` — 7-fact aggregate bundling the CoherentChain subtype API (identity, composition, length morphism, endpoint eq, projection, quotient collapse, existence) | `Decoherence.lean` | ✓ (a) **CoherentChain SUPER cert** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
