@@ -6839,6 +6839,36 @@ theorem decoherence_MEGA_MASTER_certificate : True := by
   have _h4 := @rate_trichotomy_point_certificate
   trivial
 
+/-! ## Iff form of trichotomy
+
+A cleaner statement: every chain falls into one of three regimes,
+and the regime is decidable. -/
+
+/-- **Decidable trichotomy form.** Every chain has a uniquely
+classifiable regime. -/
+instance chain_decidable_trichotomy {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    Decidable (IsCoherent ch ∨ IsPureDecoherent ch ∨ IsMixed ch) :=
+  inferInstance
+
+/-- **The classifier returns exactly one regime.** -/
+theorem chain_classifier_unique {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    chainRegime ch = Regime.coherent ∨
+    chainRegime ch = Regime.pureDecoherent ∨
+    chainRegime ch = Regime.mixed :=
+  chainRegime_classifies ch
+
+/-- **Decidable trichotomy certificate (Prop-valued).** -/
+theorem chain_decidable_trichotomy_certificate :
+    -- Classifier returns one of three regimes.
+    ∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      chainRegime ch = Regime.coherent ∨
+      chainRegime ch = Regime.pureDecoherent ∨
+      chainRegime ch = Regime.mixed :=
+  fun ch => chain_classifier_unique ch
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
