@@ -6451,6 +6451,48 @@ theorem decoherence_final_wrap : True := by
   have _h2 := @coherent_prefix_suffix_certificate
   trivial
 
+/-! ## Bonus: chain-rate point-set characterizations
+
+For any chain, the rate lives in {0, ..., length} × {length}. Below
+we characterize which rates are reachable. -/
+
+/-- **Rate first coordinate is always ≤ length.** -/
+theorem rate_first_le_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 ≤ (actualizationRate ch).2 := by
+  show ch.actualizationCount ≤ ch.length
+  have := ch.counts_sum; omega
+
+/-- **Rate second coordinate equals length.** -/
+@[simp]
+theorem rate_second_eq_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).2 = ch.length := rfl
+
+/-- **Rate first coordinate is the actualization count.** -/
+@[simp]
+theorem rate_first_eq_count {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (ch : RealityChain' P C R₁ R₂) :
+    (actualizationRate ch).1 = ch.actualizationCount := rfl
+
+/-- **Rate point-set certificate.** -/
+theorem rate_point_set_certificate :
+    -- (a) Rate first ≤ second.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 ≤ (actualizationRate ch).2) ∧
+    -- (b) Rate second = length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).2 = ch.length) ∧
+    -- (c) Rate first = count.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (ch : RealityChain' P C R₁ R₂),
+      (actualizationRate ch).1 = ch.actualizationCount) :=
+  ⟨fun ch => rate_first_le_length ch,
+   fun ch => rate_second_eq_length ch,
+   fun ch => rate_first_eq_count ch⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
