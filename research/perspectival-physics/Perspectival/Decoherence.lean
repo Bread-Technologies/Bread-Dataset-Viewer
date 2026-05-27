@@ -5574,6 +5574,76 @@ theorem coherent_chain_super_certificate :
      let w := IsCoherent.witness R k
      ⟨⟨w.val, w.property.1⟩, w.property.2⟩⟩
 
+/-! ## Mixed and PureDecoherent subtype API
+
+Parallel API for the remaining two regimes. -/
+
+/-- **PureDecoherentChain count_zero?** Pure-decoherent means
+bracketed = 0; count is unconstrained. So this lemma instead gives
+the bracketed-count = 0 extractor. -/
+theorem PureDecoherentChain.bracketed_zero {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : PureDecoherentChain R₁ R₂) :
+    c.val.bracketedCount = 0 :=
+  c.property
+
+/-- **PureDecoherentChain count = length.** -/
+theorem PureDecoherentChain.count_eq_length {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : PureDecoherentChain R₁ R₂) :
+    c.val.actualizationCount = c.val.length := by
+  have hB : c.val.bracketedCount = 0 := c.property
+  have hsum := c.val.counts_sum
+  omega
+
+/-- **PureDecoherentChain rate = (length, length).** -/
+theorem PureDecoherentChain.rate {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : PureDecoherentChain R₁ R₂) :
+    actualizationRate c.val = (c.val.length, c.val.length) := by
+  show c.val.actualizationDensity = _
+  show (c.val.actualizationCount, c.val.length) = _
+  rw [PureDecoherentChain.count_eq_length]
+
+/-- **MixedChain count is positive.** -/
+theorem MixedChain.count_pos {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : MixedChain R₁ R₂) :
+    0 < c.val.actualizationCount :=
+  c.property.1
+
+/-- **MixedChain bracketed is positive.** -/
+theorem MixedChain.bracketed_pos {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : MixedChain R₁ R₂) :
+    0 < c.val.bracketedCount :=
+  c.property.2
+
+/-- **MixedChain length ≥ 2.** -/
+theorem MixedChain.length_ge_two {P : Type u} {C : Type v}
+    {R₁ R₂ : Reality P C} (c : MixedChain R₁ R₂) :
+    2 ≤ c.val.length :=
+  IsMixed.length_ge_two c.property
+
+/-- **PureDecoherentChain + MixedChain extractor certificate.** -/
+theorem nonCoherent_subtype_certificate :
+    -- (a) PureDecoherentChain has bracketed 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (c : PureDecoherentChain R₁ R₂), c.val.bracketedCount = 0) ∧
+    -- (b) PureDecoherentChain count = length.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (c : PureDecoherentChain R₁ R₂),
+      c.val.actualizationCount = c.val.length) ∧
+    -- (c) MixedChain count > 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (c : MixedChain R₁ R₂), 0 < c.val.actualizationCount) ∧
+    -- (d) MixedChain bracketed > 0.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (c : MixedChain R₁ R₂), 0 < c.val.bracketedCount) ∧
+    -- (e) MixedChain length ≥ 2.
+    (∀ {P : Type} {C : Type} {R₁ R₂ : Reality P C}
+        (c : MixedChain R₁ R₂), 2 ≤ c.val.length) :=
+  ⟨fun c => PureDecoherentChain.bracketed_zero c,
+   fun c => PureDecoherentChain.count_eq_length c,
+   fun c => MixedChain.count_pos c,
+   fun c => MixedChain.bracketed_pos c,
+   fun c => MixedChain.length_ge_two c⟩
+
 /-- **Monoid power is decoherence-equivalent to one.** -/
 theorem loop_npow_equivalent_one {P : Type u} {C : Type v}
     {R : Reality P C} (ch : RealityChain' P C R R) (n : ℕ) :
