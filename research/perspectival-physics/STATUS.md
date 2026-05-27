@@ -665,6 +665,7 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `Decoherence.conjugation_preserves_quotient_class`, `conjugation_quotient_count_invariant`, `conjugation_quotient_certificate` — quotient-level conjugation invariance | `Decoherence.lean` | ✓ (a) **conjugation quotient cert** |
 | `Decoherence.conjugation_loopPower_preserves_count`, `_preserves_coherent`, `_preserves_quotient_class`, `loopPower_conjugation_certificate` — loopPower-level conjugation preservation | `Decoherence.lean` | ✓ (a) **loopPower conjugation cert** |
 | `Decoherence.conjugation_master_certificate` — top-level meta-anchor for all conjugation results | `Decoherence.lean` | ✓ (a) **conjugation master cert** |
+| `Decoherence.decoherence_grand_grand_master_certificate` — final top-level anchor combining master_super_super + conjugation_master | `Decoherence.lean` | ✓ (a) **GRAND-GRAND-MASTER** |
 | `Decoherence.loop_submonoid_unbounded_length`, `loops_are_not_resets`, `loops_preserve_actualized` — loop submonoid is infinite + non-resetting | `Decoherence.lean` | ✓ (a) |
 | `RealityChain'.length_one_count_*_iff_*`, `length_zero_implies_eq`, `actualizationCount_le_length` — quantitative characterizations | `TierB.lean` | ✓ (a) |
 | `future_antitone`, `proper_past_growth_implies_actualization` — arrow dual + actualization detector | `TierA.lean` | ✓ (a) |
