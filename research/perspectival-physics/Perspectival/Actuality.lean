@@ -49,7 +49,7 @@ be read off"; incompatibility is the correlate of "the answer is
 constructed in the asking" (Busemeyer's projection postulate; QBism).
 -/
 
-import Mathlib.LinearAlgebra.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Data.Fin.VecNotation
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Tactic
