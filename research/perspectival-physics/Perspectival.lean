@@ -18,6 +18,7 @@ import Perspectival.CircleGPT
 import Perspectival.QubitGPT
 import Perspectival.QutritGPT
 import Perspectival.Dichotomy
+import Perspectival.Actuality
 
 /-!
 # Perspectival Physics
