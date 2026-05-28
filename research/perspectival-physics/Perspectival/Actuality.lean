@@ -253,11 +253,9 @@ theorem actuality_bridge :
     -- frames.
     (∃ (W : Type) (_ : AddCommGroup W) (_ : Module ℝ W)
         (F G : Frame (Fin 2) W) (ω : W), PerspectiveRelative F G ω) := by
-  constructor
-  · intro F hp hq
-    exact decomposition_unique F hp hq
-  · exact ⟨Square.W, inferInstance, inferInstance, Square.F, Square.G, Square.center,
-      Square.square_perspectiveRelative⟩
+  exact ⟨decomposition_unique,
+         ⟨Square.W, inferInstance, inferInstance, Square.F, Square.G, Square.center,
+          Square.square_perspectiveRelative⟩⟩
 
 end Actuality
 end Perspectival
