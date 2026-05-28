@@ -19,6 +19,7 @@ import Perspectival.QubitGPT
 import Perspectival.QutritGPT
 import Perspectival.Dichotomy
 import Perspectival.Actuality
+import Perspectival.Clearing
 
 /-!
 # Perspectival Physics
@@ -70,5 +71,5 @@ quantum theory.
   - `PREDICTIONS.md`, `LINEAGE.md`, `FAQ.md`, `GLOSSARY.md`
   - `PAPER_DRAFT.md`, `ROADMAP.md`, `TIER2_ATTEMPT.md`, `DEPS.md`
 
-Status: 13 modules, ~70 verified theorems, full project builds clean.
+Status: 14 modules, ~80 verified theorems, full project builds clean.
 -/

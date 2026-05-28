@@ -688,6 +688,25 @@ mechanically. v1 archived to `ORIGINAL_PROMPT_V1.md`.
 | `qubit_one_parameter_from_multi_axis` — concrete 3-axis → 1-axis specialization | `Dichotomy.lean` | ✓ (a) |
 | `SEAMS.md` — catalog of 6 Tier A / Tier B seams | docs | ✓ documented |
 | `V2_AUDIT.md` — honest re-examination of prior Tier B work | docs | ✓ documented |
+| **Actuality.lean** — classical/non-classical divide via perspectival choice | `Actuality.lean` | ✓ (a) **Problem C** |
+| `Frame` structure: actual states + distinguishing effects + δ-law | `Actuality.lean :: Frame` | ✓ (a) |
+| `Decomposes` — convex decomposition of state in frame's actuals | `Actuality.lean :: Decomposes` | ✓ (a) |
+| `decomposition_unique` — within one frame, weights are operationally forced (classical case) | `Actuality.lean :: decomposition_unique` | ✓ (a) |
+| `Compatible` — frames share a joint sample space (deterministic clearing) | `Actuality.lean :: Compatible` | ✓ (a) |
+| `Incompatible` — frames have no joint refinement (strictly intermediate clearing prob) | `Actuality.lean :: Incompatible` | ✓ (a) |
+| `PerspectiveRelative` — same state decomposes with positive weights through two incompatible frames | `Actuality.lean :: PerspectiveRelative` | ✓ (a) |
+| **Square witness**: centre of square is perspective-relative — real superposition exists | `Actuality.lean :: Square.square_perspectiveRelative` | ✓ (a) **concrete quantum witness** |
+| `actuality_bridge` — bundles classical uniqueness + quantum witness into single theorem | `Actuality.lean :: actuality_bridge` | ✓ (a) |
+| **Clearing.lean** — clearing condition → CHSH/Tsirelson divide (Problem B) | `Clearing.lean` | ✓ partial **Problem B** |
+| `clearingProb F G i j` — operationally-forced joint probability F.distinguish i (G.actual j) | `Clearing.lean :: clearingProb` | ✓ (a) |
+| `clearingProb_self_delta` — within-frame clearing is Kronecker δ | `Clearing.lean :: clearingProb_self_delta` | ✓ (a) |
+| `compatible_iff_clearing_deterministic` — Compatible ↔ all clearing probs in {0,1} (LHV) | `Clearing.lean :: compatible_iff_clearing_deterministic` | ✓ (a) |
+| `incompatible_iff_clearing_intermediate` — Incompatible ↔ some clearing prob strictly between 0 and 1 | `Clearing.lean :: incompatible_iff_clearing_intermediate` | ✓ (a) |
+| `square_clearing_maximal_indeterminacy` — Square witness has clearing prob 1/2 | `Clearing.lean :: square_clearing_maximal_indeterminacy` | ✓ (a) |
+| `square_clearing_all_half` — all four F–G clearing probs = 1/2 (maximal indeterminacy) | `Clearing.lean :: square_clearing_all_half` | ✓ (a) |
+| `compatible_correlator_bounded` — compatible frames satisfy \|E(F,G)\| ≤ 1 | `Clearing.lean :: compatible_correlator_bounded` | ✓ (a) |
+| `ProductClearing` structure — separable bipartite setup with Alice/Bob frames and local weights | `Clearing.lean :: ProductClearing` | ✓ (a) |
+| **quantum_tsirelson_bound_conj** — CHSH ≤ 2√2 for incompatible frames on entangled state (open) | `Clearing.lean :: quantum_tsirelson_bound_conj` | ○ **CONJECTURE** blocked on C*-algebra bridge |
 
 ### v2 architectural status
 

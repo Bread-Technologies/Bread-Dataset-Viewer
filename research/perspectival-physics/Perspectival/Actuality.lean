@@ -160,6 +160,8 @@ measurement can actualize all four corners definitely. -/
 
 namespace Square
 
+set_option linter.unnecessarySeqFocus false
+
 /-- Ambient space: real functions on three outcomes (one normalization
 coordinate + two square coordinates). -/
 abbrev W : Type := Fin 3 → ℝ
@@ -222,7 +224,7 @@ value `1/2` — neither 0 nor 1 — so measuring in F does not actualize G's
 outcomes definitely. No joint sample space exists. -/
 theorem F_G_incompatible : Incompatible (V := W) F G := by
   refine ⟨0, 0, ?_, ?_⟩ <;>
-    simp [F, G, coeffLin, v01, Fin.sum_univ_three] <;> norm_num
+    simp [F, G, coeffLin, v01, Fin.sum_univ_three]
 
 /-- **Real superposition exists.** The square's centre is perspective-
 relative: it decomposes through both incompatible diagonals, with every
